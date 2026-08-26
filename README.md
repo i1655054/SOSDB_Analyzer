@@ -128,4 +128,4 @@ SOSDB_Analyzer
 
 ## Author
 
-Masaharu Ito
+伊藤正春
