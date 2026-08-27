@@ -1,6 +1,8 @@
 Attribute VB_Name = "modHistory"
 Option Explicit
 
+' —š—ðŠÇ—
+
 Public History As Collection
 Public CurrentPos As Long
 
@@ -28,13 +30,13 @@ Public Sub AddHistory(ByVal SheetName As String)
         Set History = New Collection
     End If
 
-    If History.count > 0 Then
-        If History(History.count) = SheetName Then Exit Sub
+    If History.Count > 0 Then
+        If History(History.Count) = SheetName Then Exit Sub
     End If
 
     History.Add SheetName
 
-    CurrentPos = History.count
+    CurrentPos = History.Count
 
 End Sub
 
@@ -61,7 +63,7 @@ End Function
 Public Function GetNextSheet() As String
 
     If History Is Nothing Then Exit Function
-    If CurrentPos >= History.count Then Exit Function
+    If CurrentPos >= History.Count Then Exit Function
 
     CurrentPos = CurrentPos + 1
 

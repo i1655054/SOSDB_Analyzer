@@ -158,7 +158,7 @@ Private Sub DrawCallTree( _
     Dim LastRow As Long
     Dim r As Long
 
-    LastRow = wsDep.Cells(wsDep.Rows.count, "A").End(xlUp).row
+    LastRow = wsDep.Cells(wsDep.Rows.Count, "A").End(xlUp).row
 
     For r = 2 To LastRow
 
@@ -246,7 +246,7 @@ Private Sub DrawCallTreeShape( _
     Dim r As Long
 
     LastRow = wsDep.Cells( _
-                wsDep.Rows.count, _
+                wsDep.Rows.Count, _
                 "A").End(xlUp).row
 
     Dim ChildIndex As Long
@@ -403,7 +403,7 @@ Private Sub ClearChartShapes(ws As Worksheet)
 
     Dim i As Long
 
-    For i = ws.Shapes.count To 1 Step -1
+    For i = ws.Shapes.Count To 1 Step -1
 
         If Left$(ws.Shapes(i).Name, 2) = "N_" _
         Or Left$(ws.Shapes(i).Name, 2) = "C_" Then

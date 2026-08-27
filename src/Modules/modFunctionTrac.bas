@@ -7,7 +7,7 @@ Public Sub CreateFunctionTrace()
 
     Dim TargetBook As Workbook
     
-    Set TargetBook = GetTargetBook()
+    Set TargetBook = GetWorkbookByWorkbookName(BOOK_SOSDB)
 
     If Not CheckTargetBook(TargetBook) Then Exit Sub
     
@@ -307,7 +307,7 @@ Private Sub SetupTraceValidation(ByVal ws As Worksheet)
 
     Dim LastRow As Long
 
-    LastRow = ws.Cells(ws.Rows.count, "A").End(xlUp).row
+    LastRow = ws.Cells(ws.Rows.Count, "A").End(xlUp).row
 
     ' å©èoÇµ
     ws.Range("F1").Value = "ämîF"

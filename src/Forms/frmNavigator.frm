@@ -18,6 +18,9 @@ Option Explicit
 Private mIsCollapsed As Boolean
 Private mNormalWidth As Double
 
+Private Const MENU_EXPORT As String = "VBA Export"
+Private Const MENU_PATHCHART As String = "PathChart"
+
 Private Sub UserForm_Initialize()
 
     mNormalWidth = Me.Width
@@ -26,6 +29,26 @@ Private Sub UserForm_Initialize()
 
     RefreshSheetList
     SelectCurrentSheet
+
+End Sub
+
+Private Sub ExecuteMenu(ByVal MenuName As String)
+
+    Select Case MenuName
+
+        Case MENU_EXPORT
+            
+            frmExportTool.Show vbModal
+
+        Case MENU_PATHCHART
+
+            frmPathChart.Show vbModeless
+
+        Case Else
+
+            Worksheets(MenuName).Activate
+
+    End Select
 
 End Sub
 
@@ -51,23 +74,13 @@ Private Sub UserForm_Activate()
 
 End Sub
 
-' ダブルクリックで選択したシート移動
-Private Sub lstMenu_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
+' ダブルクリックで選択したメニュー実行
+Private Sub lstMenu_DblClick( _
+                ByVal Cancel As MSForms.ReturnBoolean)
 
     If lstMenu.ListIndex = -1 Then Exit Sub
 
-    Select Case lstMenu.Value
-
-        Case "PathChart"
-
-            frmPathChart.Show vbModeless
-
-        Case Else
-
-            Worksheets(lstMenu.Value).Activate
-
-    End Select
-
+    ExecuteMenu lstMenu.Value
 
 End Sub
 
@@ -85,7 +98,7 @@ Private Sub txtSearch_Change()
 
         If ws.Visible = xlSheetVisible Then
 
-            If ws.Name <> "Sheet1" Then
+            If Not IsHiddenMenuSheet(ws.Name) Then
 
                 If SearchText = "" _
                 Or InStr(1, ws.Name, SearchText, vbTextCompare) > 0 Then
@@ -95,17 +108,24 @@ Private Sub txtSearch_Change()
                 End If
 
             End If
-
+            
         End If
 
     Next ws
 
+    If SearchText = "" _
+    Or InStr(1, MENU_EXPORT, SearchText, vbTextCompare) > 0 Then
+
+        lstMenu.AddItem MENU_EXPORT
+
+    End If
+
 End Sub
 
-' 検索後に Enter キーで即移動。
+' 検索後に Enter キーで即実行
 Private Sub txtSearch_KeyDown( _
-    ByVal KeyCode As MSForms.ReturnInteger, _
-    ByVal Shift As Integer)
+                ByVal KeyCode As MSForms.ReturnInteger, _
+                ByVal Shift As Integer)
 
     If KeyCode = vbKeyReturn Then
 
@@ -113,14 +133,13 @@ Private Sub txtSearch_KeyDown( _
 
             lstMenu.ListIndex = 0
 
-            Worksheets(lstMenu.List(0)).Activate
+            ExecuteMenu lstMenu.List(0)
 
         End If
 
     End If
 
 End Sub
-
 
 Private Sub PositionControls()
 
@@ -251,18 +270,32 @@ Public Sub RefreshSheetList()
 
         ' 非表示シートを除外する場合
         If ws.Visible = xlSheetVisible Then
-        
-            Select Case ws.Name
-            
-                Case "Sheet1"
-                
-                Case Else
-                    lstMenu.AddItem ws.Name
-                    
-            End Select
+
+            If Not IsHiddenMenuSheet(ws.Name) Then
+
+                lstMenu.AddItem ws.Name
+
+            End If
             
         End If
 
     Next ws
 
+    lstMenu.AddItem MENU_EXPORT
+
 End Sub
+
+Private Function IsHiddenMenuSheet( _
+                    ByVal SheetName As String) _
+                    As Boolean
+
+    Select Case SheetName
+
+        Case "Sheet1", "ToolManager"
+
+            IsHiddenMenuSheet = True
+
+    End Select
+
+End Function
+

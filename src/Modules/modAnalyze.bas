@@ -5,7 +5,7 @@ Public Sub ExtractProcedures_WithAnalysis()
 
     Dim TargetBook As Workbook
     
-    Set TargetBook = GetTargetBook()
+    Set TargetBook = GetWorkbookByWorkbookName(BOOK_SOSDB)
 
     If Not CheckTargetBook(TargetBook) Then Exit Sub
 
@@ -92,7 +92,7 @@ Public Sub ExtractProcedures_WithAnalysis()
     Dim LastRow As Long
     Dim r As Long
     
-    LastRow = ws.Cells(ws.Rows.count, 1).End(xlUp).row
+    LastRow = ws.Cells(ws.Rows.Count, 1).End(xlUp).row
     
     For r = 2 To LastRow
         
@@ -124,7 +124,7 @@ Sub JumpToProcedure()
 
     Dim TargetBook As Workbook
     
-    Set TargetBook = GetTargetBook()
+    Set TargetBook = GetWorkbookByWorkbookName(BOOK_SOSDB)
 
     If Not CheckTargetBook(TargetBook) Then Exit Sub
     
@@ -163,7 +163,7 @@ Sub JumpFromSelectedCell()
 
     Dim TargetBook As Workbook
     
-    Set TargetBook = GetTargetBook()
+    Set TargetBook = GetWorkbookByWorkbookName(BOOK_SOSDB)
 
     If Not CheckTargetBook(TargetBook) Then Exit Sub
     
@@ -239,7 +239,7 @@ Sub AnalyzeAndExtractUnused()
     
     newRow = 2
     
-    LastRow = wsSrc.Cells(wsSrc.Rows.count, 1).End(xlUp).row
+    LastRow = wsSrc.Cells(wsSrc.Rows.Count, 1).End(xlUp).row
     
     '=========================================
     ' 未使用抽出（UsageCount <=1）
@@ -273,7 +273,7 @@ Sub ExtractDeleteCandidates()
     
     Set ws = Worksheets("UnusedList")
     
-    LastRow = ws.Cells(ws.Rows.count, 1).End(xlUp).row
+    LastRow = ws.Cells(ws.Rows.Count, 1).End(xlUp).row
     
     For r = 2 To LastRow
         
@@ -322,7 +322,7 @@ Sub GenerateDeleteScript()
     
     OutRow = 2
     
-    LastRow = ws.Cells(ws.Rows.count, 1).End(xlUp).row
+    LastRow = ws.Cells(ws.Rows.Count, 1).End(xlUp).row
     
     '=========================================
     ' 1行ずつ出力
@@ -367,7 +367,7 @@ Sub ExtractProcedures_WithUsage()
 
     Dim TargetBook As Workbook
     
-    Set TargetBook = GetTargetBook()
+    Set TargetBook = GetWorkbookByWorkbookName(BOOK_SOSDB)
     
     If TargetBook Is Nothing Then Exit Sub
     
@@ -424,7 +424,7 @@ Sub ExtractProcedures_WithUsage()
     Dim LastRow As Long
     Dim r As Long
 
-    LastRow = ws.Cells(ws.Rows.count, 1).End(xlUp).row
+    LastRow = ws.Cells(ws.Rows.Count, 1).End(xlUp).row
 
     For r = 2 To LastRow
     
@@ -448,7 +448,7 @@ Sub ExtractProcedures_Advanced()
 
     Dim TargetBook As Workbook
     
-    Set TargetBook = GetTargetBook()
+    Set TargetBook = GetWorkbookByWorkbookName(BOOK_SOSDB)
     
     If TargetBook Is Nothing Then Exit Sub
     
@@ -591,37 +591,37 @@ Function CountUsage(procName As String) As Long
 
     Dim TargetBook As Workbook
     
-    Set TargetBook = GetTargetBook()
+    Set TargetBook = GetWorkbookByWorkbookName(BOOK_SOSDB)
     
     If TargetBook Is Nothing Then Exit Function
     
     Dim VBComp As Object
     Dim codeMod As Object
     Dim i As Long
-    Dim count As Long
+    Dim Count As Long
     
     If Trim(procName) = "" Then
         CountUsage = 0
         Exit Function
     End If
     
-    count = 0
+    Count = 0
     
     For Each VBComp In TargetBook.VBProject.VBComponents
         Set codeMod = VBComp.CodeModule
         
         For i = 1 To codeMod.CountOfLines
             If InStr(codeMod.Lines(i, 1), procName) > 0 Then
-                count = count + 1
+                Count = Count + 1
             End If
         Next i
         
     Next VBComp
     
-    If count <= 1 Then
+    If Count <= 1 Then
         CountUsage = 0
     Else
-        CountUsage = count - 1 ' 自分自身除外
+        CountUsage = Count - 1 ' 自分自身除外
     End If
 
 End Function

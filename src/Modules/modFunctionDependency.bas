@@ -35,7 +35,7 @@ Public Sub CreateFunctionDependency()
     wsDep.Range("C1") = "回数"
     wsDep.Range("D1") = "モジュール"
 
-    LastRow = wsTrace.Cells(wsTrace.Rows.count, "A").End(xlUp).row
+    LastRow = wsTrace.Cells(wsTrace.Rows.Count, "A").End(xlUp).row
 
     '=========================
     ' 集計

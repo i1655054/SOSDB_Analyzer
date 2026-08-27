@@ -83,7 +83,7 @@ Public Sub CreatePowerPointPathChart()
 
     Set pptShape = _
         pptSlide.Shapes( _
-            pptSlide.Shapes.count)
+            pptSlide.Shapes.Count)
 
     Debug.Print _
         "pptShape.Type:" & _
@@ -183,7 +183,7 @@ Public Sub ExportPathChartToPNG()
 
     Set pptShape = _
         pptSlide.Shapes( _
-            pptSlide.Shapes.count)
+            pptSlide.Shapes.Count)
 
     Dim SaveFolder As String
 
@@ -249,7 +249,7 @@ Private Sub ExportPathChartToPPT( _
                 shp.Height
 
             With pptSlide.Shapes( _
-                    pptSlide.Shapes.count)
+                    pptSlide.Shapes.Count)
 
                 .TextFrame.TextRange.Text = _
                     shp.TextFrame.Characters.Text
