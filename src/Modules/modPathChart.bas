@@ -3,12 +3,6 @@ Option Explicit
 
 Private gNodeNo As Long
 Private gMaxLevel As Long
-Private gSkipCommon As Boolean
-Private gShowCount As Boolean
-Public gPowerPoint As Boolean
-Public gPngOutput As Boolean
-Private gShowModule As Boolean
-Private gColorModule As Boolean
 
 Private gCurrentShapeName As String
 Private gCurrentParentShapeName As String
@@ -64,6 +58,8 @@ Public Sub CreatePathChart_V3()
     Dim RootLeft As Double
 
     gNodeNo = 0
+    
+    EdgeCount = 0
     
     Set gParentMap = _
             CreateObject("Scripting.Dictionary")
@@ -141,6 +137,10 @@ Public Sub CreatePathChart_V3()
         ExportPathChartToPNG
         
     End If
+    
+    Debug.Print gNodeNo
+    
+    NodeCount = gNodeNo
 
     MsgBox "パスチャート作成完了"
     
@@ -237,6 +237,12 @@ Private Sub DrawCallTreeShape( _
             ByVal LeftPos As Double)
     
     If Level >= gMaxLevel Then Exit Sub
+    
+    If Level > MaxDepthFound Then
+
+        MaxDepthFound = Level
+
+    End If
     
     Dim wsDep As Worksheet
     
@@ -350,6 +356,8 @@ Private Sub DrawCallTreeShape( _
             End If
 
             'Debug.Print "MAP:" & shpChild.Name & " -> " & ParentShapeName
+            
+            EdgeCount = EdgeCount + 1
             
             ConnectShapes _
                     Worksheets("PathChart"), _
@@ -1199,40 +1207,85 @@ Public Function GetChartRange() As Range
 
 End Function
 
-Public Sub dmy2_ExecutePathChart( _
-    ByVal StartProc As String, _
-    ByVal MaxDepth As Long)
+Public Sub ExecutePathChart( _
+                ByVal StartProc As String, _
+                ByVal MaxDepth As Long)
 
-    frmPathChart.AddLog "解析開始"
+    Dim ws As Worksheet
 
-    Call 既存PathChart処理
+    Set ws = _
+        ThisWorkbook.Worksheets("PathChart")
 
-    frmPathChart.AddLog "解析完了"
+    ' PathChartシートへ転記
+    frmPathChart.AddLog _
+        "PathChartシートへOption転記"
+        
+    With Worksheets("PathChart")
 
-End Sub
+        .Range(CONFIG_START_FUNC).Value = StartProc
 
-Public Sub dmyExecutePathChart( _
-    ByVal StartProc As String, _
-    ByVal MaxDepth As Long)
+        .Range(CONFIG_MAX_LEVEL).Value = MaxDepth
 
-    frmPathChart.lstLog.AddItem _
-        "Procedure読込中..."
+        .Range(CONFIG_SKIP_COMMON).Value = _
+            IIf(gSkipCommon, "Y", "N")
 
-    DoEvents
+        .Range(CONFIG_SHOW_COUNT).Value = _
+            IIf(gShowCount, "Y", "N")
 
-    frmPathChart.lstLog.AddItem _
-        "呼出解析中..."
+        .Range(CONFIG_POWERPOINT).Value = _
+            IIf(gPowerPoint, "Y", "N")
 
-    DoEvents
+        .Range(CONFIG_PNG_OUTPUT).Value = _
+            IIf(gPngOutput, "Y", "N")
 
-    frmPathChart.lstLog.AddItem _
-        "PathChart生成中..."
+        .Range(CONFIG_SHOW_MODULE).Value = _
+            IIf(gShowModule, "Y", "N")
 
-    DoEvents
+        .Range(CONFIG_COLOR_MODULE).Value = _
+            IIf(gColorModule, "Y", "N")
 
-    NodeCount = 128
-    EdgeCount = 242
-    MaxDepthFound = 18
+    End With
+    
+Debug.Print _
+    "SkipCommon    =", _
+    Worksheets("PathChart") _
+        .Range(CONFIG_SKIP_COMMON).Value
+
+Debug.Print _
+    "ShowCount     =", _
+    Worksheets("PathChart") _
+        .Range(CONFIG_SHOW_COUNT).Value
+
+Debug.Print _
+    "PowerPoint    =", _
+    Worksheets("PathChart") _
+        .Range(CONFIG_POWERPOINT).Value
+
+Debug.Print _
+    "PngOutput     =", _
+    Worksheets("PathChart") _
+        .Range(CONFIG_PNG_OUTPUT).Value
+
+Debug.Print _
+    "ShowModule    =", _
+    Worksheets("PathChart") _
+        .Range(CONFIG_SHOW_MODULE).Value
+
+Debug.Print _
+    "ColorModule   =", _
+    Worksheets("PathChart") _
+        .Range(CONFIG_COLOR_MODULE).Value
+        
+
+    frmPathChart.AddLog String(40, "-")
+    
+    frmPathChart.AddLog _
+        "PathChart生成開始"
+
+    CreatePathChart_V3
+    
+    frmPathChart.AddLog _
+        "PathChart生成完了"
 
     frmPathChart.lblNodeCount.Caption = _
         "Node数: " & NodeCount
@@ -1242,25 +1295,16 @@ Public Sub dmyExecutePathChart( _
 
     frmPathChart.lblDepth.Caption = _
         "最大深度: " & MaxDepthFound
+    
+    frmPathChart.AddLog _
+        "Node数 : " & NodeCount
 
-End Sub
+    frmPathChart.AddLog _
+        "Edge数 : " & EdgeCount
 
-Public Sub ExecutePathChart( _
-    ByVal StartProc As String, _
-    ByVal MaxDepth As Long)
-
-    frmPathChart.lstLog.AddItem _
-        "開始: " & StartProc
-
-    frmPathChart.lstLog.AddItem _
-        "最大深度: " & MaxDepth
-
-    Worksheets("PathChart").Activate
-
-    MsgBox _
-        "Path解析を実行します。" _
-        & vbCrLf _
-        & StartProc
+    frmPathChart.AddLog _
+        "最大深度 : " & MaxDepthFound
+    
 
 End Sub
 

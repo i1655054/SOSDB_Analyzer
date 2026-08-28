@@ -24,4 +24,17 @@ Public gColorTheme As String
 Public gMaxNode As Long
 Public gMaxEdge As Long
 
+'共通関数除外
+Public gSkipCommon As Boolean
+'呼出回数表示
+Public gShowCount As Boolean
 
+'PowerPoint出力
+Public gPowerPoint As Boolean
+'PNG出力
+Public gPngOutput As Boolean
+
+'モジュール表示
+Public gShowModule As Boolean
+'モジュール色分け
+Public gColorModule As Boolean

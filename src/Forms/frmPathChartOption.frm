@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} frmPathChartOption 
    Caption         =   "PathChart詳細設定"
-   ClientHeight    =   9015.001
+   ClientHeight    =   7440
    ClientLeft      =   120
    ClientTop       =   465
-   ClientWidth     =   8160
+   ClientWidth     =   6555
    OleObjectBlob   =   "frmPathChartOption.frx":0000
    StartUpPosition =   1  'オーナー フォームの中央
 End
@@ -29,6 +29,15 @@ Private Sub UserForm_Initialize()
     chkIgnoreExcel.Value = gIgnoreExcel
     chkIgnoreSelf.Value = gIgnoreSelf
     chkSameModuleOnly.Value = gSameModuleOnly
+
+    chkSkipCommon.Value = gSkipCommon
+    chkShowCount.Value = gShowCount
+
+    chkPowerPoint.Value = gPowerPoint
+    chkPngOutput.Value = gPngOutput
+
+    chkShowModule.Value = gShowModule
+    chkColorModule.Value = gColorModule
 
     cmbColorTheme.Clear
 
@@ -80,6 +89,15 @@ Private Sub cmdOK_Click()
     gIgnoreSelf = chkIgnoreSelf.Value
     gSameModuleOnly = chkSameModuleOnly.Value
 
+    gSkipCommon = chkSkipCommon.Value
+    gShowCount = chkShowCount.Value
+
+    gPowerPoint = chkPowerPoint.Value
+    gPngOutput = chkPngOutput.Value
+
+    gShowModule = chkShowModule.Value
+    gColorModule = chkColorModule.Value
+
     gVertical = optVertical.Value
 
     gColorTheme = cmbColorTheme.Value
@@ -87,6 +105,35 @@ Private Sub cmdOK_Click()
     gMaxNode = Val(txtMaxNode.Text)
     gMaxEdge = Val(txtMaxEdge.Text)
 
-    Unload Me
+    Debug.Print "Property        :", gProperty
+    Debug.Print "Private         :", gPrivate
+    Debug.Print "Public          :", gPublic
+
+    Debug.Print "StdModule       :", gStdModule
+    Debug.Print "UserForm        :", gUserForm
+    Debug.Print "ClassModule     :", gClassModule
+
+    Debug.Print "IgnoreAPI       :", gIgnoreAPI
+    Debug.Print "IgnoreExcel     :", gIgnoreExcel
+    Debug.Print "IgnoreSelf      :", gIgnoreSelf
+    Debug.Print "SameModuleOnly  :", gSameModuleOnly
+
+    Debug.Print "SkipCommon      :", gSkipCommon
+    Debug.Print "ShowCount       :", gShowCount
+
+    Debug.Print "PowerPoint      :", gPowerPoint
+    Debug.Print "PngOutput       :", gPngOutput
+
+    Debug.Print "ShowModule      :", gShowModule
+    Debug.Print "ColorModule     :", gColorModule
+
+    Debug.Print "Vertical        :", gVertical
+
+    Debug.Print "ColorTheme      :", gColorTheme
+
+    Debug.Print "MaxNode         :", gMaxNode
+    Debug.Print "MaxEdge         :", gMaxEdge
+    
+    Me.Hide
 
 End Sub

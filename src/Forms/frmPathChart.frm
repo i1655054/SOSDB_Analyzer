@@ -15,10 +15,6 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
 
-Private Sub chkExternal_Click()
-
-End Sub
-
 Private Sub UserForm_Initialize()
 
     cmbStartProc.Clear
@@ -113,37 +109,17 @@ EH:
 
 End Sub
 
-Private Sub old_cmdAnalyze_Click()
-
-    Dim StartTime As Double
-
-    StartTime = Timer
-
-    lstLog.Clear
-
-    lblStatus.Caption = "‰ðÍ’†..."
-
-    ExecutePathChart _
-        txtStartProc.Text, _
-        CLng(txtMaxDepth.Text)
-
-    lblStatus.Caption = "Š®—¹"
-
-    lblElapsed.Caption = _
-        Format(Timer - StartTime, "0.00 •b")
-
-End Sub
-
 ' ƒNƒŠƒA
 Private Sub cmdClear_Click()
 
-    txtStartProc.Text = ""
-
-    txtMaxDepth.Text = "20"
-
     lstLog.Clear
 
-    lblStatus.Caption = "‘Ò‹@’†"
+    lblStatus.Caption = "ó‘Ô: ‘Ò‹@’†"
+    lblElapsed.Caption = "‰ðÍŽžŠÔ: 0.00 •b"
+
+    lblNodeCount.Caption = "Node”: 0"
+    lblEdgeCount.Caption = "Edge”: 0"
+    lblDepth.Caption = "Å‘å[“x: 0"
 
 End Sub
 
@@ -179,10 +155,14 @@ End Sub
 
 Public Sub AddLog(ByVal Msg As String)
 
-    lstLog.AddItem Msg
+    lstLog.AddItem _
+        Format(Now, "hh:nn:ss") & _
+        "  " & Msg
 
     If lstLog.ListCount > 0 Then
+
         lstLog.ListIndex = lstLog.ListCount - 1
+
     End If
 
     DoEvents

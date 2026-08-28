@@ -35,6 +35,6 @@ End Sub
 
 ' ⑤ パスチャート作成
 Private Sub CreatePathChart_Click()
-    Call modPathChart.CreatePathChart
+    frmPathChart.Show vbModeless
 End Sub
 
