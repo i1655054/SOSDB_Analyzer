@@ -13,6 +13,8 @@ Private Sub Workbook_Open()
 
     RegisterShortcut
     
+    LoadPathChartConfig
+    
     ShowNavigator
 
 End Sub

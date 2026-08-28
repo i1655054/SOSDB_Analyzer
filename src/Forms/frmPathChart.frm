@@ -17,11 +17,51 @@ Option Explicit
 
 Private Sub UserForm_Initialize()
 
-    cmbStartProc.Clear
+    txtMaxDepth.Text = GetDefaultMaxDepth()
+    
+    LoadStartProcedure cmbStartProc
 
-    cmbStartProc.AddItem "UpdateItemsInHardCoded"
+    Dim i As Long
+    Dim DefaultProc As String
 
-    cmbStartProc.ListIndex = 0
+    DefaultProc = GetDefaultStartProcedure()
+
+    Dim Found As Boolean
+    
+    For i = 0 To cmbStartProc.ListCount - 1
+    
+        If cmbStartProc.List(i) = DefaultProc Then
+
+            cmbStartProc.ListIndex = i
+            
+            Found = True
+
+            Exit For
+
+        End If
+
+    Next i
+    
+    If Not Found Then
+
+        If cmbStartProc.ListCount > 0 Then
+
+            cmbStartProc.ListIndex = 0
+        
+        End If
+        
+    End If
+
+    If cmbStartProc.ListIndex < 0 _
+    And cmbStartProc.ListCount > 0 Then
+
+        cmbStartProc.ListIndex = 0
+
+    End If
+
+    lblStatus.Caption = "状態: 待機中"
+    
+    lblElapsed.Caption = "解析時間: 0.00 秒"
 
 End Sub
 
@@ -29,29 +69,32 @@ End Sub
 Private Sub cmdAnalyze_Click()
 
     Dim StartTime As Double
+    Dim StartProc As String
+    Dim MaxDepth As Long
 
     On Error GoTo EH
 
-    '=======================================
-    '入力チェック
-    '=======================================
-    If Trim$(cmbStartProc.Text) = "" Then
+    StartProc = Trim$(cmbStartProc.Text)
 
-        MsgBox "開始Procedureを選択してください。", _
-               vbExclamation
+    ' 開始Procedure未選択チェック
+    If StartProc = "" Then
 
-        cmbStartProc.SetFocus
+        MsgBox _
+            "開始Procedureを選択してください。", _
+            vbExclamation
 
         Exit Sub
 
     End If
 
-    If Val(txtMaxDepth.Text) <= 0 Then
+    MaxDepth = CLng(txtMaxDepth.Text)
 
-        MsgBox "最大深度を入力してください。", _
-               vbExclamation
+    ' 最大深度チェック
+    If MaxDepth <= 0 Then
 
-        txtMaxDepth.SetFocus
+        MsgBox _
+            "最大深度は1以上を指定してください。", _
+            vbExclamation
 
         Exit Sub
 
@@ -65,25 +108,35 @@ Private Sub cmdAnalyze_Click()
     lstLog.Clear
 
     lblStatus.Caption = "状態: 解析中"
+
     lblNodeCount.Caption = "Node数: 0"
     lblEdgeCount.Caption = "Edge数: 0"
     lblDepth.Caption = "最大深度: 0"
 
-    lstLog.AddItem "解析開始"
-    lstLog.AddItem "開始Procedure : " _
-                 & cmbStartProc.Text
+    frmPathChart.AddLog String(40, "=")
 
-    lstLog.AddItem "最大深度 : " _
-                 & txtMaxDepth.Text
+    AddLog "解析開始"
+    AddLog "開始Procedure : " & StartProc
+    AddLog "最大深度 : " & MaxDepth
 
     DoEvents
+
+    '=======================================
+    '最大深度保存実行
+    '=======================================
+    SaveDefaultMaxDepth MaxDepth
+
+    '=======================================
+    '開Procedure設定実行
+    '=======================================
+    SaveDefaultStartProcedure StartProc
 
     '=======================================
     '解析実行
     '=======================================
     ExecutePathChart _
-        cmbStartProc.Text, _
-        CLng(txtMaxDepth.Text)
+        StartProc, _
+        MaxDepth
 
     '=======================================
     '結果表示
@@ -94,20 +147,22 @@ Private Sub cmdAnalyze_Click()
 
     lblStatus.Caption = "状態: 完了"
 
-    lstLog.AddItem "解析完了"
+    AddLog "解析完了"
 
     Exit Sub
 
 EH:
 
-    lblStatus.Caption = "状態: 異常終了"
+    lblStatus.Caption = _
+        "状態: 異常終了"
 
-    lstLog.AddItem _
+    AddLog _
         "ERROR : " & Err.Description
 
     MsgBox Err.Description, vbCritical
 
 End Sub
+
 
 ' クリア
 Private Sub cmdClear_Click()

@@ -180,6 +180,9 @@ Private Sub cmdExport_Click()
     Dim wb As Workbook
 
     Dim Count As Long
+    
+    Dim ExportCount As Long
+    Dim LastRootPath As String
 
     Debug.Print "Export Start"
 
@@ -196,10 +199,15 @@ Private Sub cmdExport_Click()
 
             If Not wb Is Nothing Then
 
-                Debug.Print "Workbook=" & wb.Name
+                'Debug.Print "Workbook=" & wb.Name
                 
-                ExportVBABook wb, ToolID
+                ExportCount = ExportCount + 1
+                
+                LastRootPath = _
+                    GetGitRootPathByToolID(ToolID)
 
+                ExportVBABook wb, ToolID
+                
                 Count = Count + 1
 
             Else
@@ -221,6 +229,12 @@ Private Sub cmdExport_Click()
     MsgBox _
         Count & " 件のエクスポートが完了しました。", _
         vbInformation
+        
+    If ExportCount = 1 Then
+    
+        OpenGitPowerShell LastRootPath
+        
+    End If
 
 End Sub
 

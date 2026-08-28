@@ -17,6 +17,15 @@ Option Explicit
 
 Private Sub UserForm_Initialize()
 
+    If gMaxNode = 0 Then
+
+        txtMaxNode.Text = "1000"
+        txtMaxEdge.Text = "3000"
+
+        optHorizontal.Value = True
+        
+    End If
+
     chkProperty.Value = gProperty
     chkPrivate.Value = gPrivate
     chkPublic.Value = gPublic
@@ -55,11 +64,6 @@ Private Sub UserForm_Initialize()
 
     End If
 
-    optVertical.Value = gVertical
-    optHorizontal.Value = Not gVertical
-
-    If gMaxNode = 0 Then gMaxNode = 1000
-    If gMaxEdge = 0 Then gMaxEdge = 3000
 
     txtMaxNode.Text = gMaxNode
     txtMaxEdge.Text = gMaxEdge
@@ -105,35 +109,29 @@ Private Sub cmdOK_Click()
     gMaxNode = Val(txtMaxNode.Text)
     gMaxEdge = Val(txtMaxEdge.Text)
 
-    Debug.Print "Property        :", gProperty
-    Debug.Print "Private         :", gPrivate
-    Debug.Print "Public          :", gPublic
-
-    Debug.Print "StdModule       :", gStdModule
-    Debug.Print "UserForm        :", gUserForm
-    Debug.Print "ClassModule     :", gClassModule
-
-    Debug.Print "IgnoreAPI       :", gIgnoreAPI
-    Debug.Print "IgnoreExcel     :", gIgnoreExcel
-    Debug.Print "IgnoreSelf      :", gIgnoreSelf
-    Debug.Print "SameModuleOnly  :", gSameModuleOnly
-
-    Debug.Print "SkipCommon      :", gSkipCommon
-    Debug.Print "ShowCount       :", gShowCount
-
-    Debug.Print "PowerPoint      :", gPowerPoint
-    Debug.Print "PngOutput       :", gPngOutput
-
-    Debug.Print "ShowModule      :", gShowModule
-    Debug.Print "ColorModule     :", gColorModule
-
-    Debug.Print "Vertical        :", gVertical
-
-    Debug.Print "ColorTheme      :", gColorTheme
-
-    Debug.Print "MaxNode         :", gMaxNode
-    Debug.Print "MaxEdge         :", gMaxEdge
+    SavePathChartConfig
     
     Me.Hide
 
 End Sub
+
+Private Sub cmdDefault_Click()
+
+    chkSkipCommon.Value = False
+    chkShowCount.Value = False
+
+    chkPowerPoint.Value = False
+    chkPngOutput.Value = False
+
+    chkShowModule.Value = False
+    chkColorModule.Value = False
+
+    optHorizontal.Value = True
+
+    cmbColorTheme.Value = "ïWèÄ"
+
+    txtMaxNode.Text = "1000"
+    txtMaxEdge.Text = "3000"
+
+End Sub
+

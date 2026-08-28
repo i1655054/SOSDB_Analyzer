@@ -120,4 +120,15 @@ Public Function GetGitRootPathByToolID( _
 
 End Function
 
+Public Sub OpenGitPowerShell( _
+                    ByVal RootPath As String)
 
+    Dim Cmd As String
+
+    Cmd = _
+        "powershell.exe -NoExit -Command " & _
+        """Set-Location '" & RootPath & "'"""
+
+    Shell Cmd, vbNormalFocus
+
+End Sub

@@ -25,6 +25,7 @@ Public NodeCount As Long
 Public EdgeCount As Long
 Public MaxDepthFound As Long
 
+
 Private Function IsCommonFunction( _
                     ByVal FuncName As String) As Boolean
 
@@ -59,7 +60,9 @@ Public Sub CreatePathChart_V3()
 
     gNodeNo = 0
     
+    NodeCount = 0
     EdgeCount = 0
+    MaxDepthFound = 0
     
     Set gParentMap = _
             CreateObject("Scripting.Dictionary")
@@ -138,11 +141,11 @@ Public Sub CreatePathChart_V3()
         
     End If
     
-    Debug.Print gNodeNo
+    'Debug.Print gNodeNo
     
     NodeCount = gNodeNo
 
-    MsgBox "パスチャート作成完了"
+    'MsgBox "パスチャート作成完了"
     
 End Sub
 
@@ -199,6 +202,17 @@ Private Function DrawNode( _
 
     Dim shp As Shape
     
+    ' DrawNode制限
+    If gMaxNode > 0 Then
+
+        If gNodeNo >= gMaxNode Then
+
+            Exit Function
+
+        End If
+
+    End If
+
     gNodeNo = gNodeNo + 1
 
     Set shp = ws.Shapes.AddShape( _
@@ -244,6 +258,18 @@ Private Sub DrawCallTreeShape( _
 
     End If
     
+    If gMaxNode > 0 Then
+
+        If gNodeNo >= gMaxNode Then Exit Sub
+
+    End If
+
+    If gMaxEdge > 0 Then
+
+        If EdgeCount >= gMaxEdge Then Exit Sub
+
+    End If
+
     Dim wsDep As Worksheet
     
     Set wsDep = Worksheets("関数依存関係")
@@ -357,13 +383,19 @@ Private Sub DrawCallTreeShape( _
 
             'Debug.Print "MAP:" & shpChild.Name & " -> " & ParentShapeName
             
-            EdgeCount = EdgeCount + 1
-            
+            If gMaxEdge > 0 Then
+
+                If EdgeCount >= gMaxEdge Then Exit Sub
+
+            End If
+                      
             ConnectShapes _
                     Worksheets("PathChart"), _
                     ParentShapeName, _
                     shpChild.Name
 
+            EdgeCount = EdgeCount + 1
+            
             DrawCallTreeShape _
                     ChildFunc, _
                     shpChild.Name, _
@@ -1216,15 +1248,76 @@ Public Sub ExecutePathChart( _
     Set ws = _
         ThisWorkbook.Worksheets("PathChart")
 
+    '--------------------------
     ' PathChartシートへ転記
+    '--------------------------
+
+    ws.Range(CONFIG_START_FUNC).Value = _
+        StartProc
+
+    ws.Range(CONFIG_MAX_LEVEL).Value = _
+        MaxDepth
+
     frmPathChart.AddLog _
         "PathChartシートへOption転記"
-        
+
+    ApplyPathChartOption
+
+    '--------------------------
+    ' ログ
+    '--------------------------
+
+    frmPathChart.AddLog _
+        "PathChart生成開始"
+
+    '--------------------------
+    ' PathChart生成
+    '--------------------------
+
+    CreatePathChart_V3
+
+    '--------------------------
+    ' 結果表示
+    '--------------------------
+
+    frmPathChart.AddLog _
+        "PathChart生成完了"
+
+    frmPathChart.lblNodeCount.Caption = _
+        "Node数: " & NodeCount
+
+    frmPathChart.lblEdgeCount.Caption = _
+        "Edge数: " & EdgeCount
+
+    frmPathChart.lblDepth.Caption = _
+        "最大深度: " & MaxDepthFound
+
+    frmPathChart.AddLog _
+        "Node数 : " & NodeCount
+
+    frmPathChart.AddLog _
+        "Edge数 : " & EdgeCount
+
+    frmPathChart.AddLog _
+        "最大深度 : " & MaxDepthFound
+
+    ThisWorkbook.Worksheets("PathChart").Activate
+    
+    frmPathChart.Hide
+
+End Sub
+
+Public Sub ClearPathChart()
+
+End Sub
+
+Public Sub DrawPathChart()
+
+End Sub
+
+Private Sub ApplyPathChartOption()
+
     With Worksheets("PathChart")
-
-        .Range(CONFIG_START_FUNC).Value = StartProc
-
-        .Range(CONFIG_MAX_LEVEL).Value = MaxDepth
 
         .Range(CONFIG_SKIP_COMMON).Value = _
             IIf(gSkipCommon, "Y", "N")
@@ -1245,73 +1338,48 @@ Public Sub ExecutePathChart( _
             IIf(gColorModule, "Y", "N")
 
     End With
-    
-Debug.Print _
-    "SkipCommon    =", _
-    Worksheets("PathChart") _
-        .Range(CONFIG_SKIP_COMMON).Value
-
-Debug.Print _
-    "ShowCount     =", _
-    Worksheets("PathChart") _
-        .Range(CONFIG_SHOW_COUNT).Value
-
-Debug.Print _
-    "PowerPoint    =", _
-    Worksheets("PathChart") _
-        .Range(CONFIG_POWERPOINT).Value
-
-Debug.Print _
-    "PngOutput     =", _
-    Worksheets("PathChart") _
-        .Range(CONFIG_PNG_OUTPUT).Value
-
-Debug.Print _
-    "ShowModule    =", _
-    Worksheets("PathChart") _
-        .Range(CONFIG_SHOW_MODULE).Value
-
-Debug.Print _
-    "ColorModule   =", _
-    Worksheets("PathChart") _
-        .Range(CONFIG_COLOR_MODULE).Value
-        
-
-    frmPathChart.AddLog String(40, "-")
-    
-    frmPathChart.AddLog _
-        "PathChart生成開始"
-
-    CreatePathChart_V3
-    
-    frmPathChart.AddLog _
-        "PathChart生成完了"
-
-    frmPathChart.lblNodeCount.Caption = _
-        "Node数: " & NodeCount
-
-    frmPathChart.lblEdgeCount.Caption = _
-        "Edge数: " & EdgeCount
-
-    frmPathChart.lblDepth.Caption = _
-        "最大深度: " & MaxDepthFound
-    
-    frmPathChart.AddLog _
-        "Node数 : " & NodeCount
-
-    frmPathChart.AddLog _
-        "Edge数 : " & EdgeCount
-
-    frmPathChart.AddLog _
-        "最大深度 : " & MaxDepthFound
-    
 
 End Sub
 
-Public Sub ClearPathChart()
+Public Sub LoadStartProcedure( _
+                ByVal cbo As MSForms.ComboBox)
+
+    Dim ws As Worksheet
+    Dim LastRow As Long
+    Dim r As Long
+
+    Dim Dic As Object
+
+    Set Dic = CreateObject("Scripting.Dictionary")
+
+    Set ws = _
+        ThisWorkbook.Worksheets("関数依存関係")
+
+    LastRow = _
+        ws.Cells(ws.Rows.Count, "A") _
+          .End(xlUp).row
+
+    cbo.Clear
+
+    For r = 2 To LastRow
+
+        If Trim$(ws.Cells(r, 1).Value) <> "" Then
+
+            If Not Dic.Exists( _
+                    ws.Cells(r, 1).Value) Then
+
+                Dic.Add _
+                    ws.Cells(r, 1).Value, _
+                    True
+
+                cbo.AddItem _
+                    ws.Cells(r, 1).Value
+
+            End If
+
+        End If
+
+    Next r
 
 End Sub
 
-Public Sub DrawPathChart()
-
-End Sub
