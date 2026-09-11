@@ -30,10 +30,19 @@ Public Sub CreateFunctionTrace()
     End If
 
     wsOut.Range("A1") = "呼出元"
-    wsOut.Range("B1") = "呼出先"
-    wsOut.Range("C1") = "モジュール"
-    wsOut.Range("D1") = "行番号"
-    wsOut.Range("E1") = "元コード"
+    wsOut.Range("B1") = "呼出元JPName"
+
+    wsOut.Range("C1") = "呼出先"
+    wsOut.Range("D1") = "呼出先JPName"
+
+    wsOut.Range("E1") = "呼出元モジュール"
+    wsOut.Range("F1") = "呼出先モジュール"
+
+    wsOut.Range("G1") = "Category"
+    wsOut.Range("H1") = "Summary"
+
+    wsOut.Range("I1") = "行番号"
+    wsOut.Range("J1") = "元コード"
 
     Dim VBComp As Object
     Dim CodeText As String
@@ -50,30 +59,19 @@ Public Sub CreateFunctionTrace()
 
         If VBComp.Type = 1 Then
 
-            ' Debug.Print VBComp.Name
-
             If VBComp.CodeModule.CountOfLines > 0 Then
 
                 CodeText = VBComp.CodeModule.Lines( _
                             1, _
                             VBComp.CodeModule.CountOfLines)
 
-                Call GetFunctions(CodeText, FuncList)
+                Call GetFunctions(CodeText, VBComp.Name, FuncList)
 
             End If
 
         End If
 
     Next
-
-
-    Dim Key As Variant
-
-    For Each Key In FuncList.Keys
-
-        'Debug.Print Key
-
-    Next Key
 
     '======================
     ' 呼出関係取得
@@ -106,6 +104,8 @@ Public Sub CreateFunctionTrace()
     Next VBComp
 
     Call SetupTraceValidation(wsOut)
+    
+    wsOut.Columns.AutoFit
 
     MsgBox "関数トレース生成完了"
 
@@ -114,6 +114,7 @@ End Sub
 
 Private Sub GetFunctions( _
             ByVal CodeText As String, _
+            ByVal ModuleName As String, _
             ByRef FuncList As Object)
 
     Dim RegEx As Object
@@ -167,7 +168,32 @@ Private Sub GetFunctions( _
 
                 If Not FuncList.Exists(FuncName) Then
 
-                    FuncList.Add FuncName, True
+                    Dim Proc As clsProcInfo
+
+                    Set Proc = New clsProcInfo
+
+                    Proc.ProcName = FuncName
+                    Proc.ModuleName = ModuleName
+
+                    Proc.JPName = _
+                        GetTagValueFromCode( _
+                            CodeText, _
+                            FuncName, _
+                            "@JPName")
+
+                    Proc.Category = _
+                        GetTagValueFromCode( _
+                            CodeText, _
+                            FuncName, _
+                            "@Category")
+
+                    Proc.Summary = _
+                        GetTagValueFromCode( _
+                            CodeText, _
+                            FuncName, _
+                            "@Summary")
+
+                    FuncList.Add FuncName, Proc
 
                 End If
 
@@ -175,7 +201,7 @@ Private Sub GetFunctions( _
     
 NextMatch:
 
-    Next
+    Next M
 
 End Sub
 
@@ -212,12 +238,46 @@ Private Function TraceModule( _
 
                     If UCase(Key) <> _
                        UCase(CurrentProc) Then
+                       
+                        If FuncList.Exists(CurrentProc) Then
+                            FuncList(CurrentProc).AddCall Key
+                        End If
 
+                        If FuncList.Exists(Key) Then
+                            FuncList(Key).AddCalledBy CurrentProc
+                        End If
+                        
                         wsOut.Cells(RowOut, 1) = CurrentProc
-                        wsOut.Cells(RowOut, 2) = Key
-                        wsOut.Cells(RowOut, 3) = ModuleName
-                        wsOut.Cells(RowOut, 4) = i + 1
-                        wsOut.Cells(RowOut, 5) = Trim$(Lines(i))
+
+                        If FuncList.Exists(CurrentProc) Then
+                            wsOut.Cells(RowOut, 2) = _
+                                FuncList(CurrentProc).JPName
+                        Else
+                            wsOut.Cells(RowOut, 2) = ""
+                        End If
+
+                        wsOut.Cells(RowOut, 3) = Key
+
+                        wsOut.Cells(RowOut, 4) = _
+                            FuncList(Key).JPName
+
+                        ' 呼出元モジュール
+                        wsOut.Cells(RowOut, 5) = ModuleName
+
+                        ' 呼出先モジュール
+                        wsOut.Cells(RowOut, 6) = _
+                            FuncList(Key).ModuleName
+
+                        wsOut.Cells(RowOut, 7) = _
+                            FuncList(Key).Category
+
+                        wsOut.Cells(RowOut, 8) = _
+                            FuncList(Key).Summary
+
+                        wsOut.Cells(RowOut, 9) = i + 1
+
+                        wsOut.Cells(RowOut, 10) = _
+                            Trim$(Lines(i))
 
                         RowOut = RowOut + 1
 
@@ -310,11 +370,11 @@ Private Sub SetupTraceValidation(ByVal ws As Worksheet)
     LastRow = ws.Cells(ws.Rows.Count, "A").End(xlUp).row
 
     ' 見出し
-    ws.Range("F1").Value = "確認"
-    ws.Range("G1").Value = "コメント"
+    ws.Range("K1").Value = "確認"
+    ws.Range("L1").Value = "コメント"
 
     ' 入力規則
-    With ws.Range("F2:F" & LastRow).Validation
+    With ws.Range("K2:K" & LastRow).Validation
 
         .Delete
 
@@ -329,30 +389,30 @@ Private Sub SetupTraceValidation(ByVal ws As Worksheet)
     End With
 
     ' 条件付き書式クリア
-    ws.Range("A2:G" & LastRow).FormatConditions.Delete
+    ws.Range("A2:L" & LastRow).FormatConditions.Delete
 
     ' ○ 正常（薄緑）
     AddConditionColor _
-        ws.Range("A2:G" & LastRow), _
-        "=$F2=""○ 正常""", _
+        ws.Range("A2:L" & LastRow), _
+        "=$K2=""○ 正常""", _
         RGB(198, 239, 206)
 
     ' × 誤検出（薄赤）
     AddConditionColor _
-        ws.Range("A2:G" & LastRow), _
-        "=$F2=""× 誤検出""", _
+        ws.Range("A2:L" & LastRow), _
+        "=$K2=""× 誤検出""", _
         RGB(255, 199, 206)
 
     ' △ 要確認（薄黄）
     AddConditionColor _
-        ws.Range("A2:G" & LastRow), _
-        "=$F2=""△ 要確認""", _
+        ws.Range("A2:L" & LastRow), _
+        "=$K2=""△ 要確認""", _
         RGB(255, 235, 156)
 
     ' 除外（薄灰）
     AddConditionColor _
-        ws.Range("A2:G" & LastRow), _
-        "=$F2=""除外""", _
+        ws.Range("A2:L" & LastRow), _
+        "=$K2=""除外""", _
         RGB(217, 217, 217)
 
 End Sub

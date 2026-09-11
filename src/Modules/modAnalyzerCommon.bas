@@ -1,6 +1,24 @@
 Attribute VB_Name = "modAnalyzerCommon"
 Option Explicit
 
+#If VBA7 Then
+    ' ユーザー32.dll（クリップボード操作）
+    Private Declare PtrSafe Function OpenClipboard Lib "user32" (ByVal hWnd As LongPtr) As Long
+    Private Declare PtrSafe Function CloseClipboard Lib "user32" () As Long
+    Private Declare PtrSafe Function EmptyClipboard Lib "user32" () As Long
+    Private Declare PtrSafe Function SetClipboardData Lib "user32" (ByVal wFormat As Long, ByVal hMem As LongPtr) As LongPtr
+    ' カーネル32.dll（メモリ操作）
+    Private Declare PtrSafe Function GlobalAlloc Lib "kernel32" (ByVal wFlags As Long, ByVal dwBytes As LongPtr) As LongPtr
+    Private Declare PtrSafe Function GlobalLock Lib "kernel32" (ByVal hMem As LongPtr) As LongPtr
+    Private Declare PtrSafe Function GlobalUnlock Lib "kernel32" (ByVal hMem As LongPtr) As Long
+    Private Declare PtrSafe Sub CopyMemory Lib "kernel32" Alias "RtlMoveMemory" (Destination As Any, Source As Any, ByVal Length As LongPtr)
+#Else
+    ' VBA6 用の宣言（必要なら追加）
+#End If
+
+Const GHND = &H42
+Const CF_UNICODETEXT = 13
+
 ' 共通関数
 
 ' 対象ブックの状態確認
@@ -30,3 +48,245 @@ Public Function CheckTargetBook( _
     CheckTargetBook = True
 
 End Function
+
+' コメント取得関数
+Public Function GetTagValue( _
+        codeMod As Object, _
+        ByVal startLine As Long, _
+        ByVal TagName As String) As String
+
+    Dim i As Long
+    Dim txt As String
+
+    For i = startLine - 1 To 1 Step -1
+
+        txt = Trim(codeMod.Lines(i, 1))
+
+        ' コメント以外に到達したら終了
+        If Left$(txt, 1) <> "'" Then Exit For
+
+        If InStr(1, txt, TagName, vbTextCompare) = 1 Then
+
+            GetTagValue = Trim( _
+                Replace(txt, TagName, "", , , vbTextCompare))
+
+            Exit Function
+
+        End If
+
+    Next i
+
+End Function
+
+
+' コメント取得関数
+Public Function GetTagValueFromCode( _
+        ByVal CodeText As String, _
+        ByVal ProcName As String, _
+        ByVal TagName As String) As String
+
+    Dim Lines() As String
+    Dim i As Long
+    Dim j As Long
+
+    Lines = Split(CodeText, vbCrLf)
+
+    For i = LBound(Lines) To UBound(Lines)
+
+        If InStr(1, Lines(i), _
+                 ProcName, _
+                 vbTextCompare) > 0 Then
+
+            For j = i - 1 To 0 Step -1
+
+                If Left$(Trim$(Lines(j)), 1) <> "'" Then
+                    Exit For
+                End If
+
+                If InStr(1, _
+                         Trim$(Lines(j)), _
+                         TagName, _
+                         vbTextCompare) = 2 Then
+
+                    GetTagValueFromCode = _
+                        Trim$(Replace( _
+                            Trim$(Lines(j)), _
+                            "'" & TagName, ""))
+
+                    Exit Function
+
+                End If
+
+            Next j
+
+        End If
+
+    Next i
+
+End Function
+
+Public Function GetJPName( _
+                    ByVal ProcName As String) _
+                    As String
+
+    Dim Proc As clsProcInfo
+
+    Set Proc = GetProcInfo(ProcName)
+
+    If Not Proc Is Nothing Then
+
+        GetJPName = Proc.JPName
+
+    End If
+
+End Function
+
+Public Function GetCategory( _
+                    ByVal ProcName As String) _
+                    As String
+
+    Dim Proc As clsProcInfo
+
+    Set Proc = GetProcInfo(ProcName)
+
+    If Not Proc Is Nothing Then
+
+        GetCategory = Proc.Category
+
+    End If
+
+End Function
+
+Public Function GetSummary( _
+                    ByVal ProcName As String) _
+                    As String
+
+    Dim Proc As clsProcInfo
+
+    Set Proc = GetProcInfo(ProcName)
+
+    If Not Proc Is Nothing Then
+
+        GetSummary = Proc.Summary
+
+    End If
+
+End Function
+
+Public Function GetProcInfo( _
+                ByVal ProcName As String) _
+                As clsProcInfo
+
+    Dim ws As Worksheet
+    Dim LastRow As Long
+    Dim r As Long
+
+    Dim Proc As clsProcInfo
+
+    Set ws = ThisWorkbook.Worksheets("ProcList")
+
+    LastRow = ws.Cells(ws.Rows.Count, "C").End(xlUp).row
+
+    For r = 2 To LastRow
+
+        If StrComp( _
+                Trim$(ws.Cells(r, 3).Value), _
+                ProcName, _
+                vbTextCompare) = 0 Then
+
+            Set Proc = New clsProcInfo
+            
+            Proc.ModuleName = ws.Cells(r, 1).Value
+
+            Proc.ProcName = ProcName
+
+            Proc.JPName = ws.Cells(r, 4).Value
+            Proc.Category = ws.Cells(r, 5).Value
+
+            Proc.InputText = ws.Cells(r, 6).Value
+            Proc.OutputText = ws.Cells(r, 7).Value
+
+            Proc.Summary = ws.Cells(r, 8).Value
+            Proc.Remarks = ws.Cells(r, 9).Value
+
+            Set GetProcInfo = Proc
+
+            Exit Function
+
+        End If
+
+    Next r
+
+End Function
+
+Public Function GetProcDisplayName( _
+                    ByVal ProcName As String) As String
+
+    Dim Proc As clsProcInfo
+
+    Set Proc = GetProcInfo(ProcName)
+
+    If Proc Is Nothing Then
+
+        GetProcDisplayName = ProcName
+
+    ElseIf Trim$(Proc.JPName) = "" Then
+
+        GetProcDisplayName = ProcName
+
+    Else
+
+        GetProcDisplayName = _
+            ProcName & " : " & Proc.JPName
+
+    End If
+
+End Function
+
+Public Function GetProcNameFromDisplay( _
+                    ByVal DisplayText As String) _
+                    As String
+
+    If InStr(DisplayText, " : ") > 0 Then
+
+        GetProcNameFromDisplay = _
+            Trim$(Split(DisplayText, " : ")(0))
+
+    Else
+
+        GetProcNameFromDisplay = _
+            Trim$(DisplayText)
+
+    End If
+
+End Function
+
+
+'===================================================================
+'@JPName     クリップボードコピー
+'@Category   UI支援
+'@Input      Text(String)
+'@Output     なし
+'@Summary    指定文字列をクリップボードへコピーする
+'@Remarks    Unicode形式でコピーする
+'===================================================================
+Public Sub CopyTextToClipboard(text As String)
+    Dim hGlobalMemory As LongPtr
+    Dim lpGlobalMemory As LongPtr
+    Dim size As LongPtr
+
+    size = (Len(text) + 1) * 2 ' Unicodeは2バイト
+
+    If OpenClipboard(0&) Then
+        EmptyClipboard
+        hGlobalMemory = GlobalAlloc(GHND, size)
+        lpGlobalMemory = GlobalLock(hGlobalMemory)
+        CopyMemory ByVal lpGlobalMemory, ByVal StrPtr(text), size
+        GlobalUnlock hGlobalMemory
+        SetClipboardData CF_UNICODETEXT, hGlobalMemory
+        CloseClipboard
+    End If
+End Sub
+
+
+

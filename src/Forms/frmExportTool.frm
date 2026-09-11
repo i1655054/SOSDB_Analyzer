@@ -25,8 +25,6 @@ End Sub
 
 Private Sub SetupListView()
 
-    Debug.Print "Start Setup"
-
     With lvwTools
 
         .View = lvwReport
@@ -184,23 +182,17 @@ Private Sub cmdExport_Click()
     Dim ExportCount As Long
     Dim LastRootPath As String
 
-    Debug.Print "Export Start"
-
     For Each itm In lvwTools.ListItems
 
         If itm.Checked Then
 
-            ToolID = CLng(itm.Text)
+            ToolID = CLng(itm.text)
             
-            Debug.Print "ToolID=" & ToolID
-
             Set wb = _
                 GetWorkbookByToolID(ToolID)
 
             If Not wb Is Nothing Then
 
-                'Debug.Print "Workbook=" & wb.Name
-                
                 ExportCount = ExportCount + 1
                 
                 LastRootPath = _

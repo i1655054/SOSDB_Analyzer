@@ -1,8 +1,10 @@
 Attribute VB_Name = "modPowerPointChart"
 Option Explicit
 
-Public Sub CreatePowerPointPathChart()
-
+Public Sub CreatePowerPointPathChart( _
+                ByVal StartProc As String, _
+                ByVal MaxDepth As Long)
+    
     Dim pptApp As Object
     Dim pptPres As Object
     Dim pptSlide As Object
@@ -13,6 +15,9 @@ Public Sub CreatePowerPointPathChart()
     Dim ws As Worksheet
     Dim rng As Range
 
+    Dim ChartWidth As Double
+    Dim ChartHeight As Double
+    
     Dim GridLineFlg As Boolean
 
     Dim PptFile As String
@@ -21,6 +26,9 @@ Public Sub CreatePowerPointPathChart()
 
     Set rng = GetChartRange()
 
+    ChartWidth = rng.Width
+    ChartHeight = rng.Height
+    
     '=================================
     ' グリッド線を一時非表示
     '=================================
@@ -43,12 +51,47 @@ Public Sub CreatePowerPointPathChart()
 
     pptApp.Visible = True
 
-    Debug.Print pptApp.Version
-
     Set pptPres = _
         pptApp.Presentations.Add
 
-    ' ppLayoutBlank
+    '=================================
+    ' 用紙向き
+    '=================================
+    Select Case gPptOrientation
+
+        Case PPT_ORIENT_PORTRAIT
+
+            ' 縦置き
+            pptPres.PageSetup.SlideWidth = 540
+            pptPres.PageSetup.SlideHeight = 960
+
+        Case PPT_ORIENT_LANDSCAPE
+
+            ' 横置き
+            pptPres.PageSetup.SlideWidth = 960
+            pptPres.PageSetup.SlideHeight = 540
+
+        Case PPT_ORIENT_AUTO
+
+            If ChartHeight > ChartWidth Then
+
+                ' 縦置き
+                pptPres.PageSetup.SlideWidth = 540
+                pptPres.PageSetup.SlideHeight = 960
+
+            Else
+
+                ' 横置き
+                pptPres.PageSetup.SlideWidth = 960
+                pptPres.PageSetup.SlideHeight = 540
+
+            End If
+
+    End Select
+
+    '=================================
+    ' スライド追加
+    '=================================
     Set pptSlide = _
         pptPres.Slides.Add(1, 12)
 
@@ -63,14 +106,14 @@ Public Sub CreatePowerPointPathChart()
             pptPres.PageSetup.SlideWidth - 20, _
             30)
 
-    pptTitle.TextFrame.TextRange.Text = _
-        ws.Range(CONFIG_START_FUNC).Value & _
+    pptTitle.TextFrame.TextRange.text = _
+        StartProc & _
         " (Level=" & _
-        ws.Range(CONFIG_MAX_LEVEL).Value & ")"
-
+        MaxDepth & ")"
+    
     With pptTitle.TextFrame.TextRange
 
-        .Font.Size = 18
+        .Font.size = 18
         .Font.Bold = True
         .ParagraphFormat.Alignment = 2
 
@@ -85,28 +128,28 @@ Public Sub CreatePowerPointPathChart()
         pptSlide.Shapes( _
             pptSlide.Shapes.Count)
 
-    Debug.Print _
-        "pptShape.Type:" & _
-        pptShape.Type
-
-    Debug.Print _
-        "pptShape.Name:" & _
-        pptShape.Name
-
-    Debug.Print _
-        "pptShape.Width:" & _
-        pptShape.Width
-
-    Debug.Print _
-        "pptShape.Height:" & _
-        pptShape.Height
-
     pptShape.LockAspectRatio = True
+    
+    '=================================
+    ' 幅調整
+    '=================================
+    If pptShape.Width > _
+        (pptPres.PageSetup.SlideWidth - 20) Then
 
-    If pptShape.Width > 1000 Then
+        pptShape.Width = _
+            (pptPres.PageSetup.SlideWidth - 20)
 
-        pptShape.Width = 1000
-
+    End If
+    
+    '=================================
+    ' 高さ調整
+    '=================================
+    If pptShape.Height > _
+        (pptPres.PageSetup.SlideHeight - 80) Then
+        
+        pptShape.Height = _
+            (pptPres.PageSetup.SlideHeight - 80)
+        
     End If
 
     '=================================
@@ -119,11 +162,11 @@ Public Sub CreatePowerPointPathChart()
     pptShape.Top = 40
 
     '=================================
-    ' PPT保存
+    ' 保存
     '=================================
     PptFile = _
         GetOutputFolder() & _
-        ws.Range(CONFIG_START_FUNC).Value & _
+        StartProc & _
         "_PathChart_" & _
         gExportTimeStamp & _
         ".pptx"
@@ -137,7 +180,9 @@ Public Sub CreatePowerPointPathChart()
 
 End Sub
 
-Public Sub ExportPathChartToPNG()
+Public Sub ExportPathChartToPNG( _
+        ByVal StartProc As String, _
+        ByVal MaxDepth As Long)
 
     Dim pptApp As Object
     Dim pptPres As Object
@@ -189,13 +234,11 @@ Public Sub ExportPathChartToPNG()
 
     PngFile = _
         GetOutputFolder() & _
-        ws.Range(CONFIG_START_FUNC).Value & _
+        StartProc & _
         "_PathChart_" & _
         gExportTimeStamp & _
         ".png"
     
-    Debug.Print PngFile
-
     On Error Resume Next
 
     pptShape.Export PngFile, 2
@@ -251,8 +294,8 @@ Private Sub ExportPathChartToPPT( _
             With pptSlide.Shapes( _
                     pptSlide.Shapes.Count)
 
-                .TextFrame.TextRange.Text = _
-                    shp.TextFrame.Characters.Text
+                .TextFrame.TextRange.text = _
+                    shp.TextFrame.Characters.text
 
             End With
 

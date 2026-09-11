@@ -81,6 +81,8 @@ Private Sub lstMenu_DblClick( _
     If lstMenu.ListIndex = -1 Then Exit Sub
 
     ExecuteMenu lstMenu.Value
+    
+    Me.Hide
 
 End Sub
 
@@ -90,7 +92,7 @@ Private Sub txtSearch_Change()
     Dim ws As Worksheet
     Dim SearchText As String
 
-    SearchText = Trim$(txtSearch.Text)
+    SearchText = Trim$(txtSearch.text)
 
     lstMenu.Clear
 
@@ -198,8 +200,6 @@ Private Sub cmdBack_Click()
 
     SheetName = GetPreviousSheet()
 
-    'Debug.Print "Back:", SheetName
-
     If Len(SheetName) > 0 Then
 
         IsHistoryMoving = True
@@ -219,8 +219,6 @@ Private Sub cmdForward_Click()
 
     SheetName = GetNextSheet()
 
-    'Debug.Print "Forward:", SheetName
-
     If Len(SheetName) > 0 Then
 
         IsHistoryMoving = True
@@ -236,7 +234,7 @@ End Sub
 ' 更新ボタン
 Private Sub cmdRefresh_Click()
 
-    txtSearch.Text = ""
+    txtSearch.text = ""
     
     RefreshSheetList
     SelectCurrentSheet

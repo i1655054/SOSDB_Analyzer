@@ -32,10 +32,16 @@ Public Sub ExtractProcedures_WithAnalysis()
     '=========================================
     ' ヘッダ
     '=========================================
-    ws.Range("A1:F1").Value = Array( _
+    ws.Range("A1:L1").Value = Array( _
         "Module", _
         "Type", _
         "ProcedureName", _
+        "JPName", _
+        "Category", _
+        "Input", _
+        "Output", _
+        "Summary", _
+        "Remarks", _
         "Declaration", _
         "UsageCount", _
         "判定")
@@ -56,27 +62,47 @@ Public Sub ExtractProcedures_WithAnalysis()
             
             If IsProcedureLine(line) Then
                 
-                Dim procName As String
-                procName = ExtractProcedureName(line)
+                Dim ProcName As String
+                ProcName = ExtractProcedureName(line)
                 
-                If Trim(procName) = "" Then
-                    procName = "(Unknown)"
+                If Trim(ProcName) = "" Then
+                    ProcName = "(Unknown)"
                 End If
                 
                 ws.Cells(row, 1).Value = VBComp.Name
                 ws.Cells(row, 2).Value = GetProcedureType(line)
-                ws.Cells(row, 3).Value = procName
-                ws.Cells(row, 4).Value = line
-                
+                ws.Cells(row, 3).Value = ProcName
+
+                ws.Cells(row, 4).Value = _
+                    GetTagValue(codeMod, i, "'@JPName")
+
+                ws.Cells(row, 5).Value = _
+                    GetTagValue(codeMod, i, "'@Category")
+
+                ws.Cells(row, 6).Value = _
+                    GetTagValue(codeMod, i, "'@Input")
+
+                ws.Cells(row, 7).Value = _
+                    GetTagValue(codeMod, i, "'@Output")
+
+                ws.Cells(row, 8).Value = _
+                    GetTagValue(codeMod, i, "'@Summary")
+
+                ws.Cells(row, 9).Value = _
+                    GetTagValue(codeMod, i, "'@Remarks")
+
+                ws.Cells(row, 10).Value = line
+
                 ' 使用回数
-                If procName = "(Unknown)" Then
-                    ws.Cells(row, 5).Value = 0
+                If ProcName = "(Unknown)" Then
+                    ws.Cells(row, 11).Value = 0
                 Else
-                    ws.Cells(row, 5).Value = CountUsage(procName)
+                    ws.Cells(row, 11).Value = CountUsage(ProcName)
                 End If
                 
                 ' 判定
-                ws.Cells(row, 6).Value = GetUsageStatus(procName, ws.Cells(row, 5).Value)
+                ws.Cells(row, 12).Value = _
+                    GetUsageStatus(ProcName, ws.Cells(row, 11).Value)
                 
                 row = row + 1
                 
@@ -96,7 +122,7 @@ Public Sub ExtractProcedures_WithAnalysis()
     
     For r = 2 To LastRow
         
-        Select Case ws.Cells(r, 6).Value
+        Select Case ws.Cells(r, 12).Value
             
             Case "削除候補"
                 ws.Rows(r).Interior.Color = RGB(255, 200, 200)
@@ -128,10 +154,10 @@ Sub JumpToProcedure()
 
     If Not CheckTargetBook(TargetBook) Then Exit Sub
     
-    Dim procName As String
-    procName = InputBox("ジャンプする関数名を入力")
+    Dim ProcName As String
+    ProcName = InputBox("ジャンプする関数名を入力")
     
-    If procName = "" Then Exit Sub
+    If ProcName = "" Then Exit Sub
     
     Dim VBComp As Object
     Dim codeMod As Object
@@ -142,7 +168,7 @@ Sub JumpToProcedure()
         
         For i = 1 To codeMod.CountOfLines
             
-            If InStr(codeMod.Lines(i, 1), procName) > 0 Then
+            If InStr(codeMod.Lines(i, 1), ProcName) > 0 Then
                 
                 codeMod.CodePane.Show
                 codeMod.CodePane.SetSelection i, 1, i, 1
@@ -167,10 +193,10 @@ Sub JumpFromSelectedCell()
 
     If Not CheckTargetBook(TargetBook) Then Exit Sub
     
-    Dim procName As String
-    procName = ActiveCell.Value
+    Dim ProcName As String
+    ProcName = ActiveCell.Value
     
-    If procName = "" Then
+    If ProcName = "" Then
         MsgBox "セルに関数名がありません"
         Exit Sub
     End If
@@ -188,11 +214,11 @@ Sub JumpFromSelectedCell()
             line = Trim(codeMod.Lines(i, 1))
             
             ' ★ 定義行だけを対象にする
-            If line Like "*Sub " & procName & "*" _
-            Or line Like "*Function " & procName & "*" _
-            Or line Like "*Property Get " & procName & "*" _
-            Or line Like "*Property Let " & procName & "*" _
-            Or line Like "*Property Set " & procName & "*" Then
+            If line Like "*Sub " & ProcName & "*" _
+            Or line Like "*Function " & ProcName & "*" _
+            Or line Like "*Property Get " & ProcName & "*" _
+            Or line Like "*Property Let " & ProcName & "*" _
+            Or line Like "*Property Set " & ProcName & "*" Then
                 
                 codeMod.CodePane.Show
                 codeMod.CodePane.SetSelection i, 1, i, 1
@@ -205,7 +231,7 @@ Sub JumpFromSelectedCell()
         
     Next VBComp
     
-    MsgBox "定義が見つかりません：" & procName
+    MsgBox "定義が見つかりません：" & ProcName
 
 End Sub
 
@@ -587,7 +613,7 @@ Function ExtractProcedureName(line As String) As String
 
 End Function
 
-Function CountUsage(procName As String) As Long
+Function CountUsage(ProcName As String) As Long
 
     Dim TargetBook As Workbook
     
@@ -600,7 +626,7 @@ Function CountUsage(procName As String) As Long
     Dim i As Long
     Dim Count As Long
     
-    If Trim(procName) = "" Then
+    If Trim(ProcName) = "" Then
         CountUsage = 0
         Exit Function
     End If
@@ -611,7 +637,7 @@ Function CountUsage(procName As String) As Long
         Set codeMod = VBComp.CodeModule
         
         For i = 1 To codeMod.CountOfLines
-            If InStr(codeMod.Lines(i, 1), procName) > 0 Then
+            If InStr(codeMod.Lines(i, 1), ProcName) > 0 Then
                 Count = Count + 1
             End If
         Next i
@@ -626,13 +652,13 @@ Function CountUsage(procName As String) As Long
 
 End Function
 
-Function IsEventProcedure(procName As String) As Boolean
+Function IsEventProcedure(ProcName As String) As Boolean
 
-    If procName Like "Workbook_*" _
-    Or procName Like "Worksheet_*" _
-    Or procName Like "UserForm_*" _
-    Or procName Like "*_Click" _
-    Or procName Like "*_Change" Then
+    If ProcName Like "Workbook_*" _
+    Or ProcName Like "Worksheet_*" _
+    Or ProcName Like "UserForm_*" _
+    Or ProcName Like "*_Click" _
+    Or ProcName Like "*_Change" Then
     
         IsEventProcedure = True
     Else
@@ -641,9 +667,9 @@ Function IsEventProcedure(procName As String) As Boolean
 
 End Function
 
-Function GetUsageStatus(procName As String, usage As Long) As String
+Function GetUsageStatus(ProcName As String, usage As Long) As String
 
-    If IsEventProcedure(procName) Then
+    If IsEventProcedure(ProcName) Then
         GetUsageStatus = "イベント"
         
     ElseIf usage = 0 Then

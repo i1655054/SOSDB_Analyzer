@@ -24,13 +24,13 @@ Private Sub ExtractProcedures_WithAnalysis_Click()
 End Sub
 
 ' ③ 関数トレース作成
-Private Sub CreateFunctionDependency_Click()
-    Call modFunctionDependency.CreateFunctionDependency
+Private Sub CreateFunctionTrace_Click()
+    Call modFunctionTrac.CreateFunctionTrace
 End Sub
 
 ' ④ 関数依存関係作成
-Private Sub CreateFunctionTrace_Click()
-    Call modFunctionTrac.CreateFunctionTrace
+Private Sub CreateFunctionDependency_Click()
+    Call modFunctionDependency.CreateFunctionDependency
 End Sub
 
 ' ⑤ パスチャート作成

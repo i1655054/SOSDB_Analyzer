@@ -38,11 +38,12 @@ Public Function GetToolInfo( _
             With GetToolInfo
 
                 .ToolID = ToolID
-                .ToolName = ws.Cells(r, "B").Value
-                .WorkbookName = ws.Cells(r, "C").Value
-                .GitRepository = ws.Cells(r, "D").Value
+
+                .ToolName = TrimEx(ws.Cells(r, "B").Value)
+                .WorkbookName = TrimEx(ws.Cells(r, "C").Value)
+                .GitRepository = TrimEx(ws.Cells(r, "D").Value)
                 .ExportEnabled = ws.Cells(r, "E").Value
-                .Description = ws.Cells(r, "F").Value
+                .Description = TrimEx(ws.Cells(r, "F").Value)
 
             End With
 
@@ -51,6 +52,12 @@ Public Function GetToolInfo( _
         End If
 
     Next r
+
+End Function
+
+Private Function TrimEx(ByVal Value As Variant) As String
+
+    TrimEx = Trim$(Replace(CStr(Value), "Å@", ""))
 
 End Function
 
@@ -100,14 +107,6 @@ Public Sub ShowToolList()
     LastRow = ws.Cells( _
         ws.Rows.Count, "A") _
         .End(xlUp).row
-
-    For r = 2 To LastRow
-
-        Debug.Print _
-            ws.Cells(r, "A").Value, _
-            ws.Cells(r, "B").Value
-
-    Next r
 
 End Sub
 

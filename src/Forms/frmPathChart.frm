@@ -17,7 +17,13 @@ Option Explicit
 
 Private Sub UserForm_Initialize()
 
-    txtMaxDepth.Text = GetDefaultMaxDepth()
+    LoadPathChartConfig
+    
+    chkExternal.Value = gExternal
+    
+    chkRecursive.Value = gRecursive
+
+    txtMaxDepth.text = GetDefaultMaxDepth()
     
     LoadStartProcedure cmbStartProc
 
@@ -59,9 +65,55 @@ Private Sub UserForm_Initialize()
 
     End If
 
-    lblStatus.Caption = "状態: 待機中"
+    lblStatus.Caption = "状態： 待機中"
     
-    lblElapsed.Caption = "解析時間: 0.00 秒"
+    lblElapsed.Caption = "解析時間： 0.00 秒"
+
+End Sub
+
+Private Sub cmbStartProc_Change()
+
+    Dim Proc As clsProcInfo
+    Dim ProcName As String
+    
+    ProcName = Trim$(cmbStartProc.Value)
+    
+    If ProcName = "" Then Exit Sub
+    
+    Set Proc = GetProcInfo(ProcName)
+
+    If Not Proc Is Nothing Then
+    
+        If Proc.JPName <> "" Then
+            lblSelectProc.Caption = Proc.JPName
+        Else
+            lblSelectProc.Caption = ProcName
+        End If
+        
+        lblCategory.Caption = Proc.Category
+        txtSummary.text = Proc.Summary
+
+    Else
+
+        lblSelectProc.Caption = ""
+        lblCategory.Caption = ""
+        txtSummary.text = ""
+
+    End If
+
+End Sub
+
+' ×ボタン対策
+Private Sub UserForm_QueryClose( _
+    Cancel As Integer, _
+    CloseMode As Integer)
+
+    If CloseMode = vbFormControlMenu Then
+
+        'Cancel = True
+        frmNavigator.Show vbModeless
+
+    End If
 
 End Sub
 
@@ -74,7 +126,7 @@ Private Sub cmdAnalyze_Click()
 
     On Error GoTo EH
 
-    StartProc = Trim$(cmbStartProc.Text)
+    StartProc = Trim$(cmbStartProc.text)
 
     ' 開始Procedure未選択チェック
     If StartProc = "" Then
@@ -87,7 +139,11 @@ Private Sub cmdAnalyze_Click()
 
     End If
 
-    MaxDepth = CLng(txtMaxDepth.Text)
+    MaxDepth = CLng(txtMaxDepth.text)
+    
+    gRecursive = chkRecursive.Value
+
+    gExternal = chkExternal.Value
 
     ' 最大深度チェック
     If MaxDepth <= 0 Then
@@ -107,17 +163,17 @@ Private Sub cmdAnalyze_Click()
 
     lstLog.Clear
 
-    lblStatus.Caption = "状態: 解析中"
+    lblStatus.Caption = "状態： 解析中"
 
-    lblNodeCount.Caption = "Node数: 0"
-    lblEdgeCount.Caption = "Edge数: 0"
-    lblDepth.Caption = "最大深度: 0"
+    lblNodeCount.Caption = "Node数： 0"
+    lblEdgeCount.Caption = "Edge数： 0"
+    lblDepth.Caption = "最大深度： 0"
 
     frmPathChart.AddLog String(40, "=")
 
     AddLog "解析開始"
-    AddLog "開始Procedure : " & StartProc
-    AddLog "最大深度 : " & MaxDepth
+    AddLog "開始Procedure ： " & StartProc
+    AddLog "最大深度 ： " & MaxDepth
 
     DoEvents
 
@@ -145,7 +201,7 @@ Private Sub cmdAnalyze_Click()
         "解析時間: " & _
         Format(Timer - StartTime, "0.00 秒")
 
-    lblStatus.Caption = "状態: 完了"
+    lblStatus.Caption = "状態： 完了"
 
     AddLog "解析完了"
 
@@ -154,10 +210,10 @@ Private Sub cmdAnalyze_Click()
 EH:
 
     lblStatus.Caption = _
-        "状態: 異常終了"
+        "状態： 異常終了"
 
     AddLog _
-        "ERROR : " & Err.Description
+        "ERROR ： " & Err.Description
 
     MsgBox Err.Description, vbCritical
 
@@ -169,18 +225,33 @@ Private Sub cmdClear_Click()
 
     lstLog.Clear
 
-    lblStatus.Caption = "状態: 待機中"
-    lblElapsed.Caption = "解析時間: 0.00 秒"
+    lblStatus.Caption = "状態： 待機中"
+    lblElapsed.Caption = "解析時間： 0.00 秒"
 
-    lblNodeCount.Caption = "Node数: 0"
-    lblEdgeCount.Caption = "Edge数: 0"
-    lblDepth.Caption = "最大深度: 0"
+    lblNodeCount.Caption = "Node数： 0"
+    lblEdgeCount.Caption = "Edge数： 0"
+    lblDepth.Caption = "最大深度： 0"
 
 End Sub
 
 Private Sub cmdOption_Click()
 
     frmPathChartOption.Show vbModal
+
+End Sub
+
+' ナビゲータ
+Private Sub cmdNavigator_Click()
+
+    frmPathChartNavigator.cmbSearch.Clear
+    
+    LoadSearchNodeList _
+        frmPathChartNavigator.cmbSearch
+    
+    frmPathChartNavigator.Show _
+        vbModeless
+    
+    Me.Hide
 
 End Sub
 
@@ -199,12 +270,12 @@ Public Sub InitPathChartOption()
     gIgnoreSelf = False
     gSameModuleOnly = False
 
-    gVertical = True
-
     gColorTheme = "標準"
 
     gMaxNode = 1000
     gMaxEdge = 3000
+    
+    InitSearchHistory
 
 End Sub
 
@@ -223,4 +294,3 @@ Public Sub AddLog(ByVal Msg As String)
     DoEvents
 
 End Sub
-

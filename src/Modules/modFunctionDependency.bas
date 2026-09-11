@@ -1,7 +1,9 @@
 Attribute VB_Name = "modFunctionDependency"
 Option Explicit
 
-' 依存関係集計
+'=========================================
+' 関数依存関係集計
+'=========================================
 Public Sub CreateFunctionDependency()
 
     Dim wsTrace As Worksheet
@@ -11,13 +13,29 @@ Public Sub CreateFunctionDependency()
     Dim r As Long
 
     Dim Dic As Object
-    Dim DicModule As Object
-    
+
+    Dim DicCallerJP As Object
+    Dim DicCalleeJP As Object
+
+    Dim DicFromModule As Object
+    Dim DicToModule As Object
+
+    Dim DicCategory As Object
+    Dim DicSummary As Object
+
     Dim Key As String
     Dim V As Variant
 
     Set Dic = CreateObject("Scripting.Dictionary")
-    Set DicModule = CreateObject("Scripting.Dictionary")
+
+    Set DicCallerJP = CreateObject("Scripting.Dictionary")
+    Set DicCalleeJP = CreateObject("Scripting.Dictionary")
+
+    Set DicFromModule = CreateObject("Scripting.Dictionary")
+    Set DicToModule = CreateObject("Scripting.Dictionary")
+
+    Set DicCategory = CreateObject("Scripting.Dictionary")
+    Set DicSummary = CreateObject("Scripting.Dictionary")
 
     Set wsTrace = Worksheets("関数トレース")
 
@@ -30,20 +48,35 @@ Public Sub CreateFunctionDependency()
     Set wsDep = Worksheets.Add
     wsDep.Name = "関数依存関係"
 
+    '=========================
+    ' ヘッダ
+    '=========================
     wsDep.Range("A1") = "呼出元"
-    wsDep.Range("B1") = "呼出先"
-    wsDep.Range("C1") = "回数"
-    wsDep.Range("D1") = "モジュール"
+    wsDep.Range("B1") = "呼出元JPName"
 
-    LastRow = wsTrace.Cells(wsTrace.Rows.Count, "A").End(xlUp).row
+    wsDep.Range("C1") = "呼出先"
+    wsDep.Range("D1") = "呼出先JPName"
+
+    wsDep.Range("E1") = "回数"
+
+    wsDep.Range("F1") = "呼出元モジュール"
+    wsDep.Range("G1") = "呼出先モジュール"
+
+    wsDep.Range("H1") = "Category"
+    wsDep.Range("I1") = "Summary"
+
+    LastRow = wsTrace.Cells( _
+                    wsTrace.Rows.Count, _
+                    "A").End(xlUp).row
 
     '=========================
     ' 集計
     '=========================
     For r = 2 To LastRow
 
-        Key = wsTrace.Cells(r, 1).Value & "|" & _
-              wsTrace.Cells(r, 2).Value
+        Key = _
+            wsTrace.Cells(r, 1).Value & "|" & _
+            wsTrace.Cells(r, 3).Value
 
         If Dic.Exists(Key) Then
 
@@ -52,33 +85,56 @@ Public Sub CreateFunctionDependency()
         Else
 
             Dic.Add Key, 1
-            
-            ' 呼出先関数のモジュール
-            DicModule.Add _
-                Key, _
-                wsTrace.Cells(r, 3).Value
+
+            DicCallerJP.Add _
+                Key, wsTrace.Cells(r, 2).Value
+
+            DicCalleeJP.Add _
+                Key, wsTrace.Cells(r, 4).Value
+
+            DicFromModule.Add _
+                Key, wsTrace.Cells(r, 5).Value
+
+            DicToModule.Add _
+                Key, wsTrace.Cells(r, 6).Value
+
+            DicCategory.Add _
+                Key, wsTrace.Cells(r, 7).Value
+
+            DicSummary.Add _
+                Key, wsTrace.Cells(r, 8).Value
 
         End If
 
     Next r
-   
+
     '=========================
     ' 出力
     '=========================
     r = 2
 
-
     For Each V In Dic.Keys
 
-        wsDep.Cells(r, 1) = Split(V, "|")(0)
-        wsDep.Cells(r, 2) = Split(V, "|")(1)
-        wsDep.Cells(r, 3) = Dic(V)
-        wsDep.Cells(r, 4).Value = DicModule(V)
+        wsDep.Cells(r, 1).Value = Split(V, "|")(0)
+        wsDep.Cells(r, 2).Value = DicCallerJP(V)
+
+        wsDep.Cells(r, 3).Value = Split(V, "|")(1)
+        wsDep.Cells(r, 4).Value = DicCalleeJP(V)
+
+        wsDep.Cells(r, 5).Value = Dic(V)
+
+        wsDep.Cells(r, 6).Value = DicFromModule(V)
+        wsDep.Cells(r, 7).Value = DicToModule(V)
+
+        wsDep.Cells(r, 8).Value = DicCategory(V)
+        wsDep.Cells(r, 9).Value = DicSummary(V)
 
         r = r + 1
 
     Next V
-    
+
+    wsDep.Rows(1).Font.Bold = True
+    wsDep.Rows(1).AutoFilter
     wsDep.Columns.AutoFit
 
     MsgBox "関数依存関係作成完了"

@@ -21,13 +21,8 @@ End Sub
 
 Private Sub Workbook_SheetActivate(ByVal Sh As Object)
 
-    'Debug.Print "SheetActivate"; Sh.Name
-
     If Not IsHistoryMoving Then
-        'Debug.Print "AddHistory"; Sh.Name
         AddHistory Sh.Name
-    Else
-        'Debug.Print "HistoryMove"; Sh.Name
     End If
 
     UpdateNavigator

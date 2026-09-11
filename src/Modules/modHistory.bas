@@ -42,15 +42,11 @@ End Sub
 
 Public Function GetPreviousSheet() As String
 
-    'Debug.Print "CurrentPos=", CurrentPos
-
     If History Is Nothing Then
-        'Debug.Print "History Is Nothing"
         Exit Function
     End If
 
     If CurrentPos <= 1 Then
-        'Debug.Print "CurrentPos <= 1"
         Exit Function
     End If
 

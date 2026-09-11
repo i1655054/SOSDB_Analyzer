@@ -38,7 +38,7 @@ Public Sub ExportVBABook( _
     DocumentsPath = RootPath & "\src\Documents\"
 
     Set FSO = CreateObject("Scripting.FileSystemObject")
-
+    
     If Not FSO.FolderExists(ModulesPath) Then
         FSO.CreateFolder ModulesPath
     End If

@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} frmPathChartOption 
    Caption         =   "PathChart詳細設定"
-   ClientHeight    =   7440
+   ClientHeight    =   7815
    ClientLeft      =   120
    ClientTop       =   465
-   ClientWidth     =   6555
+   ClientWidth     =   6750
    OleObjectBlob   =   "frmPathChartOption.frx":0000
    StartUpPosition =   1  'オーナー フォームの中央
 End
@@ -19,11 +19,9 @@ Private Sub UserForm_Initialize()
 
     If gMaxNode = 0 Then
 
-        txtMaxNode.Text = "1000"
-        txtMaxEdge.Text = "3000"
+        txtMaxNode.text = "1000"
+        txtMaxEdge.text = "3000"
 
-        optHorizontal.Value = True
-        
     End If
 
     chkProperty.Value = gProperty
@@ -43,6 +41,23 @@ Private Sub UserForm_Initialize()
     chkShowCount.Value = gShowCount
 
     chkPowerPoint.Value = gPowerPoint
+    
+    Select Case gPptOrientation
+
+        Case PPT_ORIENT_PORTRAIT
+
+            optPptPortrait.Value = True
+
+        Case PPT_ORIENT_LANDSCAPE
+
+            optPptLandscape.Value = True
+
+        Case Else
+
+            optPptAuto.Value = True
+
+    End Select
+    
     chkPngOutput.Value = gPngOutput
 
     chkShowModule.Value = gShowModule
@@ -65,9 +80,11 @@ Private Sub UserForm_Initialize()
     End If
 
 
-    txtMaxNode.Text = gMaxNode
-    txtMaxEdge.Text = gMaxEdge
+    txtMaxNode.text = gMaxNode
+    txtMaxEdge.text = gMaxEdge
 
+    Call chkPowerPoint_Click
+    
 End Sub
 
 Private Sub cmdCancel_Click()
@@ -97,17 +114,18 @@ Private Sub cmdOK_Click()
     gShowCount = chkShowCount.Value
 
     gPowerPoint = chkPowerPoint.Value
+    
+    SetOptionValue
+    
     gPngOutput = chkPngOutput.Value
 
     gShowModule = chkShowModule.Value
     gColorModule = chkColorModule.Value
 
-    gVertical = optVertical.Value
-
     gColorTheme = cmbColorTheme.Value
 
-    gMaxNode = Val(txtMaxNode.Text)
-    gMaxEdge = Val(txtMaxEdge.Text)
+    gMaxNode = Val(txtMaxNode.text)
+    gMaxEdge = Val(txtMaxEdge.text)
 
     SavePathChartConfig
     
@@ -126,12 +144,41 @@ Private Sub cmdDefault_Click()
     chkShowModule.Value = False
     chkColorModule.Value = False
 
-    optHorizontal.Value = True
-
     cmbColorTheme.Value = "標準"
 
-    txtMaxNode.Text = "1000"
-    txtMaxEdge.Text = "3000"
+    txtMaxNode.text = "1000"
+    txtMaxEdge.text = "3000"
+
+End Sub
+
+Private Sub SetOptionValue()
+
+    If optPptAuto.Value Then
+
+        gPptOrientation = PPT_ORIENT_AUTO
+
+    ElseIf optPptPortrait.Value Then
+
+        gPptOrientation = PPT_ORIENT_PORTRAIT
+
+    ElseIf optPptLandscape.Value Then
+
+        gPptOrientation = PPT_ORIENT_LANDSCAPE
+
+    End If
+
+End Sub
+
+Private Sub chkPowerPoint_Click()
+
+    optPptAuto.Enabled = _
+        chkPowerPoint.Value
+
+    optPptPortrait.Enabled = _
+        chkPowerPoint.Value
+
+    optPptLandscape.Enabled = _
+        chkPowerPoint.Value
 
 End Sub
 
