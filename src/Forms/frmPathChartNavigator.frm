@@ -57,7 +57,7 @@ End Sub
 Private Sub cmdFind_Click()
 
     gSearchText = GetProcNameFromDisplay( _
-                    Trim$(cmbSearch.text))
+                    Trim$(cmbSearch.Text))
     
     gExactMatch = chkExactMatch.Value
     
@@ -106,7 +106,7 @@ End Sub
 
 Public Sub ClearNavigatorInfo()
 
-    txtCurrentNode.text = "-"
+    txtCurrentNode.Text = "-"
 
     lblJPName.Caption = ""
 
@@ -114,24 +114,24 @@ Public Sub ClearNavigatorInfo()
 
     lblModule.Caption = ""
 
-    txtSummary.text = ""
+    txtSummary.Text = ""
 
-    txtStatus.text = ""
+    txtStatus.Text = ""
 
 End Sub
 
 Private Sub cmdCopyCurrentInfo_Click()
 
-    Dim s As String
+    Dim S As String
 
-    s = _
-        "Procedure : " & txtCurrentNode.text & vbCrLf & _
+    S = _
+        "Procedure : " & txtCurrentNode.Text & vbCrLf & _
         "JPName    : " & lblJPName.Caption & vbCrLf & _
         "Category  : " & lblCategory.Caption & vbCrLf & _
         "Module    : " & lblModule.Caption & vbCrLf & _
-        "Summary   : " & txtSummary.text
+        "Summary   : " & txtSummary.Text
 
-    Call CopyTextToClipboard(s)
+    Call CopyTextToClipboard(S)
 
     Application.StatusBar = "現在情報をコピーしました"
     
@@ -170,7 +170,7 @@ Private Sub txtCurrentNode_MouseDown( _
     If Button = 2 Then
 
         CopyControlValue _
-            txtCurrentNode.text, _
+            txtCurrentNode.Text, _
             "現在ノード"
 
     End If
@@ -186,7 +186,7 @@ Private Sub txtStatus_MouseDown( _
     If Button = 2 Then
 
         CopyControlValue _
-            txtStatus.text, _
+            txtStatus.Text, _
             "状態"
 
     End If
@@ -250,7 +250,7 @@ Private Sub txtSummary_MouseDown( _
     If Button = 2 Then
 
         CopyControlValue _
-            txtSummary.text, _
+            txtSummary.Text, _
             "概要"
 
     End If

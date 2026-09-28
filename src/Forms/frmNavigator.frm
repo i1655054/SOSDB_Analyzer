@@ -92,7 +92,7 @@ Private Sub txtSearch_Change()
     Dim ws As Worksheet
     Dim SearchText As String
 
-    SearchText = Trim$(txtSearch.text)
+    SearchText = Trim$(txtSearch.Text)
 
     lstMenu.Clear
 
@@ -234,7 +234,7 @@ End Sub
 ' 更新ボタン
 Private Sub cmdRefresh_Click()
 
-    txtSearch.text = ""
+    txtSearch.Text = ""
     
     RefreshSheetList
     SelectCurrentSheet

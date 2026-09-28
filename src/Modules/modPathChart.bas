@@ -168,6 +168,12 @@ Public Sub CreatePathChart_V3( _
         
     End If
     
+    'If gTextOutput Then
+    
+        Call ExportPathChartToText(StartProc, MaxDepth)
+    
+    'End If
+
     'Debug.Print gNodeNo
     
     NodeCount = gNodeNo
@@ -217,7 +223,7 @@ Private Function DrawNode( _
 
     shp.Name = "N_" & Format$(gNodeNo, "000000")
 
-    shp.TextFrame.Characters.text = CaptionText
+    shp.TextFrame.Characters.Text = CaptionText
     
     shp.TextFrame.Characters.Font.size = 9
     
@@ -642,7 +648,7 @@ Private Sub FindNodeCore(ByVal IsNext As Boolean)
         If Left$(shp.Name, 2) = "N_" Then
 
             If IsMatchNode( _
-                    shp.TextFrame.Characters.text, _
+                    shp.TextFrame.Characters.Text, _
                     FindText, _
                     ExactMatch) Then
 
@@ -680,7 +686,7 @@ Private Sub FindNodeCore(ByVal IsNext As Boolean)
             End If
 
             If IsMatchNode( _
-                    shp.TextFrame.Characters.text, _
+                    shp.TextFrame.Characters.Text, _
                     FindText, _
                     ExactMatch) Then
                 
@@ -721,7 +727,7 @@ Private Sub FindNodeCore(ByVal IsNext As Boolean)
                 ' ハイライト
                 Call HighlightNode(shp)
                 
-                gCurrentNodeText = shp.TextFrame.Characters.text
+                gCurrentNodeText = shp.TextFrame.Characters.Text
                 
                 UpdateCurrentNodeInfo _
                     GetProcedureNameFromNodeText( _
@@ -734,7 +740,7 @@ Private Sub FindNodeCore(ByVal IsNext As Boolean)
                     gCurrentHitNo & "/" & _
                     gHitCount & " : " & _
                     GetProcedureNameFromNodeText( _
-                        shp.TextFrame.Characters.text)
+                        shp.TextFrame.Characters.Text)
                 
                 Exit Sub
 
@@ -806,7 +812,7 @@ Public Sub MoveToParentNode()
     gCurrentShapeName = shp.Name
 
     gCurrentNodeText = _
-        shp.TextFrame.Characters.text
+        shp.TextFrame.Characters.Text
 
     If gParentMap.Exists(shp.Name) Then
 
@@ -852,7 +858,7 @@ Public Sub MoveToParentNode()
     UpdateNavigatorStatus _
             "親ノード : " & _
             GetProcedureNameFromNodeText( _
-                shp.TextFrame.Characters.text)
+                shp.TextFrame.Characters.Text)
     
 End Sub
 
@@ -925,7 +931,7 @@ Public Sub MoveToChildNode()
     gCurrentShapeName = shp.Name
 
     gCurrentNodeText = _
-        shp.TextFrame.Characters.text
+        shp.TextFrame.Characters.Text
 
     If Not gParentMap Is Nothing Then
 
@@ -973,7 +979,7 @@ Public Sub MoveToChildNode()
         UBound(Ary) + 1 & _
         " : " & _
         GetProcedureNameFromNodeText( _
-            shp.TextFrame.Characters.text)
+            shp.TextFrame.Characters.Text)
 
 End Sub
 
@@ -1061,7 +1067,7 @@ Public Sub MoveToSiblingNode()
 
     gCurrentShapeName = shp.Name
 
-    gCurrentNodeText = shp.TextFrame.Characters.text
+    gCurrentNodeText = shp.TextFrame.Characters.Text
     
     UpdateCurrentNodeInfo _
         GetProcedureNameFromNodeText( _
@@ -1092,7 +1098,7 @@ Public Sub MoveToSiblingNode()
     UpdateNavigatorStatus _
         "兄弟ノード : " & _
         GetProcedureNameFromNodeText( _
-            shp.TextFrame.Characters.text)
+            shp.TextFrame.Characters.Text)
 
 End Sub
 
@@ -1429,7 +1435,7 @@ Public Sub ClearHighlight()
 
     UpdateNavigatorStatus ""
 
-    frmPathChartNavigator.txtCurrentNode.text = ""
+    frmPathChartNavigator.txtCurrentNode.Text = ""
 
     frmPathChartNavigator.lblJPName.Caption = ""
 
@@ -1437,7 +1443,7 @@ Public Sub ClearHighlight()
 
     frmPathChartNavigator.lblModule.Caption = ""
 
-    frmPathChartNavigator.txtSummary.text = ""
+    frmPathChartNavigator.txtSummary.Text = ""
 
 End Sub
 
@@ -1563,7 +1569,7 @@ Public Sub SelectNode()
 
     UpdateCurrentNodeInfo _
         GetProcedureNameFromNodeText( _
-            shp.TextFrame.Characters.text)
+            shp.TextFrame.Characters.Text)
 
     gCurrentShapeName = shp.Name
 
@@ -1591,7 +1597,7 @@ Public Sub SelectNode()
     UpdateNavigatorStatus _
         "Current : " & _
         GetProcedureNameFromNodeText( _
-            shp.TextFrame.Characters.text)
+            shp.TextFrame.Characters.Text)
         
 End Sub
 
@@ -1759,7 +1765,7 @@ Private Sub UpdateCurrentNodeLabel( _
     On Error Resume Next
 
     If frmPathChartNavigator.Visible Then
-        frmPathChartNavigator.txtCurrentNode.text = _
+        frmPathChartNavigator.txtCurrentNode.Text = _
             NodeText
     End If
 
@@ -1779,7 +1785,7 @@ Public Sub UpdateCurrentNodeInfo( _
 
     If frmPathChartNavigator.Visible Then
 
-        frmPathChartNavigator.txtCurrentNode.text = _
+        frmPathChartNavigator.txtCurrentNode.Text = _
             ProcName
 
         If Not Proc Is Nothing Then
@@ -1793,7 +1799,7 @@ Public Sub UpdateCurrentNodeInfo( _
             frmPathChartNavigator.lblModule.Caption = _
                 Proc.ModuleName
             
-            frmPathChartNavigator.txtSummary.text = _
+            frmPathChartNavigator.txtSummary.Text = _
                 Proc.Summary
 
         Else
@@ -1804,7 +1810,7 @@ Public Sub UpdateCurrentNodeInfo( _
             
             frmPathChartNavigator.lblModule.Caption = ""
 
-            frmPathChartNavigator.txtSummary.text = ""
+            frmPathChartNavigator.txtSummary.Text = ""
 
         End If
 
@@ -1933,7 +1939,7 @@ Public Sub UpdateNavigatorStatus( _
 
     If frmPathChartNavigator.Visible Then
 
-        frmPathChartNavigator.txtStatus.text = _
+        frmPathChartNavigator.txtStatus.Text = _
             Msg
 
     End If
@@ -1966,12 +1972,12 @@ Public Sub LoadSearchNodeList( _
         
         #If DEBUG_MODE Then
             Debug.Print shp.Name
-            Debug.Print shp.TextFrame.Characters.text
+            Debug.Print shp.TextFrame.Characters.Text
         #End If
 
             NodeText = _
                 GetProcedureNameFromNodeText( _
-                    shp.TextFrame.Characters.text)
+                    shp.TextFrame.Characters.Text)
 
             NodeText = Trim$(NodeText)
 

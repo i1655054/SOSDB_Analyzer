@@ -106,7 +106,7 @@ Public Sub CreatePowerPointPathChart( _
             pptPres.PageSetup.SlideWidth - 20, _
             30)
 
-    pptTitle.TextFrame.TextRange.text = _
+    pptTitle.TextFrame.TextRange.Text = _
         StartProc & _
         " (Level=" & _
         MaxDepth & ")"
@@ -294,8 +294,8 @@ Private Sub ExportPathChartToPPT( _
             With pptSlide.Shapes( _
                     pptSlide.Shapes.Count)
 
-                .TextFrame.TextRange.text = _
-                    shp.TextFrame.Characters.text
+                .TextFrame.TextRange.Text = _
+                    shp.TextFrame.Characters.Text
 
             End With
 

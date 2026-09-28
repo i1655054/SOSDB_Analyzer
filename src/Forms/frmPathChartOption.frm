@@ -19,8 +19,8 @@ Private Sub UserForm_Initialize()
 
     If gMaxNode = 0 Then
 
-        txtMaxNode.text = "1000"
-        txtMaxEdge.text = "3000"
+        txtMaxNode.Text = "1000"
+        txtMaxEdge.Text = "3000"
 
     End If
 
@@ -80,8 +80,8 @@ Private Sub UserForm_Initialize()
     End If
 
 
-    txtMaxNode.text = gMaxNode
-    txtMaxEdge.text = gMaxEdge
+    txtMaxNode.Text = gMaxNode
+    txtMaxEdge.Text = gMaxEdge
 
     Call chkPowerPoint_Click
     
@@ -124,8 +124,8 @@ Private Sub cmdOK_Click()
 
     gColorTheme = cmbColorTheme.Value
 
-    gMaxNode = Val(txtMaxNode.text)
-    gMaxEdge = Val(txtMaxEdge.text)
+    gMaxNode = Val(txtMaxNode.Text)
+    gMaxEdge = Val(txtMaxEdge.Text)
 
     SavePathChartConfig
     
@@ -146,8 +146,8 @@ Private Sub cmdDefault_Click()
 
     cmbColorTheme.Value = "ïWèÄ"
 
-    txtMaxNode.text = "1000"
-    txtMaxEdge.text = "3000"
+    txtMaxNode.Text = "1000"
+    txtMaxEdge.Text = "3000"
 
 End Sub
 

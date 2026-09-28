@@ -270,18 +270,18 @@ End Function
 '@Summary    指定文字列をクリップボードへコピーする
 '@Remarks    Unicode形式でコピーする
 '===================================================================
-Public Sub CopyTextToClipboard(text As String)
+Public Sub CopyTextToClipboard(Text As String)
     Dim hGlobalMemory As LongPtr
     Dim lpGlobalMemory As LongPtr
     Dim size As LongPtr
 
-    size = (Len(text) + 1) * 2 ' Unicodeは2バイト
+    size = (Len(Text) + 1) * 2 ' Unicodeは2バイト
 
     If OpenClipboard(0&) Then
         EmptyClipboard
         hGlobalMemory = GlobalAlloc(GHND, size)
         lpGlobalMemory = GlobalLock(hGlobalMemory)
-        CopyMemory ByVal lpGlobalMemory, ByVal StrPtr(text), size
+        CopyMemory ByVal lpGlobalMemory, ByVal StrPtr(Text), size
         GlobalUnlock hGlobalMemory
         SetClipboardData CF_UNICODETEXT, hGlobalMemory
         CloseClipboard

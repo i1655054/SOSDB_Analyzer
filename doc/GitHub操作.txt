@@ -1,0 +1,2146 @@
+GitHub 公開までの手順を、今回の VBA ツール向けに整理します。
+
+1. 公開対象を整理
+
+まず公開対象を決めます。
+
+公開する
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　modPathChartText.bas　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　modPathChartCommon.bas　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 4　clsTreeNode.cls 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 5　clsProcInfo.cls 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 6　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 7　frmPathChartNavigator.frm 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 8　frmPathChartNavigator.frx 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 9　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　10　README.md 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+公開しない
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　個人情報　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　顧客情報　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　業務用接続先　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 4　社内パス　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 5　テストデータ　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+
+特に
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　Private Const ROOT_PATH 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　Private Const NETWORK_PATH　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+のような定数が残っていないか確認。
+
+2. GitHub Repository作成
+
+GitHubで
+
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　New Repository　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+を作成。
+
+例
+
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　vba-path-chart　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+または
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　vba-call-tree-generator 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+
+3. README作成
+
+最低限これを書きます。
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　# VBA Path Chart Generator　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　VBAプロシージャの呼び出し関係を 　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 4　Tree形式で出力するツールです。　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 5　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 6　## Features 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 7　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 8　- Procedure Call Tree生成 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 9　- 日本語名称表示　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　10　- モジュール名表示　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　11　- Excelシート出力 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　12　- テキスト貼り付け用Tree出力　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　13　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　14　## Example　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　15　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　16　├─ Get_MonshinInfo <modMonshinCore> 　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　17　│ │問診情報取得 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　18　│ ├─ BuildDescription <modMonshinCore> 　　　　　　　　　　　　　　　　　　　　　│
+　　│　19　│ │ │説明文生成　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　20　│ └─ BuildRemarks <modMonshinCore> 　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　21　│ 備考生成 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　22　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　23　## Requirements 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　24　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　25　- Excel VBA 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　26　- Microsoft Excel 2016+ 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　27　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　28　## License　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　29　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　30　MIT 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　├─────────────────────────────────────────────┤
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　VBA Path Chart Generator　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　VBAプロシージャの呼び出し関係を Tree形式で出力するツールです。　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　Features　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　・Procedure Call Tree生成 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　・日本語名称表示　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　・モジュール名表示　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　・Excelシート出力 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　・テキスト貼り付け用Tree出力　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　Example 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　├─ Get_MonshinInfo　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　│ │問診情報取得 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　│ ├─ BuildDescription　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　│ │ │説明文生成　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　└─ BuildRemarks 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　│ 備考生成 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　Requirements　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　・Excel VBA 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　・Microsoft Excel 2016+ 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　License 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　MIT 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+
+
+4. サンプル画像追加
+
+現在の出力結果を
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　PathChartTree 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+シートで表示し、
+
+スクリーンショットを保存。
+
+例
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　docs/tree-sample.png　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+READMEへ追加
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　## Screenshot 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　docs/tree-sample.png　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　├─────────────────────────────────────────────┤
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　Screenshot　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　docs/tree-sample.png　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+
+
+5. License追加
+
+個人公開なら
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　MIT License 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+がおすすめ。
+
+GitHubで
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　Add license 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　↓　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　MIT 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+選択。
+
+6. .gitignore作成
+
+Excelプロジェクト用。
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　.ignore 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　*.xlsm　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　*.xlsb　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 4　*.tmp 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 5　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 6　~$* 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+ソースだけ公開するなら
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　.bas　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　.cls　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　.frm　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+のみコミット。
+
+7. 初回コミット
+
+例
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　git init　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　git add . 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 4　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 5　git commit -m "Initial release" 　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+8. Tag作成
+
+今回の完成版なら
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　git tag v1.0.0　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　git push origin main　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 4　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 5　git push origin v1.0.0　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+9. Release作成
+
+GitHubの
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　Releases　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　↓　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　Create Release　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+で
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　v1.0.0　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+作成。
+
+説明例
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　Initial release 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　Features　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 4　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 5　- Procedure Tree generation 　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 6　- Japanese function display 　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 7　- Module name display 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 8　- Excel output　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 9　- Text export friendly format 　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+おすすめRepository名
+
+今回の内容なら
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　vba-path-chart　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+または
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　vba-call-tree-viewer　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+または
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　vba-procedure-tree　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+が分かりやすいと思います。
+
+今の完成度なら、十分 GitHub 公開できるレベルだと思います。
+特に「英語関数名 + 日本語名 + モジュール名」の Tree 出力は実務でかなり有用です。
+
+
+GitHub に SOSDB_Analyzer で登録しているので、この更新として登録したい
+
+既存の SOSDB_Analyzer の更新として登録するのが良いと思います。
+
+スクリーンショットを見ると、
+
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　SOSDB_Analyzer　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　├ SRC　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　├ XLSM 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 4　├ ドキュメント 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 5　└ ドキュメンテーション 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+という構成になっています。
+
+今回の PathChart 機能は SOSDB_Analyzer の一機能なので、別Repositoryを作るより
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　SOSDB_Analyzer　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　└ SRC　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　    └ PathChart　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+として管理した方が履歴も追いやすいです。
+
+おすすめフォルダ構成
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　SOSDB_Analyzer　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　├ SRC　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　│ ├ Common　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 4　│ ├ Monshin 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 5　│ ├ Issue 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 6　│ └ PathChart 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 7　│     ├ modPathChartText.bas　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 8　│     ├ modPathChartCommon.bas　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 9　│     ├ clsTreeNode.cls 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　10　│     └ frmPathChartNavigator.frm 　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　11　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　12　├ XLSM 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　13　│ └ SOSDB_Analyzer.xlsm 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　14　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　15　└ ドキュメンテーション 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　16　   └ PathChart.md　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+コミットコメント案
+
+日本語なら
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　PathChart Tree生成処理をリファクタリング　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　・英語Treeと日本語Treeを同一ロジックへ統合　　　　　　　　　　　　　　　　　　　　　│
+　　│　 4　・CreateJPLine廃止　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 5　・GetJPMarker廃止 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 6　・未使用Tree補助関数削除　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 7　・Module名表示追加　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 8　・Treeテキスト出力改善　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+英語なら
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　Refactor PathChart tree generation　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　- Unified English and Japanese tree generation　　　　　　　　　　　　　　　　　　　│
+　　│　 4　- Removed obsolete JP tree helper functions 　　　　　　　　　　　　　　　　　　　　│
+　　│　 5　- Added module name display 　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 6　- Simplified tree node model　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 7　- Improved text export readability　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+README更新案
+
+SOSDB_Analyzer の README に追記
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　## PathChart Navigator　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　Procedure dependency tree visualization tool. 　　　　　　　　　　　　　　　　　　　│
+　　│　 4　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 5　### Features　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 6　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 7　- Call Tree generation　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 8　- Japanese procedure descriptions 　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 9　- Module name display 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　10　- Excel worksheet output　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　11　- Text export friendly format 　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　12　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　13　### Example 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　14　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　15　├─ Get_MonshinInfo <modMonshinCore> 　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　16　│ │問診情報取得 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　17　│ ├─ BuildDescription <modMonshinCore> 　　　　　　　　　　　　　　　　　　　　　│
+　　│　18　│ │ │説明文生成　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　19　│ └─ BuildRemarks <modMonshinCore> 　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　20　│      備考生成　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　├─────────────────────────────────────────────┤
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　PathChart Navigator 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　Procedure dependency tree visualization tool. 　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　Features　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　・Call Tree generation　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　・Japanese procedure descriptions 　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　・Module name display 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　・Excel worksheet output　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　・Text export friendly format 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　Example 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　├─ Get_MonshinInfo　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　│ │問診情報取得 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　│ ├─ BuildDescription　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　│ │   │説明文生成　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　│ └─ BuildRemarks　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　│      備考生成　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+タグ
+
+今回の更新規模なら
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　v0.9.0 → v1.0.0　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+へ上げても良いと思います。
+
+理由は、
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　Tree生成ロジック刷新　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　日本語Tree刷新　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　Module表示追加　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 4　未使用コード整理　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+まで終わっていて、実質的に PathChart の完成版に近いためです。
+
+私ならこの更新は
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　PathChart Navigator改善と関数依存関係対応 　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+という現在のブランチ内容に追加コミットして GitHub へ Push します。
+
+SOSDB_Analyzer
+├ doc
+├ src
+│ ├ Classes
+│ │ ├ clsProcInfo.cls
+│ │ └ clsTreeNode.cls
+│ ├ Documents
+│ │ ├ Sheet1.cls
+│ │ ├ Sheet2.cls
+│ │ ├ Sheet3.cls
+│ │ ├ Sheet4.cls
+│ │ ├ Sheet5.cls
+│ │ ├ Sheet6.cls
+│ │ ├ Sheet7.cls
+│ │ ├ Sheet8.cls
+│ │ └ ThisWorkbook.cls
+│ ├ Forms
+│ │ ├ frmExportTool.frm
+│ │ ├ frmExportTool.frx
+│ │ ├ frmNavigator.frm
+│ │ ├ frmNavigator.frx
+│ │ ├ frmPathChart.frm
+│ │ ├ frmPathChart.frx
+│ │ ├ frmPathChartNavigator.frm
+│ │ ├ frmPathChartNavigator.frx
+│ │ ├ frmPathChartOption.frm
+│ │ └ frmPathChartOption.frx
+│ └ Modules
+│    ├ modAnalyze.bas
+│    ├ modAnalyzerCommon.bas
+│    ├ modExportVBA.bas
+│    ├ modFunctionDependency.bas
+│    ├ modFunctionTrac.bas
+│    ├ modHistory.bas
+│    ├ modNavigator.bas
+│    ├ modPathChart.bas
+│    ├ modPathChartCommon.bas
+│    ├ modPathChartConfig.bas
+│    ├ modPathChartText.bas
+│    ├ modPowerPointChart.bas
+│    ├ modQuick.bas
+│    └ modToolManager.bas
+├ xlsm
+│ ├ backup
+│ └ SOSDB解析ツール.xlsm
+│
+└ ドキュメンテーション
+   ├ Navigator.md
+   ├ PathChart.md
+   └ UserForms.md
+
+
+GitHub に SOSDB_Analyzer で登録しているので、この更新として登録したい
+
+既存の SOSDB_Analyzer の更新として登録するのが良いと思います。
+
+スクリーンショットを見ると、
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　SOSDB_Analyzer　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　 ├ SRC 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　 ├ XLSM　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 4　 ├ ドキュメント　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 5　 └ ドキュメンテーション　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+という構成になっています。
+
+今回の PathChart 機能は SOSDB_Analyzer の一機能なので、別Repositoryを作るより
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　SOSDB_Analyzer　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　└ SRC　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　   └ PathChart 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+として管理した方が履歴も追いやすいです。
+
+おすすめフォルダ構成
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　SOSDB_Analyzer　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　├ SRC　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　│  ├ Common 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 4　│  ├ Monshin　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 5　│  ├ Issue　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 6　│  └ PathChart　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 7　│      ├ modPathChartText.bas 　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 8　│      ├ modPathChartCommon.bas 　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 9　│      ├ clsTreeNode.cls　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　10　│      └ frmPathChartNavigator.frm　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　11　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　12　├ XLSM 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　13　│   └ SOSDB_Analyzer.xlsm 　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　14　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　15　└ ドキュメンテーション 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　16　    └ PathChart.md 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+コミットコメント案
+日本語なら
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　PathChart Tree生成処理をリファクタリング　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　・英語Treeと日本語Treeを同一ロジックへ統合　　　　　　　　　　　　　　　　　　　　　│
+　　│　 4　・CreateJPLine廃止　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 5　・GetJPMarker廃止 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 6　・未使用Tree補助関数削除　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 7　・Module名表示追加　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 8　・Treeテキスト出力改善　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+英語なら
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　Refactor PathChart tree generation　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　- Unified English and Japanese tree generation　　　　　　　　　　　　　　　　　　　│
+　　│　 4　- Removed obsolete JP tree helper functions 　　　　　　　　　　　　　　　　　　　　│
+　　│　 5　- Added module name display 　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 6　- Simplified tree node model　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 7　- Improved text export readability　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+README更新案
+SOSDB_Analyzer の README に追記
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　## PathChart Navigator　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　Procedure dependency tree visualization tool. 　　　　　　　　　　　　　　　　　　　│
+　　│　 4　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 5　### Features　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 6　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 7　- Call Tree generation　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 8　- Japanese procedure descriptions 　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 9　- Module name display 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　10　- Excel worksheet output　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　11　- Text export friendly format 　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　12　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　13　### Example 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　14　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　15　├─ Get_MonshinInfo <modMonshinCore> 　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　16　│  │問診情報取得　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　17　│  ├─ BuildDescription <modMonshinCore>　　　　　　　　　　　　　　　　　　　　　│
+　　│　18　│  │  │説明文生成　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　19　│  └─ BuildRemarks <modMonshinCore>　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　20　│     備考生成 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　├─────────────────────────────────────────────┤
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　PathChart Navigator 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　Procedure dependency tree visualization tool. 　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　Features　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　・Call Tree generation　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　・Japanese procedure descriptions 　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　・Module name display 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　・Excel worksheet output　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　・Text export friendly format 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　Example 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　├─ Get_MonshinInfo　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　│ │問診情報取得 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　│ ├─ BuildDescription　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　│ │   │説明文生成　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　│ └─ BuildRemarks　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　│      備考生成　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+タグ
+今回の更新規模なら
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　v0.9.0 → v1.0.0　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+へ上げても良いと思います。
+
+理由は、
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　Tree生成ロジック刷新　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　日本語Tree刷新　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　Module表示追加　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 4　未使用コード整理　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+まで終わっていて、実質的に PathChart の完成版に近いためです。
+
+私ならこの更新は
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　PathChart Navigator改善と関数依存関係対応 　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+という現在のブランチ内容に追加コミットして GitHub へ Push します。
+
+SOSDB_Analyzer の srcフォルダ構成は、SOSDB_AnalyzerのVBA Export 機能で出力したい
+
+
+
+それはむしろ SOSDB_Analyzer の大きな強み ですね。
+
+現在の構成を見ると、
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　SOSDB_Analyzer　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　├ src　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　│ ├ Classes 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 4　│ ├ Documents 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 5　│ ├ Forms 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 6　│ └ Modules 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 7　├ xlsm 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 8　└ ドキュメンテーション 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+自体が、
+
+SOSDB_Analyzer の VBA Export 機能によって生成された成果物 になっています。
+
+つまり今回の PathChart 改善は、
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　SOSDB_Analyzer　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　↓　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　VBA Export　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 4　↓　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 5　src 作成　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 6　↓　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 7　PathChart 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 8　↓　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 9　可視化　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+という循環ができています。
+
+READMEでアピールした方が良いこと
+
+私なら README にこう書きます。
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　SOSDB_Analyzer は VBA ソースコードを解析し、　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　- Classes 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 4　- Forms 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 5　- Modules 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 6　- Documents 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 7　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 8　へエクスポートします。　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 9　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　10　さらに Export したソースを解析し、　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　11　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　12　Procedure Dependency Tree 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　13　(PathChart Navigator) 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　14　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　15　として可視化できます。　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+現在の構成は説明価値がある
+
+例えば
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　src 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　└ Modules　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　    ├ modAnalyzerCommon.bas　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 4　    ├ modPathChart.bas 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 5　    ├ modPathChartCommon.bas 　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 6　    ├ modPathChartText.bas 　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 7　    └ modFunctionDependency.bas　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+を見ると、
+
+PathChart が
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　モジュール依存　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　↓　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　関数依存　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 4　↓　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 5　Tree生成　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+を扱うツールであることが分かります。
+
+ドキュメント追加案
+
+現在
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　ドキュメンテーション　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　├ Navigator.md 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　├ PathChart.md 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 4　└ UserForms.md 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+なので、
+
+PathChart.md に今回の Tree 出力例を載せると良いと思います。
+
+例
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　# PathChart Navigator 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　## 出力例 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 4　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 5　├─ Get_MonshinInfo <modMonshinCore> 　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 6　│ │問診情報取得 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 7　│ ├─ BuildDescription <modMonshinCore> 　　　　　　　　　　　　　　　　　　　　　│
+　　│　 8　│ │ │説明文生成　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 9　│ └─ BuildRemarks <modMonshinCore> 　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　10　│ 備考生成 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　11　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　12　## 特徴 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　13　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　14　- 英語関数名表示　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　15　- 日本語名称表示　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　16　- モジュール名表示　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　17　- 呼出階層表示　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　├─────────────────────────────────────────────┤
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　PathChart Navigator 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　出力例　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　├─ Get_MonshinInfo　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　│ │問診情報取得 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　│ ├─ BuildDescription　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　│ │ │説明文生成　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　│ └─ BuildRemarks　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│ 備考生成 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　特徴　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　・英語関数名表示　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　・日本語名称表示　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　・モジュール名表示　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　・呼出階層表示　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+
+GitHub更新時のコミットコメント
+
+今回なら私はこう書きます。
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　PathChart Navigator を大幅改善　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　- 英語Treeと日本語Tree生成を統合　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 4　- Module名表示対応　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 5　- Tree出力をテキスト貼付向けに改善　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 6　- 未使用コード削除　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 7　- clsTreeNode整理 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 8　- PathChart保守性向上 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+今の状態は単なる「VBA Exportツール」ではなく、
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　VBA Export　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　↓　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　Dependency Analyzer 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 4　↓　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 5　PathChart Navigator 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+まで含めた解析ツールになっているので、GitHub の README でもそこを前面に出した方が魅力が伝わると思います。
+
+VBA Export 機能は、●SOSDB問診票登録.xlsm のソース管理のために作成し 同様に、このSOSDB解析ツール.xlsmツール自身のソースも合わせて管理できるように 管理ツールの範囲を広げたものです。
+
+それは README にぜひ書くべき背景ですね。
+
+今のお話を聞くと、SOSDB_Analyzer は単なる「VBA解析ツール」ではなく、
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　●SOSDB問診票登録.xlsm　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　↓　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　ソース管理をしたい　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 4　↓　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 5　VBA Export機能を作成　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 6　↓　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 7　関数依存関係も見える化したい　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 8　↓　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 9　PathChartを作成 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　10　↓　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　11　SOSDB解析ツール自身も管理対象に拡張 　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+という経緯で育ってきたツールです。
+
+GitHub の README には、機能説明よりも先にこの背景を書いた方が価値が伝わると思います。
+
+例えば、
+
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　# SOSDB Analyzer　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　SOSDB Analyzer は 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 4　「SOSDB問診票登録.xlsm」のソース管理を目的として開発した　　　　　　　　　　　　　　│
+　　│　 5　VBA解析ツールです。 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 6　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 7　当初は Excel VBA プロジェクトを 　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 8　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 9　- Modules 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　10　- Classes 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　11　- Forms 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　12　- Documents 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　13　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　14　へエクスポートする機能のみでした。　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　15　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　16　その後、　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　17　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　18　- 関数一覧　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　19　- 関数依存関係解析　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　20　- Navigator 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　21　- PathChart 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　22　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　23　を追加し、　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　24　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　25　現在では SOSDB問診票登録.xlsm だけでなく、　　　　　　　　　　　　　　　　　　　　　│
+　　│　26　SOSDB Analyzer 自身のソースコード管理にも利用しています。 　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　├─────────────────────────────────────────────┤
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　SOSDB Analyzer　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　SOSDB Analyzer は 「SOSDB問診票登録.xlsm」のソース管理を目的として開発した VBA解析　　　│
+　　│　ツールです。　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　当初は Excel VBA プロジェクトを 　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　Modules 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　Classes 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　Forms 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　Documents 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　へエクスポートする機能のみでした。　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　その後、　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　関数一覧　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　関数依存関係解析　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　Navigator 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　PathChart 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　を追加し、　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　現在では SOSDB問診票登録.xlsm だけでなく、 SOSDB Analyzer 自身のソースコード管理に　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+さらに PathChart の位置付けも明確になります。
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　## PathChart Navigator　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　PathChart Navigator は　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 4　Procedure の呼出し関係を Tree 表示する機能です。　　　　　　　　　　　　　　　　　　│
+　　│　 5　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 6　表示内容　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 7　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 8　- Procedure 名　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 9　- 日本語名称　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　10　- Module 名 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　11　- 呼出し階層　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　12　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　13　例　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　14　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　15　├─ Get_MonshinInfo <modMonshinCore> 　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　16　│ │問診情報取得 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　17　│ ├─ BuildDescription <modMonshinCore> 　　　　　　　　　　　　　　　　　　　　　│
+　　│　18　│ │ │説明文生成　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　19　│ └─ BuildRemarks <modMonshinCore> 　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　20　│ 備考生成 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　├─────────────────────────────────────────────┤
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　PathChart Navigator 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　PathChart Navigator は Procedure の呼出し関係を Tree 表示する機能です。 　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　表示内容　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　Procedure 名　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　日本語名称　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　Module 名 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　呼出し階層　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　例　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　├─ Get_MonshinInfo　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　│ │問診情報取得 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　│ ├─ BuildDescription　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　│ │ │説明文生成　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　│ └─ BuildRemarks　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　│      備考生成　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+コミットコメントも少し変わりますね。
+
+単なる
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　PathChart改修 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+ではなく、
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　SOSDB Analyzer自身のソース管理対応を強化　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　- PathChart Tree生成ロジックを刷新　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 4　- Procedure/JPName/Module表示対応 　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 5　- VBA Export後のレビュー性向上　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 6　- 未使用Tree処理を削除　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+の方が、このプロジェクトの目的に合っています。
+
+今回の PathChart 改善は、
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　問診票登録.xlsmの解析 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+だけでなく、
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　SOSDB Analyzer自身を解析する　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+ところまで使えるようになったという意味で、かなり大きな進化だと思います。
+
+
+PathChart機能は、問診票登録.xlsmを管理する上でどのような機能となっているのかをトレースするとき、
+関数の繋がりを把握できるように、ProcListに関数一覧を作成、また、関数一覧と同様に関数同士の繋がり
+を関数トレースに作成、関数トレースを元に関数の依存関係を関数依存関係に作成するように発展させ、
+問診票登録.xlsmの関数依存関係を元に、指定した関数からパスチャート（PathChart）図を生成し機能把握
+ができるようした。 しかし、パスチャート（PathChart）図で全体を把握できるようになったが、テキスト
+ベースで残しコメントの追記等ができるようにしたいと思いテキストベースのパスチャートを生成に至りま
+した。 この機能は、●SOSDB問診票登録.xlsm に閉じた機能となっています。
+
+
+その説明は README の「開発経緯」として非常に良い内容だと思います。
+
+単なる機能一覧よりも、
+
+なぜ PathChart が必要になったのか
+
+が伝わるので、利用者にも開発者にも理解しやすくなります。
+
+例えば README や PathChart.md に、次のようにまとめると良いと思います。
+
+PathChart 機能の開発経緯
+
+SOSDB Analyzer は、当初 「●SOSDB問診票登録.xlsm」 のソース管理を行うためのツール として開発しました。
+
+まず VBA ソースを
+
+・Modules
+・Classes
+・Forms
+・Documents
+
+へエクスポートし、GitHub 上で管理できるようにしました。
+
+その後、
+
+「問診票登録.xlsm の機能を把握したい」
+
+という要望から、段階的に解析機能を拡張しました。
+
+1. ProcList
+
+最初に Procedure 一覧を作成しました。
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　Procedure名 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　日本語名称　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　Module名　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+を一覧化し、構成を把握できるようにしました。
+
+2. 関数トレース
+
+次に、
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　どの関数が　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　どの関数を呼び出しているのか　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+を追跡する機能を追加しました。
+
+3. 関数依存関係
+
+関数トレース結果を元に、
+
+Procedure 間の依存関係を整理した
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　関数依存関係　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+を生成できるようにしました。
+
+4. PathChart
+
+さらに、
+
+特定の Procedure を起点として
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　呼び出し構造　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+をツリー形式で可視化するため、
+
+PathChart を実装しました。
+
+例
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　Get_MonshinInfo 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　├─ BuildDescription 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　│ ├─ BuildDescription2010　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 4　│ ├─ BuildDescriptionCurrent 　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 5　│ └─ BuildDescriptionFallback　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 6　└─ BuildRemarks 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+
+これにより、
+
+機能単位で処理の流れを把握できるようになりました。
+
+5. テキスト版 PathChart
+
+PathChart により全体構造は把握しやすくなりましたが、
+
+・レビュー結果を残したい
+・コメントを追記したい
+・GitHub や設計書へ貼り付けたい
+
+という要求が出てきました。
+
+そのため、
+
+図ではなくテキストベースの PathChart を生成する機能を追加しました。
+
+現在は
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　Procedure名 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　日本語名称　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　Module名　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 4　呼出階層　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+を含む Tree を出力できます。
+
+例
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　├─ Get_MonshinInfo <modMonshinCore> 　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　│ │問診情報取得 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　│ ├─ BuildDescription <modMonshinCore> 　　　　　　　　　　　　　　　　　　　　　│
+　　│　 4　│ │ │説明文生成　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 5　│ └─ BuildRemarks <modMonshinCore> 　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 6　│      備考生成　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+対象
+
+現在の PathChart 機能は、
+
+「●SOSDB問診票登録.xlsm」 の解析・保守を目的とした機能 として実装されています。
+
+その後、同じ仕組みを利用して
+
+SOSDB Analyzer 自身のソースコード管理と解析にも活用しています。
+
+この説明は、GitHub の README にもそのまま載せられるレベルだと思います。特に「ProcList → 関数トレース → 関数依存関係 → PathChart → テキストPathChart」という発展の流れが非常に分かりやすいです。
+
+BizChat ついてフィードバックする
+You said:
+この開発経緯であるため、ソース出力も機能重視にソース出力ができていません。
+Copilot said:
+
+それはむしろ自然な流れだと思います。
+
+今回整理していて分かったのは、
+
+SOSDB_Analyzer は最初からツールとして設計されたのではなく、実業務の問題解決のために機能を積み上げてきた ということです。
+
+流れとしては、
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　●SOSDB問診票登録.xlsm　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　↓　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　ソース管理したい　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 4　↓　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 5　VBA Export作成　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 6　↓　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 7　ProcList作成　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 8　↓　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 9　関数トレース作成　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　10　↓　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　11　関数依存関係作成　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　12　↓　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　13　PathChart作成 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　14　↓　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　15　テキストPathChart作成 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+です。
+
+そのため、
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　src 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　├ Classes　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　├ Documents　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 4　├ Forms　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 5　└ Modules　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+という構成は整理されていますが、
+
+ソース出力そのものは
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　機能ごと　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+ではなく、
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　VBA標準のエクスポート単位 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+になっています。
+
+例えば現在の
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　Modules 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　├ modAnalyze.bas 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　├ modAnalyzerCommon.bas　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 4　├ modFunctionDependency.bas　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 5　├ modNavigator.bas 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 6　├ modPathChart.bas 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 7　├ modPathChartCommon.bas 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 8　├ modPathChartConfig.bas 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 9　├ modPathChartText.bas 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　10　└ ...　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+を見ると、
+
+PathChart関連はまとまっていますが、
+
+元々は
+
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　機能設計　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　↓　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　ソース構成　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+ではなく、
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　必要機能追加　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　↓　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　モジュール追加　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+で発展してきています。
+
+README にも書けそうですね。
+
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　## 開発経緯 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　SOSDB Analyzer は、 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 4　●SOSDB問診票登録.xlsm のソース管理を目的として開発を開始した。 　　　　　　　　　　│
+　　│　 5　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 6　当初は VBA Export 機能のみを備えていたが、　　　　　　　　　　　　　　　　　　　　　│
+　　│　 7　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 8　- ProcList　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 9　- 関数トレース　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　10　- 関数依存関係　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　11　- PathChart 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　12　- テキストPathChart 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　13　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　14　と段階的に機能を拡張してきた。　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　15　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　16　そのため現在のソース構成は、　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　17　機能設計を先行して構築したものではなく、　　　　　　　　　　　　　　　　　　　　　　│
+　　│　18　実運用に必要な機能を追加しながら発展した構成となっている。　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　├─────────────────────────────────────────────┤
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　開発経緯　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　SOSDB Analyzer は、 ●SOSDB問診票登録.xlsm のソース管理を目的として開発を開始した。 　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　当初は VBA Export 機能のみを備えていたが、　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　・ProcList　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　・関数トレース　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　・関数依存関係　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　・PathChart 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　・テキストPathChart 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　と段階的に機能を拡張してきた。　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　そのため現在のソース構成は、 機能設計を先行して構築したものではなく、 実運用に必要な　　│
+　　│　機能を追加しながら発展した構成となっている。　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+実際には今回の PathChart 整理は、
+
+初めて
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　仕組みの整理　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+まで手を入れた作業と言えると思います。
+
+特に
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　CreateJPLine　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　↓　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　GetJPMarker 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 4　↓　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 5　BuildJPPrefix 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+を削除して
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　BuildTreeText 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　├ English Tree 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　└ Japanese Tree　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+へ一本化したのは、
+
+単なる機能追加ではなく、
+
+設計の整理・リファクタリングでした。
+
+なので GitHub の更新履歴には、
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　PathChart Navigator リファクタリング　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　機能追加ではなく、　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 4　既存機能の可読性・保守性改善を実施。　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 5　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 6　英語Treeと日本語Tree生成を統合し、　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 7　Tree出力の簡素化とテキスト活用性を向上。　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+のように残しておくと、後から見返した時に経緯が分かりやすいと思います。
+
+BizChat ついてフィードバックする
+You said:
+踏まえて、GitHubへの出力を行いたい
+Copilot said:
+
+今回の経緯を踏まえると、GitHubへの反映は単なる
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　PathChart機能追加 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+ではなく、
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　PathChart機能のリファクタリングと保守性改善 　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+として整理すると良いと思います。
+
+1. 今回の変更内容を整理
+
+まず変更内容を箇条書きにします。
+
+PathChart
+改善
+
+・英語Treeと日本語Tree生成を統合
+・BuildTreeTextへ一本化
+・モジュール名表示追加
+・テキスト出力改善
+削除
+・CreateJPLine
+・GetJPMarker
+・BuildJPLine
+・BuildJPPrefix
+・AddJPBranch
+・ExtendBranch
+
+clsTreeNode整理
+
+削除
+
+・Prefix
+・IsLastChild
+・HasNextTree
+・HasNextSibling
+・HasChildren
+・JPPrefix
+・JPTreeText
+2. README追加
+
+今の Repository は README が未整備なので、
+
+GitHub のトップページでまず説明できるようにします。
+
+README.md
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　# SOSDB Analyzer　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　SOSDB問診票登録.xlsm の 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 4　ソース管理および解析を目的として開発した　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 5　Excel VBA 解析ツールです。　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 6　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 7　## 開発経緯 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 8　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 9　当初は VBA ソースを 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　10　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　11　- Modules 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　12　- Classes 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　13　- Forms　 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　14　- Documents 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　15　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　16　へエクスポートする　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　17　VBA Export 機能のみを実装しました。 　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　18　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　19　その後、　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　20　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　21　- ProcList　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　22　- 関数トレース　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　23　- 関数依存関係　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　24　- PathChart Navigator 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　25　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　26　へと機能を拡張しました。　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　27　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　28　現在は SOSDB問診票登録.xlsm の解析だけでなく、　　　　　　　　　　　　　　　　　　　│
+　　│　29　SOSDB Analyzer 自身のソース管理にも利用しています。 　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　├─────────────────────────────────────────────┤
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　SOSDB Analyzer　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　SOSDB問診票登録.xlsm の ソース管理および解析を目的として開発した Excel VBA 解析ツール 　│
+　　│　です。　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　開発経緯　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　当初は VBA ソースを 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　・Modules 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　・Classes 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　・Forms　 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　・Documents 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　へエクスポートする VBA Export 機能のみを実装しました。　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　その後、　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　・ProcList　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　・関数トレース　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　・関数依存関係　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　・PathChart Navigator 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　へと機能を拡張しました。　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　現在は SOSDB問診票登録.xlsm の解析だけでなく、 SOSDB Analyzer 自身のソース管理にも利　　│
+　　│　用しています。　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+3. PathChart.md 更新
+
+今回の内容で最も価値があるドキュメントです。
+
+追加例
+
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　# PathChart Navigator 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　## 目的 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 4　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 5　指定した Procedure を起点に 　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 6　呼出し関係をツリー形式で可視化する。　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 7　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 8　## 出力情報 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 9　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　10　- Procedure名 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　11　- 日本語名称　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　12　- Module名　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　13　- 呼出し階層　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　14　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　15　## 出力例 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　16　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　17　├─ Get_MonshinInfo <modMonshinCore> 　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　18　│ │問診情報取得 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　19　│ ├─ BuildDescription <modMonshinCore> 　　　　　　　　　　　　　　　　　　　　　│
+　　│　20　│ │ │説明文生成　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　21　│ └─ BuildRemarks <modMonshinCore> 　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　22　│      備考生成　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　├─────────────────────────────────────────────┤
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　PathChart Navigator 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　目的　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　指定した Procedure を起点に 呼出し関係をツリー形式で可視化する。　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　出力情報　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　・Procedure名 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　・日本語名称　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　・Module名　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　・呼出し階層　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　出力例　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　├─ Get_MonshinInfo　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　│ │問診情報取得 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　│ ├─ BuildDescription　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　│ │ │説明文生成　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　│ └─ BuildRemarks　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　│      備考生成　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+4. コミットコメント
+
+おすすめ
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　PathChart Navigatorをリファクタリング 　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　・英語Treeと日本語Tree生成を統合　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 4　・Module名表示追加　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 5　・CreateJPLine系処理を削除　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 6　・Tree生成ロジックを簡素化　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 7　・clsTreeNode整理 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 8　・テキスト出力可読性向上　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+5. Git操作
+
+変更確認
+
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　git status　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+追加
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　git add . 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+コミット
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　git commit -m "PathChart Navigator refactoring" 　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+送信
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　git push origin main　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+
+6. Release Notes案
+
+もしタグを切るなら、
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　v1.0.0　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+説明は
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　PathChart Navigator 改善　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　- Procedure Tree生成を刷新　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 4　- 日本語Tree生成を統合　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 5　- Module表示対応　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 6　- テキスト出力対応強化　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 7　- 未使用コード削除　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 8　- clsTreeNode整理 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 9　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　10　SOSDB問診票登録.xlsm の 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　11　機能解析・保守を目的として　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　12　PathChartの可読性と保守性を向上 　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+今回の更新は、
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　VBA Export　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　↓　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　ProcList　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 4　↓　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 5　関数トレース　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 6　↓　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 7　関数依存関係　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 8　↓　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 9　PathChart 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　10　↓　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　11　テキストPathChart 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+という開発経緯の中で、
+
+PathChartを実運用レベルまで整理した節目のリリース
+
+として扱うのが良いと思います。
+
+BizChat ついてフィードバックする
+You said:
+GitHubへの更新手順を見せて‌
+Copilot said:
+
+既存の SOSDB_Analyzer を更新する場合の手順です。
+
+① 最新化
+
+GitHub Desktop を使う場合
+
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　Repository　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　↓　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　Pull　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+CLI の場合
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　git pull origin main　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+② 変更ファイル確認
+
+今回の対象
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　src 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　├ Classes　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　│ └ clsTreeNode.cls 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 4　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 5　├ Forms　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 6　│ ├ frmPathChart.frm　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 7　│ ├ frmPathChart.frx　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 8　│ ├ frmPathChartNavigator.frm 　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 9　│ ├ frmPathChartNavigator.frx 　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　10　│ ├ frmPathChartOption.frm　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　11　│ └ frmPathChartOption.frx　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　12　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　13　└ Modules　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　14　   ├ modFunctionDependency.bas 　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　15　   ├ modPathChart.bas　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　16　   ├ modPathChartCommon.bas　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　17　   ├ modPathChartConfig.bas　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　18　   └ modPathChartText.bas　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+追加で
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　ドキュメンテーション　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　└ PathChart.md 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+も更新すると良いです。
+
+③ 差分確認
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　git status　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+変更確認
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　git diff　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+④ ステージ
+
+全部登録
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　git add . 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+または PathChart 関連のみ
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　git add src/Classes/clsTreeNode.cls 　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　git add src/Modules/modPathChartText.bas　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　git add src/Modules/modPathChartCommon.bas　　　　　　　　　　　　　　　　　　　　　│
+　　│　 4　git add ドキュメンテーション/PathChart.md 　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+⑤ コミット
+
+今回なら
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　git commit -m "PathChart Navigator refactoring" 　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+または日本語
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　git commit -m "PathChart改善とテキストTree出力対応" 　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+⑥ Push
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　git push origin main　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+⑦ GitHub上で確認
+
+確認ポイント
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　SOSDB_Analyzer　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　└ src　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　   ├ Classes 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 4　   │ └ clsTreeNode.cls　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 5　   ├ Forms 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 6　   └ Modules 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 7　      └ modPathChartText.bas 　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+が更新されていること。
+
+⑧ Release Notes（任意）
+
+GitHub の
+
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　リリース　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　↓　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　新しいリリースを作成　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+で
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　Tag: v1.0.0 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+説明:
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　PathChart Navigator改善 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　・英語Treeと日本語Tree生成を統合　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 4　・Module名表示追加　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 5　・テキスト貼付向けTree出力改善　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 6　・CreateJPLine系処理削除　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 7　・clsTreeNode整理 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 8　・PathChart保守性改善 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 9　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　10　SOSDB問診票登録.xlsm の機能把握を目的とした 　　　　　　　　　　　　　　　　　　　　│
+　　│　11　PathChart機能を強化。 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+⑨ README追加（おすすめ）
+
+現在 GitHub 画面では
+
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　READMEを追加してください　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+となっているので、
+
+Repository直下に
+
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　README.md 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+を追加すると見栄えが大幅に向上します。
+
+まずは、
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　① VBA Export 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　② ProcList 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　③ 関数トレース 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 4　④ 関数依存関係 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 5　⑤ PathChart　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 6　⑥ テキストPathChart　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+という発展経緯を README に書き、今回のコミットと一緒に Push するのがおすすめです。
+
+
+
+現在の PathChart 機能は、
+
+
+「●SOSDB問診票登録.xlsm」 の解析・保守を目的とした機能 として実装されています。
+が「SOSDB Analyzer 自身のソースコード管理と解析にも活用」はしていません。
+
+Copilot said:
+その点は README や GitHub の説明では正確に書いた方が良いですね。
+
+私なら、先ほどの文章は次のように修正します。
+
+修正前
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　現在の PathChart 機能は、 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　「●SOSDB問診票登録.xlsm」の解析・保守を目的とした機能　　　　　　　　　　　　　　　│
+　　│　 3　として実装されています。　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 4　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 5　その後、同じ仕組みを利用して　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 6　SOSDB Analyzer 自身のソースコード管理と解析にも活用しています。 　　　　　　　　　　│
+　　│　 7　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+修正後
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　現在の PathChart 機能は、 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　「●SOSDB問診票登録.xlsm」の解析・保守を目的とした機能　　　　　　　　　　　　　　　│
+　　│　 3　として実装されています。　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 4　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 5　SOSDB Analyzer 自身のソースコードについては、 　　　　　　　　　　　　　　　　　　　│
+　　│　 6　VBA Export 機能によってソース管理対象として出力していますが、 　　　　　　　　　　　│
+　　│　 7　PathChart 機能は主に　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 8　「●SOSDB問診票登録.xlsm」の機能把握を目的として開発されています。　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+あるいは開発経緯として書くなら、
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　## 開発経緯 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　SOSDB Analyzer は、 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 4　「●SOSDB問診票登録.xlsm」のソース管理を目的として開発しました。　　　　　　　　　　│
+　　│　 5　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 6　まず VBA Export 機能を実装し、　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 7　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 8　- Modules 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 9　- Classes 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　10　- Forms 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　11　- Documents 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　12　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　13　へソースを出力できるようにしました。　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　14　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　15　その後、　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　16　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　17　- ProcList　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　18　- 関数トレース　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　19　- 関数依存関係　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　20　- PathChart 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　21　- テキストPathChart 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　22　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　23　へ機能を発展させました。　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　24　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　25　これらの機能は、　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　26　「●SOSDB問診票登録.xlsm」の機能解析および保守を主目的として実装しています。　　　　│
+　　│　27　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　28　なお、SOSDB Analyzer 自身のソースについても 　　　　　　　　　　　　　　　　　　　　│
+　　│　29　VBA Export 機能によりソース管理対象としていますが、 　　　　　　　　　　　　　　　　│
+　　│　30　PathChart 機能は主に　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　31　「●SOSDB問診票登録.xlsm」の解析を対象としています。　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　├─────────────────────────────────────────────┤
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　開発経緯　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　SOSDB Analyzer は、 「●SOSDB問診票登録.xlsm」のソース管理を目的として開発しました。　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　まず VBA Export 機能を実装し、　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　Modules 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　Classes 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　Forms 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　Documents 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　へソースを出力できるようにしました。　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　その後、　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　ProcList　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　関数トレース　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　関数依存関係　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　PathChart 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　テキストPathChart 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　へ機能を発展させました。　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　これらの機能は、 「●SOSDB問診票登録.xlsm」の機能解析および保守を主目的として実装し 　　│
+　　│　ています。　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　なお、SOSDB Analyzer 自身のソースについても VBA Export 機能によりソース管理対象とし 　　│
+　　│　ていますが、 PathChart 機能は主に 「●SOSDB問診票登録.xlsm」の解析を対象としています。　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+この方が、
+
+・なぜ作ったのか
+・何を目的としているのか
+・SOSDB_Analyzer 自身はどこまで対象なのか
+
+が正確に伝わると思います。
+
+You said:
+「SOSDB Analyzer 自身のソースコード管理と解析」は、今後検討する必要はあると思いますが
+現状について、GitHubへUpしたい
+Copilot said:
+現状なら、まずは README と PathChart.md を更新して GitHub に反映 するのが良いと思います。
+
+あなたの説明を踏まえると、
+
+❌ 誤り
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　SOSDB Analyzer 自身も PathChart 解析対象　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+✅ 正しい
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　PathChart は　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　●SOSDB問診票登録.xlsm　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　の解析・保守を目的として開発　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 4　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 5　SOSDB Analyzer 自身は 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 6　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 7　VBA Exportでソース管理　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 8　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 9　までは実施　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　10　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　11　PathChart解析対象化は今後の検討課題 　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+です。
+
+README.md 案
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　# SOSDB Analyzer　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　SOSDB問診票登録.xlsm の 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 4　ソース管理および解析を目的として開発した　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 5　Excel VBA 解析ツールです。　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 6　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 7　## 開発経緯 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 8　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 9　当初は VBA Export 機能を実装し、　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　10　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　11　- Modules 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　12　- Classes 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　13　- Forms 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　14　- Documents 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　15　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　16　へソース出力できるようにしました。　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　17　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　18　その後、　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　19　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　20　- ProcList　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　21　- 関数トレース　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　22　- 関数依存関係　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　23　- PathChart 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　24　- テキストPathChart 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　25　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　26　へと機能を拡張しました。　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　27　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　28　## PathChart　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　29　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　30　PathChart は、　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　31　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　32　「●SOSDB問診票登録.xlsm」　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　33　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　34　の機能解析および保守を目的として開発した機能です。　　　　　　　　　　　　　　　　　│
+　　│　35　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　36　指定した Procedure から呼び出し関係を解析し、 　　　　　　　　　　　　　　　　　　　│
+　　│　37　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　38　- Procedure名 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　39　- 日本語名称　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　40　- Module名　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　41　- 呼出し階層　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　42　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　43　を Tree 形式で表示します。　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　44　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　45　## テキストPathChart　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　46　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　47　PathChart によって機能構造を可視化できるようになりましたが、　　　　　　　　　　　　│
+　　│　48　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　49　- レビュー　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　50　- コメント追記　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　51　- GitHub管理　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　52　- 設計書貼付　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　53　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　54　を行うため、　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　55　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　56　テキストベースの PathChart 出力機能を追加しました。 　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　├─────────────────────────────────────────────┤
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　SOSDB Analyzer　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　SOSDB問診票登録.xlsm の ソース管理および解析を目的として開発した Excel VBA 解析ツール 　│
+　　│　です。　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　開発経緯　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　当初は VBA Export 機能を実装し、　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　・Modules 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　・Classes 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　・Forms 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　・Documents 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　へソース出力できるようにしました。　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　その後、　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　・ProcList　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　・関数トレース　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　・関数依存関係　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　・PathChart 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　テキストPathChart 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　へと機能を拡張しました。　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　PathChart 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　PathChart は、　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　「●SOSDB問診票登録.xlsm」　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　の機能解析および保守を目的として開発した機能です。　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　指定した Procedure から呼び出し関係を解析し、 　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　・Procedure名 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　・日本語名称　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　・Module名　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　・呼出し階層　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　を Tree 形式で表示します。　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　テキストPathChart 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　PathChart によって機能構造を可視化できるようになりましたが、　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　・レビュー　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　・コメント追記　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　・GitHub管理　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　・設計書貼付　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　を行うため、　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　テキストベースの PathChart 出力機能を追加しました。 　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+
+PathChart.md に追記
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　# 2026-09 PathChart改善 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　## 背景 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 4　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 5　PathChart により呼出し構造の可視化は可能になったが、　　　　　　　　　　　　　　　　│
+　　│　 6　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 7　レビュー結果や設計メモを残すためには　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 8　テキストベースの出力が必要となった。　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 9　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　10　## 改善内容 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　11　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　12　- 英語Treeと日本語Treeを統合　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　13　- Module名表示追加　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　14　- テキスト貼付可能なTree出力に変更　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　15　- Tree生成ロジック簡素化　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　16　- 未使用コード削除　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　17　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　18　## 出力例 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　19　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　20　├─ Get_MonshinInfo <modMonshinCore> 　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　21　│  │問診情報取得　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　22　│  ├─ BuildDescription <modMonshinCore>　　　　　　　　　　　　　　　　　　　　　│
+　　│　23　│  │  │説明文生成　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　24　│  └─ BuildRemarks <modMonshinCore>　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　25　│     備考生成 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　├─────────────────────────────────────────────┤
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　2026-09 PathChart改善 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　背景　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　PathChart により呼出し構造の可視化は可能になったが、　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　レビュー結果や設計メモを残すためには テキストベースの出力が必要となった。 　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　改善内容　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　・英語Treeと日本語Treeを統合　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　・Module名表示追加　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　・テキスト貼付可能なTree出力に変更　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　・Tree生成ロジック簡素化　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　・未使用コード削除　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　出力例　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　├─ Get_MonshinInfo　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　│ │問診情報取得 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　│ ├─ BuildDescription　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　│ │ │説明文生成　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　│ └─ BuildRemarks　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　│ 備考生成 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+コミット
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　git add . 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　git commit -m "PathChart Navigator refactoring" 　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+または日本語なら
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　git commit -m "PathChart改善とテキストTree出力対応" 　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+Push
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　git push origin main　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+今回の更新内容として残したい要約
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　PathChart Navigator改善 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　・英語Treeと日本語Tree生成を統合　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 4　・Module名表示追加　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 5　・テキストTree出力対応　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 6　・未使用Tree補助関数削除　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 7　・clsTreeNode整理 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 8　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 9　対象：　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　10　●SOSDB問診票登録.xlsm の解析・保守 　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+この内容で GitHub へ反映すれば、現状の実態と今後の発展余地の両方を正しく表現できると思います。
+

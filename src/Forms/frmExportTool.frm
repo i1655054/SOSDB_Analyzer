@@ -186,7 +186,7 @@ Private Sub cmdExport_Click()
 
         If itm.Checked Then
 
-            ToolID = CLng(itm.text)
+            ToolID = CLng(itm.Text)
             
             Set wb = _
                 GetWorkbookByToolID(ToolID)

@@ -23,7 +23,7 @@ Private Sub UserForm_Initialize()
     
     chkRecursive.Value = gRecursive
 
-    txtMaxDepth.text = GetDefaultMaxDepth()
+    txtMaxDepth.Text = GetDefaultMaxDepth()
     
     LoadStartProcedure cmbStartProc
 
@@ -91,13 +91,13 @@ Private Sub cmbStartProc_Change()
         End If
         
         lblCategory.Caption = Proc.Category
-        txtSummary.text = Proc.Summary
+        txtSummary.Text = Proc.Summary
 
     Else
 
         lblSelectProc.Caption = ""
         lblCategory.Caption = ""
-        txtSummary.text = ""
+        txtSummary.Text = ""
 
     End If
 
@@ -126,7 +126,7 @@ Private Sub cmdAnalyze_Click()
 
     On Error GoTo EH
 
-    StartProc = Trim$(cmbStartProc.text)
+    StartProc = Trim$(cmbStartProc.Text)
 
     ' 開始Procedure未選択チェック
     If StartProc = "" Then
@@ -139,7 +139,7 @@ Private Sub cmdAnalyze_Click()
 
     End If
 
-    MaxDepth = CLng(txtMaxDepth.text)
+    MaxDepth = CLng(txtMaxDepth.Text)
     
     gRecursive = chkRecursive.Value
 
