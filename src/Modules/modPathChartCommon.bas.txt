@@ -186,3 +186,77 @@ Public Function CreateTreeNode( _
 
 End Function
 
+'====================================================
+' Treeï\é¶ï∂éöóÒ
+'====================================================
+Public Function OldGetTreeDisplayText( _
+                ByVal ProcName As String) _
+                As String
+
+    GetTreeDisplayText = ProcName
+
+End Function
+
+'====================================================
+' å≈íËí∑ï‚äÆ
+'====================================================
+Public Function OldPadRight( _
+                ByVal Text As String, _
+                ByVal Width As Long) _
+                As String
+
+    If Len(Text) >= Width Then
+
+        PadRight = Text
+
+    Else
+
+        PadRight = _
+            Text & _
+            Space$(Width - Len(Text))
+
+    End If
+
+End Function
+
+'====================================================
+' ProcedureÉwÉbÉ_ê∂ê¨
+'====================================================
+Public Function OldGetProcHeaderText( _
+                ByVal ProcName As String) _
+                As String
+
+    Dim Proc As clsProcInfo
+    Dim Buf As String
+
+    Set Proc = GetProcInfo(ProcName)
+
+    If Proc Is Nothing Then
+
+        GetProcHeaderText = _
+            "Procedure : " & ProcName
+
+        Exit Function
+
+    End If
+
+    Buf = ""
+    Buf = Buf & _
+        "Procedure : " & Proc.ProcName & vbCrLf
+
+    Buf = Buf & _
+        "JPName    : " & Proc.JPName & vbCrLf
+
+    Buf = Buf & _
+        "Category  : " & Proc.Category & vbCrLf
+
+    Buf = Buf & _
+        "Module    : " & Proc.ModuleName & vbCrLf
+
+    Buf = Buf & _
+        "Summary   : " & Proc.Summary
+
+    GetProcHeaderText = Buf
+
+End Function
+
