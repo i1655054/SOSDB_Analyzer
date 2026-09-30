@@ -4,6 +4,26 @@ Option Explicit
 '====================================================
 ' 子Procedure一覧取得
 '====================================================
+
+' @JPName
+' 子関数一覧取得
+'
+' @Category
+' PathChart
+'
+' @Input
+' ParentProc(String)
+'
+' @Output
+' Collection
+'
+' @Summary
+' 指定プロシージャの子プロシージャ一覧を取得する
+'
+' @Remarks
+' 関数依存関係シートを参照し
+' 出力条件に一致する子プロシージャのみ返す
+'
 Public Function GetChildrenList( _
                 ByVal ParentProc As String) _
                 As Collection
@@ -66,6 +86,31 @@ End Function
 '====================================================
 ' 出力対象判定
 '====================================================
+
+' @JPName
+' 出力対象判定
+'
+' @Category
+' PathChart
+'
+' @Input
+' ParentProc(String)
+' ChildProc(String)
+' ParentModule(String)
+' ChildModule(String)
+'
+' @Output
+' Boolean
+'
+' @Summary
+' PathChart出力対象の呼出関係か判定する
+'
+' @Remarks
+' 再帰呼出除外
+' 外部モジュール除外
+' 共通関数除外
+' を考慮して判定する
+'
 Public Function IsTargetRelation( _
                 ByVal ParentProc As String, _
                 ByVal ChildProc As String, _
@@ -114,7 +159,7 @@ Public Function IsTargetRelation( _
     '------------------------------
     If gSkipCommon Then
 
-        If IsCommonFunctionSafe( _
+        If IsCommonFunction( _
                 ChildProc) Then
 
             IsTargetRelation = False
@@ -129,9 +174,24 @@ End Function
 '====================================================
 ' 共通関数判定
 '====================================================
-Public Function IsCommonFunctionSafe( _
-                ByVal ProcName As String) _
-                As Boolean
+
+' @JPName
+' 共通関数判定
+'
+' @Category
+' PathChart
+'
+' @Input
+' ProcName(String)
+'
+' @Output
+' Boolean
+'
+' @Summary
+' 共通関数として除外対象か判定する
+'
+Public Function IsCommonFunction( _
+                ByVal ProcName As String) As Boolean
 
     Select Case UCase$(ProcName)
 
@@ -141,8 +201,12 @@ Public Function IsCommonFunctionSafe( _
              "CHK_EQ_PRODUCT", _
              "CHK_ESCALE_DAY", _
              "CHK_TORBLENUM"
+             '"VALIDATEANDHIGHLIGHT", _
+             '"RESTORECOLOR", _
+             '"GETDEFAULTCOLOR", _
+             '"HIGHLIGHTCELL"
 
-            IsCommonFunctionSafe = True
+            IsCommonFunction = True
 
     End Select
 
@@ -151,6 +215,30 @@ End Function
 '====================================================
 ' TreeNode生成
 '====================================================
+
+' @JPName
+' ツリーノード生成
+'
+' @Category
+' PathChart
+'
+' @Input
+' ProcName(String)
+' ParentProcName(String)
+' Level(Long)
+' TreeText(String)
+'
+' @Output
+' clsTreeNode
+'
+' @Summary
+' PathChartおよびTextPathChart用の
+' ツリーノードを生成する
+'
+' @Remarks
+' ProcListの情報を取得して
+' JPName、Category、ModuleName、Summaryを設定する
+'
 Public Function CreateTreeNode( _
                 ByVal ProcName As String, _
                 ByVal ParentProcName As String, _

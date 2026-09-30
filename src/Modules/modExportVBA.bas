@@ -3,11 +3,28 @@ Option Explicit
 
 ' VBAエクスポート
 
+'==================================================
+' 画面表示
+'==================================================
+
+' @JPName
+' エクスポート画面表示
+'
+' @Category
+' Export
+'
+' @Summary
+' VBAソースエクスポート画面を表示する
+'
 Public Sub ShowExportTool()
 
     frmExportTool.Show vbModal
 
 End Sub
+
+'==================================================
+' VBAエクスポート
+'==================================================
 
 '**************************************
 '====  VBA ソース自動エクスポート  ====
@@ -15,6 +32,29 @@ End Sub
 ' Excelブック内のVBAプロジェクトを、
 ' ボタン一発で .bas .cls .frm に出力する
 '**************************************
+
+' @JPName
+' VBAソース出力
+'
+' @Category
+' Export
+'
+' @Input
+' TargetBook(Workbook)
+' ToolID(Long)
+'
+' @Output
+' なし
+'
+' @Summary
+' 指定ブックのVBAソースを
+' GitHub管理用フォルダへ出力する
+'
+' @Remarks
+' 標準モジュール、クラスモジュール、
+' フォーム、ドキュメントモジュールを
+' 種別毎に出力する
+'
 Public Sub ExportVBABook( _
                 ByVal TargetBook As Workbook, _
                 ByVal ToolID As Long)
@@ -106,6 +146,22 @@ Public Sub ExportVBABook( _
 
 End Sub
 
+' @JPName
+' Git管理フォルダ取得
+'
+' @Category
+' Export
+'
+' @Input
+' ToolID(Long)
+'
+' @Output
+' GitRootPath(String)
+'
+' @Summary
+' ToolIDに対応する
+' GitHub管理フォルダを取得する
+'
 Public Function GetGitRootPathByToolID( _
             ByVal ToolID As Long) As String
 
@@ -120,6 +176,26 @@ Public Function GetGitRootPathByToolID( _
 
 End Function
 
+'==================================================
+' Git連携
+'==================================================
+
+' @JPName
+' Gitフォルダ起動
+'
+' @Category
+' Export
+'
+' @Input
+' RootPath(String)
+'
+' @Output
+' なし
+'
+' @Summary
+' 指定フォルダをカレントとして
+' PowerShellを起動する
+'
 Public Sub OpenGitPowerShell( _
                     ByVal RootPath As String)
 

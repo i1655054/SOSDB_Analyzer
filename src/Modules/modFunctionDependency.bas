@@ -1,10 +1,31 @@
 Attribute VB_Name = "modFunctionDependency"
 Option Explicit
 
-'=========================================
-' 関数依存関係集計
-'=========================================
-Public Sub CreateFunctionDependency()
+'==================================================
+' 関数依存関係
+'==================================================
+
+' @JPName
+' 関数依存関係作成
+'
+' @Category
+' FunctionDependency
+'
+' @Input
+' なし
+'
+' @Output
+' 関数依存関係シート
+'
+' @Summary
+' 関数トレースシートを集計し
+' 関数依存関係シートを作成する
+'
+' @Remarks
+' 呼出元・呼出先単位で集計し
+' 呼出回数および付帯情報を出力する
+'
+Public Sub FunctionDependency()
 
     Dim wsTrace As Worksheet
     Dim wsDep As Worksheet
@@ -62,8 +83,8 @@ Public Sub CreateFunctionDependency()
     wsDep.Range("F1") = "呼出元モジュール"
     wsDep.Range("G1") = "呼出先モジュール"
 
-    wsDep.Range("H1") = "Category"
-    wsDep.Range("I1") = "Summary"
+    wsDep.Range("H1") = "呼出先Category"
+    wsDep.Range("I1") = "呼出先Summary"
 
     LastRow = wsTrace.Cells( _
                     wsTrace.Rows.Count, _

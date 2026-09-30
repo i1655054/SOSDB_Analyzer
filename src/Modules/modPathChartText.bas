@@ -3,6 +3,10 @@ Option Explicit
 
 Private gTreeNodes As Collection
 
+'==================================================
+' Tree表示文字
+'==================================================
+
 Private Const TREE_BAR As String = "│"
 
 Private Const TREE_NODE_LAST As String = "└─"
@@ -10,8 +14,10 @@ Private Const TREE_NODE_NEXT As String = "├─"
 
 Private Const TREE_SPACE As String = "　"
 
+' 日本語Tree継続用
 Private Const TREE_CONTINUE As String = "│　"
 
+' 次階層Prefix用
 Private Const TREE_NEXT_LEVEL As String = "│　"
 
 Private Const TREE_LAST_LEVEL As String = "　　"
@@ -20,6 +26,28 @@ Private Const TREE_LAST_LEVEL As String = "　　"
 '==================================================
 ' テキストチャート生成
 '==================================================
+
+' @JPName
+' テキストチャート出力
+'
+' @Category
+' PathChart
+'
+' @Input
+' StartProc(String)
+' MaxDepth(Long)
+'
+' @Output
+' PathChartTreeシート
+'
+' @Summary
+' PathChart情報をツリー形式の
+' テキストとして出力する
+'
+' @Remarks
+' TreeNode一覧を生成し
+' PathChartTreeシートへ出力する
+'
 Public Sub ExportPathChartToText( _
                 ByVal StartProc As String, _
                 ByVal MaxDepth As Long)
@@ -41,6 +69,23 @@ End Sub
 '==================================================
 ' ルートノード追加
 '==================================================
+
+' @JPName
+' ルートノード追加
+'
+' @Category
+' PathChart
+'
+' @Input
+' StartProc(String)
+'
+' @Output
+' なし
+'
+' @Summary
+' ツリー構造のルートノードを生成し
+' TreeNode一覧へ追加する
+'
 Private Sub AddRootNode( _
                 ByVal StartProc As String)
 
@@ -81,6 +126,29 @@ End Sub
 '==================================================
 ' 木構造生成
 '==================================================
+
+' @JPName
+' ツリー構造生成
+'
+' @Category
+' PathChart
+'
+' @Input
+' ParentProc(String)
+' Prefix(String)
+' Level(Long)
+' MaxDepth(Long)
+'
+' @Output
+' なし
+'
+' @Summary
+' 関数依存関係を再帰的にたどり
+' TreeNode一覧を生成する
+'
+' @Remarks
+' 英語Tree行および日本語Tree行を生成する
+'
 Private Sub BuildTreeText( _
                 ByVal ParentProc As String, _
                 ByVal Prefix As String, _
@@ -236,6 +304,23 @@ End Sub
 '==================================================
 ' Treeシート出力
 '==================================================
+
+' @JPName
+' ツリー一覧出力
+'
+' @Category
+' PathChart
+'
+' @Output
+' PathChartTreeシート
+'
+' @Summary
+' TreeNode一覧をPathChartTreeシートへ出力する
+'
+' @Remarks
+' 英語Tree行と日本語Tree行を
+' 交互に出力する
+'
 Public Sub OutputTreeNodeList()
 
     Dim ws As Worksheet

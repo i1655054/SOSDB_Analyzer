@@ -38,29 +38,20 @@ Public MaxDepthFound As Long
 
 Public gNavigatorStatus As String
 
-Private Function IsCommonFunction( _
-                    ByVal FuncName As String) As Boolean
+'==================================================
+' PathChart生成
+'==================================================
 
-    Select Case UCase$(FuncName)
-
-        Case "CHK_PERSON", _
-             "CHK_TARGET", _
-             "CHK_PRIORITY", _
-             "CHK_EQ_PRODUCT", _
-             "CHK_ESCALE_DAY", _
-             "CHK_TORBLENUM"
-             '"VALIDATEANDHIGHLIGHT", _
-             '"RESTORECOLOR", _
-             '"GETDEFAULTCOLOR", _
-             '"HIGHLIGHTCELL"
-
-            IsCommonFunction = True
-
-    End Select
-
-End Function
-
-' パスチャート生成
+' @JPName
+' パスチャート作成
+'
+' @Category
+' PathChart
+'
+' @Summary
+' 関数依存関係シートを参照し
+' 指定関数を起点としたパスチャート図を生成する
+'
 Public Sub CreatePathChart_V3( _
                 ByVal StartProc As String, _
                 ByVal MaxDepth As Long)
@@ -183,57 +174,16 @@ Public Sub CreatePathChart_V3( _
 
 End Sub
 
-' ノード作成
-Private Function DrawNode( _
-            ws As Worksheet, _
-            ByVal CaptionText As String, _
-            ByVal TopPos As Double, _
-            ByVal LeftPos As Double, _
-            ByVal FillColor As Long) As Shape
-    
-    Dim shp As Shape
-    
-    ' DrawNode制限
-    If gMaxNode > 0 Then
-
-        If gNodeNo >= gMaxNode Then
-
-            Exit Function
-
-        End If
-
-    End If
-
-    gNodeNo = gNodeNo + 1
-
-    Set shp = ws.Shapes.AddShape( _
-                msoShapeRoundedRectangle, _
-                LeftPos, _
-                TopPos, _
-                NODE_WIDTH, _
-                NODE_HEIGHT)
-
-    shp.Name = "N_" & Format$(gNodeNo, "000000")
-
-    shp.TextFrame.Characters.Text = CaptionText
-    
-    shp.TextFrame.Characters.Font.size = 9
-    
-    shp.OnAction = "SelectNode"
-    
-    shp.Fill.ForeColor.RGB = FillColor
-    
-    shp.TextFrame.Characters.Font.Color = RGB(0, 0, 0)
-    
-    shp.line.ForeColor.RGB = RGB(80, 80, 80)
-    
-    shp.line.Weight = 1.25
-
-    Set DrawNode = shp
-
-End Function
-
-' 再帰描画
+' @JPName
+' ノード再帰描画
+'
+' @Category
+' PathChart
+'
+' @Summary
+' 関数依存関係を再帰的にたどり
+' 子ノードおよび接続線を描画する
+'
 Private Sub DrawCallTreeShape( _
             ByVal ParentFunc As String, _
             ByVal ParentShapeName As String, _
@@ -464,51 +414,222 @@ NextChild:
 
 End Sub
 
-' コネクタ
-Private Sub ConnectShapes( _
-            ws As Worksheet, _
-            ByVal ParentName As String, _
-            ByVal ChildName As String)
+' @JPName
+' 分岐サイズ取得
+'
+' @Category
+' PathChart
+'
+' @Summary
+' ノード配列計算用の分岐サイズを取得する
+'
+Private Function GetBranchSize( _
+                ByVal ParentFunc As String) _
+                As Long
 
-    Dim Con As Shape
+    Dim wsDep As Worksheet
 
-    Set Con = ws.Shapes.AddConnector( _
-                    msoConnectorElbow, _
-                    0, 0, 100, 100)
+    Dim LastRow As Long
+    Dim r As Long
 
-    Con.ConnectorFormat.BeginConnect _
-        ws.Shapes(ParentName), 4
+    Dim ChildFunc As String
+    Dim size As Long
 
-    Con.ConnectorFormat.EndConnect _
-        ws.Shapes(ChildName), 2
+    Set wsDep = _
+        Worksheets("関数依存関係")
 
-    On Error Resume Next
+    LastRow = _
+        wsDep.Cells( _
+            wsDep.Rows.Count, _
+            "A").End(xlUp).row
 
-    Con.Name = _
-        "C_" & ParentName & "_" & ChildName
+    For r = 2 To LastRow
 
-    On Error GoTo 0
+        If wsDep.Cells(r, 1).Value = ParentFunc Then
 
-End Sub
+            ChildFunc = _
+                Trim$(wsDep.Cells(r, 3).Value)
 
-' 初期化
-Private Sub ClearChartShapes(ws As Worksheet)
-
-    Dim i As Long
-
-    For i = ws.Shapes.Count To 1 Step -1
-
-        If Left$(ws.Shapes(i).Name, 2) = "N_" _
-        Or Left$(ws.Shapes(i).Name, 2) = "C_" Then
-
-            ws.Shapes(i).Delete
+            size = _
+                size + _
+                GetBranchSize(ChildFunc)
 
         End If
 
-    Next i
+    Next r
 
-End Sub
+    If size = 0 Then
 
+        GetBranchSize = 1
+
+    Else
+
+        GetBranchSize = size
+
+    End If
+
+End Function
+
+'==================================================
+' ノード作成
+'==================================================
+
+' @JPName
+' ノード作成
+'
+' @Category
+' PathChart
+'
+' @Input
+' ws(Worksheet)
+' CaptionText(String)
+' TopPos(Double)
+' LeftPos(Double)
+' FillColor(Long)
+'
+' @Output
+' Shape
+'
+' @Summary
+' パスチャート用ノード図形を作成する
+'
+Private Function DrawNode( _
+            ws As Worksheet, _
+            ByVal CaptionText As String, _
+            ByVal TopPos As Double, _
+            ByVal LeftPos As Double, _
+            ByVal FillColor As Long) As Shape
+    
+    Dim shp As Shape
+    
+    ' DrawNode制限
+    If gMaxNode > 0 Then
+
+        If gNodeNo >= gMaxNode Then
+
+            Exit Function
+
+        End If
+
+    End If
+
+    gNodeNo = gNodeNo + 1
+
+    Set shp = ws.Shapes.AddShape( _
+                msoShapeRoundedRectangle, _
+                LeftPos, _
+                TopPos, _
+                NODE_WIDTH, _
+                NODE_HEIGHT)
+
+    shp.Name = "N_" & Format$(gNodeNo, "000000")
+
+    shp.TextFrame.Characters.Text = CaptionText
+    
+    shp.TextFrame.Characters.Font.size = 9
+    
+    shp.OnAction = "SelectNode"
+    
+    shp.Fill.ForeColor.RGB = FillColor
+    
+    shp.TextFrame.Characters.Font.Color = RGB(0, 0, 0)
+    
+    shp.line.ForeColor.RGB = RGB(80, 80, 80)
+    
+    shp.line.Weight = 1.25
+
+    Set DrawNode = shp
+
+End Function
+
+'==================================================
+' ノード表示テキスト生成
+'
+' 形式
+'   関数名 <モジュール名>
+'   日本語関数名
+'==================================================
+
+' @JPName
+' ノード表示文字列生成
+'
+' @Category
+' PathChart
+'
+' @Input
+' ProcName(String)
+' CallCount(Long)
+'
+' @Output
+' CaptionText(String)
+'
+' @Summary
+' PathChartノードに表示する文字列を生成する
+'
+' @Remarks
+' モジュール名表示および呼出回数表示は
+' 設定値により切替える
+'
+Private Function BuildCaptionText( _
+                ByVal ProcName As String, _
+                Optional ByVal CallCount As Long = 0) _
+                As String
+
+    Dim Proc As clsProcInfo
+
+    Dim CaptionText As String
+
+    Set Proc = GetProcInfo(ProcName)
+
+    CaptionText = ProcName
+
+    If Not Proc Is Nothing Then
+
+        If gShowModule Then
+
+            CaptionText = _
+                CaptionText & _
+                " <" & _
+                Proc.ModuleName & _
+                ">"
+
+        End If
+
+        If Trim$(Proc.JPName) <> "" Then
+
+            CaptionText = _
+                CaptionText & vbLf & _
+                Proc.JPName
+
+        End If
+
+    End If
+
+    If gShowCount Then
+
+        If CallCount > 0 Then
+
+            CaptionText = _
+                CaptionText & _
+                " (" & CallCount & ")"
+
+        End If
+
+    End If
+
+    BuildCaptionText = CaptionText
+
+End Function
+
+' @JPName
+' モジュール色取得
+'
+' @Category
+' PathChart
+'
+' @Summary
+' モジュール名に対応する表示色を取得する
+'
 Private Function GetModuleColor( _
                     ByVal ModuleName As String) As Long
 
@@ -539,6 +660,224 @@ Private Function GetModuleColor( _
 
 End Function
 
+'==================================================
+' 接続線
+'==================================================
+
+' @JPName
+' 接続線作成
+'
+' @Category
+' PathChart
+'
+' @Summary
+' 親ノードと子ノード間の接続線を作成する
+'
+Private Sub ConnectShapes( _
+            ws As Worksheet, _
+            ByVal ParentName As String, _
+            ByVal ChildName As String)
+
+    Dim Con As Shape
+
+    Set Con = ws.Shapes.AddConnector( _
+                    msoConnectorElbow, _
+                    0, 0, 100, 100)
+
+    Con.ConnectorFormat.BeginConnect _
+        ws.Shapes(ParentName), 4
+
+    Con.ConnectorFormat.EndConnect _
+        ws.Shapes(ChildName), 2
+
+    On Error Resume Next
+
+    Con.Name = _
+        "C_" & ParentName & "_" & ChildName
+
+    On Error GoTo 0
+
+End Sub
+
+'==================================================
+' PathChart初期化
+'==================================================
+
+' @JPName
+' チャート初期化
+'
+' @Category
+' PathChart
+'
+' @Summary
+' PathChart上の作成済みノードと接続線を削除する
+'
+Private Sub ClearChartShapes(ws As Worksheet)
+
+    Dim i As Long
+
+    For i = ws.Shapes.Count To 1 Step -1
+
+        If Left$(ws.Shapes(i).Name, 2) = "N_" _
+        Or Left$(ws.Shapes(i).Name, 2) = "C_" Then
+
+            ws.Shapes(i).Delete
+
+        End If
+
+    Next i
+
+End Sub
+
+' @JPName
+' チャート範囲取得
+'
+' @Category
+' PathChart
+'
+' @Summary
+' PathChart全体を含むセル範囲を取得する
+'
+Public Function GetChartRange() As Range
+
+    Dim ws As Worksheet
+    Dim shp As Shape
+
+    Dim MaxRight As Double
+    Dim MaxBottom As Double
+
+    Dim LastCol As Long
+    Dim LastRow As Long
+
+    Set ws = Worksheets("PathChart")
+
+    MaxRight = ws.Range(ROOT_CELL).Left
+    MaxBottom = ws.Range(ROOT_CELL).Top
+
+    For Each shp In ws.Shapes
+
+        If Left$(shp.Name, 2) = "N_" _
+        Or Left$(shp.Name, 2) = "C_" Then
+
+            If shp.Left + shp.Width > MaxRight Then
+
+                MaxRight = shp.Left + shp.Width
+
+            End If
+
+            If shp.Top + shp.Height > MaxBottom Then
+
+                MaxBottom = shp.Top + shp.Height
+
+            End If
+
+        End If
+
+    Next shp
+
+    LastCol = 1
+
+    Do While ws.Columns(LastCol).Left < MaxRight
+
+        LastCol = LastCol + 1
+
+    Loop
+
+    LastRow = 1
+
+    Do While ws.Rows(LastRow).Top < MaxBottom
+
+        LastRow = LastRow + 1
+
+    Loop
+
+    Set GetChartRange = _
+        ws.Range( _
+            ws.Range(ROOT_CELL), _
+            ws.Cells(LastRow + 1, _
+                     LastCol + 1))
+
+End Function
+
+'==================================================
+' PathChart実行
+'==================================================
+
+' @JPName
+' パスチャート実行
+'
+' @Category
+' PathChart
+'
+' @Summary
+' PathChart生成を実行し結果を表示する
+'
+Public Sub ExecutePathChart( _
+                ByVal StartProc As String, _
+                ByVal MaxDepth As Long)
+
+    Dim ws As Worksheet
+
+    Set ws = _
+        ThisWorkbook.Worksheets("PathChart")
+
+    '--------------------------
+    ' ログ
+    '--------------------------
+
+    frmPathChart.AddLog _
+        "PathChart生成開始"
+
+    '--------------------------
+    ' PathChart生成
+    '--------------------------
+
+    CreatePathChart_V3 StartProc, MaxDepth
+
+    '--------------------------
+    ' 結果表示
+    '--------------------------
+
+    frmPathChart.AddLog _
+        "PathChart生成完了"
+
+    frmPathChart.lblNodeCount.Caption = _
+        "Node数: " & NodeCount
+
+    frmPathChart.lblEdgeCount.Caption = _
+        "Edge数: " & EdgeCount
+
+    frmPathChart.lblDepth.Caption = _
+        "最大深度: " & MaxDepthFound
+
+    frmPathChart.AddLog _
+        "Node数 : " & NodeCount
+
+    frmPathChart.AddLog _
+        "Edge数 : " & EdgeCount
+
+    frmPathChart.AddLog _
+        "最大深度 : " & MaxDepthFound
+
+    ThisWorkbook.Worksheets("PathChart").Activate
+    
+    'frmPathChart.Hide
+
+End Sub
+
+'==================================================
+' 検索
+'==================================================
+
+' @JPName
+' ノード検索
+'
+' @Category
+' PathChart
+'
+' @Summary
+' 指定文字列でノードを検索する
+'
 Public Sub FindNode()
 
     'MsgBox "FindNode Start"
@@ -547,12 +886,30 @@ Public Sub FindNode()
 
 End Sub
 
+' @JPName
+' 次候補検索
+'
+' @Category
+' PathChart
+'
+' @Summary
+' 次の検索候補ノードを検索する
+'
 Public Sub FindNextNode()
 
     FindNodeCore True
 
 End Sub
 
+' @JPName
+' ノード検索実行
+'
+' @Category
+' PathChart
+'
+' @Summary
+' PathChart内のノード検索処理を実行する
+'
 Private Sub FindNodeCore(ByVal IsNext As Boolean)
 
     Dim ws As Worksheet
@@ -742,6 +1099,247 @@ ContinueLoop:
 
 End Sub
 
+' @JPName
+' ノード一致判定
+'
+' @Category
+' PathChart
+'
+' @Summary
+' ノード文字列が検索条件に一致するか判定する
+'
+Private Function IsMatchNode( _
+                ByVal NodeText As String, _
+                ByVal FindText As String, _
+                ByVal ExactMatch As Boolean) _
+                As Boolean
+
+    If ExactMatch Then
+
+        Dim BaseText As String
+
+        BaseText = Split(NodeText, "(")(0)
+        BaseText = Split(BaseText, "[")(0)
+
+        BaseText = Trim$(BaseText)
+
+        IsMatchNode = _
+            (StrComp(BaseText, _
+                     FindText, _
+                     vbTextCompare) = 0)
+
+    Else
+
+        IsMatchNode = _
+            (InStr(1, _
+                   NodeText, _
+                   FindText, _
+                   vbTextCompare) > 0)
+
+    End If
+
+End Function
+
+'==================================================
+' ノード選択
+'==================================================
+
+' @JPName
+' ノード選択
+'
+' @Category
+' PathChart
+'
+' @Summary
+' 選択されたノードを現在ノードとして設定する
+'
+Public Sub SelectNode()
+
+    If gParentMap Is Nothing Then
+
+        MsgBox _
+            "パスチャート情報が初期化されています。" & vbCrLf & _
+            "PathChartを再生成してください。"
+
+        Exit Sub
+
+    End If
+
+    If gChildMap Is Nothing Then
+
+        MsgBox _
+            "パスチャート情報が初期化されています。" & vbCrLf & _
+            "PathChartを再生成してください。"
+
+        Exit Sub
+
+    End If
+    
+    Dim ws As Worksheet
+    Dim shp As Shape
+    Dim ShapeName As String
+
+    Set ws = Worksheets("PathChart")
+
+    ShapeName = CStr(Application.Caller)
+
+    On Error Resume Next
+
+    Set shp = ws.Shapes(ShapeName)
+
+    On Error GoTo 0
+    
+    If shp Is Nothing Then Exit Sub
+
+    UpdateCurrentNodeInfo _
+        GetProcedureNameFromNodeText( _
+            shp.TextFrame.Characters.Text)
+
+    gCurrentShapeName = shp.Name
+
+    gCurrentParentWithChildren = shp.Name
+
+    gCurrentChildIndex = 0
+
+    If Not gParentMap Is Nothing Then
+
+        If gParentMap.Exists(shp.Name) Then
+
+            gCurrentParentShapeName = _
+                gParentMap(shp.Name)
+
+        Else
+
+            gCurrentParentShapeName = ""
+
+        End If
+
+    End If
+    
+    HighlightNode shp
+
+    UpdateNavigatorStatus _
+        "Current : " & _
+        GetProcedureNameFromNodeText( _
+            shp.TextFrame.Characters.Text)
+        
+End Sub
+
+'==================================================
+' ノード表示文字列からProcedure名を取得
+'
+' 例:
+'   Get_MonshinInfo <modMonshinCore>
+'   問診情報取得
+'
+' → Get_MonshinInfo
+'==================================================
+
+' @JPName
+' 関数名取得
+'
+' @Category
+' PathChart
+'
+' @Input
+' NodeText(String)
+'
+' @Output
+' ProcedureName(String)
+'
+' @Summary
+' ノード表示文字列から
+' プロシージャ名を取得する
+'
+' @Remarks
+' ナビゲータ表示および
+' ノード検索で利用する
+'
+Public Function GetProcedureNameFromNodeText( _
+                ByVal NodeText As String) _
+                As String
+
+    Dim ProcName As String
+
+    ProcName = _
+        Split(NodeText, vbLf)(0)
+
+    ProcName = _
+        Split(ProcName, " <")(0)
+
+    GetProcedureNameFromNodeText = _
+        Trim$(ProcName)
+
+End Function
+
+' @JPName
+' ノード情報更新
+'
+' @Category
+' PathChart
+'
+' @Summary
+' 選択ノードの情報をNavigatorへ表示する
+'
+Public Sub UpdateCurrentNodeInfo( _
+                ByVal ProcName As String)
+    
+    Dim Proc As clsProcInfo
+
+    Set Proc = GetProcInfo(ProcName)
+
+    On Error Resume Next
+
+    If frmPathChartNavigator.Visible Then
+
+        frmPathChartNavigator.txtCurrentNode.Text = _
+            ProcName
+
+        If Not Proc Is Nothing Then
+
+            frmPathChartNavigator.lblJPName.Caption = _
+                Proc.JPName
+
+            frmPathChartNavigator.lblCategory.Caption = _
+                Proc.Category
+
+            frmPathChartNavigator.lblModule.Caption = _
+                Proc.ModuleName
+            
+            frmPathChartNavigator.txtSummary.Text = _
+                Proc.Summary
+
+        Else
+
+            frmPathChartNavigator.lblJPName.Caption = ""
+
+            frmPathChartNavigator.lblCategory.Caption = ""
+            
+            frmPathChartNavigator.lblModule.Caption = ""
+
+            frmPathChartNavigator.txtSummary.Text = ""
+
+        End If
+
+    End If
+
+    On Error GoTo 0
+
+End Sub
+
+'==================================================
+' ノード移動
+'==================================================
+
+' @JPName
+' 親ノード移動
+'
+' @Category
+' PathChart
+'
+' @Summary
+' 現在ノードの親ノードへ移動する
+'
 Public Sub MoveToParentNode()
 
     If gParentMap Is Nothing Then
@@ -831,6 +1429,15 @@ Public Sub MoveToParentNode()
     
 End Sub
 
+' @JPName
+' 子ノード移動
+'
+' @Category
+' PathChart
+'
+' @Summary
+' 現在ノードの子ノードへ移動する
+'
 Public Sub MoveToChildNode()
 
     If gChildMap Is Nothing Then
@@ -952,6 +1559,15 @@ Public Sub MoveToChildNode()
 
 End Sub
 
+' @JPName
+' 兄弟ノード移動
+'
+' @Category
+' PathChart
+'
+' @Summary
+' 現在ノードと同一親を持つ兄弟ノードへ移動する
+'
 Public Sub MoveToSiblingNode()
 
     If gParentMap Is Nothing Then
@@ -1071,39 +1687,19 @@ Public Sub MoveToSiblingNode()
 
 End Sub
 
-Private Function IsMatchNode( _
-                ByVal NodeText As String, _
-                ByVal FindText As String, _
-                ByVal ExactMatch As Boolean) _
-                As Boolean
+'==================================================
+' ハイライト
+'==================================================
 
-    If ExactMatch Then
-
-        Dim BaseText As String
-
-        BaseText = Split(NodeText, "(")(0)
-        BaseText = Split(BaseText, "[")(0)
-
-        BaseText = Trim$(BaseText)
-
-        IsMatchNode = _
-            (StrComp(BaseText, _
-                     FindText, _
-                     vbTextCompare) = 0)
-
-    Else
-
-        IsMatchNode = _
-            (InStr(1, _
-                   NodeText, _
-                   FindText, _
-                   vbTextCompare) > 0)
-
-    End If
-
-End Function
-
-' ハイライト処理
+' @JPName
+' ノード強調表示
+'
+' @Category
+' PathChart
+'
+' @Summary
+' 現在ノードおよび関連ノードを強調表示する
+'
 Private Sub HighlightNode( _
                 ByVal shp As Shape)
 
@@ -1134,7 +1730,15 @@ Private Sub HighlightNode( _
 
 End Sub
 
+' @JPName
 ' 現在ノード強調
+'
+' @Category
+' PathChart
+'
+' @Summary
+' 現在選択中ノードを強調表示する
+'
 Private Sub HighlightCurrentNode( _
                 ByVal shp As Shape)
 
@@ -1148,7 +1752,15 @@ Private Sub HighlightCurrentNode( _
 
 End Sub
 
+' @JPName
 ' 親ノード強調
+'
+' @Category
+' PathChart
+'
+' @Summary
+' 親ノードを強調表示する
+'
 Private Sub HighlightParentNode( _
                 ByVal ParentShapeName As String)
 
@@ -1171,7 +1783,15 @@ Private Sub HighlightParentNode( _
 
 End Sub
 
-' 親コネクタ強調
+' @JPName
+' 親接続線強調
+'
+' @Category
+' PathChart
+'
+' @Summary
+' 親ノードとの接続線を強調表示する
+'
 Private Sub HighlightParentConnector()
 
     If gParentMap Is Nothing Then Exit Sub
@@ -1189,7 +1809,15 @@ Private Sub HighlightParentConnector()
 
 End Sub
 
+' @JPName
 ' 子ノード強調
+'
+' @Category
+' PathChart
+'
+' @Summary
+' 現在ノードの子ノードを強調表示する
+'
 Private Sub HighlightChildNodes( _
                 ByVal ParentShapeName As String)
 
@@ -1246,7 +1874,15 @@ Private Sub HighlightChildNodes( _
 End Sub
 
 
+' @JPName
 ' 兄弟ノード強調
+'
+' @Category
+' PathChart
+'
+' @Summary
+' 兄弟ノードを強調表示する
+'
 Private Sub HighlightSiblingNodes( _
                 ByVal ParentShapeName As String)
 
@@ -1296,7 +1932,15 @@ Private Sub HighlightSiblingNodes( _
 End Sub
 
 
-' 兄弟コネクタ強調
+' @JPName
+' 兄弟接続線強調
+'
+' @Category
+' PathChart
+'
+' @Summary
+' 兄弟ノードへの接続線を強調表示する
+'
 Private Sub HighlightSiblingConnectors( _
                 ByVal ParentShapeName As String)
 
@@ -1330,41 +1974,54 @@ Private Sub HighlightSiblingConnectors( _
 
 End Sub
 
+' @JPName
+' 接続線強調
+'
+' @Category
+' PathChart
+'
+' @Summary
+' 指定ノード間の接続線を強調表示する
+'
+Private Sub HighlightConnector( _
+                ByVal ParentShapeName As String, _
+                ByVal ChildShapeName As String, _
+                ByVal LineColor As Long, _
+                ByVal LineWeight As Double)
 
-' ハイライト解除
-' PathChartの状態をすべて解除する
-Public Sub ClearHighlight()
+    Dim ws As Worksheet
+    Dim ConnectorName As String
 
-    Call ResetChartHighlight
+    Set ws = Worksheets("PathChart")
 
-    gCurrentShapeName = ""
+    ConnectorName = _
+        "C_" & _
+        ParentShapeName & "_" & _
+        ChildShapeName
 
-    gCurrentParentShapeName = ""
+    On Error Resume Next
 
-    gCurrentParentWithChildren = ""
+    With ws.Shapes(ConnectorName)
 
-    gCurrentNodeText = ""
+        .line.ForeColor.RGB = LineColor
+        .line.Weight = LineWeight
+        
+    End With
 
-    gNavigatorStatus = ""
-
-    Application.StatusBar = False
-
-    UpdateNavigatorStatus ""
-
-    frmPathChartNavigator.txtCurrentNode.Text = ""
-
-    frmPathChartNavigator.lblJPName.Caption = ""
-
-    frmPathChartNavigator.lblCategory.Caption = ""
-
-    frmPathChartNavigator.lblModule.Caption = ""
-
-    frmPathChartNavigator.txtSummary.Text = ""
+    On Error GoTo 0
 
 End Sub
 
 
-' 図形初期化
+' @JPName
+' 強調解除
+'
+' @Category
+' PathChart
+'
+' @Summary
+' PathChartの強調表示を初期状態へ戻す
+'
 Private Sub ResetChartHighlight()
 
     Dim ws As Worksheet
@@ -1396,242 +2053,107 @@ Private Sub ResetChartHighlight()
 
 End Sub
 
-Public Sub RegisterShortcut()
 
-    ' 検索 Ctrl + Shift + F
-    Application.OnKey "^+F", "FindNode"
+'==================================================
+' ハイライト解除
+'==================================================
 
-    ' 次検索 Ctrl + Shift + N
-    Application.OnKey "^+N", "FindNextNode"
-    
-    ' 親へ移動 Ctrl + Shift + P
-    Application.OnKey "^+P", "MoveToParentNode"
-    
-    ' 子へ移動 Ctrl + Shift + C
-    Application.OnKey "^+C", "MoveToChildNode"
-    
-    ' 兄弟へ移動 Ctrl + Shift + S
-    Application.OnKey "^+S", "MoveToSiblingNode"
-    
-    ' ハイライト解除 Ctrl + Shift + H
-    Application.OnKey "^+H", "ClearHighlight"
+' @JPName
+' 強調表示解除
+'
+' @Category
+' PathChart
+'
+' @Input
+' なし
+'
+' @Output
+' なし
+'
+' @Summary
+' PathChartの強調表示状態を解除する
+'
+' @Remarks
+' 現在選択ノード情報および
+' Navigator表示情報も初期化する
+'
+Public Sub ClearHighlight()
+
+    Call ResetChartHighlight
+
+    gCurrentShapeName = ""
+
+    gCurrentParentShapeName = ""
+
+    gCurrentParentWithChildren = ""
+
+    gCurrentNodeText = ""
+
+    gNavigatorStatus = ""
+
+    Application.StatusBar = False
+
+    UpdateNavigatorStatus ""
+
+    frmPathChartNavigator.txtCurrentNode.Text = ""
+
+    frmPathChartNavigator.lblJPName.Caption = ""
+
+    frmPathChartNavigator.lblCategory.Caption = ""
+
+    frmPathChartNavigator.lblModule.Caption = ""
+
+    frmPathChartNavigator.txtSummary.Text = ""
 
 End Sub
 
-Public Sub UnRegisterShortcut()
+'==================================================
+' Navigator
+'==================================================
 
-    Application.OnKey "^+F"
+' @JPName
+' Navigator状態更新
+'
+' @Category
+' PathChart
+'
+' @Summary
+' Navigatorおよびステータスバーへ状態を表示する
+'
+Public Sub UpdateNavigatorStatus( _
+                ByVal Msg As String)
 
-    Application.OnKey "^+N"
-    
-    Application.OnKey "^+P"
-
-    Application.OnKey "^+C"
-    
-    Application.OnKey "^+S"
-    
-    Application.OnKey "^+H"
-
-End Sub
-
-Private Sub ExportPathChartToPowerPoint( _
-                ByVal StartProc As String, _
-                ByVal MaxDepth As Long)
-
-    Call modPowerPointChart.CreatePowerPointPathChart( _
-            StartProc, _
-            MaxDepth)
-
-End Sub
-
-' ノード選択処理
-Public Sub SelectNode()
-
-    If gParentMap Is Nothing Then
-
-        MsgBox _
-            "パスチャート情報が初期化されています。" & vbCrLf & _
-            "PathChartを再生成してください。"
-
-        Exit Sub
-
-    End If
-
-    If gChildMap Is Nothing Then
-
-        MsgBox _
-            "パスチャート情報が初期化されています。" & vbCrLf & _
-            "PathChartを再生成してください。"
-
-        Exit Sub
-
-    End If
-    
-    Dim ws As Worksheet
-    Dim shp As Shape
-    Dim ShapeName As String
-
-    Set ws = Worksheets("PathChart")
-
-    ShapeName = CStr(Application.Caller)
+    gNavigatorStatus = Msg
 
     On Error Resume Next
 
-    Set shp = ws.Shapes(ShapeName)
+    If frmPathChartNavigator.Visible Then
 
-    On Error GoTo 0
-    
-    If shp Is Nothing Then Exit Sub
-
-    UpdateCurrentNodeInfo _
-        GetProcedureNameFromNodeText( _
-            shp.TextFrame.Characters.Text)
-
-    gCurrentShapeName = shp.Name
-
-    gCurrentParentWithChildren = shp.Name
-
-    gCurrentChildIndex = 0
-
-    If Not gParentMap Is Nothing Then
-
-        If gParentMap.Exists(shp.Name) Then
-
-            gCurrentParentShapeName = _
-                gParentMap(shp.Name)
-
-        Else
-
-            gCurrentParentShapeName = ""
-
-        End If
+        frmPathChartNavigator.txtStatus.Text = _
+            Msg
 
     End If
-    
-    HighlightNode shp
 
-    UpdateNavigatorStatus _
-        "Current : " & _
-        GetProcedureNameFromNodeText( _
-            shp.TextFrame.Characters.Text)
-        
-End Sub
+    On Error GoTo 0
 
-Public Function GetChartRange() As Range
-
-    Dim ws As Worksheet
-    Dim shp As Shape
-
-    Dim MaxRight As Double
-    Dim MaxBottom As Double
-
-    Dim LastCol As Long
-    Dim LastRow As Long
-
-    Set ws = Worksheets("PathChart")
-
-    MaxRight = ws.Range(ROOT_CELL).Left
-    MaxBottom = ws.Range(ROOT_CELL).Top
-
-    For Each shp In ws.Shapes
-
-        If Left$(shp.Name, 2) = "N_" _
-        Or Left$(shp.Name, 2) = "C_" Then
-
-            If shp.Left + shp.Width > MaxRight Then
-
-                MaxRight = shp.Left + shp.Width
-
-            End If
-
-            If shp.Top + shp.Height > MaxBottom Then
-
-                MaxBottom = shp.Top + shp.Height
-
-            End If
-
-        End If
-
-    Next shp
-
-    LastCol = 1
-
-    Do While ws.Columns(LastCol).Left < MaxRight
-
-        LastCol = LastCol + 1
-
-    Loop
-
-    LastRow = 1
-
-    Do While ws.Rows(LastRow).Top < MaxBottom
-
-        LastRow = LastRow + 1
-
-    Loop
-
-    Set GetChartRange = _
-        ws.Range( _
-            ws.Range(ROOT_CELL), _
-            ws.Cells(LastRow + 1, _
-                     LastCol + 1))
-
-End Function
-
-Public Sub ExecutePathChart( _
-                ByVal StartProc As String, _
-                ByVal MaxDepth As Long)
-
-    Dim ws As Worksheet
-
-    Set ws = _
-        ThisWorkbook.Worksheets("PathChart")
-
-    '--------------------------
-    ' ログ
-    '--------------------------
-
-    frmPathChart.AddLog _
-        "PathChart生成開始"
-
-    '--------------------------
-    ' PathChart生成
-    '--------------------------
-
-    CreatePathChart_V3 StartProc, MaxDepth
-
-    '--------------------------
-    ' 結果表示
-    '--------------------------
-
-    frmPathChart.AddLog _
-        "PathChart生成完了"
-
-    frmPathChart.lblNodeCount.Caption = _
-        "Node数: " & NodeCount
-
-    frmPathChart.lblEdgeCount.Caption = _
-        "Edge数: " & EdgeCount
-
-    frmPathChart.lblDepth.Caption = _
-        "最大深度: " & MaxDepthFound
-
-    frmPathChart.AddLog _
-        "Node数 : " & NodeCount
-
-    frmPathChart.AddLog _
-        "Edge数 : " & EdgeCount
-
-    frmPathChart.AddLog _
-        "最大深度 : " & MaxDepthFound
-
-    ThisWorkbook.Worksheets("PathChart").Activate
-    
-    'frmPathChart.Hide
+    Application.StatusBar = Msg
 
 End Sub
 
-' 開始候補ロード
+
+'==================================================
+' 開始候補
+'==================================================
+
+' @JPName
+' 開始関数読込
+'
+' @Category
+' PathChart
+'
+' @Summary
+' 開始関数候補をコンボボックスへ設定する
+'
 Public Sub LoadStartProcedure( _
                 ByVal cbo As MSForms.ComboBox)
 
@@ -1674,114 +2196,38 @@ Public Sub LoadStartProcedure( _
 
 End Sub
 
-' 現在の選択ノード情報の設定
-Public Sub UpdateCurrentNodeInfo( _
-                ByVal ProcName As String)
-    
-    Dim Proc As clsProcInfo
+'==================================================
+' 検索履歴
+'==================================================
 
-    Set Proc = GetProcInfo(ProcName)
+' @JPName
+' 検索履歴初期化
+'
+' @Category
+' PathChart
+'
+' @Summary
+' 検索履歴コレクションを初期化する
+'
+Public Sub InitSearchHistory()
 
-    On Error Resume Next
+    If gSearchHistory Is Nothing Then
 
-    If frmPathChartNavigator.Visible Then
-
-        frmPathChartNavigator.txtCurrentNode.Text = _
-            ProcName
-
-        If Not Proc Is Nothing Then
-
-            frmPathChartNavigator.lblJPName.Caption = _
-                Proc.JPName
-
-            frmPathChartNavigator.lblCategory.Caption = _
-                Proc.Category
-
-            frmPathChartNavigator.lblModule.Caption = _
-                Proc.ModuleName
-            
-            frmPathChartNavigator.txtSummary.Text = _
-                Proc.Summary
-
-        Else
-
-            frmPathChartNavigator.lblJPName.Caption = ""
-
-            frmPathChartNavigator.lblCategory.Caption = ""
-            
-            frmPathChartNavigator.lblModule.Caption = ""
-
-            frmPathChartNavigator.txtSummary.Text = ""
-
-        End If
+        Set gSearchHistory = New Collection
 
     End If
 
-    On Error GoTo 0
-
 End Sub
 
-' 検索候補ロード
-Public Sub OldLoadSearchProcedure( _
-                ByVal cbo As MSForms.ComboBox)
-
-    Dim ws As Worksheet
-    Dim LastRow As Long
-    Dim r As Long
-    Dim Dic As Object
-
-    Set Dic = CreateObject("Scripting.Dictionary")
-
-    Set ws = _
-        ThisWorkbook.Worksheets("関数依存関係")
-
-    LastRow = _
-        ws.Cells(ws.Rows.Count, "A") _
-            .End(xlUp).row
-
-    cbo.Clear
-
-    For r = 2 To LastRow
-
-        ' 呼出元
-        If Trim$(ws.Cells(r, 1).Value) <> "" Then
-
-            If Not Dic.Exists(ws.Cells(r, 1).Value) Then
-
-                Dic.Add _
-                    ws.Cells(r, 1).Value, _
-                    True
-
-                cbo.AddItem _
-                    GetProcDisplayName( _
-                        ws.Cells(r, 1).Value)
-
-            End If
-
-        End If
-
-        ' 呼出先
-        If Trim$(ws.Cells(r, 3).Value) <> "" Then
-
-            If Not Dic.Exists(ws.Cells(r, 3).Value) Then
-
-                Dic.Add _
-                    ws.Cells(r, 3).Value, _
-                    True
-
-                cbo.AddItem _
-                    GetProcDisplayName( _
-                        ws.Cells(r, 3).Value)
-
-            End If
-
-        End If
-
-    Next r
-
-End Sub
-
+' @JPName
 ' 検索履歴追加
+'
+' @Category
+' PathChart
+'
+' @Summary
+' 検索履歴へキーワードを追加する
+'
 Public Sub AddSearchHistory( _
                 ByVal SearchText As String)
 
@@ -1804,7 +2250,15 @@ Public Sub AddSearchHistory( _
 
 End Sub
 
-' 検索履歴追加表示
+' @JPName
+' 検索履歴読込
+'
+' @Category
+' PathChart
+'
+' @Summary
+' 検索履歴をコンボボックスへ設定する
+'
 Public Sub LoadSearchHistory( _
                 ByVal cbo As MSForms.ComboBox)
 
@@ -1820,37 +2274,19 @@ Public Sub LoadSearchHistory( _
 
 End Sub
 
-' 検索履歴の初期化
-Public Sub InitSearchHistory()
+'==================================================
+' 検索候補
+'==================================================
 
-    If gSearchHistory Is Nothing Then
-
-        Set gSearchHistory = New Collection
-
-    End If
-
-End Sub
-
-Public Sub UpdateNavigatorStatus( _
-                ByVal Msg As String)
-
-    gNavigatorStatus = Msg
-
-    On Error Resume Next
-
-    If frmPathChartNavigator.Visible Then
-
-        frmPathChartNavigator.txtStatus.Text = _
-            Msg
-
-    End If
-
-    On Error GoTo 0
-
-    Application.StatusBar = Msg
-
-End Sub
-
+' @JPName
+' 検索候補読込
+'
+' @Category
+' PathChart
+'
+' @Summary
+' PathChart内のノード一覧を検索候補として読み込む
+'
 Public Sub LoadSearchNodeList( _
                 ByVal cbo As MSForms.ComboBox)
 
@@ -1906,166 +2342,86 @@ Public Sub LoadSearchNodeList( _
 
 End Sub
 
+'==================================================
+' ショートカット
+'==================================================
 
-Private Sub HighlightConnector( _
-                ByVal ParentShapeName As String, _
-                ByVal ChildShapeName As String, _
-                ByVal LineColor As Long, _
-                ByVal LineWeight As Double)
+' @JPName
+' ショートカット登録
+'
+' @Category
+' PathChart
+'
+' @Summary
+' PathChart操作用ショートカットキーを登録する
+'
+Public Sub RegisterShortcut()
 
-    Dim ws As Worksheet
-    Dim ConnectorName As String
+    ' 検索 Ctrl + Shift + F
+    Application.OnKey "^+F", "FindNode"
 
-    Set ws = Worksheets("PathChart")
-
-    ConnectorName = _
-        "C_" & _
-        ParentShapeName & "_" & _
-        ChildShapeName
-
-    On Error Resume Next
-
-    With ws.Shapes(ConnectorName)
-
-        .line.ForeColor.RGB = LineColor
-        .line.Weight = LineWeight
-        
-    End With
-
-    On Error GoTo 0
+    ' 次検索 Ctrl + Shift + N
+    Application.OnKey "^+N", "FindNextNode"
+    
+    ' 親へ移動 Ctrl + Shift + P
+    Application.OnKey "^+P", "MoveToParentNode"
+    
+    ' 子へ移動 Ctrl + Shift + C
+    Application.OnKey "^+C", "MoveToChildNode"
+    
+    ' 兄弟へ移動 Ctrl + Shift + S
+    Application.OnKey "^+S", "MoveToSiblingNode"
+    
+    ' ハイライト解除 Ctrl + Shift + H
+    Application.OnKey "^+H", "ClearHighlight"
 
 End Sub
 
-
-Private Function GetBranchSize( _
-                ByVal ParentFunc As String) _
-                As Long
-
-    Dim wsDep As Worksheet
-
-    Dim LastRow As Long
-    Dim r As Long
-
-    Dim ChildFunc As String
-    Dim size As Long
-
-    Set wsDep = _
-        Worksheets("関数依存関係")
-
-    LastRow = _
-        wsDep.Cells( _
-            wsDep.Rows.Count, _
-            "A").End(xlUp).row
-
-    For r = 2 To LastRow
-
-        If wsDep.Cells(r, 1).Value = ParentFunc Then
-
-            ChildFunc = _
-                Trim$(wsDep.Cells(r, 3).Value)
-
-            size = _
-                size + _
-                GetBranchSize(ChildFunc)
-
-        End If
-
-    Next r
-
-    If size = 0 Then
-
-        GetBranchSize = 1
-
-    Else
-
-        GetBranchSize = size
-
-    End If
-
-End Function
-
-'==================================================
-' ノード表示文字列からProcedure名を取得
+' @JPName
+' ショートカット解除
 '
-' 例:
-'   Get_MonshinInfo <modMonshinCore>
-'   問診情報取得
+' @Category
+' PathChart
 '
-' → Get_MonshinInfo
-'==================================================
-Public Function GetProcedureNameFromNodeText( _
-                ByVal NodeText As String) _
-                As String
-
-    Dim ProcName As String
-
-    ProcName = _
-        Split(NodeText, vbLf)(0)
-
-    ProcName = _
-        Split(ProcName, " <")(0)
-
-    GetProcedureNameFromNodeText = _
-        Trim$(ProcName)
-
-End Function
-
-'==================================================
-' ノード表示テキスト生成
+' @Summary
+' PathChart操作用ショートカットキーを解除する
 '
-' 形式
-'   関数名 <モジュール名>
-'   日本語関数名
+Public Sub UnRegisterShortcut()
+
+    Application.OnKey "^+F"
+
+    Application.OnKey "^+N"
+    
+    Application.OnKey "^+P"
+
+    Application.OnKey "^+C"
+    
+    Application.OnKey "^+S"
+    
+    Application.OnKey "^+H"
+
+End Sub
+
 '==================================================
-Private Function BuildCaptionText( _
-                ByVal ProcName As String, _
-                Optional ByVal CallCount As Long = 0) _
-                As String
+' 出力
+'==================================================
 
-    Dim Proc As clsProcInfo
+' @JPName
+' PowerPoint出力
+'
+' @Category
+' PathChart
+'
+' @Summary
+' PathChartをPowerPointへ出力する
+'
+Private Sub ExportPathChartToPowerPoint( _
+                ByVal StartProc As String, _
+                ByVal MaxDepth As Long)
 
-    Dim CaptionText As String
+    Call modPowerPointChart.CreatePowerPointPathChart( _
+            StartProc, _
+            MaxDepth)
 
-    Set Proc = GetProcInfo(ProcName)
-
-    CaptionText = ProcName
-
-    If Not Proc Is Nothing Then
-
-        If gShowModule Then
-
-            CaptionText = _
-                CaptionText & _
-                " <" & _
-                Proc.ModuleName & _
-                ">"
-
-        End If
-
-        If Trim$(Proc.JPName) <> "" Then
-
-            CaptionText = _
-                CaptionText & vbLf & _
-                Proc.JPName
-
-        End If
-
-    End If
-
-    If gShowCount Then
-
-        If CallCount > 0 Then
-
-            CaptionText = _
-                CaptionText & _
-                " (" & CallCount & ")"
-
-        End If
-
-    End If
-
-    BuildCaptionText = CaptionText
-
-End Function
-
+End Sub
 

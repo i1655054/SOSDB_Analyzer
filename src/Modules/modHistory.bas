@@ -1,13 +1,30 @@
 Attribute VB_Name = "modHistory"
 Option Explicit
 
+'==================================================
 ' 履歴管理
+'
+' ナビゲータで利用するシート遷移履歴を管理する
+'==================================================
 
+' 遷移履歴
 Public History As Collection
+
+' 現在履歴位置
 Public CurrentPos As Long
 
+' 履歴移動中フラグ
 Public IsHistoryMoving As Boolean
 
+' @JPName
+' 履歴初期化
+'
+' @Category
+' Navigator
+'
+' @Summary
+' シート遷移履歴を初期化する
+'
 Public Sub InitHistory()
 
     Set History = New Collection
@@ -15,7 +32,24 @@ Public Sub InitHistory()
 
 End Sub
 
+' @JPName
 ' 履歴追加
+'
+' @Category
+' Navigator
+'
+' @Input
+' SheetName(String)
+'
+' @Output
+' なし
+'
+' @Summary
+' 指定シートを履歴へ追加する
+'
+' @Remarks
+' 非表示シートおよび重複履歴は追加しない
+'
 Public Sub AddHistory(ByVal SheetName As String)
 
     Dim ws As Worksheet
@@ -24,6 +58,7 @@ Public Sub AddHistory(ByVal SheetName As String)
 
     If ws.Visible <> xlSheetVisible Then Exit Sub
     
+    ' メニューシートは履歴対象外
     If ws.Name = "Sheet1" Then Exit Sub
 
     If History Is Nothing Then
@@ -40,6 +75,18 @@ Public Sub AddHistory(ByVal SheetName As String)
 
 End Sub
 
+' @JPName
+' 前履歴取得
+'
+' @Category
+' Navigator
+'
+' @Output
+' SheetName(String)
+'
+' @Summary
+' 一つ前の履歴シート名を取得する
+'
 Public Function GetPreviousSheet() As String
 
     If History Is Nothing Then
@@ -56,6 +103,18 @@ Public Function GetPreviousSheet() As String
 
 End Function
 
+' @JPName
+' 次履歴取得
+'
+' @Category
+' Navigator
+'
+' @Output
+' SheetName(String)
+'
+' @Summary
+' 一つ後の履歴シート名を取得する
+'
 Public Function GetNextSheet() As String
 
     If History Is Nothing Then Exit Function

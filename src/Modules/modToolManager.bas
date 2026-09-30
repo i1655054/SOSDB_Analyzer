@@ -17,6 +17,29 @@ Public Type ToolInfo
 
 End Type
 
+'==================================================
+' Tool情報取得
+'==================================================
+
+' @JPName
+' ツール情報取得
+'
+' @Category
+' ToolManager
+'
+' @Input
+' ToolID(Long)
+'
+' @Output
+' ToolInfo
+'
+' @Summary
+' ToolManagerシートから
+' 指定ツールの情報を取得する
+'
+' @Remarks
+' ToolIDをキーとして検索する
+'
 Public Function GetToolInfo( _
                 ByVal ToolID As Long) _
                 As ToolInfo
@@ -55,13 +78,50 @@ Public Function GetToolInfo( _
 
 End Function
 
+' @JPName
+' 文字列整形
+'
+' @Category
+' ToolManager
+'
+' @Input
+' Value(Variant)
+'
+' @Output
+' String
+'
+' @Summary
+' 前後空白および全角空白を除去する
+'
 Private Function TrimEx(ByVal Value As Variant) As String
 
     TrimEx = Trim$(Replace(CStr(Value), "　", ""))
 
 End Function
 
+'==================================================
+' Workbook取得
+'==================================================
 
+' @JPName
+' 対象ブック取得
+'
+' @Category
+' ToolManager
+'
+' @Input
+' ToolID(Long)
+'
+' @Output
+' Workbook
+'
+' @Summary
+' ToolIDに対応する
+' Workbookを取得する
+'
+' @Remarks
+' Workbook未オープン時はNothingを返す
+'
 Public Function GetWorkbookByToolID( _
                 ByVal ToolID As Long) _
                 As Workbook
@@ -79,19 +139,25 @@ Public Function GetWorkbookByToolID( _
 
 End Function
 
-Public Function GetRepositoryByToolID( _
-                ByVal ToolID As Long) _
-                As String
-
-    Dim Tool As ToolInfo
-
-    Tool = GetToolInfo(ToolID)
-
-    GetRepositoryByToolID = _
-        Tool.GitRepository
-
-End Function
-
+' @JPName
+' Workbook取得
+'
+' @Category
+' ToolManager
+'
+' @Input
+' WorkbookName(String)
+'
+' @Output
+' Workbook
+'
+' @Summary
+' Workbook名から
+' Workbookオブジェクトを取得する
+'
+' @Remarks
+' Workbook未オープン時はNothingを返す
+'
 Public Function GetWorkbookByWorkbookName( _
                     ByVal WorkbookName As String) _
                     As Workbook
@@ -102,6 +168,39 @@ Public Function GetWorkbookByWorkbookName( _
         Workbooks(WorkbookName)
 
     On Error GoTo 0
+
+End Function
+
+'==================================================
+' Repository取得
+'==================================================
+
+' @JPName
+' リポジトリ名取得
+'
+' @Category
+' ToolManager
+'
+' @Input
+' ToolID(Long)
+'
+' @Output
+' RepositoryName(String)
+'
+' @Summary
+' ToolIDに対応する
+' GitHubリポジトリ名を取得する
+'
+Public Function GetRepositoryByToolID( _
+                ByVal ToolID As Long) _
+                As String
+
+    Dim Tool As ToolInfo
+
+    Tool = GetToolInfo(ToolID)
+
+    GetRepositoryByToolID = _
+        Tool.GitRepository
 
 End Function
 

@@ -19,18 +19,18 @@ Private Sub cmdExportVBA_Click()
 End Sub
 
 ' ② 関数一覧作成
-Private Sub ExtractProcedures_WithAnalysis_Click()
-    Call modAnalyze.ExtractProcedures_WithAnalysis
+Private Sub ProcedureList_Click()
+    Call modAnalyze.ProcedureList
 End Sub
 
 ' ③ 関数トレース作成
-Private Sub CreateFunctionTrace_Click()
-    Call modFunctionTrac.CreateFunctionTrace
+Private Sub FunctionTrace_Click()
+    Call modFunctionTrac.FunctionTrace
 End Sub
 
 ' ④ 関数依存関係作成
-Private Sub CreateFunctionDependency_Click()
-    Call modFunctionDependency.CreateFunctionDependency
+Private Sub FunctionDependency_Click()
+    Call modFunctionDependency.FunctionDependency
 End Sub
 
 ' ⑤ パスチャート作成

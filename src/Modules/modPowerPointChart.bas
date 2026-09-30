@@ -1,6 +1,30 @@
 Attribute VB_Name = "modPowerPointChart"
 Option Explicit
 
+'==================================================
+' PowerPoint出力
+'==================================================
+
+' @JPName
+' PowerPoint出力
+'
+' @Category
+' PathChart
+'
+' @Input
+' StartProc(String)
+' MaxDepth(Long)
+'
+' @Output
+' PowerPointファイル
+'
+' @Summary
+' PathChartをPowerPointファイルとして出力する
+'
+' @Remarks
+' スライドサイズは設定値または
+' チャートサイズから自動決定する
+'
 Public Sub CreatePowerPointPathChart( _
                 ByVal StartProc As String, _
                 ByVal MaxDepth As Long)
@@ -180,6 +204,25 @@ Public Sub CreatePowerPointPathChart( _
 
 End Sub
 
+' @JPName
+' PNG出力
+'
+' @Category
+' PathChart
+'
+' @Input
+' StartProc(String)
+' MaxDepth(Long)
+'
+' @Output
+' PNGファイル
+'
+' @Summary
+' PathChartをPNG形式で出力する
+'
+' @Remarks
+' PowerPoint経由で画像ファイルを生成する
+'
 Public Sub ExportPathChartToPNG( _
         ByVal StartProc As String, _
         ByVal MaxDepth As Long)
@@ -272,6 +315,25 @@ Public Sub ExportPathChartToPNG( _
 
 End Sub
 
+'==================================================
+' 共通
+'==================================================
+
+' @JPName
+' 出力フォルダ取得
+'
+' @Category
+' PathChart
+'
+' @Output
+' FolderPath(String)
+'
+' @Summary
+' PathChart出力先フォルダを取得する
+'
+' @Remarks
+' フォルダが存在しない場合は作成する
+'
 Public Function GetOutputFolder() As String
 
     Dim Folder As String
@@ -291,6 +353,18 @@ Public Function GetOutputFolder() As String
 
 End Function
 
+' @JPName
+' タイムスタンプ取得
+'
+' @Category
+' Common
+'
+' @Output
+' TimeStamp(String)
+'
+' @Summary
+' ファイル名用タイムスタンプを取得する
+'
 Public Function GetTimeStamp() As String
 
     GetTimeStamp = _

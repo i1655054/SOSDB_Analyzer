@@ -1,9 +1,54 @@
 Attribute VB_Name = "modPathChartConfig"
 Option Explicit
 
+'==================================================
+' 定数
+'==================================================
+
 Public Const PPT_ORIENT_AUTO As String = "AUTO"
 Public Const PPT_ORIENT_PORTRAIT As String = "PORTRAIT"
 Public Const PPT_ORIENT_LANDSCAPE As String = "LANDSCAPE"
+
+Private Const CFG_SKIP_COMMON      As String = "B1"
+Private Const CFG_SHOW_COUNT       As String = "B2"
+
+Private Const CFG_POWERPOINT       As String = "B3"
+Private Const CFG_PPT_ORIENTATION  As String = "B4"
+
+Private Const CFG_PNG_OUTPUT       As String = "B5"
+
+Private Const CFG_SHOW_MODULE      As String = "B6"
+Private Const CFG_COLOR_MODULE     As String = "B7"
+
+Private Const CFG_PROPERTY         As String = "B8"
+Private Const CFG_PRIVATE          As String = "B9"
+Private Const CFG_PUBLIC           As String = "B10"
+
+Private Const CFG_STD_MODULE       As String = "B11"
+Private Const CFG_USER_FORM        As String = "B12"
+Private Const CFG_CLASS_MODULE     As String = "B13"
+
+Private Const CFG_IGNORE_API       As String = "B14"
+Private Const CFG_IGNORE_EXCEL     As String = "B15"
+Private Const CFG_IGNORE_SELF      As String = "B16"
+Private Const CFG_SAME_MODULE_ONLY As String = "B17"
+
+Private Const CFG_COLOR_THEME      As String = "B18"
+
+Private Const CFG_MAX_NODE         As String = "B19"
+Private Const CFG_MAX_EDGE         As String = "B20"
+Private Const CFG_MAX_DEPTH        As String = "B21"
+Private Const CFG_START_PROC       As String = "B22"
+Private Const CFG_EXTERNAL         As String = "B23"
+Private Const CFG_RECURSIVE        As String = "B24"
+
+Private Const CFG_SHOW_JPNAME      As String = "B25"
+Private Const CFG_SHOW_CATEGORY    As String = "B26"
+
+
+'==================================================
+' 実行時設定
+'==================================================
 
 '解析対象
 Public gProperty As Boolean
@@ -70,43 +115,25 @@ Public gExternal As Boolean
 Public gShowJPName As Boolean
 Public gShowCategory As Boolean
 
-Private Const CFG_SKIP_COMMON      As String = "B1"
-Private Const CFG_SHOW_COUNT       As String = "B2"
 
-Private Const CFG_POWERPOINT       As String = "B3"
-Private Const CFG_PPT_ORIENTATION  As String = "B4"
+'==================================================
+' 設定保存・復元
+'==================================================
 
-Private Const CFG_PNG_OUTPUT       As String = "B5"
-
-Private Const CFG_SHOW_MODULE      As String = "B6"
-Private Const CFG_COLOR_MODULE     As String = "B7"
-
-Private Const CFG_PROPERTY         As String = "B8"
-Private Const CFG_PRIVATE          As String = "B9"
-Private Const CFG_PUBLIC           As String = "B10"
-
-Private Const CFG_STD_MODULE       As String = "B11"
-Private Const CFG_USER_FORM        As String = "B12"
-Private Const CFG_CLASS_MODULE     As String = "B13"
-
-Private Const CFG_IGNORE_API       As String = "B14"
-Private Const CFG_IGNORE_EXCEL     As String = "B15"
-Private Const CFG_IGNORE_SELF      As String = "B16"
-Private Const CFG_SAME_MODULE_ONLY As String = "B17"
-
-Private Const CFG_COLOR_THEME      As String = "B18"
-
-Private Const CFG_MAX_NODE         As String = "B19"
-Private Const CFG_MAX_EDGE         As String = "B20"
-Private Const CFG_MAX_DEPTH        As String = "B21"
-Private Const CFG_START_PROC       As String = "B22"
-Private Const CFG_EXTERNAL         As String = "B23"
-Private Const CFG_RECURSIVE        As String = "B24"
-
-Private Const CFG_SHOW_JPNAME      As String = "B25"
-Private Const CFG_SHOW_CATEGORY    As String = "B26"
-
-' 設定保存機能
+' @JPName
+' PathChart設定保存
+'
+' @Category
+' PathChart
+'
+' @Summary
+' PathChart設定を
+' PathChartConfigシートへ保存する
+'
+' @Remarks
+' 出力設定、解析条件、
+' 表示設定を保存する
+'
 Public Sub SavePathChartConfig()
 
     Dim ws As Worksheet
@@ -149,7 +176,19 @@ Public Sub SavePathChartConfig()
 
 End Sub
 
-' 設定読込機能
+' @JPName
+' PathChart設定読込
+'
+' @Category
+' PathChart
+'
+' @Summary
+' PathChartConfigシートから
+' PathChart設定を読み込む
+'
+' @Remarks
+' 未設定項目には既定値を設定する
+'
 Public Sub LoadPathChartConfig()
 
     Dim ws As Worksheet
@@ -226,7 +265,22 @@ Public Sub LoadPathChartConfig()
 
 End Sub
 
-' 最大深度保存関数
+'==================================================
+' PathChart既定値
+'==================================================
+' @JPName
+' 既定深度保存
+'
+' @Category
+' PathChart
+'
+' @Input
+' MaxDepth(Long)
+'
+' @Summary
+' PathChart作成時の既定探索深度を保存する
+' 最大深度保存
+'
 Public Sub SaveDefaultMaxDepth( _
                     ByVal MaxDepth As Long)
 
@@ -240,7 +294,21 @@ Public Sub SaveDefaultMaxDepth( _
 
 End Sub
 
-' 最大深度取得関数
+' @JPName
+' 既定深度取得
+'
+' @Category
+' PathChart
+'
+' @Output
+' MaxDepth(Long)
+'
+' @Summary
+' PathChart作成時の既定探索深度を取得する
+'
+' @Remarks
+' 未設定時は5を返す
+'
 Public Function GetDefaultMaxDepth() As Long
 
     Dim ws As Worksheet
@@ -258,7 +326,18 @@ Public Function GetDefaultMaxDepth() As Long
 
 End Function
 
-' 開始Procedure保存関数
+' @JPName
+' 開始関数保存
+'
+' @Category
+' PathChart
+'
+' @Input
+' StartProc(String)
+'
+' @Summary
+' PathChart作成時の開始関数を保存する
+'
 Public Sub SaveDefaultStartProcedure( _
                     ByVal StartProc As String)
 
@@ -272,7 +351,18 @@ Public Sub SaveDefaultStartProcedure( _
 
 End Sub
 
-' 開始Procedures復元関数
+' @JPName
+' 開始関数取得
+'
+' @Category
+' PathChart
+'
+' @Output
+' ProcedureName(String)
+'
+' @Summary
+' PathChart作成時の開始関数を取得する
+'
 Public Function GetDefaultStartProcedure() As String
 
     Dim ws As Worksheet

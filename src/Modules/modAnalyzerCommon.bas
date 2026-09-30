@@ -1,6 +1,7 @@
 Attribute VB_Name = "modAnalyzerCommon"
 Option Explicit
 
+' API宣言
 #If VBA7 Then
     ' ユーザー32.dll（クリップボード操作）
     Private Declare PtrSafe Function OpenClipboard Lib "user32" (ByVal hWnd As LongPtr) As Long
@@ -19,9 +20,30 @@ Option Explicit
 Const GHND = &H42
 Const CF_UNICODETEXT = 13
 
-' 共通関数
+'==================================================
+' 共通ユーティリティ
+'==================================================
 
-' 対象ブックの状態確認
+' @JPName
+' 対象ブック確認
+'
+' @Category
+' Common
+'
+' @Input
+' TargetBook(Workbook)
+' BookName(String)
+'
+' @Output
+' True:有効
+' False:無効
+'
+' @Summary
+' 対象ブックが開かれているか確認する
+'
+' @Remarks
+' 未オープン時はメッセージを表示する
+'
 Public Function CheckTargetBook( _
                     ByVal TargetBook As Workbook, _
                     Optional ByVal BookName As String = "") _
@@ -49,9 +71,48 @@ Public Function CheckTargetBook( _
 
 End Function
 
-' コメント取得関数
+'===================================================================
+'@JPName     クリップボードコピー
+'@Category   UI支援
+'@Input      Text(String)
+'@Output     なし
+'@Summary    指定文字列をクリップボードへコピーする
+'@Remarks    Unicode形式でコピーする
+'===================================================================
+Public Sub CopyTextToClipboard(Text As String)
+    Dim hGlobalMemory As LongPtr
+    Dim lpGlobalMemory As LongPtr
+    Dim size As LongPtr
+
+    size = (Len(Text) + 1) * 2 ' Unicodeは2バイト
+
+    If OpenClipboard(0&) Then
+        EmptyClipboard
+        hGlobalMemory = GlobalAlloc(GHND, size)
+        lpGlobalMemory = GlobalLock(hGlobalMemory)
+        CopyMemory ByVal lpGlobalMemory, ByVal StrPtr(Text), size
+        GlobalUnlock hGlobalMemory
+        SetClipboardData CF_UNICODETEXT, hGlobalMemory
+        CloseClipboard
+    End If
+End Sub
+
+'==================================================
+' コメント解析
+'==================================================
+
+' @JPName
+' タグ値取得
+'
+' @Category
+' Analyze
+'
+' @Summary
+' プロシージャ定義直前のコメントから
+' 指定タグの値を取得する
+'
 Public Function GetTagValue( _
-        codeMod As Object, _
+        CodeMod As Object, _
         ByVal startLine As Long, _
         ByVal TagName As String) As String
 
@@ -60,7 +121,7 @@ Public Function GetTagValue( _
 
     For i = startLine - 1 To 1 Step -1
 
-        txt = Trim(codeMod.Lines(i, 1))
+        txt = Trim(CodeMod.Lines(i, 1))
 
         ' コメント以外に到達したら終了
         If Left$(txt, 1) <> "'" Then Exit For
@@ -79,7 +140,16 @@ Public Function GetTagValue( _
 End Function
 
 
-' コメント取得関数
+' @JPName
+' タグ値取得
+'
+' @Category
+' Analyze
+'
+' @Summary
+' ソースコード文字列から
+' 指定タグの値を取得する
+'
 Public Function GetTagValueFromCode( _
         ByVal CodeText As String, _
         ByVal ProcName As String, _
@@ -125,38 +195,29 @@ Public Function GetTagValueFromCode( _
 
 End Function
 
-Public Function OldGetCategory( _
-                    ByVal ProcName As String) _
-                    As String
+'==================================================
+' ProcList参照
+'==================================================
 
-    Dim Proc As clsProcInfo
-
-    Set Proc = GetProcInfo(ProcName)
-
-    If Not Proc Is Nothing Then
-
-        OldGetCategory = Proc.Category
-
-    End If
-
-End Function
-
-Public Function OldGetSummary( _
-                    ByVal ProcName As String) _
-                    As String
-
-    Dim Proc As clsProcInfo
-
-    Set Proc = GetProcInfo(ProcName)
-
-    If Not Proc Is Nothing Then
-
-        OldGetSummary = Proc.Summary
-
-    End If
-
-End Function
-
+' @JPName
+' 関数情報取得
+'
+' @Category
+' Analyze
+'
+' @Input
+' ProcName(String)
+'
+' @Output
+' clsProcInfo
+'
+' @Summary
+' ProcListシートから
+' 指定プロシージャの情報を取得する
+'
+' @Remarks
+' 情報が存在しない場合はNothingを返す
+'
 Public Function GetProcInfo( _
                 ByVal ProcName As String) _
                 As clsProcInfo
@@ -203,30 +264,16 @@ Public Function GetProcInfo( _
 
 End Function
 
-Public Function GetProcDisplayName( _
-                    ByVal ProcName As String) As String
-'不要な関数
-    Dim Proc As clsProcInfo
-
-    Set Proc = GetProcInfo(ProcName)
-
-    If Proc Is Nothing Then
-
-        GetProcDisplayName = ProcName
-
-    ElseIf Trim$(Proc.JPName) = "" Then
-
-        GetProcDisplayName = ProcName
-
-    Else
-
-        GetProcDisplayName = _
-            ProcName & " : " & Proc.JPName
-
-    End If
-
-End Function
-
+' @JPName
+' 関数名抽出
+'
+' @Category
+' Analyze
+'
+' @Summary
+' 表示文字列から
+' プロシージャ名部分を取得する
+'
 Public Function GetProcNameFromDisplay( _
                     ByVal DisplayText As String) _
                     As String
@@ -245,32 +292,83 @@ Public Function GetProcNameFromDisplay( _
 
 End Function
 
+'==================================================
+' 関数解析共通
+'==================================================
 
-'===================================================================
-'@JPName     クリップボードコピー
-'@Category   UI支援
-'@Input      Text(String)
-'@Output     なし
-'@Summary    指定文字列をクリップボードへコピーする
-'@Remarks    Unicode形式でコピーする
-'===================================================================
-Public Sub CopyTextToClipboard(Text As String)
-    Dim hGlobalMemory As LongPtr
-    Dim lpGlobalMemory As LongPtr
-    Dim size As LongPtr
+' @JPName
+' 関数呼出判定
+'
+' @Category
+' Analyze
+'
+' @Input
+' LineText(String)
+' FuncName(String)
+'
+' @Output
+' True:呼出あり
+' False:呼出なし
+'
+' @Summary
+' 指定行に対象プロシージャの
+' 呼出構文が存在するか判定する
+'
+' @Remarks
+' Call文
+' Function呼出
+' Sub単独呼出
+' に対応する
+'
+Public Function IsFunctionCall( _
+        ByVal LineText As String, _
+        ByVal FuncName As String) As Boolean
 
-    size = (Len(Text) + 1) * 2 ' Unicodeは2バイト
+    Dim RegEx As Object
 
-    If OpenClipboard(0&) Then
-        EmptyClipboard
-        hGlobalMemory = GlobalAlloc(GHND, size)
-        lpGlobalMemory = GlobalLock(hGlobalMemory)
-        CopyMemory ByVal lpGlobalMemory, ByVal StrPtr(Text), size
-        GlobalUnlock hGlobalMemory
-        SetClipboardData CF_UNICODETEXT, hGlobalMemory
-        CloseClipboard
+    LineText = Trim$(LineText)
+
+    ' コメント行除外
+    If Left$(LineText, 1) = "'" Then Exit Function
+
+    ' API説明行除外
+    If Left$(LineText, 1) = "■" Then Exit Function
+
+    Set RegEx = CreateObject("VBScript.RegExp")
+
+    RegEx.IgnoreCase = True
+
+    ' Call Function
+    RegEx.Pattern = _
+        "(^|\s)Call\s+" & _
+        FuncName & _
+        "(\s*\(|\s|$)"
+
+    If RegEx.Test(LineText) Then
+
+        IsFunctionCall = True
+        Exit Function
+
     End If
-End Sub
 
+    ' Function(...)
+    RegEx.Pattern = _
+        "(^|[\s=\(,])" & _
+        FuncName & _
+        "\s*\("
 
+    If RegEx.Test(LineText) Then
+
+        IsFunctionCall = True
+        Exit Function
+
+    End If
+
+    ' Function 単独呼出
+    RegEx.Pattern = _
+        "^\s*" & FuncName & "\s*$"
+
+    IsFunctionCall = RegEx.Test(LineText)
+
+End Function
 

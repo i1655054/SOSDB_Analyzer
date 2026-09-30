@@ -1,7 +1,32 @@
 Attribute VB_Name = "modAnalyze"
 Option Explicit
 
-Public Sub ExtractProcedures_WithAnalysis()
+'==================================================
+' ProcList生成
+'==================================================
+
+' @JPName
+' 関数一覧作成
+'
+' @Category
+' Analyze
+'
+' @Input
+' なし
+'
+' @Output
+' ProcListシート
+'
+' @Summary
+' 対象ブックのプロシージャ情報を解析し
+' ProcListシートへ出力する
+'
+' @Remarks
+' UsageCountおよび使用状況を
+' あわせて出力する
+'
+Public Sub ProcedureList()
+
 ' "ProcList"シートが追加される
 ' 1行目
 ' Module  Type    ProcedureName   Declaration Line    UsageCount
@@ -16,11 +41,12 @@ Public Sub ExtractProcedures_WithAnalysis()
     Dim TargetBook As Workbook
     
     Set TargetBook = GetWorkbookByWorkbookName(BOOK_SOSDB)
+    'Set TargetBook = GetWorkbookByWorkbookName(BOOK_ANALYZER)
 
     If Not CheckTargetBook(TargetBook) Then Exit Sub
 
     Dim VBComp As Object
-    Dim codeMod As Object
+    Dim CodeMod As Object
     Dim i As Long
     Dim row As Long
     Dim ws As Worksheet
@@ -63,12 +89,12 @@ Public Sub ExtractProcedures_WithAnalysis()
     '=========================================
     For Each VBComp In TargetBook.VBProject.VBComponents
         
-        Set codeMod = VBComp.CodeModule
+        Set CodeMod = VBComp.CodeModule
         
-        For i = 1 To codeMod.CountOfLines
+        For i = 1 To CodeMod.CountOfLines
             
             Dim line As String
-            line = Trim(codeMod.Lines(i, 1))
+            line = Trim(CodeMod.Lines(i, 1))
             
             If IsProcedureLine(line) Then
                 
@@ -84,22 +110,22 @@ Public Sub ExtractProcedures_WithAnalysis()
                 ws.Cells(row, 3).Value = ProcName
 
                 ws.Cells(row, 4).Value = _
-                    GetTagValue(codeMod, i, "'@JPName")
+                    GetTagValue(CodeMod, i, "'@JPName")
 
                 ws.Cells(row, 5).Value = _
-                    GetTagValue(codeMod, i, "'@Category")
+                    GetTagValue(CodeMod, i, "'@Category")
 
                 ws.Cells(row, 6).Value = _
-                    GetTagValue(codeMod, i, "'@Input")
+                    GetTagValue(CodeMod, i, "'@Input")
 
                 ws.Cells(row, 7).Value = _
-                    GetTagValue(codeMod, i, "'@Output")
+                    GetTagValue(CodeMod, i, "'@Output")
 
                 ws.Cells(row, 8).Value = _
-                    GetTagValue(codeMod, i, "'@Summary")
+                    GetTagValue(CodeMod, i, "'@Summary")
 
                 ws.Cells(row, 9).Value = _
-                    GetTagValue(codeMod, i, "'@Remarks")
+                    GetTagValue(CodeMod, i, "'@Remarks")
 
                 ws.Cells(row, 10).Value = line
 
@@ -156,237 +182,19 @@ Public Sub ExtractProcedures_WithAnalysis()
 
 End Sub
 
-Sub JumpToProcedure()
-' 不要な関数
-    Dim TargetBook As Workbook
-    
-    Set TargetBook = GetWorkbookByWorkbookName(BOOK_SOSDB)
-
-    If Not CheckTargetBook(TargetBook) Then Exit Sub
-    
-    Dim ProcName As String
-    ProcName = InputBox("ジャンプする関数名を入力")
-    
-    If ProcName = "" Then Exit Sub
-    
-    Dim VBComp As Object
-    Dim codeMod As Object
-    Dim i As Long
-    
-    For Each VBComp In TargetBook.VBProject.VBComponents
-        Set codeMod = VBComp.CodeModule
-        
-        For i = 1 To codeMod.CountOfLines
-            
-            If InStr(codeMod.Lines(i, 1), ProcName) > 0 Then
-                
-                codeMod.CodePane.Show
-                codeMod.CodePane.SetSelection i, 1, i, 1
-                
-                MsgBox "ジャンプしました：" & VBComp.Name
-                Exit Sub
-                
-            End If
-            
-        Next i
-    Next VBComp
-    
-    MsgBox "見つかりません"
-
-End Sub
-
-Sub JumpFromSelectedCell()
-'不要な関数
-    Dim TargetBook As Workbook
-    
-    Set TargetBook = GetWorkbookByWorkbookName(BOOK_SOSDB)
-
-    If Not CheckTargetBook(TargetBook) Then Exit Sub
-    
-    Dim ProcName As String
-    ProcName = ActiveCell.Value
-    
-    If ProcName = "" Then
-        MsgBox "セルに関数名がありません"
-        Exit Sub
-    End If
-    
-    Dim VBComp As Object
-    Dim codeMod As Object
-    Dim i As Long
-    Dim line As String
-    
-    For Each VBComp In TargetBook.VBProject.VBComponents
-        Set codeMod = VBComp.CodeModule
-        
-        For i = 1 To codeMod.CountOfLines
-            
-            line = Trim(codeMod.Lines(i, 1))
-            
-            ' ★ 定義行だけを対象にする
-            If line Like "*Sub " & ProcName & "*" _
-            Or line Like "*Function " & ProcName & "*" _
-            Or line Like "*Property Get " & ProcName & "*" _
-            Or line Like "*Property Let " & ProcName & "*" _
-            Or line Like "*Property Set " & ProcName & "*" Then
-                
-                codeMod.CodePane.Show
-                codeMod.CodePane.SetSelection i, 1, i, 1
-                
-                Exit Sub
-                
-            End If
-            
-        Next i
-        
-    Next VBComp
-    
-    MsgBox "定義が見つかりません：" & ProcName
-
-End Sub
-
-' ① 未使用だけ別シートに抽出
-Sub AnalyzeAndExtractUnused()
-'不要な関数
-    Dim wsSrc As Worksheet
-    Dim wsUnused As Worksheet
-    Dim LastRow As Long
-    Dim r As Long
-    Dim newRow As Long
-    
-    Set wsSrc = Worksheets("ProcList")
-    
-    '=========================================
-    ' 未使用シート作成
-    '=========================================
-    On Error Resume Next
-    Set wsUnused = Worksheets("UnusedList")
-    On Error GoTo 0
-    
-    If wsUnused Is Nothing Then
-        Set wsUnused = Worksheets.Add
-        wsUnused.Name = "UnusedList"
-    End If
-    
-    wsUnused.Cells.Clear
-    
-    ' ヘッダ
-    wsUnused.Range("A1:F1").Value = Array("Module", "Type", "ProcedureName", "Declaration", "Line", "UsageCount")
-    
-    newRow = 2
-    
-    LastRow = wsSrc.Cells(wsSrc.Rows.Count, 1).End(xlUp).row
-    
-    '=========================================
-    ' 未使用抽出（UsageCount <=1）
-    '=========================================
-    For r = 2 To LastRow
-        
-        If wsSrc.Cells(r, 6).Value <= 1 Then
-            
-            wsUnused.Cells(newRow, 1).Resize(1, 6).Value = _
-                wsSrc.Cells(r, 1).Resize(1, 6).Value
-            
-            newRow = newRow + 1
-        
-        End If
-        
-    Next r
-    
-    wsUnused.Columns.AutoFit
-    wsUnused.Rows(1).AutoFilter
-    
-    MsgBox "未使用関数 抽出完了"
-
-End Sub
-
-' ② 削除候補リスト自動生成
-Sub ExtractDeleteCandidates()
-'不要な関数
-    Dim ws As Worksheet
-    Dim LastRow As Long
-    Dim r As Long
-    
-    Set ws = Worksheets("UnusedList")
-    
-    LastRow = ws.Cells(ws.Rows.Count, 1).End(xlUp).row
-    
-    For r = 2 To LastRow
-        
-        ' より厳格な条件
-        If ws.Cells(r, 6).Value = 0 Then
-            ws.Cells(r, 6).Interior.Color = RGB(255, 0, 0) ' 完全未使用
-        ElseIf ws.Cells(r, 6).Value = 1 Then
-            ws.Cells(r, 6).Interior.Color = RGB(255, 200, 200) ' 定義のみ
-        End If
-        
-    Next r
-    
-    MsgBox "削除候補 強調完了"
-
-End Sub
-
-' ③ 一括削除支援
-Sub GenerateDeleteScript()
-'不要な関数
-    Dim ws As Worksheet
-    Dim wsOut As Worksheet
-    Dim LastRow As Long
-    Dim r As Long
-    Dim OutRow As Long
-    
-    Set ws = Worksheets("UnusedList")
-    
-    '=========================================
-    ' 出力シート用意
-    '=========================================
-    On Error Resume Next
-    Set wsOut = Worksheets("DeleteScript")
-    On Error GoTo 0
-    
-    If wsOut Is Nothing Then
-        Set wsOut = Worksheets.Add
-        wsOut.Name = "DeleteScript"
-    End If
-    
-    wsOut.Cells.Clear
-    
-    ' ヘッダ
-    wsOut.Range("A1").Value = "削除候補プロシージャ"
-    wsOut.Range("B1").Value = "モジュール"
-    wsOut.Range("C1").Value = "UsageCount"
-    
-    OutRow = 2
-    
-    LastRow = ws.Cells(ws.Rows.Count, 1).End(xlUp).row
-    
-    '=========================================
-    ' 1行ずつ出力
-    '=========================================
-    For r = 2 To LastRow
-        
-        If ws.Cells(r, 6).Value <= 1 Then
-            
-            wsOut.Cells(OutRow, 1).Value = ws.Cells(r, 3).Value ' ProcedureName
-            wsOut.Cells(OutRow, 2).Value = ws.Cells(r, 1).Value ' Module
-            wsOut.Cells(OutRow, 3).Value = ws.Cells(r, 6).Value ' Usage
-            
-            OutRow = OutRow + 1
-            
-        End If
-        
-    Next r
-    
-    ' 見やすく
-    wsOut.Columns.AutoFit
-    wsOut.Rows(1).Font.Bold = True
-    wsOut.Rows(1).AutoFilter
-
-    MsgBox "削除候補リスト作成完了"
-
-End Sub
-
-Function IsProcedureLine(line As String) As Boolean
+'==================================================
+' プロシージャ解析
+'==================================================
+' @JPName
+' プロシージャ宣言判定
+'
+' @Category
+' Analyze
+'
+' @Summary
+' 指定行がプロシージャ宣言行か判定する
+'
+Public Function IsProcedureLine(line As String) As Boolean
 
     ' コメント行は除外
     If Left(Trim(line), 1) = "'" Then
@@ -414,7 +222,17 @@ Function IsProcedureLine(line As String) As Boolean
 
 End Function
 
-Function GetProcedureType(line As String) As String
+' @JPName
+' プロシージャ種別取得
+'
+' @Category
+' Analyze
+'
+' @Summary
+' プロシージャ宣言行から
+' Sub、Function、Property種別を取得する
+'
+Private Function GetProcedureType(line As String) As String
 
     If InStr(line, "Sub") > 0 Then
         GetProcedureType = "Sub"
@@ -428,7 +246,17 @@ Function GetProcedureType(line As String) As String
 
 End Function
 
-Function ExtractProcedureName(line As String) As String
+' @JPName
+' 関数名抽出
+'
+' @Category
+' Analyze
+'
+' @Summary
+' プロシージャ宣言行から
+' プロシージャ名を抽出する
+'
+Public Function ExtractProcedureName(line As String) As String
 
     Dim tmp As String
     
@@ -449,46 +277,86 @@ Function ExtractProcedureName(line As String) As String
 
 End Function
 
-Function CountUsage(ProcName As String) As Long
+'==================================================
+' 使用状況判定
+'==================================================
+
+' @JPName
+' 関数使用回数取得
+'
+' @Category
+' Analyze
+'
+' @Summary
+' 対象ブック内のプロシージャ呼出回数を集計する
+'
+' @Remarks
+' プロシージャ宣言行は使用回数に含めない
+' IsFunctionCallを利用して呼出判定を行う
+'
+Public Function CountUsage( _
+    ByVal ProcName As String) As Long
 
     Dim TargetBook As Workbook
-    
-    Set TargetBook = GetWorkbookByWorkbookName(BOOK_SOSDB)
-    
+
+    Set TargetBook = _
+        GetWorkbookByWorkbookName(BOOK_SOSDB)
+    'Set TargetBook = _
+        GetWorkbookByWorkbookName(BOOK_ANALYZER)
+
     If TargetBook Is Nothing Then Exit Function
-    
+
     Dim VBComp As Object
-    Dim codeMod As Object
+    Dim CodeMod As Object
     Dim i As Long
     Dim Count As Long
-    
-    If Trim(ProcName) = "" Then
-        CountUsage = 0
-        Exit Function
-    End If
-    
+    Dim LineText As String
+
     Count = 0
-    
+
     For Each VBComp In TargetBook.VBProject.VBComponents
-        Set codeMod = VBComp.CodeModule
-        
-        For i = 1 To codeMod.CountOfLines
-            If InStr(codeMod.Lines(i, 1), ProcName) > 0 Then
-                Count = Count + 1
-            End If
-        Next i
-        
-    Next VBComp
     
+        Set CodeMod = VBComp.CodeModule
+
+        For i = 1 To CodeMod.CountOfLines
+
+            LineText = _
+                Trim$(CodeMod.Lines(i, 1))
+                
+            'If VBComp.Name = "modTest" Then
+            '    Debug.Print "[" & LineText & "]"
+            'End If
+
+            If IsFunctionCall( _
+                LineText, ProcName) Then
+                
+                Count = Count + 1
+
+            End If
+
+        Next i
+
+    Next VBComp
+
+    ' 宣言行を除外
     If Count <= 1 Then
         CountUsage = 0
     Else
-        CountUsage = Count - 1 ' 自分自身除外
+        CountUsage = Count - 1
     End If
 
 End Function
 
-Function IsEventProcedure(ProcName As String) As Boolean
+' @JPName
+' イベント関数判定
+'
+' @Category
+' Analyze
+'
+' @Summary
+' プロシージャ名からイベント関数か判定する
+'
+Private Function IsEventProcedure(ProcName As String) As Boolean
 
     If ProcName Like "Workbook_*" _
     Or ProcName Like "Worksheet_*" _
@@ -503,7 +371,17 @@ Function IsEventProcedure(ProcName As String) As Boolean
 
 End Function
 
-Function GetUsageStatus(ProcName As String, usage As Long) As String
+' @JPName
+' 使用状況判定
+'
+' @Category
+' Analyze
+'
+' @Summary
+' 使用回数およびイベント種別から
+' 使用状況を判定する
+'
+Private Function GetUsageStatus(ProcName As String, usage As Long) As String
 
     If IsEventProcedure(ProcName) Then
         GetUsageStatus = "イベント"
@@ -520,4 +398,3 @@ Function GetUsageStatus(ProcName As String, usage As Long) As String
     End If
 
 End Function
-

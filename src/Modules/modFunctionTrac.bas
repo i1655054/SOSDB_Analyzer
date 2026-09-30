@@ -1,9 +1,31 @@
 Attribute VB_Name = "modFunctionTrac"
 Option Explicit
 
-' 関数トレース生成
+'==================================================
+' 関数トレース
+'==================================================
 
-Public Sub CreateFunctionTrace()
+' @JPName
+' 関数トレース作成
+'
+' @Category
+' FunctionTrace
+'
+' @Input
+' なし
+'
+' @Output
+' 関数トレースシート
+'
+' @Summary
+' 対象ブックの関数呼出関係を解析し
+' 関数トレースシートを作成する
+'
+' @Remarks
+' 呼出元、呼出先、モジュール、
+' Category、Summaryを出力する
+'
+Public Sub FunctionTrace()
 
     Dim TargetBook As Workbook
     
@@ -38,8 +60,8 @@ Public Sub CreateFunctionTrace()
     wsOut.Range("E1") = "呼出元モジュール"
     wsOut.Range("F1") = "呼出先モジュール"
 
-    wsOut.Range("G1") = "Category"
-    wsOut.Range("H1") = "Summary"
+    wsOut.Range("G1") = "呼出先Category"
+    wsOut.Range("H1") = "呼出先Summary"
 
     wsOut.Range("I1") = "行番号"
     wsOut.Range("J1") = "元コード"
@@ -111,7 +133,28 @@ Public Sub CreateFunctionTrace()
 
 End Sub
 
+'==================================================
+' 関数一覧取得
+'==================================================
 
+' @JPName
+' 関数一覧取得
+'
+' @Category
+' FunctionTrace
+'
+' @Input
+' CodeText(String)
+' ModuleName(String)
+' FuncList(Dictionary)
+'
+' @Output
+' FuncList
+'
+' @Summary
+' ソースコードから関数一覧を取得し
+' 関数情報を収集する
+'
 Private Sub GetFunctions( _
             ByVal CodeText As String, _
             ByVal ModuleName As String, _
@@ -162,7 +205,7 @@ Private Sub GetFunctions( _
                 
             Case "ISSUE"
             
-                '除外
+                ' GitHub Issue 等の誤検出防止
 
             Case Else
 
@@ -205,6 +248,29 @@ NextMatch:
 
 End Sub
 
+'==================================================
+' トレース解析
+'==================================================
+' @JPName
+' 関数呼出解析
+'
+' @Category
+' FunctionTrace
+'
+' @Input
+' CodeText(String)
+' ModuleName(String)
+' FuncList(Dictionary)
+' wsOut(Worksheet)
+' RowOut(Long)
+'
+' @Output
+' 次出力行番号
+'
+' @Summary
+' モジュール内の関数呼出関係を解析し
+' 関数トレースシートへ出力する
+'
 Private Function TraceModule( _
             ByVal CodeText As String, _
             ByVal ModuleName As String, _
@@ -295,7 +361,16 @@ Private Function TraceModule( _
 
 End Function
 
-
+' @JPName
+' 現在関数取得
+'
+' @Category
+' FunctionTrace
+'
+' @Summary
+' ソース行から現在解析中の
+' プロシージャ名を取得する
+'
 Private Function GetProcedureName( _
             ByVal LineText As String, _
             ByVal CurrentName As String) As String
@@ -312,57 +387,20 @@ Private Function GetProcedureName( _
 
 End Function
 
-Private Function IsFunctionCall( _
-        ByVal LineText As String, _
-        ByVal FuncName As String) As Boolean
+'==================================================
+' 出力シート設定
+'==================================================
 
-    Dim RegEx As Object
-
-    LineText = Trim$(LineText)
-
-    ' コメント行除外
-    If Left$(LineText, 1) = "'" Then Exit Function
-
-    ' API説明行除外
-    If Left$(LineText, 1) = "■" Then Exit Function
-
-    Set RegEx = CreateObject("VBScript.RegExp")
-
-    RegEx.IgnoreCase = True
-
-    ' Call Function
-    RegEx.Pattern = _
-        "(^|\s)Call\s+" & FuncName & _
-        "(\s*\(|\s|$)"
-
-    If RegEx.Test(LineText) Then
-
-        IsFunctionCall = True
-        Exit Function
-
-    End If
-
-    ' Function(...)
-    RegEx.Pattern = _
-        "(^|[^A-Za-z0-9_])" & FuncName & _
-        "\s*\("
-
-    If RegEx.Test(LineText) Then
-
-        IsFunctionCall = True
-        Exit Function
-
-    End If
-
-    ' Function (...)
-    RegEx.Pattern = _
-        "(^|[^A-Za-z0-9_])" & FuncName & _
-        "\s+\("
-
-    IsFunctionCall = RegEx.Test(LineText)
-
-End Function
-
+' @JPName
+' トレース確認設定
+'
+' @Category
+' FunctionTrace
+'
+' @Summary
+' 関数トレースシートへ
+' 入力規則と条件付き書式を設定する
+'
 Private Sub SetupTraceValidation(ByVal ws As Worksheet)
 
     Dim LastRow As Long
@@ -417,6 +455,15 @@ Private Sub SetupTraceValidation(ByVal ws As Worksheet)
 
 End Sub
 
+' @JPName
+' 条件色設定
+'
+' @Category
+' FunctionTrace
+'
+' @Summary
+' 条件付き書式の色設定を追加する
+'
 Private Sub AddConditionColor( _
             ByVal rng As Range, _
             ByVal Formula As String, _
