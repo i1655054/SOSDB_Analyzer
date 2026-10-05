@@ -5,6 +5,12 @@ Option Explicit
 ' テスト支援
 '==================================================
 
+Public Sub TestStartup()
+
+    InitializeAnalyzer
+
+End Sub
+
 ' @JPName
 ' Navigatorテスト起動
 '

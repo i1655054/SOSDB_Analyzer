@@ -40,10 +40,20 @@ Public Sub ProcedureList()
 
     Dim TargetBook As Workbook
     
-    Set TargetBook = GetWorkbookByWorkbookName(BOOK_SOSDB)
+    'Set TargetBook = GetWorkbookByWorkbookName(BOOK_SOSDB)
     'Set TargetBook = GetWorkbookByWorkbookName(BOOK_ANALYZER)
+    
+    Set TargetBook = GetCurrentTargetBook()
+    
+    'If Not CheckTargetBook(TargetBook) Then Exit Sub
+    Dim Tool As ToolInfo
 
-    If Not CheckTargetBook(TargetBook) Then Exit Sub
+    Tool = GetCurrentToolInfo()
+
+    If Not CheckTargetBook( _
+            TargetBook, _
+            Tool.WorkbookName) Then Exit Sub
+        
 
     Dim VBComp As Object
     Dim CodeMod As Object
@@ -51,16 +61,39 @@ Public Sub ProcedureList()
     Dim row As Long
     Dim ws As Worksheet
     
+    Dim ManagementBook As Workbook
+
+    Set ManagementBook = _
+        GetCurrentManagementWorkbook()
+    
+    If Not CheckManagementWorkbook( _
+            ManagementBook, _
+            GetCurrentManagementFile()) Then
+        
+        Exit Sub
+        
+    End If
+    
     '=========================================
     ' ÉVÅ[ÉgèÄîı
     '=========================================
     On Error Resume Next
-    Set ws = Worksheets("ProcList")
+    'Set ws = ThisWorkbook.Worksheets("ProcList")
+    
+    Set ws = _
+        ManagementBook.Worksheets("ProcList")
+    
     On Error GoTo 0
     
     If ws Is Nothing Then
-        Set ws = Worksheets.Add
+    
+        Set ws = _
+            ManagementBook.Worksheets.Add( _
+                After:=ManagementBook.Worksheets( _
+                    ManagementBook.Worksheets.Count))
+        
         ws.Name = "ProcList"
+    
     End If
     
     ws.Cells.Clear
@@ -110,22 +143,22 @@ Public Sub ProcedureList()
                 ws.Cells(row, 3).Value = ProcName
 
                 ws.Cells(row, 4).Value = _
-                    GetTagValue(CodeMod, i, "'@JPName")
+                    GetTagValue(CodeMod, i, "@JPName")
 
                 ws.Cells(row, 5).Value = _
-                    GetTagValue(CodeMod, i, "'@Category")
+                    GetTagValue(CodeMod, i, "@Category")
 
                 ws.Cells(row, 6).Value = _
-                    GetTagValue(CodeMod, i, "'@Input")
+                    GetTagValue(CodeMod, i, "@Input")
 
                 ws.Cells(row, 7).Value = _
-                    GetTagValue(CodeMod, i, "'@Output")
+                    GetTagValue(CodeMod, i, "@Output")
 
                 ws.Cells(row, 8).Value = _
-                    GetTagValue(CodeMod, i, "'@Summary")
+                    GetTagValue(CodeMod, i, "@Summary")
 
                 ws.Cells(row, 9).Value = _
-                    GetTagValue(CodeMod, i, "'@Remarks")
+                    GetTagValue(CodeMod, i, "@Remarks")
 
                 ws.Cells(row, 10).Value = line
 
@@ -299,10 +332,10 @@ Public Function CountUsage( _
 
     Dim TargetBook As Workbook
 
-    Set TargetBook = _
-        GetWorkbookByWorkbookName(BOOK_SOSDB)
-    'Set TargetBook = _
-        GetWorkbookByWorkbookName(BOOK_ANALYZER)
+    'Set TargetBook = GetWorkbookByWorkbookName(BOOK_SOSDB)
+    'Set TargetBook = GetWorkbookByWorkbookName(BOOK_ANALYZER)
+
+    Set TargetBook = GetCurrentTargetBook()
 
     If TargetBook Is Nothing Then Exit Function
 

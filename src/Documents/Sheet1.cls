@@ -13,28 +13,8 @@ Private Sub CommandButton1_Click()
 
 End Sub
 
-' ‡@ ExportVBA
-Private Sub cmdExportVBA_Click()
-    Call modExportVBA.ShowExportTool
-End Sub
-
-' ‡A ŠÖ”ˆê——ì¬
-Private Sub ProcedureList_Click()
-    Call modAnalyze.ProcedureList
-End Sub
-
-' ‡B ŠÖ”ƒgƒŒ[ƒXì¬
-Private Sub FunctionTrace_Click()
-    Call modFunctionTrac.FunctionTrace
-End Sub
-
-' ‡C ŠÖ”ˆË‘¶ŠÖŒWì¬
-Private Sub FunctionDependency_Click()
-    Call modFunctionDependency.FunctionDependency
-End Sub
-
-' ‡D ƒpƒXƒ`ƒƒ[ƒgì¬
-Private Sub CreatePathChart_Click()
-    frmPathChart.Show vbModeless
+' ‡@ Start
+Private Sub cmdStart_Click()
+    Call InitializeAnalyzer
 End Sub
 

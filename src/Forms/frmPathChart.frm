@@ -15,6 +15,14 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
 
+Private Sub fraParameter_Click()
+
+End Sub
+
+Private Sub fraResult_Click()
+
+End Sub
+
 Private Sub UserForm_Initialize()
 
     LoadPathChartConfig
@@ -81,9 +89,9 @@ Private Sub cmbStartProc_Change()
     If ProcName = "" Then Exit Sub
 
     Set Proc = GetProcInfo(ProcName)
-
-    If Not Proc Is Nothing Then
     
+    If Not Proc Is Nothing Then
+      
         If Proc.JPName <> "" Then
             lblSelectProc.Caption = Proc.JPName
         Else
@@ -111,7 +119,7 @@ Private Sub UserForm_QueryClose( _
     If CloseMode = vbFormControlMenu Then
 
         'Cancel = True
-        frmNavigator.Show vbModeless
+        frmFunctionManager.Show vbModeless
 
     End If
 

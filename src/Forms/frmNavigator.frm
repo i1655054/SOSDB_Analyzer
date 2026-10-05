@@ -46,7 +46,7 @@ Private Sub ExecuteMenu(ByVal MenuName As String)
 
         Case Else
 
-            Worksheets(MenuName).Activate
+            ThisWorkbook.Worksheets(MenuName).Activate
 
     End Select
 
@@ -204,7 +204,7 @@ Private Sub cmdBack_Click()
 
         IsHistoryMoving = True
 
-        Worksheets(SheetName).Activate
+        ThisWorkbook.Worksheets(SheetName).Activate
 
         IsHistoryMoving = False
 
@@ -223,7 +223,7 @@ Private Sub cmdForward_Click()
 
         IsHistoryMoving = True
 
-        Worksheets(SheetName).Activate
+        ThisWorkbook.Worksheets(SheetName).Activate
 
         IsHistoryMoving = False
 

@@ -38,10 +38,23 @@ Public Function GetChildrenList( _
     Dim ParentModule As String
     Dim ChildModule As String
 
+    Dim ManagementBook As Workbook
+
+    Set ManagementBook = _
+        GetCurrentManagementWorkbook()
+
+    If Not CheckManagementWorkbook( _
+            ManagementBook, _
+            GetCurrentManagementFile()) Then
+
+        Exit Function
+
+    End If
+    
     Set Col = New Collection
 
     Set wsDep = _
-        ThisWorkbook.Worksheets( _
+        ManagementBook.Worksheets( _
             "ä÷êîàÀë∂ä÷åW")
 
     LastRow = _

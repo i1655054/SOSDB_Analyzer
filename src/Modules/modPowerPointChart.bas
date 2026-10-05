@@ -46,7 +46,20 @@ Public Sub CreatePowerPointPathChart( _
 
     Dim PptFile As String
 
-    Set ws = Worksheets("PathChart")
+    Dim ManagementBook As Workbook
+
+    Set ManagementBook = _
+        GetCurrentManagementWorkbook()
+
+    If Not CheckManagementWorkbook( _
+            ManagementBook, _
+            GetCurrentManagementFile()) Then
+
+        Exit Sub
+
+    End If
+    
+    Set ws = ManagementBook.Worksheets("PathChart")
 
     Set rng = GetChartRange()
 
@@ -240,7 +253,20 @@ Public Sub ExportPathChartToPNG( _
 
     Dim PngFile As String
 
-    Set ws = Worksheets("PathChart")
+    Dim ManagementBook As Workbook
+
+    Set ManagementBook = _
+        GetCurrentManagementWorkbook()
+
+    If Not CheckManagementWorkbook( _
+            ManagementBook, _
+            GetCurrentManagementFile()) Then
+
+        Exit Sub
+
+    End If
+    
+    Set ws = ManagementBook.Worksheets("PathChart")
 
     Set rng = GetChartRange()
 

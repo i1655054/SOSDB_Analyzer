@@ -29,20 +29,46 @@ Public Sub FunctionTrace()
 
     Dim TargetBook As Workbook
     
-    Set TargetBook = GetWorkbookByWorkbookName(BOOK_SOSDB)
+    'Set TargetBook = GetWorkbookByWorkbookName(BOOK_SOSDB)
 
-    If Not CheckTargetBook(TargetBook) Then Exit Sub
+    Set TargetBook = GetCurrentTargetBook()
+    
+    'If Not CheckTargetBook(TargetBook) Then Exit Sub
+    
+    Dim Tool As ToolInfo
+
+    Tool = GetCurrentToolInfo()
+
+    If Not CheckTargetBook( _
+            TargetBook, _
+            Tool.WorkbookName) Then Exit Sub
     
     Dim wsOut As Worksheet
 
+    Dim ManagementBook As Workbook
+
+    Set ManagementBook = _
+        GetCurrentManagementWorkbook()
+
+    If Not CheckManagementWorkbook( _
+            ManagementBook, _
+            GetCurrentManagementFile()) Then
+
+        Exit Sub
+
+    End If
+
     On Error Resume Next
-    Set wsOut = Worksheets("関数トレース")
+    Set wsOut = ManagementBook.Worksheets("関数トレース")
     On Error GoTo 0
 
     If wsOut Is Nothing Then
 
-        Set wsOut = Worksheets.Add
-
+        Set wsOut = _
+            ManagementBook.Worksheets.Add( _
+                After:=ManagementBook.Worksheets( _
+                    ManagementBook.Worksheets.Count))
+        
         wsOut.Name = "関数トレース"
 
     Else
@@ -411,20 +437,33 @@ Private Sub SetupTraceValidation(ByVal ws As Worksheet)
     ws.Range("K1").Value = "確認"
     ws.Range("L1").Value = "コメント"
 
+    If LastRow < 2 Then Exit Sub
+
     ' 入力規則
     With ws.Range("K2:K" & LastRow).Validation
-
+    
+        On Error Resume Next
+        
         .Delete
+        
+        'Debug.Print "Delete Err=" & Err.Number & " " & Err.Description
+        
+        Err.Clear
 
         .Add _
             Type:=xlValidateList, _
             AlertStyle:=xlValidAlertStop, _
             Formula1:="○ 正常,× 誤検出,△ 要確認,除外"
 
+        'Debug.Print "Add Err=" & Err.Number & " " & Err.Description
+        
+        On Error GoTo 0
+
         .IgnoreBlank = True
         .InCellDropdown = True
 
     End With
+
 
     ' 条件付き書式クリア
     ws.Range("A2:L" & LastRow).FormatConditions.Delete

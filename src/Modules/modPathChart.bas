@@ -61,6 +61,19 @@ Public Sub CreatePathChart_V3( _
     Dim RootLeft As Double
     Dim RootCaption As String
 
+    Dim ManagementBook As Workbook
+
+    Set ManagementBook = _
+        GetCurrentManagementWorkbook()
+
+    If Not CheckManagementWorkbook( _
+            ManagementBook, _
+            GetCurrentManagementFile()) Then
+
+        Exit Sub
+
+    End If
+
     gNodeNo = 0
 
     NodeCount = 0
@@ -80,7 +93,7 @@ Public Sub CreatePathChart_V3( _
     Set gChildMap = _
             CreateObject("Scripting.Dictionary")
 
-    Set ws = Worksheets("PathChart")
+    Set ws = ManagementBook.Worksheets("PathChart")
 
     If StartProc = "" Then
 
@@ -214,7 +227,20 @@ Private Sub DrawCallTreeShape( _
     Dim LastRow As Long
     Dim r As Long
 
-    Set wsDep = Worksheets("ä÷êîàÀë∂ä÷åW")
+    Dim ManagementBook As Workbook
+
+    Set ManagementBook = _
+        GetCurrentManagementWorkbook()
+
+    If Not CheckManagementWorkbook( _
+            ManagementBook, _
+            GetCurrentManagementFile()) Then
+
+        Exit Sub
+
+    End If
+
+    Set wsDep = ManagementBook.Worksheets("ä÷êîàÀë∂ä÷åW")
 
     LastRow = _
         wsDep.Cells( _
@@ -362,7 +388,7 @@ Private Sub DrawCallTreeShape( _
 
             Set shpChild = _
                 DrawNode( _
-                    Worksheets("PathChart"), _
+                    ManagementBook.Worksheets("PathChart"), _
                     CaptionText, _
                     ChildTop, _
                     ChildLeft, _
@@ -390,7 +416,7 @@ Private Sub DrawCallTreeShape( _
             ' ê⁄ë±ê¸ê∂ê¨
             '====================
             ConnectShapes _
-                Worksheets("PathChart"), _
+                ManagementBook.Worksheets("PathChart"), _
                 ParentShapeName, _
                 shpChild.Name
 
@@ -435,8 +461,21 @@ Private Function GetBranchSize( _
     Dim ChildFunc As String
     Dim size As Long
 
+    Dim ManagementBook As Workbook
+
+    Set ManagementBook = _
+        GetCurrentManagementWorkbook()
+
+    If Not CheckManagementWorkbook( _
+            ManagementBook, _
+            GetCurrentManagementFile()) Then
+
+        Exit Function
+
+    End If
+
     Set wsDep = _
-        Worksheets("ä÷êîàÀë∂ä÷åW")
+        ManagementBook.Worksheets("ä÷êîàÀë∂ä÷åW")
 
     LastRow = _
         wsDep.Cells( _
@@ -528,7 +567,10 @@ Private Function DrawNode( _
     
     shp.TextFrame.Characters.Font.size = 9
     
-    shp.OnAction = "SelectNode"
+    'shp.OnAction = "SelectNode"
+    
+    shp.OnAction = _
+        "'" & ThisWorkbook.Name & "'!SelectNode"
     
     shp.Fill.ForeColor.RGB = FillColor
     
@@ -749,7 +791,20 @@ Public Function GetChartRange() As Range
     Dim LastCol As Long
     Dim LastRow As Long
 
-    Set ws = Worksheets("PathChart")
+    Dim ManagementBook As Workbook
+
+    Set ManagementBook = _
+        GetCurrentManagementWorkbook()
+
+    If Not CheckManagementWorkbook( _
+            ManagementBook, _
+            GetCurrentManagementFile()) Then
+
+        Exit Function
+
+    End If
+
+    Set ws = ManagementBook.Worksheets("PathChart")
 
     MaxRight = ws.Range(ROOT_CELL).Left
     MaxBottom = ws.Range(ROOT_CELL).Top
@@ -818,8 +873,21 @@ Public Sub ExecutePathChart( _
 
     Dim ws As Worksheet
 
+    Dim ManagementBook As Workbook
+
+    Set ManagementBook = _
+        GetCurrentManagementWorkbook()
+
+    If Not CheckManagementWorkbook( _
+            ManagementBook, _
+            GetCurrentManagementFile()) Then
+
+        Exit Sub
+
+    End If
+
     Set ws = _
-        ThisWorkbook.Worksheets("PathChart")
+        ManagementBook.Worksheets("PathChart")
 
     '--------------------------
     ' ÉçÉO
@@ -859,7 +927,7 @@ Public Sub ExecutePathChart( _
     frmPathChart.AddLog _
         "ç≈ëÂê[ìx : " & MaxDepthFound
 
-    ThisWorkbook.Worksheets("PathChart").Activate
+    ManagementBook.Worksheets("PathChart").Activate
     
     'frmPathChart.Hide
 
@@ -920,7 +988,20 @@ Private Sub FindNodeCore(ByVal IsNext As Boolean)
 
     Dim ShapeNo As Long
 
-    Set ws = Worksheets("PathChart")
+    Dim ManagementBook As Workbook
+
+    Set ManagementBook = _
+        GetCurrentManagementWorkbook()
+
+    If Not CheckManagementWorkbook( _
+            ManagementBook, _
+            GetCurrentManagementFile()) Then
+
+        Exit Sub
+
+    End If
+
+    Set ws = ManagementBook.Worksheets("PathChart")
 
     FindText = Trim$(gSearchText)
 
@@ -1179,7 +1260,20 @@ Public Sub SelectNode()
     Dim shp As Shape
     Dim ShapeName As String
 
-    Set ws = Worksheets("PathChart")
+    Dim ManagementBook As Workbook
+
+    Set ManagementBook = _
+        GetCurrentManagementWorkbook()
+
+    If Not CheckManagementWorkbook( _
+            ManagementBook, _
+            GetCurrentManagementFile()) Then
+
+        Exit Sub
+
+    End If
+
+    Set ws = ManagementBook.Worksheets("PathChart")
 
     ShapeName = CStr(Application.Caller)
 
@@ -1353,7 +1447,20 @@ Public Sub MoveToParentNode()
     Dim ws As Worksheet
     Dim shp As Shape
 
-    Set ws = Worksheets("PathChart")
+    Dim ManagementBook As Workbook
+
+    Set ManagementBook = _
+        GetCurrentManagementWorkbook()
+
+    If Not CheckManagementWorkbook( _
+            ManagementBook, _
+            GetCurrentManagementFile()) Then
+
+        Exit Sub
+
+    End If
+    
+    Set ws = ManagementBook.Worksheets("PathChart")
     
     'MsgBox "MoveToParentNode"
     
@@ -1453,7 +1560,21 @@ Public Sub MoveToChildNode()
 
     Dim Ary As Variant
     
-    Set ws = Worksheets("PathChart")
+    Dim ManagementBook As Workbook
+
+    Set ManagementBook = _
+        GetCurrentManagementWorkbook()
+
+    If Not CheckManagementWorkbook( _
+            ManagementBook, _
+            GetCurrentManagementFile()) Then
+
+        Exit Sub
+
+    End If
+
+
+    Set ws = ManagementBook.Worksheets("PathChart")
 
     If gCurrentParentWithChildren = "" Then
 
@@ -1587,7 +1708,21 @@ Public Sub MoveToSiblingNode()
     Dim i As Long
     Dim CurrentPos As Long
     
-    Set ws = Worksheets("PathChart")
+    Dim ManagementBook As Workbook
+
+    Set ManagementBook = _
+        GetCurrentManagementWorkbook()
+
+    If Not CheckManagementWorkbook( _
+            ManagementBook, _
+            GetCurrentManagementFile()) Then
+
+        Exit Sub
+
+    End If
+
+
+    Set ws = ManagementBook.Worksheets("PathChart")
 
     If gCurrentShapeName = "" Then
 
@@ -1770,7 +1905,21 @@ Private Sub HighlightParentNode( _
 
     If ParentShapeName = "" Then Exit Sub
 
-    Set ws = Worksheets("PathChart")
+    Dim ManagementBook As Workbook
+
+    Set ManagementBook = _
+        GetCurrentManagementWorkbook()
+
+    If Not CheckManagementWorkbook( _
+            ManagementBook, _
+            GetCurrentManagementFile()) Then
+
+        Exit Sub
+
+    End If
+
+
+    Set ws = ManagementBook.Worksheets("PathChart")
 
     With ws.Shapes(ParentShapeName)
 
@@ -1832,7 +1981,21 @@ Private Sub HighlightChildNodes( _
 
     Dim ChildName As Variant
 
-    Set ws = Worksheets("PathChart")
+    Dim ManagementBook As Workbook
+
+    Set ManagementBook = _
+        GetCurrentManagementWorkbook()
+
+    If Not CheckManagementWorkbook( _
+            ManagementBook, _
+            GetCurrentManagementFile()) Then
+
+        Exit Sub
+
+    End If
+
+
+    Set ws = ManagementBook.Worksheets("PathChart")
 
     If gChildMap Is Nothing Then Exit Sub
 
@@ -1890,7 +2053,21 @@ Private Sub HighlightSiblingNodes( _
     Dim Ary As Variant
     Dim ChildName As Variant
 
-    Set ws = Worksheets("PathChart")
+    Dim ManagementBook As Workbook
+
+    Set ManagementBook = _
+        GetCurrentManagementWorkbook()
+
+    If Not CheckManagementWorkbook( _
+            ManagementBook, _
+            GetCurrentManagementFile()) Then
+
+        Exit Sub
+
+    End If
+
+
+    Set ws = ManagementBook.Worksheets("PathChart")
 
     If gChildMap Is Nothing Then Exit Sub
 
@@ -1992,7 +2169,20 @@ Private Sub HighlightConnector( _
     Dim ws As Worksheet
     Dim ConnectorName As String
 
-    Set ws = Worksheets("PathChart")
+    Dim ManagementBook As Workbook
+
+    Set ManagementBook = _
+        GetCurrentManagementWorkbook()
+
+    If Not CheckManagementWorkbook( _
+            ManagementBook, _
+            GetCurrentManagementFile()) Then
+
+        Exit Sub
+
+    End If
+
+    Set ws = ManagementBook.Worksheets("PathChart")
 
     ConnectorName = _
         "C_" & _
@@ -2027,7 +2217,20 @@ Private Sub ResetChartHighlight()
     Dim ws As Worksheet
     Dim shp As Shape
 
-    Set ws = Worksheets("PathChart")
+    Dim ManagementBook As Workbook
+
+    Set ManagementBook = _
+        GetCurrentManagementWorkbook()
+
+    If Not CheckManagementWorkbook( _
+            ManagementBook, _
+            GetCurrentManagementFile()) Then
+
+        Exit Sub
+
+    End If
+
+    Set ws = ManagementBook.Worksheets("PathChart")
 
     For Each shp In ws.Shapes
 
@@ -2163,10 +2366,23 @@ Public Sub LoadStartProcedure( _
 
     Dim Dic As Object
 
+    Dim ManagementBook As Workbook
+
+    Set ManagementBook = _
+        GetCurrentManagementWorkbook()
+
+    If Not CheckManagementWorkbook( _
+            ManagementBook, _
+            GetCurrentManagementFile()) Then
+
+        Exit Sub
+
+    End If
+    
     Set Dic = CreateObject("Scripting.Dictionary")
 
     Set ws = _
-        ThisWorkbook.Worksheets("ä÷êîàÀë∂ä÷åW")
+        ManagementBook.Worksheets("ä÷êîàÀë∂ä÷åW")
 
     LastRow = _
         ws.Cells(ws.Rows.Count, "A") _
@@ -2296,7 +2512,20 @@ Public Sub LoadSearchNodeList( _
     Dim NodeText As String
     Dim V As Variant
 
-    Set ws = Worksheets("PathChart")
+    Dim ManagementBook As Workbook
+
+    Set ManagementBook = _
+        GetCurrentManagementWorkbook()
+
+    If Not CheckManagementWorkbook( _
+            ManagementBook, _
+            GetCurrentManagementFile()) Then
+
+        Exit Sub
+
+    End If
+
+    Set ws = ManagementBook.Worksheets("PathChart")
 
     Set Dic = _
         CreateObject("Scripting.Dictionary")

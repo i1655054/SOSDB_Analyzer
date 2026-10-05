@@ -51,17 +51,21 @@ Public Function CheckTargetBook( _
 
     If TargetBook Is Nothing Then
 
-        If BookName = "" Then
+        If Trim$(BookName) = "" Then
+
             MsgBox _
-                "対象ブックが開かれていません。", _
+                "対象ブックが開かれていません。" & vbCrLf & _
+                "対象ブック名が指定されていません。", _
                 vbExclamation
+
         Else
+
             MsgBox _
-                BookName & _
-                " が開かれていません。", _
+                "対象ブックが開かれていません。" & vbCrLf & _
+                "対象: " & BookName, _
                 vbExclamation
+
         End If
-                
 
         Exit Function
 
@@ -113,23 +117,82 @@ End Sub
 '
 Public Function GetTagValue( _
         CodeMod As Object, _
-        ByVal startLine As Long, _
+        ByVal StartLine As Long, _
         ByVal TagName As String) As String
 
     Dim i As Long
+    Dim j As Long
     Dim txt As String
+    Dim Result As String
 
-    For i = startLine - 1 To 1 Step -1
+    For i = StartLine - 1 To 1 Step -1
 
-        txt = Trim(CodeMod.Lines(i, 1))
+        txt = Trim$(CodeMod.Lines(i, 1))
 
-        ' コメント以外に到達したら終了
+        ' コメントブロック終了
         If Left$(txt, 1) <> "'" Then Exit For
 
+        ' コメント記号除去
+        txt = Mid$(txt, 2)
+        txt = Trim$(txt)
+
+        '==========================
+        ' 旧形式
+        ' '@JPName 〇〇
+        '==========================
         If InStr(1, txt, TagName, vbTextCompare) = 1 Then
 
-            GetTagValue = Trim( _
-                Replace(txt, TagName, "", , , vbTextCompare))
+            Result = Trim$(Replace( _
+                        txt, _
+                        TagName, _
+                        "", _
+                        , , _
+                        vbTextCompare))
+
+            If Result <> "" Then
+
+                GetTagValue = Result
+                Exit Function
+
+            End If
+
+            '==========================
+            ' 新形式
+            ' @JPName
+            ' ○○○
+            '==========================
+            For j = i + 1 To StartLine - 1
+
+                txt = Trim$(CodeMod.Lines(j, 1))
+
+                If Left$(txt, 1) <> "'" Then Exit For
+
+                txt = Mid$(txt, 2)
+
+                txt = Trim$(txt)
+
+                ' 空行
+                If txt = "" Then GoTo ContinueLoop
+
+                ' 次タグ
+                If Left$(txt, 1) = "@" Then Exit For
+
+                If Result <> "" Then
+
+                    Result = _
+                        Result & vbCrLf & txt
+
+                Else
+
+                    Result = txt
+
+                End If
+ContinueLoop:
+            Next j
+
+            GetTagValue = Result
+            
+            'Debug.Print "Result=[" & Result & "]"
 
             Exit Function
 
@@ -138,7 +201,6 @@ Public Function GetTagValue( _
     Next i
 
 End Function
-
 
 ' @JPName
 ' タグ値取得
@@ -228,7 +290,21 @@ Public Function GetProcInfo( _
 
     Dim Proc As clsProcInfo
 
-    Set ws = ThisWorkbook.Worksheets("ProcList")
+    Dim ManagementBook As Workbook
+
+    Set ManagementBook = _
+        GetCurrentManagementWorkbook()
+
+    If Not CheckManagementWorkbook( _
+            ManagementBook, _
+            GetCurrentManagementFile()) Then
+
+        Exit Function
+
+    End If
+
+    'Set ws = ManagementBook.Worksheets("PathChart")
+    Set ws = ManagementBook.Worksheets("ProcList")
 
     LastRow = ws.Cells(ws.Rows.Count, "C").End(xlUp).row
 

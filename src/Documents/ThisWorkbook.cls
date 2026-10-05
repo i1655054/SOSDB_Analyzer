@@ -9,13 +9,7 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Private Sub Workbook_Open()
 
-    InitHistory
-
-    RegisterShortcut
-    
-    LoadPathChartConfig
-    
-    ShowNavigator
+    InitializeAnalyzer
 
 End Sub
 

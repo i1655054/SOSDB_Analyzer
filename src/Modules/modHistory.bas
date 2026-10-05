@@ -54,7 +54,7 @@ Public Sub AddHistory(ByVal SheetName As String)
 
     Dim ws As Worksheet
 
-    Set ws = Worksheets(SheetName)
+    Set ws = ThisWorkbook.Worksheets(SheetName)
 
     If ws.Visible <> xlSheetVisible Then Exit Sub
     

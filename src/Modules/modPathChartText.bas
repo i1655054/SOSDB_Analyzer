@@ -331,10 +331,23 @@ Public Sub OutputTreeNodeList()
     Dim LastRow As Long
     Dim LastCol As Long
 
+    Dim ManagementBook As Workbook
+
+    Set ManagementBook = _
+        GetCurrentManagementWorkbook()
+
+    If Not CheckManagementWorkbook( _
+            ManagementBook, _
+            GetCurrentManagementFile()) Then
+
+        Exit Sub
+
+    End If
+
     On Error Resume Next
 
     Set ws = _
-        ThisWorkbook.Worksheets( _
+        ManagementBook.Worksheets( _
             "PathChartTree")
 
     On Error GoTo 0
@@ -342,7 +355,9 @@ Public Sub OutputTreeNodeList()
     If ws Is Nothing Then
 
         Set ws = _
-            ThisWorkbook.Worksheets.Add
+            ManagementBook.Worksheets.Add( _
+                After:=ManagementBook.Worksheets( _
+                    ManagementBook.Worksheets.Count))
 
         ws.Name = "PathChartTree"
 

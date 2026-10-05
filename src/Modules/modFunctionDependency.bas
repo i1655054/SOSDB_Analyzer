@@ -47,6 +47,19 @@ Public Sub FunctionDependency()
     Dim Key As String
     Dim V As Variant
 
+    Dim ManagementBook As Workbook
+
+    Set ManagementBook = _
+        GetCurrentManagementWorkbook()
+
+    If Not CheckManagementWorkbook( _
+            ManagementBook, _
+            GetCurrentManagementFile()) Then
+
+        Exit Sub
+
+    End If
+
     Set Dic = CreateObject("Scripting.Dictionary")
 
     Set DicCallerJP = CreateObject("Scripting.Dictionary")
@@ -58,15 +71,19 @@ Public Sub FunctionDependency()
     Set DicCategory = CreateObject("Scripting.Dictionary")
     Set DicSummary = CreateObject("Scripting.Dictionary")
 
-    Set wsTrace = Worksheets("関数トレース")
+    Set wsTrace = ManagementBook.Worksheets("関数トレース")
 
     On Error Resume Next
     Application.DisplayAlerts = False
-    Worksheets("関数依存関係").Delete
+    ManagementBook.Worksheets("関数依存関係").Delete
     Application.DisplayAlerts = True
     On Error GoTo 0
 
-    Set wsDep = Worksheets.Add
+    Set wsDep = _
+        ManagementBook.Worksheets.Add( _
+            After:=ManagementBook.Worksheets( _
+                ManagementBook.Worksheets.Count))
+
     wsDep.Name = "関数依存関係"
 
     '=========================
