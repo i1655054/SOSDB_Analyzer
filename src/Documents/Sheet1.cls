@@ -8,11 +8,6 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 
-
-Private Sub CommandButton1_Click()
-
-End Sub
-
 ' ‡@ Start
 Private Sub cmdStart_Click()
     Call InitializeAnalyzer

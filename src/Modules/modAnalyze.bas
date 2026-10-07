@@ -2,6 +2,30 @@ Attribute VB_Name = "modAnalyze"
 Option Explicit
 
 '==================================================
+' ProcList定数
+'==================================================
+
+' 使用状況
+Private Const STATUS_UNUSED As String = "削除候補"
+Private Const STATUS_CONFIRM As String = "要確認"
+Private Const STATUS_EVENT As String = "イベント"
+Private Const STATUS_USED As String = "使用中"
+
+' 表示色
+
+' 削除候補
+Private Const COLOR_UNUSED As Long = &HC8C8FF
+
+' 要確認
+Private Const COLOR_CONFIRM As Long = &HC8FFFF
+
+' イベント
+Private Const COLOR_EVENT As Long = &HFFC8C8
+
+' 関数名抽出失敗時
+Private Const PROC_UNKNOWN As String = "(Unknown)"
+    
+'==================================================
 ' ProcList生成
 '==================================================
 
@@ -26,7 +50,6 @@ Option Explicit
 ' あわせて出力する
 '
 Public Sub ProcedureList()
-
 ' "ProcList"シートが追加される
 ' 1行目
 ' Module  Type    ProcedureName   Declaration Line    UsageCount
@@ -38,69 +61,47 @@ Public Sub ProcedureList()
 ' 2          黄   要確認（1回しか呼ばれてない）
 ' 3+         通常 使用中
 
-    Dim TargetBook As Workbook
     
-    'Set TargetBook = GetWorkbookByWorkbookName(BOOK_SOSDB)
-    'Set TargetBook = GetWorkbookByWorkbookName(BOOK_ANALYZER)
-    
-    Set TargetBook = GetCurrentTargetBook()
-    
-    'If Not CheckTargetBook(TargetBook) Then Exit Sub
-    Dim Tool As ToolInfo
-
-    Tool = GetCurrentToolInfo()
-
-    If Not CheckTargetBook( _
-            TargetBook, _
-            Tool.WorkbookName) Then Exit Sub
-        
-
     Dim VBComp As Object
     Dim CodeMod As Object
+    
     Dim i As Long
+    Dim r As Long
     Dim row As Long
+    
+    Dim LastRow As Long
+    
     Dim ws As Worksheet
     
-    Dim ManagementBook As Workbook
-
-    Set ManagementBook = _
-        GetCurrentManagementWorkbook()
+    Dim line As String
+    Dim ProcName As String
     
-    If Not CheckManagementWorkbook( _
-            ManagementBook, _
-            GetCurrentManagementFile()) Then
-        
-        Exit Sub
-        
-    End If
-    
-    '=========================================
+    '------------------------------------
     ' シート準備
-    '=========================================
+    '------------------------------------
     On Error Resume Next
-    'Set ws = ThisWorkbook.Worksheets("ProcList")
     
     Set ws = _
-        ManagementBook.Worksheets("ProcList")
+        gContext.ManagementBook.Worksheets(SHEET_PROC_LIST)
     
     On Error GoTo 0
     
     If ws Is Nothing Then
     
         Set ws = _
-            ManagementBook.Worksheets.Add( _
-                After:=ManagementBook.Worksheets( _
-                    ManagementBook.Worksheets.Count))
+            gContext.ManagementBook.Worksheets.Add( _
+                After:=gContext.ManagementBook.Worksheets( _
+                    gContext.ManagementBook.Worksheets.Count))
         
-        ws.Name = "ProcList"
+        ws.Name = SHEET_PROC_LIST
     
     End If
     
     ws.Cells.Clear
     
-    '=========================================
+    '------------------------------------
     ' ヘッダ
-    '=========================================
+    '------------------------------------
     ws.Range("A1:L1").Value = Array( _
         "Module", _
         "Type", _
@@ -117,25 +118,23 @@ Public Sub ProcedureList()
     
     row = 2
     
-    '=========================================
+    '------------------------------------
     ' 関数抽出
-    '=========================================
-    For Each VBComp In TargetBook.VBProject.VBComponents
+    '------------------------------------
+    For Each VBComp In gContext.TargetBook.VBProject.VBComponents
         
         Set CodeMod = VBComp.CodeModule
         
         For i = 1 To CodeMod.CountOfLines
             
-            Dim line As String
             line = Trim(CodeMod.Lines(i, 1))
             
             If IsProcedureLine(line) Then
                 
-                Dim ProcName As String
                 ProcName = ExtractProcedureName(line)
                 
                 If Trim(ProcName) = "" Then
-                    ProcName = "(Unknown)"
+                    ProcName = PROC_UNKNOWN
                 End If
                 
                 ws.Cells(row, 1).Value = VBComp.Name
@@ -163,7 +162,7 @@ Public Sub ProcedureList()
                 ws.Cells(row, 10).Value = line
 
                 ' 使用回数
-                If ProcName = "(Unknown)" Then
+                If ProcName = PROC_UNKNOWN Then
                     ws.Cells(row, 11).Value = 0
                 Else
                     ws.Cells(row, 11).Value = CountUsage(ProcName)
@@ -181,26 +180,23 @@ Public Sub ProcedureList()
         
     Next VBComp
     
-    '=========================================
+    '------------------------------------
     ' 色付け
-    '=========================================
-    Dim LastRow As Long
-    Dim r As Long
-    
+    '------------------------------------
     LastRow = ws.Cells(ws.Rows.Count, 1).End(xlUp).row
     
     For r = 2 To LastRow
         
         Select Case ws.Cells(r, 12).Value
             
-            Case "削除候補"
-                ws.Rows(r).Interior.Color = RGB(255, 200, 200)
+            Case STATUS_UNUSED
+                ws.Rows(r).Interior.Color = COLOR_UNUSED
                 
-            Case "要確認"
-                ws.Rows(r).Interior.Color = RGB(255, 255, 200)
+            Case STATUS_CONFIRM
+                ws.Rows(r).Interior.Color = COLOR_CONFIRM
                 
-            Case "イベント"
-                ws.Rows(r).Interior.Color = RGB(200, 200, 255)
+            Case STATUS_EVENT
+                ws.Rows(r).Interior.Color = COLOR_EVENT
                 
         End Select
         
@@ -211,7 +207,6 @@ Public Sub ProcedureList()
     ws.Rows(1).AutoFilter
     ws.Rows(1).Font.Bold = True
     
-    MsgBox "解析完了"
 
 End Sub
 
@@ -246,8 +241,9 @@ Public Function IsProcedureLine(line As String) As Boolean
     Or line Like "Private Function *" _
     Or line Like "Property Get *" _
     Or line Like "Property Let *" _
-    Or line Like "Property Set *" Then
-    
+    Or line Like "Property Set *" _
+    Or line Like "Friend Sub *" _
+    Or line Like "Friend Function *" Then
         IsProcedureLine = True
     Else
         IsProcedureLine = False
@@ -261,9 +257,18 @@ End Function
 ' @Category
 ' Analyze
 '
+' @Input
+' line(String)
+'
+' @Output
+' ProcedureType(String)
+'
 ' @Summary
 ' プロシージャ宣言行から
 ' Sub、Function、Property種別を取得する
+'
+' @Remarks
+' 宣言文字列の部分一致により判定する
 '
 Private Function GetProcedureType(line As String) As String
 
@@ -301,6 +306,7 @@ Public Function ExtractProcedureName(line As String) As String
     tmp = Replace(tmp, "Property Get ", "")
     tmp = Replace(tmp, "Property Let ", "")
     tmp = Replace(tmp, "Property Set ", "")
+    tmp = Replace(tmp, "Friend ", "")
     
     If InStr(tmp, "(") > 0 Then
         tmp = Left(tmp, InStr(tmp, "(") - 1)
@@ -328,14 +334,12 @@ End Function
 ' IsFunctionCallを利用して呼出判定を行う
 '
 Public Function CountUsage( _
-    ByVal ProcName As String) As Long
+            ByVal ProcName As String) _
+            As Long
 
     Dim TargetBook As Workbook
 
-    'Set TargetBook = GetWorkbookByWorkbookName(BOOK_SOSDB)
-    'Set TargetBook = GetWorkbookByWorkbookName(BOOK_ANALYZER)
-
-    Set TargetBook = GetCurrentTargetBook()
+    Set TargetBook = gContext.TargetBook
 
     If TargetBook Is Nothing Then Exit Function
 
@@ -356,10 +360,6 @@ Public Function CountUsage( _
             LineText = _
                 Trim$(CodeMod.Lines(i, 1))
                 
-            'If VBComp.Name = "modTest" Then
-            '    Debug.Print "[" & LineText & "]"
-            'End If
-
             If IsFunctionCall( _
                 LineText, ProcName) Then
                 
@@ -410,23 +410,34 @@ End Function
 ' @Category
 ' Analyze
 '
+' @Input
+' ProcName(String)
+' usage(Long)
+'
+' @Output
+' Status(String)
+'
 ' @Summary
 ' 使用回数およびイベント種別から
 ' 使用状況を判定する
 '
+' @Remarks
+' イベント関数は使用回数に関係なく
+' 「イベント」を返す
+'
 Private Function GetUsageStatus(ProcName As String, usage As Long) As String
 
     If IsEventProcedure(ProcName) Then
-        GetUsageStatus = "イベント"
+        GetUsageStatus = STATUS_EVENT
         
     ElseIf usage = 0 Then
-        GetUsageStatus = "削除候補"
+        GetUsageStatus = STATUS_UNUSED
         
     ElseIf usage = 1 Then
-        GetUsageStatus = "要確認"
+        GetUsageStatus = STATUS_CONFIRM
         
     Else
-        GetUsageStatus = "使用中"
+        GetUsageStatus = STATUS_USED
         
     End If
 

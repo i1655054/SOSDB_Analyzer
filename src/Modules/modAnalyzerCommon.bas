@@ -20,6 +20,99 @@ Option Explicit
 Const GHND = &H42
 Const CF_UNICODETEXT = 13
 
+' @JPName
+' 解析コンテキスト生成
+'
+' @Category
+' Analyze
+'
+' @Output
+' clsAnalyzeContext
+'
+' @Summary
+' 現在選択中ツールの
+' TargetBook、ManagementBook、
+' ToolInfoを保持した
+' 解析コンテキストを生成する
+'
+' @Remarks
+' gContextへ設定する前の
+' インスタンス生成で利用する
+'
+Public Function CreateAnalyzeContext() _
+            As clsAnalyzeContext
+
+    Dim Context As clsAnalyzeContext
+
+    Set Context = New clsAnalyzeContext
+
+    ' TargetBook取得
+    Set Context.TargetBook = GetCurrentTargetBook()
+
+    ' ManagementBook取得
+    Set Context.ManagementBook = GetCurrentManagementWorkbook()
+
+    ' ToolInfo取得
+    Set Context.Tool = GetCurrentToolInfo()
+
+    Set CreateAnalyzeContext = Context
+
+End Function
+
+' @JPName
+' 全解析実行
+'
+' @Category
+' Analyze
+'
+' @Summary
+' ProcList、関数トレース、
+' 関数依存関係の解析を実行する
+'
+' @Remarks
+' gContextの妥当性確認後に
+' 各解析処理を順次実行する
+'
+Public Sub AnalyzeAll()
+
+    If gContext Is Nothing Then
+    
+        MsgBox "解析コンテキスト未生成"
+
+        Exit Sub
+
+    End If
+
+    If Not gContext.IsValid Then
+
+        MsgBox "解析コンテキスト生成失敗"
+
+        Exit Sub
+
+    End If
+
+    If Not CheckTargetBook( _
+            gContext.TargetBook, _
+            gContext.Tool.WorkbookName) Then
+        Exit Sub
+    End If
+
+    If Not CheckManagementWorkbook( _
+            gContext.ManagementBook, _
+            gContext.Tool.ManagementFile) Then
+        Exit Sub
+    End If
+
+    ProcedureList
+    
+    FunctionTrace
+
+    FunctionDependency
+
+    MsgBox "解析完了"
+
+End Sub
+
 '==================================================
 ' 共通ユーティリティ
 '==================================================
@@ -86,15 +179,15 @@ End Function
 Public Sub CopyTextToClipboard(Text As String)
     Dim hGlobalMemory As LongPtr
     Dim lpGlobalMemory As LongPtr
-    Dim size As LongPtr
+    Dim Size As LongPtr
 
-    size = (Len(Text) + 1) * 2 ' Unicodeは2バイト
+    Size = (Len(Text) + 1) * 2 ' Unicodeは2バイト
 
     If OpenClipboard(0&) Then
         EmptyClipboard
-        hGlobalMemory = GlobalAlloc(GHND, size)
+        hGlobalMemory = GlobalAlloc(GHND, Size)
         lpGlobalMemory = GlobalLock(hGlobalMemory)
-        CopyMemory ByVal lpGlobalMemory, ByVal StrPtr(Text), size
+        CopyMemory ByVal lpGlobalMemory, ByVal StrPtr(Text), Size
         GlobalUnlock hGlobalMemory
         SetClipboardData CF_UNICODETEXT, hGlobalMemory
         CloseClipboard
@@ -110,6 +203,14 @@ End Sub
 '
 ' @Category
 ' Analyze
+'
+' @Input
+' CodeMod(CodeModule)
+' StartLine(Long)
+' TagName(String)
+'
+' @Output
+' TagValue(String)
 '
 ' @Summary
 ' プロシージャ定義直前のコメントから
@@ -208,6 +309,14 @@ End Function
 ' @Category
 ' Analyze
 '
+' @Input
+' CodeText(String)
+' ProcName(String)
+' TagName(String)
+'
+' @Output
+' TagValue(String)
+'
 ' @Summary
 ' ソースコード文字列から
 ' 指定タグの値を取得する
@@ -290,21 +399,9 @@ Public Function GetProcInfo( _
 
     Dim Proc As clsProcInfo
 
-    Dim ManagementBook As Workbook
-
-    Set ManagementBook = _
-        GetCurrentManagementWorkbook()
-
-    If Not CheckManagementWorkbook( _
-            ManagementBook, _
-            GetCurrentManagementFile()) Then
-
-        Exit Function
-
-    End If
-
-    'Set ws = ManagementBook.Worksheets("PathChart")
-    Set ws = ManagementBook.Worksheets("ProcList")
+    If gContext Is Nothing Then Exit Function
+    
+    Set ws = gContext.ManagementBook.Worksheets(SHEET_PROC_LIST)
 
     LastRow = ws.Cells(ws.Rows.Count, "C").End(xlUp).row
 
@@ -345,6 +442,12 @@ End Function
 '
 ' @Category
 ' Analyze
+'
+' @Input
+' DisplayText(String)
+'
+' @Output
+' ProcName(String)
 '
 ' @Summary
 ' 表示文字列から

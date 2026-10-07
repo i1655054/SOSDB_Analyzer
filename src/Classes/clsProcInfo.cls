@@ -12,6 +12,21 @@ Option Explicit
 '=================================================
 ' プロシージャ情報
 '=================================================
+'
+' @JPName
+' プロシージャ情報
+'
+' @Category
+' Model
+'
+' @Summary
+' プロシージャの属性情報および
+' 呼出関係を保持する
+'
+' @Remarks
+' ProcList、FunctionTrace、
+' PathChartで共通利用する
+'
 
 ' 基本情報
 Public ProcName As String
@@ -37,6 +52,21 @@ Public Calls As Collection
 '=================================================
 ' 初期化
 '=================================================
+' @JPName
+' プロシージャ情報初期化
+'
+' @Category
+' Model
+'
+' @Input
+' なし
+'
+' @Output
+' なし
+'
+' @Summary
+' 呼出元および呼出先コレクションを初期化する
+'
 Private Sub Class_Initialize()
 
     Set CalledBy = New Collection
@@ -47,6 +77,24 @@ End Sub
 '=================================================
 ' 呼出元追加
 '=================================================
+' @JPName
+' 呼出元追加
+'
+' @Category
+' Model
+'
+' @Input
+' ProcName(String)
+'
+' @Output
+' なし
+'
+' @Summary
+' 呼出元プロシージャを登録する
+'
+' @Remarks
+' 重複登録は行わない
+'
 Public Sub AddCalledBy(ByVal ProcName As String)
 
     If Not ExistsInCollection(CalledBy, ProcName) Then
@@ -58,6 +106,24 @@ End Sub
 '=================================================
 ' 呼出先追加
 '=================================================
+' @JPName
+' 呼出先追加
+'
+' @Category
+' Model
+'
+' @Input
+' ProcName(String)
+'
+' @Output
+' なし
+'
+' @Summary
+' 呼出先プロシージャを登録する
+'
+' @Remarks
+' 重複登録は行わない
+'
 Public Sub AddCall(ByVal ProcName As String)
 
     If Not ExistsInCollection(Calls, ProcName) Then
@@ -69,6 +135,21 @@ End Sub
 '=================================================
 ' 呼出元一覧
 '=================================================
+' @JPName
+' 呼出元一覧取得
+'
+' @Category
+' Model
+'
+' @Input
+' なし
+'
+' @Output
+' CalledByList(String)
+'
+' @Summary
+' 呼出元一覧をセミコロン区切りで取得する
+'
 Public Function GetCalledByText() As String
 
     GetCalledByText = JoinCollection(CalledBy)
@@ -78,6 +159,21 @@ End Function
 '=================================================
 ' 呼出先一覧
 '=================================================
+' @JPName
+' 呼出先一覧取得
+'
+' @Category
+' Model
+'
+' @Input
+' なし
+'
+' @Output
+' CallList(String)
+'
+' @Summary
+' 呼出先一覧をセミコロン区切りで取得する
+'
 Public Function GetCallsText() As String
 
     GetCallsText = JoinCollection(Calls)
@@ -87,10 +183,27 @@ End Function
 '=================================================
 ' Collection存在チェック
 '=================================================
+' @JPName
+' Collection存在確認
+'
+' @Category
+' Internal
+'
+' @Input
+' Col(Collection)
+' Value(String)
+'
+' @Output
+' Exists(Boolean)
+'
+' @Summary
+' Collection内に
+' 指定値が存在するか判定する
+'
 Private Function ExistsInCollection( _
             ByVal Col As Collection, _
             ByVal Value As String) As Boolean
-
+            
     Dim V As Variant
 
     For Each V In Col
@@ -112,6 +225,22 @@ End Function
 '=================================================
 ' Collection連結
 '=================================================
+' @JPName
+' Collection連結
+'
+' @Category
+' Internal
+'
+' @Input
+' Col(Collection)
+'
+' @Output
+' Text(String)
+'
+' @Summary
+' Collection内容を
+' セミコロン区切り文字列へ変換する
+'
 Private Function JoinCollection( _
             ByVal Col As Collection) As String
 

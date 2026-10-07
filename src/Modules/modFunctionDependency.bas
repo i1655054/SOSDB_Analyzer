@@ -26,12 +26,15 @@ Option Explicit
 ' 呼出回数および付帯情報を出力する
 '
 Public Sub FunctionDependency()
-
+    
     Dim wsTrace As Worksheet
     Dim wsDep As Worksheet
 
     Dim LastRow As Long
     Dim r As Long
+
+    Dim Key As String
+    Dim V As Variant
 
     Dim Dic As Object
 
@@ -44,22 +47,6 @@ Public Sub FunctionDependency()
     Dim DicCategory As Object
     Dim DicSummary As Object
 
-    Dim Key As String
-    Dim V As Variant
-
-    Dim ManagementBook As Workbook
-
-    Set ManagementBook = _
-        GetCurrentManagementWorkbook()
-
-    If Not CheckManagementWorkbook( _
-            ManagementBook, _
-            GetCurrentManagementFile()) Then
-
-        Exit Sub
-
-    End If
-
     Set Dic = CreateObject("Scripting.Dictionary")
 
     Set DicCallerJP = CreateObject("Scripting.Dictionary")
@@ -71,20 +58,26 @@ Public Sub FunctionDependency()
     Set DicCategory = CreateObject("Scripting.Dictionary")
     Set DicSummary = CreateObject("Scripting.Dictionary")
 
-    Set wsTrace = ManagementBook.Worksheets("関数トレース")
+    If gContext Is Nothing Then Exit Sub
+    
+    Set wsTrace = gContext.ManagementBook.Worksheets(SHEET_FUNCTION_TRACE)
 
-    On Error Resume Next
     Application.DisplayAlerts = False
-    ManagementBook.Worksheets("関数依存関係").Delete
-    Application.DisplayAlerts = True
+    
+    On Error Resume Next
+    
+    gContext.ManagementBook.Worksheets(SHEET_FUNCTION_DEPENDENCY).Delete
+    
     On Error GoTo 0
 
+    Application.DisplayAlerts = True
+    
     Set wsDep = _
-        ManagementBook.Worksheets.Add( _
-            After:=ManagementBook.Worksheets( _
-                ManagementBook.Worksheets.Count))
+        gContext.ManagementBook.Worksheets.Add( _
+            After:=gContext.ManagementBook.Worksheets( _
+                gContext.ManagementBook.Worksheets.Count))
 
-    wsDep.Name = "関数依存関係"
+    wsDep.Name = SHEET_FUNCTION_DEPENDENCY
 
     '=========================
     ' ヘッダ
@@ -174,8 +167,6 @@ Public Sub FunctionDependency()
     wsDep.Rows(1).Font.Bold = True
     wsDep.Rows(1).AutoFilter
     wsDep.Columns.AutoFit
-
-    MsgBox "関数依存関係作成完了"
 
 End Sub
 

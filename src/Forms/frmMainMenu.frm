@@ -20,6 +20,12 @@ Attribute VB_Exposed = False
 ' @Category
 ' UI
 '
+' @Input
+' なし
+'
+' @Output
+' なし
+'
 ' @Summary
 ' メインメニュー画面を初期化する
 '
@@ -34,6 +40,12 @@ End Sub
 '
 ' @Category
 ' UI
+'
+' @Input
+' なし
+'
+' @Output
+' なし
 '
 ' @Summary
 ' ソース管理画面を表示する
@@ -50,6 +62,12 @@ End Sub
 ' @Category
 ' UI
 '
+' @Input
+' なし
+'
+' @Output
+' なし
+'
 ' @Summary
 ' 対象ツール選択画面を表示する
 '
@@ -64,6 +82,12 @@ End Sub
 '
 ' @Category
 ' UI
+'
+' @Input
+' なし
+'
+' @Output
+' なし
 '
 ' @Summary
 ' メインメニュー画面を閉じる

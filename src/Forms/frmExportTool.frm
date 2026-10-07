@@ -15,6 +15,21 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
 
+' @JPName
+' 画面初期化
+'
+' @Category
+' Export
+'
+' @Input
+' なし
+'
+' @Output
+' なし
+'
+' @Summary
+' エクスポート画面の初期表示処理を行う
+'
 Private Sub UserForm_Initialize()
 
     SetupListView
@@ -23,6 +38,21 @@ Private Sub UserForm_Initialize()
 
 End Sub
 
+' @JPName
+' ListView初期化
+'
+' @Category
+' Export
+'
+' @Input
+' なし
+'
+' @Output
+' なし
+'
+' @Summary
+' ツール一覧表示用ListViewを初期化する
+'
 Private Sub SetupListView()
 
     With lvwTools
@@ -43,6 +73,25 @@ Private Sub SetupListView()
 
 End Sub
 
+' @JPName
+' ツール一覧読込
+'
+' @Category
+' Export
+'
+' @Input
+' なし
+'
+' @Output
+' なし
+'
+' @Summary
+' ToolManagerシートから
+' エクスポート対象ツール一覧を読み込む
+'
+' @Remarks
+' WorkbookのOpen/Close状態も表示する
+'
 Private Sub LoadToolList()
 
     Dim ws As Worksheet
@@ -53,7 +102,7 @@ Private Sub LoadToolList()
     Dim wb As Workbook
 
     Set ws = _
-        ThisWorkbook.Worksheets("ToolManager")
+        ThisWorkbook.Worksheets(SHEET_TOOL_MANAGER)
 
     LastRow = _
         ws.Cells(ws.Rows.Count, "A") _
@@ -73,6 +122,8 @@ Private Sub LoadToolList()
             itm.SubItems(1) = _
                 ws.Cells(r, "B").Value
 
+            Set wb = Nothing
+            
             On Error Resume Next
 
             Set wb = _
@@ -103,7 +154,21 @@ Private Sub LoadToolList()
 
 End Sub
 
+' @JPName
 ' 選択件数更新
+'
+' @Category
+' Export
+'
+' @Input
+' なし
+'
+' @Output
+' なし
+'
+' @Summary
+' チェック済みツール件数を表示する
+'
 Private Sub UpdateSelectedCount()
 
     Dim itm As ListItem
@@ -124,14 +189,31 @@ Private Sub UpdateSelectedCount()
 
 End Sub
 
-' 更新 : Open/Close状態を再読込
+' @JPName
+' 一覧再読込
+'
+' @Category
+' Export
+'
+' @Summary
+' ツール一覧を再読込し
+' Open/Close状態を更新する
+'
 Private Sub cmdRefresh_Click()
 
     LoadToolList
 
 End Sub
 
-' 全選択 : 全件チェック
+' @JPName
+' 全選択
+'
+' @Category
+' Export
+'
+' @Summary
+' 一覧の全ツールを選択する
+'
 Private Sub cmdSelectAll_Click()
 
     Dim itm As ListItem
@@ -146,7 +228,15 @@ Private Sub cmdSelectAll_Click()
 
 End Sub
 
-' 全解除 : 全件チェック解除
+' @JPName
+' 全解除
+'
+' @Category
+' Export
+'
+' @Summary
+' 一覧の全ツールの選択を解除する
+'
 Private Sub cmdSelectNone_Click()
 
     Dim itm As ListItem
@@ -161,7 +251,22 @@ Private Sub cmdSelectNone_Click()
 
 End Sub
 
-' チェック変更時
+' @JPName
+' チェック変更
+'
+' @Category
+' Export
+'
+' @Input
+' Item(ListItem)
+'
+' @Output
+' なし
+'
+' @Summary
+' チェック状態変更時に
+' 選択件数を更新する
+'
 Private Sub lvwTools_ItemCheck( _
     ByVal Item As MSComctlLib.ListItem)
 
@@ -169,7 +274,26 @@ Private Sub lvwTools_ItemCheck( _
 
 End Sub
 
-' Export : エクスポート実行
+' @JPName
+' VBAエクスポート実行
+'
+' @Category
+' Export
+'
+' @Input
+' なし
+'
+' @Output
+' なし
+'
+' @Summary
+' 選択ツールのVBAソースを
+' Git管理フォルダへ出力する
+'
+' @Remarks
+' エクスポート対象が1件の場合は
+' PowerShellを自動起動する
+'
 Private Sub cmdExport_Click()
 
     Dim itm As ListItem
@@ -218,6 +342,16 @@ Private Sub cmdExport_Click()
 
     Next itm
 
+    If Count = 0 Then
+
+        MsgBox _
+            "選択されたツールはありません。", _
+            vbInformation
+
+        Exit Sub
+
+    End If
+
     MsgBox _
         Count & " 件のエクスポートが完了しました。", _
         vbInformation
@@ -230,7 +364,15 @@ Private Sub cmdExport_Click()
 
 End Sub
 
-' 閉じる : フォーム終了
+' @JPName
+' 画面終了
+'
+' @Category
+' Export
+'
+' @Summary
+' エクスポート画面を閉じる
+'
 Private Sub cmdClose_Click()
 
     Unload Me

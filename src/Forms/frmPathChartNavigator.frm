@@ -15,6 +15,24 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
 
+' @JPName
+' ナビゲータ初期化
+'
+' @Category
+' PathChart
+'
+' @Input
+' なし
+'
+' @Output
+' なし
+'
+' @Summary
+' PathChartナビゲータの初期設定を行う
+'
+' @Remarks
+' 検索履歴および入力補完設定を初期化する
+'
 Private Sub UserForm_Initialize()
 
     LoadSearchHistory cmbSearch
@@ -23,6 +41,25 @@ Private Sub UserForm_Initialize()
     
 End Sub
 
+' @JPName
+' ナビゲータ表示
+'
+' @Category
+' PathChart
+'
+' @Input
+' なし
+'
+' @Output
+' なし
+'
+' @Summary
+' ナビゲータ表示位置を設定する
+'
+' @Remarks
+' Excel画面右上へ配置し
+' 表示情報を初期化する
+'
 Private Sub UserForm_Activate()
 
     Me.Left = _
@@ -37,7 +74,26 @@ Private Sub UserForm_Activate()
     
 End Sub
 
-' ×ボタン対策
+' @JPName
+' ナビゲータ終了制御
+'
+' @Category
+' PathChart
+'
+' @Input
+' Cancel(Integer)
+' CloseMode(Integer)
+'
+' @Output
+' なし
+'
+' @Summary
+' ナビゲータ終了時の制御を行う
+'
+' @Remarks
+' ×ボタン押下時は
+' PathChart画面を再表示する
+'
 Private Sub UserForm_QueryClose( _
     Cancel As Integer, _
     CloseMode As Integer)
@@ -48,12 +104,28 @@ Private Sub UserForm_QueryClose( _
         
         frmPathChart.Show vbModeless
 
-
     End If
 
 End Sub
 
-' 検索
+' @JPName
+' ノード検索
+'
+' @Category
+' PathChart
+'
+' @Input
+' なし
+'
+' @Output
+' なし
+'
+' @Summary
+' 指定文字列でノード検索を実行する
+'
+' @Remarks
+' 検索履歴へ追加後に検索する
+'
 Private Sub cmdFind_Click()
 
     gSearchText = GetProcNameFromDisplay( _
@@ -67,7 +139,21 @@ Private Sub cmdFind_Click()
 
 End Sub
 
-' 次検索
+' @JPName
+' 次候補検索
+'
+' @Category
+' PathChart
+'
+' @Input
+' なし
+'
+' @Output
+' なし
+'
+' @Summary
+' 次の検索候補を検索する
+'
 Private Sub cmdNext_Click()
 
     gExactMatch = chkExactMatch.Value
@@ -76,34 +162,105 @@ Private Sub cmdNext_Click()
 
 End Sub
 
-' 親
+' @JPName
+' 親ノード移動
+'
+' @Category
+' PathChart
+'
+' @Input
+' なし
+'
+' @Output
+' なし
+'
+' @Summary
+' 親ノードへ移動する
+'
 Private Sub cmdParent_Click()
 
     MoveToParentNode
 
 End Sub
 
-' 子
+' @JPName
+' 子ノード移動
+'
+' @Category
+' PathChart
+'
+' @Input
+' なし
+'
+' @Output
+' なし
+'
+' @Summary
+' 子ノードへ移動する
+'
 Private Sub cmdChild_Click()
 
     MoveToChildNode
 
 End Sub
 
-' 兄弟
+' @JPName
+' 兄弟ノード移動
+'
+' @Category
+' PathChart
+'
+' @Input
+' なし
+'
+' @Output
+' なし
+'
+' @Summary
+' 兄弟ノードへ移動する
+'
 Private Sub cmdSibling_Click()
 
     MoveToSiblingNode
 
 End Sub
 
-' 解除
+' @JPName
+' 強調解除
+'
+' @Category
+' PathChart
+'
+' @Input
+' なし
+'
+' @Output
+' なし
+'
+' @Summary
+' ノード強調表示を解除する
+'
 Private Sub cmdClear_Click()
 
     ClearHighlight
 
 End Sub
 
+' @JPName
+' ナビゲータ情報初期化
+'
+' @Category
+' PathChart
+'
+' @Input
+' なし
+'
+' @Output
+' なし
+'
+' @Summary
+' ナビゲータ表示情報を初期化する
+'
 Public Sub ClearNavigatorInfo()
 
     txtCurrentNode.Text = "-"
@@ -120,6 +277,21 @@ Public Sub ClearNavigatorInfo()
 
 End Sub
 
+' @JPName
+' 現在情報コピー
+'
+' @Category
+' PathChart
+'
+' @Input
+' なし
+'
+' @Output
+' なし
+'
+' @Summary
+' 現在ノード情報をクリップボードへコピーする
+'
 Private Sub cmdCopyCurrentInfo_Click()
 
     Dim S As String
@@ -137,6 +309,25 @@ Private Sub cmdCopyCurrentInfo_Click()
     
 End Sub
 
+' @JPName
+' 値コピー
+'
+' @Category
+' PathChart
+'
+' @Input
+' TextValue(String)
+' Title(String)
+'
+' @Output
+' なし
+'
+' @Summary
+' 指定文字列をクリップボードへコピーする
+'
+' @Remarks
+' ステータスバーへコピー結果を表示する
+'
 Private Sub CopyControlValue( _
                 ByVal TextValue As String, _
                 Optional ByVal Title As String = "")
@@ -161,6 +352,24 @@ Private Sub CopyControlValue( _
 
 End Sub
 
+' @JPName
+' 値コピー
+'
+' @Category
+' PathChart
+'
+' @Input
+' Button(Integer)
+' Shift(Integer)
+' X(Single)
+' Y(Single)
+'
+' @Output
+' なし
+'
+' @Summary
+' 右クリック時に表示値をコピーする
+'
 Private Sub txtCurrentNode_MouseDown( _
         ByVal Button As Integer, _
         ByVal Shift As Integer, _
@@ -177,6 +386,24 @@ Private Sub txtCurrentNode_MouseDown( _
 
 End Sub
 
+' @JPName
+' 値コピー
+'
+' @Category
+' PathChart
+'
+' @Input
+' Button(Integer)
+' Shift(Integer)
+' X(Single)
+' Y(Single)
+'
+' @Output
+' なし
+'
+' @Summary
+' 右クリック時に表示値をコピーする
+'
 Private Sub txtStatus_MouseDown( _
         ByVal Button As Integer, _
         ByVal Shift As Integer, _
@@ -193,6 +420,24 @@ Private Sub txtStatus_MouseDown( _
 
 End Sub
 
+' @JPName
+' 値コピー
+'
+' @Category
+' PathChart
+'
+' @Input
+' Button(Integer)
+' Shift(Integer)
+' X(Single)
+' Y(Single)
+'
+' @Output
+' なし
+'
+' @Summary
+' 右クリック時に表示値をコピーする
+'
 Private Sub lblJPName_MouseDown( _
         ByVal Button As Integer, _
         ByVal Shift As Integer, _
@@ -209,6 +454,24 @@ Private Sub lblJPName_MouseDown( _
 
 End Sub
 
+' @JPName
+' 値コピー
+'
+' @Category
+' PathChart
+'
+' @Input
+' Button(Integer)
+' Shift(Integer)
+' X(Single)
+' Y(Single)
+'
+' @Output
+' なし
+'
+' @Summary
+' 右クリック時に表示値をコピーする
+'
 Private Sub lblCategory_MouseDown( _
         ByVal Button As Integer, _
         ByVal Shift As Integer, _
@@ -225,6 +488,24 @@ Private Sub lblCategory_MouseDown( _
 
 End Sub
 
+' @JPName
+' 値コピー
+'
+' @Category
+' PathChart
+'
+' @Input
+' Button(Integer)
+' Shift(Integer)
+' X(Single)
+' Y(Single)
+'
+' @Output
+' なし
+'
+' @Summary
+' 右クリック時に表示値をコピーする
+'
 Private Sub lblModule_MouseDown( _
         ByVal Button As Integer, _
         ByVal Shift As Integer, _
@@ -241,6 +522,24 @@ Private Sub lblModule_MouseDown( _
 
 End Sub
 
+' @JPName
+' 値コピー
+'
+' @Category
+' PathChart
+'
+' @Input
+' Button(Integer)
+' Shift(Integer)
+' X(Single)
+' Y(Single)
+'
+' @Output
+' なし
+'
+' @Summary
+' 右クリック時に表示値をコピーする
+'
 Private Sub txtSummary_MouseDown( _
         ByVal Button As Integer, _
         ByVal Shift As Integer, _

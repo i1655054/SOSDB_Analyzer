@@ -2,12 +2,16 @@ Attribute VB_Name = "modPathChartConfig"
 Option Explicit
 
 '==================================================
-' 定数
+' PowerPoint出力定数
 '==================================================
 
 Public Const PPT_ORIENT_AUTO As String = "AUTO"
 Public Const PPT_ORIENT_PORTRAIT As String = "PORTRAIT"
 Public Const PPT_ORIENT_LANDSCAPE As String = "LANDSCAPE"
+
+'==================================================
+' PathChartConfigセル定義
+'==================================================
 
 Private Const CFG_SKIP_COMMON      As String = "B1"
 Private Const CFG_SHOW_COUNT       As String = "B2"
@@ -45,12 +49,25 @@ Private Const CFG_RECURSIVE        As String = "B24"
 Private Const CFG_SHOW_JPNAME      As String = "B25"
 Private Const CFG_SHOW_CATEGORY    As String = "B26"
 
+'==================================================
+' PathChart既定値
+'==================================================
+
+Public Const DEFAULT_MAX_NODE As Long = 1000
+
+Public Const DEFAULT_MAX_EDGE As Long = 3000
+
+Public Const DEFAULT_MAX_DEPTH As Long = 5
+
+Public Const DEFAULT_COLOR_THEME As String = "標準"
 
 '==================================================
 ' 実行時設定
 '==================================================
 
-'解析対象
+'--------------------------------------------------
+' 解析対象
+'--------------------------------------------------
 Public gProperty As Boolean
 Public gPrivate As Boolean
 Public gPublic As Boolean
@@ -59,16 +76,22 @@ Public gStdModule As Boolean
 Public gUserForm As Boolean
 Public gClassModule As Boolean
 
-'除外条件
+'--------------------------------------------------
+' 除外条件
+'--------------------------------------------------
 Public gIgnoreAPI As Boolean
 Public gIgnoreExcel As Boolean
 Public gIgnoreSelf As Boolean
 Public gSameModuleOnly As Boolean
 
+'--------------------------------------------------
 '出力設定
+'--------------------------------------------------
 Public gColorTheme As String
 
+'--------------------------------------------------
 '制限
+'--------------------------------------------------
 Public gMaxNode As Long
 Public gMaxEdge As Long
 
@@ -126,6 +149,12 @@ Public gShowCategory As Boolean
 ' @Category
 ' PathChart
 '
+' @Input
+' なし
+'
+' @Output
+' なし
+'
 ' @Summary
 ' PathChart設定を
 ' PathChartConfigシートへ保存する
@@ -139,8 +168,7 @@ Public Sub SavePathChartConfig()
     Dim ws As Worksheet
 
     Set ws = _
-        ThisWorkbook.Worksheets( _
-            "PathChartConfig")
+        ThisWorkbook.Worksheets(SHEET_PATH_CHART_CONFIG)
 
     ws.Range(CFG_SKIP_COMMON).Value = gSkipCommon
     ws.Range(CFG_SHOW_COUNT).Value = gShowCount
@@ -174,6 +202,9 @@ Public Sub SavePathChartConfig()
     ws.Range(CFG_EXTERNAL).Value = gExternal
     ws.Range(CFG_RECURSIVE).Value = gRecursive
 
+    ws.Range(CFG_SHOW_JPNAME).Value = gShowJPName
+    ws.Range(CFG_SHOW_CATEGORY).Value = gShowCategory
+
 End Sub
 
 ' @JPName
@@ -181,6 +212,12 @@ End Sub
 '
 ' @Category
 ' PathChart
+'
+' @Input
+' なし
+'
+' @Output
+' なし
 '
 ' @Summary
 ' PathChartConfigシートから
@@ -194,8 +231,7 @@ Public Sub LoadPathChartConfig()
     Dim ws As Worksheet
 
     Set ws = _
-        ThisWorkbook.Worksheets( _
-            "PathChartConfig")
+        ThisWorkbook.Worksheets(SHEET_PATH_CHART_CONFIG)
 
     gSkipCommon = ws.Range(CFG_SKIP_COMMON).Value
     gShowCount = ws.Range(CFG_SHOW_COUNT).Value
@@ -254,12 +290,12 @@ Public Sub LoadPathChartConfig()
 
     ' 初回起動対策
     ' Load時に未設定なら既定値。
-    If gMaxNode = 0 Then gMaxNode = 1000
-    If gMaxEdge = 0 Then gMaxEdge = 3000
+    If gMaxNode = 0 Then gMaxNode = DEFAULT_MAX_NODE
+    If gMaxEdge = 0 Then gMaxEdge = DEFAULT_MAX_EDGE
 
     If gColorTheme = "" Then
 
-        gColorTheme = "標準"
+        gColorTheme = DEFAULT_COLOR_THEME
 
     End If
 
@@ -277,9 +313,11 @@ End Sub
 ' @Input
 ' MaxDepth(Long)
 '
+' @Output
+' なし
+'
 ' @Summary
 ' PathChart作成時の既定探索深度を保存する
-' 最大深度保存
 '
 Public Sub SaveDefaultMaxDepth( _
                     ByVal MaxDepth As Long)
@@ -287,10 +325,9 @@ Public Sub SaveDefaultMaxDepth( _
     Dim ws As Worksheet
 
     Set ws = _
-        ThisWorkbook.Worksheets("PathChartConfig")
+        ThisWorkbook.Worksheets(SHEET_PATH_CHART_CONFIG)
 
-    ws.Range(CFG_MAX_DEPTH).Value = _
-        MaxDepth
+    ws.Range(CFG_MAX_DEPTH).Value = MaxDepth
 
 End Sub
 
@@ -299,6 +336,9 @@ End Sub
 '
 ' @Category
 ' PathChart
+'
+' @Input
+' なし
 '
 ' @Output
 ' MaxDepth(Long)
@@ -313,14 +353,13 @@ Public Function GetDefaultMaxDepth() As Long
 
     Dim ws As Worksheet
 
-    Set ws = ThisWorkbook.Worksheets("PathChartConfig")
+    Set ws = ThisWorkbook.Worksheets(SHEET_PATH_CHART_CONFIG)
 
-    GetDefaultMaxDepth = _
-        Val(ws.Range(CFG_MAX_DEPTH).Value)
+    GetDefaultMaxDepth = Val(ws.Range(CFG_MAX_DEPTH).Value)
 
     If GetDefaultMaxDepth <= 0 Then
 
-        GetDefaultMaxDepth = 5
+        GetDefaultMaxDepth = DEFAULT_MAX_DEPTH
 
     End If
 
@@ -335,6 +374,9 @@ End Function
 ' @Input
 ' StartProc(String)
 '
+' @Output
+' なし
+'
 ' @Summary
 ' PathChart作成時の開始関数を保存する
 '
@@ -344,10 +386,9 @@ Public Sub SaveDefaultStartProcedure( _
     Dim ws As Worksheet
 
     Set ws = _
-        ThisWorkbook.Worksheets("PathChartConfig")
+        ThisWorkbook.Worksheets(SHEET_PATH_CHART_CONFIG)
 
-    ws.Range(CFG_START_PROC).Value = _
-        StartProc
+    ws.Range(CFG_START_PROC).Value = StartProc
 
 End Sub
 
@@ -356,6 +397,9 @@ End Sub
 '
 ' @Category
 ' PathChart
+'
+' @Input
+' なし
 '
 ' @Output
 ' ProcedureName(String)
@@ -367,7 +411,7 @@ Public Function GetDefaultStartProcedure() As String
 
     Dim ws As Worksheet
 
-    Set ws = ThisWorkbook.Worksheets("PathChartConfig")
+    Set ws = ThisWorkbook.Worksheets(SHEET_PATH_CHART_CONFIG)
 
     GetDefaultStartProcedure = _
         Trim$(ws.Range(CFG_START_PROC).Value)

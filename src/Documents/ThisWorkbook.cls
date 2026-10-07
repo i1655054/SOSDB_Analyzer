@@ -13,16 +13,6 @@ Private Sub Workbook_Open()
 
 End Sub
 
-Private Sub Workbook_SheetActivate(ByVal Sh As Object)
-
-    If Not IsHistoryMoving Then
-        AddHistory Sh.Name
-    End If
-
-    UpdateNavigator
-
-End Sub
-
 Private Sub Workbook_BeforeClose(Cancel As Boolean)
 
     UnRegisterShortcut

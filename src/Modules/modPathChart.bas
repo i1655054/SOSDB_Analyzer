@@ -3,39 +3,220 @@ Option Explicit
 
 #Const DEBUG_MODE = False
 
+'==================================================
+' PathChartレイアウト定数
+'==================================================
+
+' ルートノード Top
+Private Const ROOT_TOP As Long = 50
+
+' ルートノード配置セル
 Private Const ROOT_CELL As String = "B3"
 
+' ノード幅
 Private Const NODE_WIDTH As Long = 180
+
+' ノード高さ
 Private Const NODE_HEIGHT As Long = 40
 
+' 水平ノード間隔
 Private Const H_GAP As Long = 260
-'Private Const V_GAP As Long = 50
+
+' 垂直ノード間隔
 Private Const V_GAP As Long = 55
 
+'==================================================
+' 表示定数
+'==================================================
+
+' 画面表示定数
+Private Const DEFAULT_ZOOM As Long = 60
+
+'==================================================
+' ノード表示
+'==================================================
+
+' 図形のフォントサイズ
+Private Const NODE_FONT_SIZE As Long = 8
+
+' 図形の文字色 RGB(0, 0, 0)
+Private Const NODE_FONT_COLOR As Long = &H0
+
+' 図形の枠線色 RGB(80, 80, 80)
+Private Const NODE_LINE_COLOR As Long = &H505050
+
+' 図形の枠線の太さ
+Private Const NODE_LINE_WEIGHT As Double = 1.25
+
+' ノード背景色 RGB(255,255,255)
+Private Const NODE_FILL_COLOR As Long = &HFFFFFF
+
+
+'==================================================
+' ハイライト表示
+'==================================================
+
+' [現在ノード]
+' 現在ノード枠線色 RGB(255,0,0)
+Private Const CURRENT_NODE_LINE_COLOR As Long = &HFF
+
+' 現在ノード図形の枠線の太さ
+Private Const CURRENT_NODE_LINE_WEIGHT As Double = 3
+
+' [親ノード]
+' 親ノード枠線色 RGB(0,112,192)
+Private Const PARENT_NODE_LINE_COLOR As Long = &HC07000
+
+' [子ノード]
+' 子ノード枠線色 RGB(255,192,0)
+Private Const CHILD_LINE_COLOR As Long = &HC0FF
+
+' 子ノード図形の枠線の太さ
+Private Const CHILD_LINE_WEIGHT As Double = 2
+
+' 子ノード背景色 RGB(255,242,204)
+Private Const CHILD_FILL_COLOR As Long = &HCCF2FF
+
+' 子ノード文字色 RGB(192,0,0)
+Private Const CHILD_FONT_COLOR As Long = &HC0
+
+' 子ノード接続線色 RGB(255,128,0)
+Private Const CHILD_CONNECTOR_COLOR As Long = &H80FF
+
+' [兄弟ノード]
+' 兄弟ノード枠線色 RGB(112,173,71)
+Private Const SIBLING_LINE_COLOR As Long = &H47AD70
+
+' 兄弟ノード背景色 RGB(226,239,218)
+Private Const SIBLING_FILL_COLOR As Long = &HDAEFE2
+
+'==================================================
+' コネクタ表示
+'==================================================
+
+' コネクタ標準色 RGB(120,120,120)
+Private Const CONNECTOR_LINE_COLOR As Long = &H787878
+
+' コネクタ標準太さ
+Private Const CONNECTOR_LINE_WEIGHT As Double = 1
+
+' 親接続線太さ
+Private Const PARENT_CONNECTOR_WEIGHT As Double = 2
+
+' 子接続線太さ
+Private Const CHILD_CONNECTOR_WEIGHT As Double = 3
+
+' 兄弟接続線太さ
+Private Const SIBLING_CONNECTOR_WEIGHT As Double = 2
+
+'==================================================
+' ノード配色
+'==================================================
+
+' ルートノード色 RGB(93, 186, 255)
+Private Const ROOT_NODE_COLOR As Long = &HFFBA5D
+
+' 標準ノード色 RGB(31, 94, 124)
+Private Const DEFAULT_NODE_COLOR As Long = &H7C5E1F
+
+' modMonshinCore RGB(184,204,228)
+Private Const MODULE_COLOR_MONSHIN As Long = &HE4CCB8
+
+' modIssueService RGB(198,224,180)
+Private Const MODULE_COLOR_ISSUE As Long = &HB4E0C6
+
+' modIssueMapper RGB(248,203,173)
+Private Const MODULE_COLOR_MAPPER As Long = &HADCBF8
+
+' modInfoDisplay RGB(217,210,233)
+Private Const MODULE_COLOR_INFO As Long = &HE9D2D9
+
+' modUtility RGB(230,230,230)
+Private Const MODULE_COLOR_UTILITY As Long = &HE6E6E6
+
+' XmlLoader RGB(255,242,204)
+Private Const MODULE_COLOR_XML As Long = &HCCF2FF
+
+' 既定ノード色 RGB(200,200,200)
+Private Const MODULE_COLOR_DEFAULT As Long = &HC8C8C8
+
+'==================================================
+' PathChart生成状態
+'==================================================
+
+' 生成ノード採番
 Private gNodeNo As Long
+
+' 最大探索階層
 Private gMaxLevel As Long
 
+'==================================================
+' ナビゲーション状態
+'==================================================
+
+' 現在選択中ノード
 Private gCurrentShapeName As String
+
+' 現在選択中親ノード
 Private gCurrentParentShapeName As String
 
+' 子巡回基準ノード
 Private gCurrentParentWithChildren As String
+
+' 現在子インデックス
 Private gCurrentChildIndex As Long
 
+'==================================================
+' 検索状態
+'==================================================
+
+' 検索ヒット総件数
 Private gHitCount As Long
+
+' 現在ヒット番号
 Private gCurrentHitNo As Long
 
+' 前回検索文字列
 Private gLastFindText As String
+
+' 前回検索Shape位置
 Private gLastShapeIndex As Long
 
+'==================================================
+' ノード関係管理
+'==================================================
+
+' 子→親対応表
 Private gParentMap As Object
+
+' 親→子対応表
 Private gChildMap As Object
 
+'==================================================
+' 出力情報
+'==================================================
+
+' 出力ファイル用タイムスタンプ
 Public gExportTimeStamp As String
 
+'==================================================
+' 統計情報
+'==================================================
+
+' ノード総数
 Public NodeCount As Long
+
+' 接続線総数
 Public EdgeCount As Long
+
+' 発見最大階層
 Public MaxDepthFound As Long
 
+'==================================================
+' UI状態
+'==================================================
+
+' Navigator表示メッセージ
 Public gNavigatorStatus As String
 
 '==================================================
@@ -47,6 +228,13 @@ Public gNavigatorStatus As String
 '
 ' @Category
 ' PathChart
+'
+' @Input
+' StartProc(String)
+' MaxDepth(Long)
+'
+' @Output
+' なし
 '
 ' @Summary
 ' 関数依存関係シートを参照し
@@ -60,19 +248,6 @@ Public Sub CreatePathChart_V3( _
     Dim RootShape As Shape
     Dim RootLeft As Double
     Dim RootCaption As String
-
-    Dim ManagementBook As Workbook
-
-    Set ManagementBook = _
-        GetCurrentManagementWorkbook()
-
-    If Not CheckManagementWorkbook( _
-            ManagementBook, _
-            GetCurrentManagementFile()) Then
-
-        Exit Sub
-
-    End If
 
     gNodeNo = 0
 
@@ -93,7 +268,7 @@ Public Sub CreatePathChart_V3( _
     Set gChildMap = _
             CreateObject("Scripting.Dictionary")
 
-    Set ws = ManagementBook.Worksheets("PathChart")
+    Set ws = gContext.ManagementBook.Worksheets(SHEET_PATH_CHART)
 
     If StartProc = "" Then
 
@@ -119,16 +294,13 @@ Public Sub CreatePathChart_V3( _
 #If DEBUG_MODE Then
 
     Debug.Print _
-        "SetIssueToUI=" & _
-        GetBranchSize("SetIssueToUI")
+        "SetIssueToUI=" & GetBranchSize("SetIssueToUI")
 
     Debug.Print _
-        "get_MonshinFile=" & _
-        GetBranchSize("get_MonshinFile")
+        "get_MonshinFile=" & GetBranchSize("get_MonshinFile")
 
     Debug.Print _
-        "Get_MonshinInfo=" & _
-        GetBranchSize("Get_MonshinInfo")
+        "Get_MonshinInfo=" & GetBranchSize("Get_MonshinInfo")
 
 #End If
 
@@ -142,18 +314,18 @@ Public Sub CreatePathChart_V3( _
         DrawNode( _
             ws, _
             RootCaption, _
-            50, _
+            ROOT_TOP, _
             RootLeft, _
-            RGB(93, 186, 255))
+            ROOT_NODE_COLOR)
 
     DrawCallTreeShape _
             StartProc, _
             RootShape.Name, _
             1, _
-            50, _
+            ROOT_TOP, _
             RootLeft
 
-    ActiveWindow.Zoom = 60
+    ActiveWindow.Zoom = DEFAULT_ZOOM
 
     If gPowerPoint Then
 
@@ -193,6 +365,16 @@ End Sub
 ' @Category
 ' PathChart
 '
+' @Input
+' ParentFunc(String)
+' ParentShapeName(String)
+' Level(Long)
+' TopPos(Double)
+' LeftPos(Double)
+'
+' @Output
+' なし
+'
 ' @Summary
 ' 関数依存関係を再帰的にたどり
 ' 子ノードおよび接続線を描画する
@@ -202,12 +384,30 @@ Private Sub DrawCallTreeShape( _
             ByVal ParentShapeName As String, _
             ByVal Level As Long, _
             ByVal TopPos As Double, _
-            ByVal LeftPos As Double)
+            ByVal LeftPos As Double, _
+            Optional ByVal PathText As String = "")
+
+    Dim wsDep As Worksheet
+
+    Dim LastRow As Long
+    Dim r As Long
+
+    Dim BranchOffset As Long
+    Dim BranchSize As Long
+
+    If PathText = "" Then
+
+        PathText = _
+            "|" & UCase$(ParentFunc) & "|"
+
+    End If
 
     If Level >= gMaxLevel Then Exit Sub
 
     If Level > MaxDepthFound Then
+
         MaxDepthFound = Level
+
     End If
 
     If gMaxNode > 0 Then
@@ -222,33 +422,13 @@ Private Sub DrawCallTreeShape( _
 
     End If
 
-    Dim wsDep As Worksheet
-
-    Dim LastRow As Long
-    Dim r As Long
-
-    Dim ManagementBook As Workbook
-
-    Set ManagementBook = _
-        GetCurrentManagementWorkbook()
-
-    If Not CheckManagementWorkbook( _
-            ManagementBook, _
-            GetCurrentManagementFile()) Then
-
-        Exit Sub
-
-    End If
-
-    Set wsDep = ManagementBook.Worksheets("関数依存関係")
+    Set wsDep = _
+        gContext.ManagementBook.Worksheets(SHEET_FUNCTION_DEPENDENCY)
 
     LastRow = _
         wsDep.Cells( _
             wsDep.Rows.Count, _
             "A").End(xlUp).row
-
-    Dim BranchOffset As Long
-    Dim BranchSize As Long
 
     BranchOffset = 0
 
@@ -267,8 +447,28 @@ Private Sub DrawCallTreeShape( _
 
             Dim CaptionText As String
 
+            Dim ChildTop As Double
+            Dim ChildLeft As Double
+
+            Dim FillColor As Long
+
+            Dim shpChild As Shape
+
             ChildFunc = _
                 Trim$(wsDep.Cells(r, 3).Value)
+
+            '====================
+            ' 再帰ループ防止
+            '====================
+            If InStr( _
+                    1, _
+                    PathText, _
+                    "|" & UCase$(ChildFunc) & "|", _
+                    vbTextCompare) > 0 Then
+
+                GoTo NextChild
+
+            End If
 
             '====================
             ' 再帰呼出除外
@@ -326,9 +526,6 @@ Private Sub DrawCallTreeShape( _
 
             End If
 
-            Dim ChildTop As Double
-            Dim ChildLeft As Double
-
             BranchSize = _
                 GetBranchSize(ChildFunc)
 
@@ -336,8 +533,7 @@ Private Sub DrawCallTreeShape( _
                 LeftPos + H_GAP
 
             ChildTop = _
-                TopPos + _
-                BranchOffset
+                TopPos + BranchOffset
 
             BranchOffset = _
                 BranchOffset + _
@@ -367,8 +563,6 @@ Private Sub DrawCallTreeShape( _
             '====================
             ' モジュール色設定
             '====================
-            Dim FillColor As Long
-
             If gColorModule Then
 
                 FillColor = _
@@ -377,22 +571,26 @@ Private Sub DrawCallTreeShape( _
             Else
 
                 FillColor = _
-                    RGB(31, 94, 124)
+                    DEFAULT_NODE_COLOR
 
             End If
 
             '====================
             ' 子ノード生成
             '====================
-            Dim shpChild As Shape
-
             Set shpChild = _
                 DrawNode( _
-                    ManagementBook.Worksheets("PathChart"), _
+                    gContext.ManagementBook.Worksheets(SHEET_PATH_CHART), _
                     CaptionText, _
                     ChildTop, _
                     ChildLeft, _
                     FillColor)
+
+            If shpChild Is Nothing Then
+
+                GoTo NextChild
+
+            End If
 
             gParentMap(shpChild.Name) = _
                 ParentShapeName
@@ -416,7 +614,7 @@ Private Sub DrawCallTreeShape( _
             ' 接続線生成
             '====================
             ConnectShapes _
-                ManagementBook.Worksheets("PathChart"), _
+                gContext.ManagementBook.Worksheets(SHEET_PATH_CHART), _
                 ParentShapeName, _
                 shpChild.Name
 
@@ -430,7 +628,9 @@ Private Sub DrawCallTreeShape( _
                 shpChild.Name, _
                 Level + 1, _
                 ChildTop, _
-                ChildLeft
+                ChildLeft, _
+                PathText & _
+                UCase$(ChildFunc) & "|"
 
         End If
 
@@ -446,11 +646,18 @@ End Sub
 ' @Category
 ' PathChart
 '
+' @Input
+' ParentFunc(String)
+'
+' @Output
+' BranchSize(Long)
+'
 ' @Summary
 ' ノード配列計算用の分岐サイズを取得する
 '
 Private Function GetBranchSize( _
-                ByVal ParentFunc As String) _
+                ByVal ParentFunc As String, _
+                Optional ByVal PathText As String = "") _
                 As Long
 
     Dim wsDep As Worksheet
@@ -459,23 +666,17 @@ Private Function GetBranchSize( _
     Dim r As Long
 
     Dim ChildFunc As String
-    Dim size As Long
+    Dim Size As Long
 
-    Dim ManagementBook As Workbook
+    If PathText = "" Then
 
-    Set ManagementBook = _
-        GetCurrentManagementWorkbook()
-
-    If Not CheckManagementWorkbook( _
-            ManagementBook, _
-            GetCurrentManagementFile()) Then
-
-        Exit Function
+        PathText = _
+            "|" & UCase$(ParentFunc) & "|"
 
     End If
 
     Set wsDep = _
-        ManagementBook.Worksheets("関数依存関係")
+        gContext.ManagementBook.Worksheets(SHEET_FUNCTION_DEPENDENCY)
 
     LastRow = _
         wsDep.Cells( _
@@ -489,21 +690,39 @@ Private Function GetBranchSize( _
             ChildFunc = _
                 Trim$(wsDep.Cells(r, 3).Value)
 
-            size = _
-                size + _
-                GetBranchSize(ChildFunc)
+            '====================
+            ' 再帰ループ防止
+            '====================
+            If InStr( _
+                    1, _
+                    PathText, _
+                    "|" & UCase$(ChildFunc) & "|", _
+                    vbTextCompare) > 0 Then
+
+                GoTo NextChild
+
+            End If
+
+            Size = _
+                Size + _
+                GetBranchSize( _
+                    ChildFunc, _
+                    PathText & _
+                    UCase$(ChildFunc) & "|")
 
         End If
 
+NextChild:
+
     Next r
 
-    If size = 0 Then
+    If Size = 0 Then
 
         GetBranchSize = 1
 
     Else
 
-        GetBranchSize = size
+        GetBranchSize = Size
 
     End If
 
@@ -565,7 +784,7 @@ Private Function DrawNode( _
 
     shp.TextFrame.Characters.Text = CaptionText
     
-    shp.TextFrame.Characters.Font.size = 9
+    shp.TextFrame.Characters.Font.Size = NODE_FONT_SIZE
     
     'shp.OnAction = "SelectNode"
     
@@ -574,11 +793,11 @@ Private Function DrawNode( _
     
     shp.Fill.ForeColor.RGB = FillColor
     
-    shp.TextFrame.Characters.Font.Color = RGB(0, 0, 0)
+    shp.TextFrame.Characters.Font.Color = NODE_FONT_COLOR
     
-    shp.line.ForeColor.RGB = RGB(80, 80, 80)
+    shp.line.ForeColor.RGB = NODE_LINE_COLOR
     
-    shp.line.Weight = 1.25
+    shp.line.Weight = NODE_LINE_WEIGHT
 
     Set DrawNode = shp
 
@@ -669,6 +888,12 @@ End Function
 ' @Category
 ' PathChart
 '
+' @Input
+' ModuleName(String)
+'
+' @Output
+' FillColor(Long)
+'
 ' @Summary
 ' モジュール名に対応する表示色を取得する
 '
@@ -678,25 +903,25 @@ Private Function GetModuleColor( _
     Select Case UCase$(ModuleName)
 
         Case "MODMONSHINCORE"
-            GetModuleColor = RGB(184, 204, 228)
+            GetModuleColor = MODULE_COLOR_MONSHIN
 
         Case "MODISSUESERVICE"
-            GetModuleColor = RGB(198, 224, 180)
+            GetModuleColor = MODULE_COLOR_ISSUE
 
         Case "MODISSUEMAPPER"
-            GetModuleColor = RGB(248, 203, 173)
+            GetModuleColor = MODULE_COLOR_MAPPER
 
         Case "MODINFODISPLAY"
-            GetModuleColor = RGB(217, 210, 233)
+            GetModuleColor = MODULE_COLOR_INFO
 
         Case "MODUTILITY"
-            GetModuleColor = RGB(230, 230, 230)
+            GetModuleColor = MODULE_COLOR_UTILITY
 
         Case "XMLLOADER"
-            GetModuleColor = RGB(255, 242, 204)
+            GetModuleColor = MODULE_COLOR_XML
 
         Case Else
-            GetModuleColor = RGB(200, 200, 200)
+            GetModuleColor = MODULE_COLOR_DEFAULT
 
     End Select
 
@@ -712,6 +937,14 @@ End Function
 ' @Category
 ' PathChart
 '
+' @Input
+' ws(Worksheet)
+' ParentName(String)
+' ChildName(String)
+'
+' @Output
+' なし
+'
 ' @Summary
 ' 親ノードと子ノード間の接続線を作成する
 '
@@ -726,6 +959,12 @@ Private Sub ConnectShapes( _
                     msoConnectorElbow, _
                     0, 0, 100, 100)
 
+    Con.line.ForeColor.RGB = _
+        CONNECTOR_LINE_COLOR
+
+    Con.line.Weight = _
+        CONNECTOR_LINE_WEIGHT
+    
     Con.ConnectorFormat.BeginConnect _
         ws.Shapes(ParentName), 4
 
@@ -750,6 +989,12 @@ End Sub
 '
 ' @Category
 ' PathChart
+'
+' @Input
+' ws(Worksheet)
+'
+' @Output
+' なし
 '
 ' @Summary
 ' PathChart上の作成済みノードと接続線を削除する
@@ -777,11 +1022,17 @@ End Sub
 ' @Category
 ' PathChart
 '
+' @Input
+' なし
+'
+' @Output
+' ChartRange(Range)
+'
 ' @Summary
 ' PathChart全体を含むセル範囲を取得する
 '
 Public Function GetChartRange() As Range
-
+    
     Dim ws As Worksheet
     Dim shp As Shape
 
@@ -791,20 +1042,7 @@ Public Function GetChartRange() As Range
     Dim LastCol As Long
     Dim LastRow As Long
 
-    Dim ManagementBook As Workbook
-
-    Set ManagementBook = _
-        GetCurrentManagementWorkbook()
-
-    If Not CheckManagementWorkbook( _
-            ManagementBook, _
-            GetCurrentManagementFile()) Then
-
-        Exit Function
-
-    End If
-
-    Set ws = ManagementBook.Worksheets("PathChart")
+    Set ws = gContext.ManagementBook.Worksheets(SHEET_PATH_CHART)
 
     MaxRight = ws.Range(ROOT_CELL).Left
     MaxBottom = ws.Range(ROOT_CELL).Top
@@ -864,6 +1102,13 @@ End Function
 ' @Category
 ' PathChart
 '
+' @Input
+' StartProc(String)
+' MaxDepth(Long)
+'
+' @Output
+' なし
+'
 ' @Summary
 ' PathChart生成を実行し結果を表示する
 '
@@ -873,21 +1118,8 @@ Public Sub ExecutePathChart( _
 
     Dim ws As Worksheet
 
-    Dim ManagementBook As Workbook
-
-    Set ManagementBook = _
-        GetCurrentManagementWorkbook()
-
-    If Not CheckManagementWorkbook( _
-            ManagementBook, _
-            GetCurrentManagementFile()) Then
-
-        Exit Sub
-
-    End If
-
     Set ws = _
-        ManagementBook.Worksheets("PathChart")
+        gContext.ManagementBook.Worksheets(SHEET_PATH_CHART)
 
     '--------------------------
     ' ログ
@@ -927,7 +1159,7 @@ Public Sub ExecutePathChart( _
     frmPathChart.AddLog _
         "最大深度 : " & MaxDepthFound
 
-    ManagementBook.Worksheets("PathChart").Activate
+    gContext.ManagementBook.Worksheets(SHEET_PATH_CHART).Activate
     
     'frmPathChart.Hide
 
@@ -942,6 +1174,12 @@ End Sub
 '
 ' @Category
 ' PathChart
+'
+' @Input
+' なし
+'
+' @Output
+' なし
 '
 ' @Summary
 ' 指定文字列でノードを検索する
@@ -960,6 +1198,12 @@ End Sub
 ' @Category
 ' PathChart
 '
+' @Input
+' なし
+'
+' @Output
+' なし
+'
 ' @Summary
 ' 次の検索候補ノードを検索する
 '
@@ -975,6 +1219,12 @@ End Sub
 ' @Category
 ' PathChart
 '
+' @Input
+' IsNext(Boolean)
+'
+' @Output
+' なし
+'
 ' @Summary
 ' PathChart内のノード検索処理を実行する
 '
@@ -988,20 +1238,7 @@ Private Sub FindNodeCore(ByVal IsNext As Boolean)
 
     Dim ShapeNo As Long
 
-    Dim ManagementBook As Workbook
-
-    Set ManagementBook = _
-        GetCurrentManagementWorkbook()
-
-    If Not CheckManagementWorkbook( _
-            ManagementBook, _
-            GetCurrentManagementFile()) Then
-
-        Exit Sub
-
-    End If
-
-    Set ws = ManagementBook.Worksheets("PathChart")
+    Set ws = gContext.ManagementBook.Worksheets(SHEET_PATH_CHART)
 
     FindText = Trim$(gSearchText)
 
@@ -1038,8 +1275,10 @@ Private Sub FindNodeCore(ByVal IsNext As Boolean)
 
         If Left$(shp.Name, 2) = "N_" Then
 
-            shp.line.ForeColor.RGB = RGB(80, 80, 80)
-            shp.line.Weight = 1.25
+            'shp.line.ForeColor.RGB = RGB(80, 80, 80)
+            'shp.line.Weight = 1.25
+            shp.line.ForeColor.RGB = NODE_LINE_COLOR
+            shp.line.Weight = NODE_LINE_WEIGHT
 
         End If
 
@@ -1176,8 +1415,6 @@ ContinueLoop:
         "先頭から再検索します。", _
         vbInformation
 
-    'ActiveWindow.Zoom = 60
-
 End Sub
 
 ' @JPName
@@ -1185,6 +1422,14 @@ End Sub
 '
 ' @Category
 ' PathChart
+'
+' @Input
+' NodeText(String)
+' FindText(String)
+' ExactMatch(Boolean)
+'
+' @Output
+' IsMatchNode(Boolean)
 '
 ' @Summary
 ' ノード文字列が検索条件に一致するか判定する
@@ -1231,6 +1476,12 @@ End Function
 ' @Category
 ' PathChart
 '
+' @Input
+' なし
+'
+' @Output
+' なし
+'
 ' @Summary
 ' 選択されたノードを現在ノードとして設定する
 '
@@ -1260,20 +1511,7 @@ Public Sub SelectNode()
     Dim shp As Shape
     Dim ShapeName As String
 
-    Dim ManagementBook As Workbook
-
-    Set ManagementBook = _
-        GetCurrentManagementWorkbook()
-
-    If Not CheckManagementWorkbook( _
-            ManagementBook, _
-            GetCurrentManagementFile()) Then
-
-        Exit Sub
-
-    End If
-
-    Set ws = ManagementBook.Worksheets("PathChart")
+    Set ws = gContext.ManagementBook.Worksheets(SHEET_PATH_CHART)
 
     ShapeName = CStr(Application.Caller)
 
@@ -1286,8 +1524,8 @@ Public Sub SelectNode()
     If shp Is Nothing Then Exit Sub
 
     UpdateCurrentNodeInfo _
-        GetProcedureNameFromNodeText( _
-            shp.TextFrame.Characters.Text)
+            GetProcedureNameFromNodeText( _
+                shp.TextFrame.Characters.Text)
 
     gCurrentShapeName = shp.Name
 
@@ -1355,14 +1593,11 @@ Public Function GetProcedureNameFromNodeText( _
 
     Dim ProcName As String
 
-    ProcName = _
-        Split(NodeText, vbLf)(0)
+    ProcName = Split(NodeText, vbLf)(0)
 
-    ProcName = _
-        Split(ProcName, " <")(0)
+    ProcName = Split(ProcName, " <")(0)
 
-    GetProcedureNameFromNodeText = _
-        Trim$(ProcName)
+    GetProcedureNameFromNodeText = Trim$(ProcName)
 
 End Function
 
@@ -1371,6 +1606,12 @@ End Function
 '
 ' @Category
 ' PathChart
+'
+' @Input
+' ProcName(String)
+'
+' @Output
+' なし
 '
 ' @Summary
 ' 選択ノードの情報をNavigatorへ表示する
@@ -1381,27 +1622,22 @@ Public Sub UpdateCurrentNodeInfo( _
     Dim Proc As clsProcInfo
 
     Set Proc = GetProcInfo(ProcName)
-
+    
     On Error Resume Next
 
     If frmPathChartNavigator.Visible Then
 
-        frmPathChartNavigator.txtCurrentNode.Text = _
-            ProcName
+        frmPathChartNavigator.txtCurrentNode.Text = ProcName
 
         If Not Proc Is Nothing Then
 
-            frmPathChartNavigator.lblJPName.Caption = _
-                Proc.JPName
+            frmPathChartNavigator.lblJPName.Caption = Proc.JPName
 
-            frmPathChartNavigator.lblCategory.Caption = _
-                Proc.Category
+            frmPathChartNavigator.lblCategory.Caption = Proc.Category
 
-            frmPathChartNavigator.lblModule.Caption = _
-                Proc.ModuleName
+            frmPathChartNavigator.lblModule.Caption = Proc.ModuleName
             
-            frmPathChartNavigator.txtSummary.Text = _
-                Proc.Summary
+            frmPathChartNavigator.txtSummary.Text = Proc.Summary
 
         Else
 
@@ -1431,6 +1667,12 @@ End Sub
 ' @Category
 ' PathChart
 '
+' @Input
+' なし
+'
+' @Output
+' なし
+'
 ' @Summary
 ' 現在ノードの親ノードへ移動する
 '
@@ -1447,29 +1689,10 @@ Public Sub MoveToParentNode()
     Dim ws As Worksheet
     Dim shp As Shape
 
-    Dim ManagementBook As Workbook
-
-    Set ManagementBook = _
-        GetCurrentManagementWorkbook()
-
-    If Not CheckManagementWorkbook( _
-            ManagementBook, _
-            GetCurrentManagementFile()) Then
-
-        Exit Sub
-
-    End If
-    
-    Set ws = ManagementBook.Worksheets("PathChart")
+    Set ws = gContext.ManagementBook.Worksheets(SHEET_PATH_CHART)
     
     'MsgBox "MoveToParentNode"
-    
-    #If DEBUG_MODE Then
-        Debug.Print "CurrentShape=" & shp.Name
-        Debug.Print "CurrentParent=" & gCurrentParentShapeName
-        Debug.Print "CurrentParentWithChildren=" & gCurrentParentWithChildren
-    #End If
-    
+       
     If gCurrentParentShapeName = "" Then
 
         MsgBox _
@@ -1485,13 +1708,11 @@ Public Sub MoveToParentNode()
 
     gCurrentShapeName = shp.Name
 
-    gCurrentNodeText = _
-        shp.TextFrame.Characters.Text
+    gCurrentNodeText = shp.TextFrame.Characters.Text
 
     If gParentMap.Exists(shp.Name) Then
 
-        gCurrentParentShapeName = _
-            gParentMap(shp.Name)
+        gCurrentParentShapeName = gParentMap(shp.Name)
 
     Else
 
@@ -1499,8 +1720,7 @@ Public Sub MoveToParentNode()
 
     End If
 
-    gCurrentParentWithChildren = _
-        gCurrentShapeName
+    gCurrentParentWithChildren = gCurrentShapeName
 
     Call HighlightNode(shp)
     
@@ -1519,8 +1739,7 @@ Public Sub MoveToParentNode()
     
         If gParentMap.Exists(shp.Name) Then
         
-            gCurrentParentShapeName = _
-                gParentMap(shp.Name)
+            gCurrentParentShapeName = gParentMap(shp.Name)
         Else
         
             gCurrentParentShapeName = ""
@@ -1542,6 +1761,12 @@ End Sub
 ' @Category
 ' PathChart
 '
+' @Input
+' なし
+'
+' @Output
+' なし
+'
 ' @Summary
 ' 現在ノードの子ノードへ移動する
 '
@@ -1560,21 +1785,7 @@ Public Sub MoveToChildNode()
 
     Dim Ary As Variant
     
-    Dim ManagementBook As Workbook
-
-    Set ManagementBook = _
-        GetCurrentManagementWorkbook()
-
-    If Not CheckManagementWorkbook( _
-            ManagementBook, _
-            GetCurrentManagementFile()) Then
-
-        Exit Sub
-
-    End If
-
-
-    Set ws = ManagementBook.Worksheets("PathChart")
+    Set ws = gContext.ManagementBook.Worksheets(SHEET_PATH_CHART)
 
     If gCurrentParentWithChildren = "" Then
 
@@ -1612,8 +1823,7 @@ Public Sub MoveToChildNode()
             gChildMap(gCurrentParentWithChildren), _
             "|")
 
-    gCurrentChildIndex = _
-        gCurrentChildIndex + 1
+    gCurrentChildIndex = gCurrentChildIndex + 1
 
     If gCurrentChildIndex > UBound(Ary) + 1 Then
 
@@ -1634,8 +1844,7 @@ Public Sub MoveToChildNode()
 
         If gParentMap.Exists(shp.Name) Then
 
-            gCurrentParentShapeName = _
-                gParentMap(shp.Name)
+            gCurrentParentShapeName = gParentMap(shp.Name)
 
         Else
 
@@ -1686,6 +1895,12 @@ End Sub
 ' @Category
 ' PathChart
 '
+' @Input
+' なし
+'
+' @Output
+' なし
+'
 ' @Summary
 ' 現在ノードと同一親を持つ兄弟ノードへ移動する
 '
@@ -1707,22 +1922,8 @@ Public Sub MoveToSiblingNode()
 
     Dim i As Long
     Dim CurrentPos As Long
-    
-    Dim ManagementBook As Workbook
 
-    Set ManagementBook = _
-        GetCurrentManagementWorkbook()
-
-    If Not CheckManagementWorkbook( _
-            ManagementBook, _
-            GetCurrentManagementFile()) Then
-
-        Exit Sub
-
-    End If
-
-
-    Set ws = ManagementBook.Worksheets("PathChart")
+    Set ws = gContext.ManagementBook.Worksheets(SHEET_PATH_CHART)
 
     If gCurrentShapeName = "" Then
 
@@ -1832,6 +2033,12 @@ End Sub
 ' @Category
 ' PathChart
 '
+' @Input
+' shp(Shape)
+'
+' @Output
+' なし
+'
 ' @Summary
 ' 現在ノードおよび関連ノードを強調表示する
 '
@@ -1871,6 +2078,12 @@ End Sub
 ' @Category
 ' PathChart
 '
+' @Input
+' shp(Shape)
+'
+' @Output
+' なし
+'
 ' @Summary
 ' 現在選択中ノードを強調表示する
 '
@@ -1880,8 +2093,8 @@ Private Sub HighlightCurrentNode( _
     With shp
 
         ' 現在ノードだけ赤
-        .line.ForeColor.RGB = RGB(255, 0, 0)
-        .line.Weight = 3
+        .line.ForeColor.RGB = CURRENT_NODE_LINE_COLOR
+        .line.Weight = CURRENT_NODE_LINE_WEIGHT
 
     End With
 
@@ -1892,6 +2105,12 @@ End Sub
 '
 ' @Category
 ' PathChart
+'
+' @Input
+' ParentShapeName(String)
+'
+' @Output
+' なし
 '
 ' @Summary
 ' 親ノードを強調表示する
@@ -1905,26 +2124,12 @@ Private Sub HighlightParentNode( _
 
     If ParentShapeName = "" Then Exit Sub
 
-    Dim ManagementBook As Workbook
-
-    Set ManagementBook = _
-        GetCurrentManagementWorkbook()
-
-    If Not CheckManagementWorkbook( _
-            ManagementBook, _
-            GetCurrentManagementFile()) Then
-
-        Exit Sub
-
-    End If
-
-
-    Set ws = ManagementBook.Worksheets("PathChart")
+    Set ws = gContext.ManagementBook.Worksheets(SHEET_PATH_CHART)
 
     With ws.Shapes(ParentShapeName)
 
-        .line.ForeColor.RGB = RGB(0, 112, 192)
-        .line.Weight = 3
+        .line.ForeColor.RGB = PARENT_NODE_LINE_COLOR
+        .line.Weight = CURRENT_NODE_LINE_WEIGHT
 
         ' 背景色は変更しない
 
@@ -1937,6 +2142,12 @@ End Sub
 '
 ' @Category
 ' PathChart
+'
+' @Input
+' なし
+'
+' @Output
+' なし
 '
 ' @Summary
 ' 親ノードとの接続線を強調表示する
@@ -1953,8 +2164,8 @@ Private Sub HighlightParentConnector()
     HighlightConnector _
         gCurrentParentShapeName, _
         gCurrentShapeName, _
-        RGB(255, 0, 0), _
-        2
+        CURRENT_NODE_LINE_COLOR, _
+        PARENT_CONNECTOR_WEIGHT
 
 End Sub
 
@@ -1964,38 +2175,27 @@ End Sub
 ' @Category
 ' PathChart
 '
+' @Input
+' ParentShapeName(String)
+'
+' @Output
+' なし
+'
 ' @Summary
 ' 現在ノードの子ノードを強調表示する
 '
 Private Sub HighlightChildNodes( _
                 ByVal ParentShapeName As String)
 
-    If gChildMap Is Nothing Then Exit Sub
-    
-    If gChildMap.Exists(ParentShapeName) Then
-
-    End If
-
     Dim ws As Worksheet
     Dim Ary As Variant
 
     Dim ChildName As Variant
 
-    Dim ManagementBook As Workbook
-
-    Set ManagementBook = _
-        GetCurrentManagementWorkbook()
-
-    If Not CheckManagementWorkbook( _
-            ManagementBook, _
-            GetCurrentManagementFile()) Then
-
-        Exit Sub
-
-    End If
-
-
-    Set ws = ManagementBook.Worksheets("PathChart")
+    If gContext Is Nothing Then Exit Sub
+    If gChildMap Is Nothing Then Exit Sub
+    
+    Set ws = gContext.ManagementBook.Worksheets(SHEET_PATH_CHART)
 
     If gChildMap Is Nothing Then Exit Sub
 
@@ -2014,21 +2214,21 @@ Private Sub HighlightChildNodes( _
         With ws.Shapes(CStr(ChildName))
 
             ' 子だけ薄黄色
-            .line.ForeColor.RGB = RGB(255, 192, 0)
+            .line.ForeColor.RGB = CHILD_LINE_COLOR
 
-            .line.Weight = 2
+            .line.Weight = CHILD_LINE_WEIGHT
             
-            .Fill.ForeColor.RGB = RGB(255, 242, 204)
+            .Fill.ForeColor.RGB = CHILD_FILL_COLOR
             
-            .TextFrame.Characters.Font.Color = RGB(192, 0, 0)
+            .TextFrame.Characters.Font.Color = CHILD_FONT_COLOR
 
         End With
 
         HighlightConnector _
             ParentShapeName, _
             CStr(ChildName), _
-            RGB(255, 128, 0), _
-            3
+            CHILD_CONNECTOR_COLOR, _
+            CHILD_CONNECTOR_WEIGHT
         
         End If
 
@@ -2043,6 +2243,12 @@ End Sub
 ' @Category
 ' PathChart
 '
+' @Input
+' ParentShapeName(String)
+'
+' @Output
+' なし
+'
 ' @Summary
 ' 兄弟ノードを強調表示する
 '
@@ -2053,21 +2259,7 @@ Private Sub HighlightSiblingNodes( _
     Dim Ary As Variant
     Dim ChildName As Variant
 
-    Dim ManagementBook As Workbook
-
-    Set ManagementBook = _
-        GetCurrentManagementWorkbook()
-
-    If Not CheckManagementWorkbook( _
-            ManagementBook, _
-            GetCurrentManagementFile()) Then
-
-        Exit Sub
-
-    End If
-
-
-    Set ws = ManagementBook.Worksheets("PathChart")
+    Set ws = gContext.ManagementBook.Worksheets(SHEET_PATH_CHART)
 
     If gChildMap Is Nothing Then Exit Sub
 
@@ -2086,21 +2278,19 @@ Private Sub HighlightSiblingNodes( _
 
             With ws.Shapes(CStr(ChildName))
 
-                .line.ForeColor.RGB = _
-                    RGB(112, 173, 71)
+                .line.ForeColor.RGB = SIBLING_LINE_COLOR
 
-                .line.Weight = 2
+                .line.Weight = CHILD_LINE_WEIGHT
 
-                .Fill.ForeColor.RGB = _
-                    RGB(226, 239, 218)
+                .Fill.ForeColor.RGB = SIBLING_FILL_COLOR
 
             End With
 
             HighlightConnector _
                 ParentShapeName, _
                 CStr(ChildName), _
-                RGB(112, 173, 71), _
-                2
+                SIBLING_LINE_COLOR, _
+                SIBLING_CONNECTOR_WEIGHT
 
         End If
 
@@ -2114,6 +2304,12 @@ End Sub
 '
 ' @Category
 ' PathChart
+'
+' @Input
+' ParentShapeName(String)
+'
+' @Output
+' なし
 '
 ' @Summary
 ' 兄弟ノードへの接続線を強調表示する
@@ -2142,8 +2338,8 @@ Private Sub HighlightSiblingConnectors( _
             HighlightConnector _
                 ParentShapeName, _
                 CStr(ChildName), _
-                RGB(112, 173, 71), _
-                2
+                SIBLING_LINE_COLOR, _
+                SIBLING_CONNECTOR_WEIGHT
 
         End If
 
@@ -2157,6 +2353,15 @@ End Sub
 ' @Category
 ' PathChart
 '
+' @Input
+' ParentShapeName(String)
+' ChildShapeName(String)
+' LineColor(Long)
+' LineWeight(Double)
+'
+' @Output
+' なし
+'
 ' @Summary
 ' 指定ノード間の接続線を強調表示する
 '
@@ -2169,20 +2374,7 @@ Private Sub HighlightConnector( _
     Dim ws As Worksheet
     Dim ConnectorName As String
 
-    Dim ManagementBook As Workbook
-
-    Set ManagementBook = _
-        GetCurrentManagementWorkbook()
-
-    If Not CheckManagementWorkbook( _
-            ManagementBook, _
-            GetCurrentManagementFile()) Then
-
-        Exit Sub
-
-    End If
-
-    Set ws = ManagementBook.Worksheets("PathChart")
+    Set ws = gContext.ManagementBook.Worksheets(SHEET_PATH_CHART)
 
     ConnectorName = _
         "C_" & _
@@ -2209,6 +2401,12 @@ End Sub
 ' @Category
 ' PathChart
 '
+' @Input
+' なし
+'
+' @Output
+' なし
+'
 ' @Summary
 ' PathChartの強調表示を初期状態へ戻す
 '
@@ -2217,38 +2415,25 @@ Private Sub ResetChartHighlight()
     Dim ws As Worksheet
     Dim shp As Shape
 
-    Dim ManagementBook As Workbook
-
-    Set ManagementBook = _
-        GetCurrentManagementWorkbook()
-
-    If Not CheckManagementWorkbook( _
-            ManagementBook, _
-            GetCurrentManagementFile()) Then
-
-        Exit Sub
-
-    End If
-
-    Set ws = ManagementBook.Worksheets("PathChart")
+    Set ws = gContext.ManagementBook.Worksheets(SHEET_PATH_CHART)
 
     For Each shp In ws.Shapes
 
         If Left$(shp.Name, 2) = "N_" Then
 
-            shp.line.ForeColor.RGB = RGB(80, 80, 80)
-            shp.line.Weight = 1.25
+            shp.line.ForeColor.RGB = NODE_LINE_COLOR
+            shp.line.Weight = NODE_LINE_WEIGHT
 
-            shp.Fill.ForeColor.RGB = RGB(255, 255, 255)
+            shp.Fill.ForeColor.RGB = NODE_FILL_COLOR
 
-            shp.TextFrame.Characters.Font.Color = RGB(0, 0, 0)
+            shp.TextFrame.Characters.Font.Color = NODE_FONT_COLOR
 
         End If
 
         If Left$(shp.Name, 2) = "C_" Then
 
-            shp.line.ForeColor.RGB = RGB(120, 120, 120)
-            shp.line.Weight = 1
+            shp.line.ForeColor.RGB = CONNECTOR_LINE_COLOR
+            shp.line.Weight = CONNECTOR_LINE_WEIGHT
 
         End If
 
@@ -2320,6 +2505,12 @@ End Sub
 ' @Category
 ' PathChart
 '
+' @Input
+' Msg(String)
+'
+' @Output
+' なし
+'
 ' @Summary
 ' Navigatorおよびステータスバーへ状態を表示する
 '
@@ -2354,6 +2545,12 @@ End Sub
 ' @Category
 ' PathChart
 '
+' @Input
+' cbo(MSForms.ComboBox)
+'
+' @Output
+' なし
+'
 ' @Summary
 ' 開始関数候補をコンボボックスへ設定する
 '
@@ -2366,23 +2563,10 @@ Public Sub LoadStartProcedure( _
 
     Dim Dic As Object
 
-    Dim ManagementBook As Workbook
-
-    Set ManagementBook = _
-        GetCurrentManagementWorkbook()
-
-    If Not CheckManagementWorkbook( _
-            ManagementBook, _
-            GetCurrentManagementFile()) Then
-
-        Exit Sub
-
-    End If
-    
     Set Dic = CreateObject("Scripting.Dictionary")
 
     Set ws = _
-        ManagementBook.Worksheets("関数依存関係")
+        gContext.ManagementBook.Worksheets(SHEET_FUNCTION_DEPENDENCY)
 
     LastRow = _
         ws.Cells(ws.Rows.Count, "A") _
@@ -2422,6 +2606,12 @@ End Sub
 ' @Category
 ' PathChart
 '
+' @Input
+' なし
+'
+' @Output
+' なし
+'
 ' @Summary
 ' 検索履歴コレクションを初期化する
 '
@@ -2440,6 +2630,12 @@ End Sub
 '
 ' @Category
 ' PathChart
+'
+' @Input
+' SearchText(String)
+'
+' @Output
+' なし
 '
 ' @Summary
 ' 検索履歴へキーワードを追加する
@@ -2472,6 +2668,12 @@ End Sub
 ' @Category
 ' PathChart
 '
+' @Input
+' cbo(MSForms.ComboBox)
+'
+' @Output
+' なし
+'
 ' @Summary
 ' 検索履歴をコンボボックスへ設定する
 '
@@ -2500,6 +2702,12 @@ End Sub
 ' @Category
 ' PathChart
 '
+' @Input
+' cbo(MSForms.ComboBox)
+'
+' @Output
+' なし
+'
 ' @Summary
 ' PathChart内のノード一覧を検索候補として読み込む
 '
@@ -2512,20 +2720,7 @@ Public Sub LoadSearchNodeList( _
     Dim NodeText As String
     Dim V As Variant
 
-    Dim ManagementBook As Workbook
-
-    Set ManagementBook = _
-        GetCurrentManagementWorkbook()
-
-    If Not CheckManagementWorkbook( _
-            ManagementBook, _
-            GetCurrentManagementFile()) Then
-
-        Exit Sub
-
-    End If
-
-    Set ws = ManagementBook.Worksheets("PathChart")
+    Set ws = gContext.ManagementBook.Worksheets(SHEET_PATH_CHART)
 
     Set Dic = _
         CreateObject("Scripting.Dictionary")
@@ -2581,6 +2776,12 @@ End Sub
 ' @Category
 ' PathChart
 '
+' @Input
+' なし
+'
+' @Output
+' なし
+'
 ' @Summary
 ' PathChart操作用ショートカットキーを登録する
 '
@@ -2612,6 +2813,12 @@ End Sub
 ' @Category
 ' PathChart
 '
+' @Input
+' なし
+'
+' @Output
+' なし
+'
 ' @Summary
 ' PathChart操作用ショートカットキーを解除する
 '
@@ -2640,6 +2847,13 @@ End Sub
 '
 ' @Category
 ' PathChart
+'
+' @Input
+' StartProc(String)
+' MaxDepth(Long)
+'
+' @Output
+' なし
 '
 ' @Summary
 ' PathChartをPowerPointへ出力する

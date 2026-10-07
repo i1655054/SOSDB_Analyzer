@@ -15,14 +15,24 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
 
-Private Sub fraParameter_Click()
-
-End Sub
-
-Private Sub fraResult_Click()
-
-End Sub
-
+' @JPName
+' PathChart画面初期化
+'
+' @Category
+' PathChart
+'
+' @Input
+' なし
+'
+' @Output
+' なし
+'
+' @Summary
+' PathChart画面の初期表示処理を行う
+'
+' @Remarks
+' 設定読込および開始関数候補を初期化する
+'
 Private Sub UserForm_Initialize()
 
     LoadPathChartConfig
@@ -79,6 +89,24 @@ Private Sub UserForm_Initialize()
 
 End Sub
 
+' @JPName
+' 開始関数変更
+'
+' @Category
+' PathChart
+'
+' @Input
+' なし
+'
+' @Output
+' なし
+'
+' @Summary
+' 選択された開始関数の情報を表示する
+'
+' @Remarks
+' JPName、Category、Summaryを更新する
+'
 Private Sub cmbStartProc_Change()
 
     Dim Proc As clsProcInfo
@@ -111,7 +139,26 @@ Private Sub cmbStartProc_Change()
 
 End Sub
 
-' ×ボタン対策
+' @JPName
+' 画面終了制御
+'
+' @Category
+' PathChart
+'
+' @Input
+' Cancel(Integer)
+' CloseMode(Integer)
+'
+' @Output
+' なし
+'
+' @Summary
+' フォーム終了時の制御を行う
+'
+' @Remarks
+' ×ボタン押下時は
+' 関数管理画面を再表示する
+'
 Private Sub UserForm_QueryClose( _
     Cancel As Integer, _
     CloseMode As Integer)
@@ -125,7 +172,25 @@ Private Sub UserForm_QueryClose( _
 
 End Sub
 
-' 解析実行
+' @JPName
+' PathChart解析実行
+'
+' @Category
+' PathChart
+'
+' @Input
+' なし
+'
+' @Output
+' なし
+'
+' @Summary
+' 指定開始関数からPathChart解析を実行する
+'
+' @Remarks
+' 最大深度保存および
+' 開始関数保存を行う
+'
 Private Sub cmdAnalyze_Click()
 
     Dim StartTime As Double
@@ -227,8 +292,21 @@ EH:
 
 End Sub
 
-
-' クリア
+' @JPName
+' ログクリア
+'
+' @Category
+' PathChart
+'
+' @Input
+' なし
+'
+' @Output
+' なし
+'
+' @Summary
+' ログおよび統計情報を初期化する
+'
 Private Sub cmdClear_Click()
 
     lstLog.Clear
@@ -242,13 +320,45 @@ Private Sub cmdClear_Click()
 
 End Sub
 
+' @JPName
+' オプション表示
+'
+' @Category
+' PathChart
+'
+' @Input
+' なし
+'
+' @Output
+' なし
+'
+' @Summary
+' PathChartオプション画面を表示する
+'
 Private Sub cmdOption_Click()
 
     frmPathChartOption.Show vbModal
 
 End Sub
 
-' ナビゲータ
+' @JPName
+' ナビゲータ表示
+'
+' @Category
+' PathChart
+'
+' @Input
+' なし
+'
+' @Output
+' なし
+'
+' @Summary
+' PathChartナビゲータを表示する
+'
+' @Remarks
+' 検索候補を再読込して表示する
+'
 Private Sub cmdNavigator_Click()
 
     frmPathChartNavigator.cmbSearch.Clear
@@ -263,6 +373,24 @@ Private Sub cmdNavigator_Click()
 
 End Sub
 
+' @JPName
+' PathChart既定値初期化
+'
+' @Category
+' PathChart
+'
+' @Input
+' なし
+'
+' @Output
+' なし
+'
+' @Summary
+' PathChartの既定設定を初期化する
+'
+' @Remarks
+' 初回起動時の設定値を設定する
+'
 Public Sub InitPathChartOption()
 
     gProperty = False
@@ -278,15 +406,33 @@ Public Sub InitPathChartOption()
     gIgnoreSelf = False
     gSameModuleOnly = False
 
-    gColorTheme = "標準"
+    gColorTheme = DEFAULT_COLOR_THEME
 
-    gMaxNode = 1000
-    gMaxEdge = 3000
+    gMaxNode = DEFAULT_MAX_NODE
+    gMaxEdge = DEFAULT_MAX_EDGE
     
     InitSearchHistory
 
 End Sub
 
+' @JPName
+' ログ追加
+'
+' @Category
+' PathChart
+'
+' @Input
+' Msg(String)
+'
+' @Output
+' なし
+'
+' @Summary
+' ログ一覧へメッセージを追加する
+'
+' @Remarks
+' 追加時に最新行へスクロールする
+'
 Public Sub AddLog(ByVal Msg As String)
 
     lstLog.AddItem _

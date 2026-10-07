@@ -12,7 +12,7 @@ Public Sub TestStartup()
 End Sub
 
 ' @JPName
-' Navigatorテスト起動
+' MainMenuテスト起動
 '
 ' @Category
 ' Test
@@ -24,20 +24,23 @@ End Sub
 ' なし
 '
 ' @Summary
-' Navigator画面を初期状態で表示する
+' MainMenu画面を初期状態で表示する
 '
 ' @Remarks
 ' 履歴情報を初期化してから
-' Navigatorを再表示する
+' MainMenuを再表示する
 '
 Public Sub TestNavigator()
 
+    Dim History As Workbook
+    Dim CurrentPos As Long
+    
     Set History = Nothing
     CurrentPos = 0
 
-    Unload frmNavigator
+    Unload frmMainMenu
 
-    frmNavigator.Show vbModeless
+    frmMainMenu.Show vbModeless
 
 End Sub
 

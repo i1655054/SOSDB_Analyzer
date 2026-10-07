@@ -13,6 +13,25 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+' @JPName
+' ツール選択画面初期化
+'
+' @Category
+' UI
+'
+' @Input
+' なし
+'
+' @Output
+' なし
+'
+' @Summary
+' ツール選択画面を初期化する
+'
+' @Remarks
+' ToolManagerシートから
+' ツール一覧を読み込む
+'
 Private Sub UserForm_Initialize()
 
     Me.Caption = "関数管理対象選択"
@@ -24,6 +43,26 @@ Private Sub UserForm_Initialize()
 
 End Sub
 
+' @JPName
+' ツール一覧読込
+'
+' @Category
+' ToolManager
+'
+' @Input
+' なし
+'
+' @Output
+' なし
+'
+' @Summary
+' ToolManagerシートから
+' ツール一覧を読み込む
+'
+' @Remarks
+' ツール名を表示し
+' ToolIDを内部保持する
+'
 Private Sub LoadToolList()
 
     Dim ws As Worksheet
@@ -31,7 +70,7 @@ Private Sub LoadToolList()
     Dim r As Long
 
     Set ws = _
-        ThisWorkbook.Worksheets("ToolManager")
+        ThisWorkbook.Worksheets(SHEET_TOOL_MANAGER)
 
     LastRow = _
         ws.Cells(ws.Rows.Count, "A") _
@@ -53,6 +92,25 @@ Private Sub LoadToolList()
 End Sub
 
 
+' @JPName
+' ツール選択確定
+'
+' @Category
+' ToolManager
+'
+' @Input
+' なし
+'
+' @Output
+' なし
+'
+' @Summary
+' 選択したツールを解析対象として設定する
+'
+' @Remarks
+' 解析コンテキスト生成後に
+' 関数管理画面を表示する
+'
 Private Sub cmdOK_Click()
 
     If lstTool.ListIndex < 0 Then
@@ -69,12 +127,30 @@ Private Sub cmdOK_Click()
             lstTool.ListIndex, _
             1))
 
+    Set gContext = _
+        CreateAnalyzeContext()
+    
     Unload Me
 
     frmFunctionManager.Show vbModeless
 
 End Sub
 
+' @JPName
+' ツール選択終了
+'
+' @Category
+' UI
+'
+' @Input
+' なし
+'
+' @Output
+' なし
+'
+' @Summary
+' ツール選択画面を閉じる
+'
 Private Sub cmdClose_Click()
 
     Unload Me

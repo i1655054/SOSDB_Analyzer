@@ -26,50 +26,32 @@ Option Explicit
 ' Category、Summaryを出力する
 '
 Public Sub FunctionTrace()
-
-    Dim TargetBook As Workbook
-    
-    'Set TargetBook = GetWorkbookByWorkbookName(BOOK_SOSDB)
-
-    Set TargetBook = GetCurrentTargetBook()
-    
-    'If Not CheckTargetBook(TargetBook) Then Exit Sub
-    
-    Dim Tool As ToolInfo
-
-    Tool = GetCurrentToolInfo()
-
-    If Not CheckTargetBook( _
-            TargetBook, _
-            Tool.WorkbookName) Then Exit Sub
-    
+       
     Dim wsOut As Worksheet
+    
+    Dim VBComp As Object
+    Dim FuncList As Object
+    
+    Dim CodeText As String
 
-    Dim ManagementBook As Workbook
+    Dim RowOut As Long
 
-    Set ManagementBook = _
-        GetCurrentManagementWorkbook()
-
-    If Not CheckManagementWorkbook( _
-            ManagementBook, _
-            GetCurrentManagementFile()) Then
-
-        Exit Sub
-
-    End If
-
+    If gContext Is Nothing Then Exit Sub
+    
     On Error Resume Next
-    Set wsOut = ManagementBook.Worksheets("関数トレース")
+    
+    Set wsOut = gContext.ManagementBook.Worksheets(SHEET_FUNCTION_TRACE)
+    
     On Error GoTo 0
 
     If wsOut Is Nothing Then
 
         Set wsOut = _
-            ManagementBook.Worksheets.Add( _
-                After:=ManagementBook.Worksheets( _
-                    ManagementBook.Worksheets.Count))
+            gContext.ManagementBook.Worksheets.Add( _
+                After:=gContext.ManagementBook.Worksheets( _
+                    gContext.ManagementBook.Worksheets.Count))
         
-        wsOut.Name = "関数トレース"
+        wsOut.Name = SHEET_FUNCTION_TRACE
 
     Else
 
@@ -92,18 +74,13 @@ Public Sub FunctionTrace()
     wsOut.Range("I1") = "行番号"
     wsOut.Range("J1") = "元コード"
 
-    Dim VBComp As Object
-    Dim CodeText As String
-
-    Dim FuncList As Object
-
     Set FuncList = CreateObject("Scripting.Dictionary")
 
     '======================
     ' 関数一覧取得
     '======================
 
-    For Each VBComp In TargetBook.VBProject.VBComponents
+    For Each VBComp In gContext.TargetBook.VBProject.VBComponents
 
         If VBComp.Type = 1 Then
 
@@ -125,11 +102,9 @@ Public Sub FunctionTrace()
     ' 呼出関係取得
     '======================
 
-    Dim RowOut As Long
-
     RowOut = 2
 
-    For Each VBComp In TargetBook.VBProject.VBComponents
+    For Each VBComp In gContext.TargetBook.VBProject.VBComponents
 
         If VBComp.Type = 1 Then
             
@@ -154,8 +129,6 @@ Public Sub FunctionTrace()
     Call SetupTraceValidation(wsOut)
     
     wsOut.Columns.AutoFit
-
-    MsgBox "関数トレース生成完了"
 
 End Sub
 
@@ -189,19 +162,24 @@ Private Sub GetFunctions( _
     Dim RegEx As Object
     Dim Matches As Object
     Dim M As Object
+    Dim FuncName As String
+    Dim Proc As clsProcInfo
 
     Set RegEx = CreateObject("VBScript.RegExp")
 
     RegEx.Global = True
 
+    'RegEx.Pattern = _
+    '    "(Public|Private|Friend)?\s*(Sub|Function)\s+([A-Za-z0-9_]+)"
+    
     RegEx.Pattern = _
-        "(Public|Private|Friend)?\s*(Sub|Function)\s+([A-Za-z0-9_]+)"
+        "(Public|Private|Friend)?\s*" & _
+        "(Sub|Function|Property\s+Get|Property\s+Let|Property\s+Set)\s+" & _
+        "([A-Za-z0-9_]+)"
 
     Set Matches = RegEx.Execute(CodeText)
 
     For Each M In Matches
-
-        Dim FuncName As String
 
         FuncName = M.SubMatches(2)
 
@@ -236,8 +214,6 @@ Private Sub GetFunctions( _
             Case Else
 
                 If Not FuncList.Exists(FuncName) Then
-
-                    Dim Proc As clsProcInfo
 
                     Set Proc = New clsProcInfo
 
@@ -306,11 +282,13 @@ Private Function TraceModule( _
 
     Dim Lines() As String
 
-    Lines = Split(CodeText, vbCrLf)
-
     Dim CurrentProc As String
 
     Dim i As Long
+
+    Dim Key As Variant
+
+    Lines = Split(CodeText, vbCrLf)
 
     For i = LBound(Lines) To UBound(Lines)
 
@@ -319,8 +297,6 @@ Private Function TraceModule( _
                         CurrentProc)
 
         If CurrentProc <> "" Then
-
-            Dim Key As Variant
 
             For Each Key In FuncList.Keys
 
@@ -393,6 +369,13 @@ End Function
 ' @Category
 ' FunctionTrace
 '
+' @Input
+' LineText(String)
+' CurrentName(String)
+'
+' @Output
+' ProcedureName(String)
+'
 ' @Summary
 ' ソース行から現在解析中の
 ' プロシージャ名を取得する
@@ -448,6 +431,8 @@ Private Sub SetupTraceValidation(ByVal ws As Worksheet)
         
         'Debug.Print "Delete Err=" & Err.Number & " " & Err.Description
         
+        On Error GoTo 0
+        
         Err.Clear
 
         .Add _
@@ -457,8 +442,6 @@ Private Sub SetupTraceValidation(ByVal ws As Worksheet)
 
         'Debug.Print "Add Err=" & Err.Number & " " & Err.Description
         
-        On Error GoTo 0
-
         .IgnoreBlank = True
         .InCellDropdown = True
 
@@ -499,6 +482,14 @@ End Sub
 '
 ' @Category
 ' FunctionTrace
+'
+' @Input
+' rng(Range)
+' Formula(String)
+' FillColor(Long)
+'
+' @Output
+' なし
 '
 ' @Summary
 ' 条件付き書式の色設定を追加する

@@ -1,24 +1,46 @@
 Attribute VB_Name = "modToolManager"
 Option Explicit
 
+'==================================================
+' Book名
+'==================================================
 Public Const BOOK_SOSDB As String = "●SOSDB問診票登録.xlsm"
 Public Const BOOK_ANALYZER As String = "SOSDB解析ツール.xlsm"
 
+'==================================================
+' シート名
+'==================================================
+
+' ToolManagerシート名
+Public Const SHEET_TOOL_MANAGER As String = "ToolManager"
+
+' PathChartConfigシート名
+Public Const SHEET_PATH_CHART_CONFIG As String = "PathChartConfig"
+
+' ProcListシート名
+Public Const SHEET_PROC_LIST As String = "ProcList"
+
+' 関数トレースシート名
+Public Const SHEET_FUNCTION_TRACE As String = "関数トレース"
+
+' 関数依存関係シート名
+Public Const SHEET_FUNCTION_DEPENDENCY As String = "関数依存関係"
+
+' PathChartシート名
+Public Const SHEET_PATH_CHART As String = "PathChart"
+
+' PathChartTreeシート名
+Public Const SHEET_PATH_CHART_TREE As String = "PathChartTree"
+               
+'==================================================
+' グローバル状態
+'==================================================
+
+' 現在選択中ツール
 Public gTargetToolID As Long
 
-' ToolManager管理
-
-Public Type ToolInfo
-
-    ToolID As Long
-    ToolName As String
-    WorkbookName As String
-    GitRepository As String
-    ExportEnabled As Boolean
-    Description As String
-    ManagementFile As String
-
-End Type
+' 現在解析コンテキスト
+Public gContext As clsAnalyzeContext
 
 ' @JPName
 ' 現在ツール情報取得
@@ -26,12 +48,18 @@ End Type
 ' @Category
 ' ToolManager
 '
+' @Input
+' なし
+'
+' @Output
+' ToolInfo(clsToolInfo)
+'
 ' @Summary
 ' 現在選択中ツールの情報を取得する
 '
-Public Function GetCurrentToolInfo() As ToolInfo
+Public Function GetCurrentToolInfo() As clsToolInfo
 
-    GetCurrentToolInfo = _
+    Set GetCurrentToolInfo = _
         GetToolInfo(gTargetToolID)
 
 End Function
@@ -41,6 +69,12 @@ End Function
 '
 ' @Category
 ' ToolManager
+'
+' @Input
+' なし
+'
+' @Output
+' Workbook
 '
 ' @Summary
 ' 現在選択中ツールのWorkbookを取得する
@@ -59,6 +93,12 @@ End Function
 ' @Category
 ' ToolManager
 '
+' @Input
+' ToolID(Long)
+'
+' @Output
+' FileName(String)
+'
 ' @Summary
 ' ToolIDに対応する管理ファイル名を取得する
 '
@@ -66,9 +106,9 @@ Public Function GetManagementFileByToolID( _
                     ByVal ToolID As Long) _
                     As String
 
-    Dim Tool As ToolInfo
+    Dim Tool As clsToolInfo
 
-    Tool = GetToolInfo(ToolID)
+    Set Tool = GetToolInfo(ToolID)
 
     GetManagementFileByToolID = _
         Tool.ManagementFile
@@ -80,6 +120,12 @@ End Function
 '
 ' @Category
 ' ToolManager
+'
+' @Input
+' なし
+'
+' @Output
+' FileName(String)
 '
 ' @Summary
 ' 現在選択中ツールの管理ファイル名を取得する
@@ -93,13 +139,29 @@ Public Function GetCurrentManagementFile() _
 
 End Function
 
+' @JPName
+' 現在ツールID取得
+'
+' @Category
+' ToolManager
+'
+' @Input
+' なし
+'
+' @Output
+' ToolID(Long)
+'
+' @Summary
+' ToolManagerシートから
+' 現在選択中のToolIDを取得する
+'
 Public Function GetCurrentToolID() As Long
 
     Dim ws As Worksheet
     Dim LastRow As Long
     Dim r As Long
 
-    Set ws = ThisWorkbook.Worksheets("ToolManager")
+    Set ws = ThisWorkbook.Worksheets(SHEET_TOOL_MANAGER)
 
     LastRow = ws.Cells(ws.Rows.Count, "A").End(xlUp).row
 
@@ -117,15 +179,33 @@ Public Function GetCurrentToolID() As Long
 
 End Function
 
+' @JPName
 ' 管理ブック取得
+'
+' @Category
+' ToolManager
+'
+' @Input
+' ToolID(Long)
+'
+' @Output
+' Workbook
+'
+' @Summary
+' ToolIDに対応する管理ブックを取得する
+'
+' @Remarks
+' 管理ブックが未作成の場合は
+' 新規作成して返却する
+'
 Public Function GetManagementWorkbookByToolID( _
                     ByVal ToolID As Long) _
                     As Workbook
 
-    Dim Tool As ToolInfo
+    Dim Tool As clsToolInfo
     Dim FullPath As String
 
-    Tool = GetToolInfo(ToolID)
+    Set Tool = GetToolInfo(ToolID)
 
     On Error Resume Next
 
@@ -161,7 +241,21 @@ Public Function GetManagementWorkbookByToolID( _
 
 End Function
 
+' @JPName
 ' 現在管理ブック取得
+'
+' @Category
+' ToolManager
+'
+' @Input
+' なし
+'
+' @Output
+' Workbook
+'
+' @Summary
+' 現在選択中ツールの管理ブックを取得する
+'
 Public Function GetCurrentManagementWorkbook() _
                 As Workbook
 
@@ -171,12 +265,30 @@ Public Function GetCurrentManagementWorkbook() _
 
 End Function
 
-' 管理ブック存在確認
+' @JPName
+' 管理ブック確認
+'
+' @Category
+' ToolManager
+'
+' @Input
+' TargetBook(Workbook)
+' FileName(String)
+'
+' @Output
+' Boolean
+'
+' @Summary
+' 管理ブックが有効か確認する
+'
+' @Remarks
+' 未オープン時はメッセージを表示する
+'
 Public Function CheckManagementWorkbook( _
                 ByVal TargetBook As Workbook, _
                 ByVal FileName As String) _
                 As Boolean
-
+    
     If TargetBook Is Nothing Then
 
         MsgBox _
@@ -193,22 +305,52 @@ Public Function CheckManagementWorkbook( _
 
 End Function
 
-' 管理ファイルフルパス取得
+' @JPName
+' 管理ファイルパス取得
+'
+' @Category
+' ToolManager
+'
+' @Input
+' ToolID(Long)
+'
+' @Output
+' FilePath(String)
+'
+' @Summary
+' ToolIDに対応する
+' 管理ファイルのフルパスを取得する
+'
 Public Function GetManagementFilePathByToolID( _
                     ByVal ToolID As Long) _
                     As String
+    
+    Dim Tool As clsToolInfo
 
-    Dim Tool As ToolInfo
-
-    Tool = GetToolInfo(ToolID)
-
+    Set Tool = GetToolInfo(ToolID)
+    
     GetManagementFilePathByToolID = _
         GetOutputFolder() & _
         Tool.ManagementFile
 
 End Function
 
-' 現在管理ファイルフルパス取得
+' @JPName
+' 現在管理ファイルパス取得
+'
+' @Category
+' ToolManager
+'
+' @Input
+' なし
+'
+' @Output
+' FilePath(String)
+'
+' @Summary
+' 現在選択中ツールの
+' 管理ファイルフルパスを取得する
+'
 Public Function GetCurrentManagementFilePath() _
                     As String
 
@@ -218,6 +360,30 @@ Public Function GetCurrentManagementFilePath() _
 
 End Function
 
+' @JPName
+' 管理ブック作成
+'
+' @Category
+' ToolManager
+'
+' @Input
+' FilePath(String)
+' ToolName(String)
+'
+' @Output
+' Workbook
+'
+' @Summary
+' 管理ブックを新規作成する
+'
+' @Remarks
+' ProcList
+' 関数トレース
+' 関数依存関係
+' PathChart
+' PathChartTree
+' シートを作成して保存する
+'
 Public Function CreateManagementWorkbook( _
                     ByVal FilePath As String, _
                     ByVal ToolName As String) _
@@ -229,15 +395,15 @@ Public Function CreateManagementWorkbook( _
 
     Set wb = Workbooks.Add
 
-    wb.Worksheets(1).Name = "ProcList"
+    wb.Worksheets(1).Name = SHEET_PROC_LIST
 
-    wb.Worksheets.Add.Name = "関数トレース"
+    wb.Worksheets.Add.Name = SHEET_FUNCTION_TRACE
 
-    wb.Worksheets.Add.Name = "関数依存関係"
+    wb.Worksheets.Add.Name = SHEET_FUNCTION_DEPENDENCY
 
-    wb.Worksheets.Add.Name = "PathChart"
+    wb.Worksheets.Add.Name = SHEET_PATH_CHART
 
-    wb.Worksheets.Add.Name = "PathChartTree"
+    wb.Worksheets.Add.Name = SHEET_PATH_CHART_TREE
 
     Application.DisplayAlerts = False
 
@@ -255,7 +421,7 @@ Public Function CreateManagementWorkbook( _
 
     Set CreateManagementWorkbook = wb
     
-    Debug.Print "SaveOK"
+    'Debug.Print "SaveOK"
 
     Exit Function
     
@@ -293,34 +459,47 @@ End Function
 '
 Public Function GetToolInfo( _
                 ByVal ToolID As Long) _
-                As ToolInfo
+                As clsToolInfo
 
     Dim ws As Worksheet
     Dim LastRow As Long
     Dim r As Long
 
-    Set ws = ThisWorkbook.Worksheets("ToolManager")
+    Dim Tool As clsToolInfo
 
-    LastRow = ws.Cells( _
-                ws.Rows.Count, "A") _
-                .End(xlUp).row
+    Set ws = ThisWorkbook.Worksheets(SHEET_TOOL_MANAGER)
+
+    LastRow = _
+        ws.Cells(ws.Rows.Count, "A") _
+          .End(xlUp).row
 
     For r = 2 To LastRow
 
         If ws.Cells(r, "A").Value = ToolID Then
 
-            With GetToolInfo
+            Set Tool = New clsToolInfo
 
-                .ToolID = ToolID
+            Tool.ToolID = ToolID
 
-                .ToolName = TrimEx(ws.Cells(r, "B").Value)
-                .WorkbookName = TrimEx(ws.Cells(r, "C").Value)
-                .GitRepository = TrimEx(ws.Cells(r, "D").Value)
-                .ExportEnabled = ws.Cells(r, "E").Value
-                .Description = TrimEx(ws.Cells(r, "F").Value)
-                .ManagementFile = TrimEx(ws.Cells(r, "G").Value)
+            Tool.ToolName = _
+                TrimEx(ws.Cells(r, "B").Value)
 
-            End With
+            Tool.WorkbookName = _
+                TrimEx(ws.Cells(r, "C").Value)
+
+            Tool.GitRepository = _
+                TrimEx(ws.Cells(r, "D").Value)
+
+            Tool.ExportEnabled = _
+                CBool(ws.Cells(r, "E").Value)
+
+            Tool.Description = _
+                TrimEx(ws.Cells(r, "F").Value)
+
+            Tool.ManagementFile = _
+                TrimEx(ws.Cells(r, "G").Value)
+
+            Set GetToolInfo = Tool
 
             Exit Function
 
@@ -340,7 +519,7 @@ End Function
 ' Value(Variant)
 '
 ' @Output
-' String
+' TrimmedText(String)
 '
 ' @Summary
 ' 前後空白および全角空白を除去する
@@ -378,9 +557,9 @@ Public Function GetWorkbookByToolID( _
                 ByVal ToolID As Long) _
                 As Workbook
 
-    Dim Tool As ToolInfo
+    Dim Tool As clsToolInfo
 
-    Tool = GetToolInfo(ToolID)
+    Set Tool = GetToolInfo(ToolID)
 
     On Error Resume Next
 
@@ -447,9 +626,9 @@ Public Function GetRepositoryByToolID( _
                 ByVal ToolID As Long) _
                 As String
 
-    Dim Tool As ToolInfo
+    Dim Tool As clsToolInfo
 
-    Tool = GetToolInfo(ToolID)
+    Set Tool = GetToolInfo(ToolID)
 
     GetRepositoryByToolID = _
         Tool.GitRepository

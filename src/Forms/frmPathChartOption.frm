@@ -15,12 +15,34 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
 
+' @JPName
+' オプション初期化
+'
+' @Category
+' PathChart
+'
+' @Input
+' なし
+'
+' @Output
+' なし
+'
+' @Summary
+' PathChartオプション画面を初期化する
+'
+' @Remarks
+' 現在設定値を画面へ反映する
+'
 Private Sub UserForm_Initialize()
 
     If gMaxNode = 0 Then
 
         txtMaxNode.Text = "1000"
         txtMaxEdge.Text = "3000"
+        
+    Else
+        txtMaxNode.Text = gMaxNode
+        txtMaxEdge.Text = gMaxEdge
 
     End If
 
@@ -79,20 +101,50 @@ Private Sub UserForm_Initialize()
 
     End If
 
-
-    txtMaxNode.Text = gMaxNode
-    txtMaxEdge.Text = gMaxEdge
-
     Call chkPowerPoint_Click
     
 End Sub
 
+' @JPName
+' オプション取消
+'
+' @Category
+' PathChart
+'
+' @Input
+' なし
+'
+' @Output
+' なし
+'
+' @Summary
+' オプション画面を閉じる
+'
 Private Sub cmdCancel_Click()
 
     Unload Me
 
 End Sub
 
+' @JPName
+' オプション保存
+'
+' @Category
+' PathChart
+'
+' @Input
+' なし
+'
+' @Output
+' なし
+'
+' @Summary
+' オプション設定を保存する
+'
+' @Remarks
+' 画面設定をグローバル設定へ反映し
+' PathChart設定を保存する
+'
 Private Sub cmdOK_Click()
 
     ' 設定値保存
@@ -133,6 +185,21 @@ Private Sub cmdOK_Click()
 
 End Sub
 
+' @JPName
+' 既定値設定
+'
+' @Category
+' PathChart
+'
+' @Input
+' なし
+'
+' @Output
+' なし
+'
+' @Summary
+' 画面の全オプションを初期状態へ戻す
+'
 Private Sub cmdDefault_Click()
 
     chkSkipCommon.Value = False
@@ -144,13 +211,28 @@ Private Sub cmdDefault_Click()
     chkShowModule.Value = False
     chkColorModule.Value = False
 
-    cmbColorTheme.Value = "標準"
+    cmbColorTheme.Value = DEFAULT_COLOR_THEME
 
-    txtMaxNode.Text = "1000"
-    txtMaxEdge.Text = "3000"
+    txtMaxNode.Text = DEFAULT_MAX_NODE
+    txtMaxEdge.Text = DEFAULT_MAX_EDGE
 
 End Sub
 
+' @JPName
+' 出力オプション設定
+'
+' @Category
+' PathChart
+'
+' @Input
+' なし
+'
+' @Output
+' なし
+'
+' @Summary
+' PowerPoint出力方向設定を反映する
+'
 Private Sub SetOptionValue()
 
     If optPptAuto.Value Then
@@ -169,6 +251,22 @@ Private Sub SetOptionValue()
 
 End Sub
 
+' @JPName
+' PowerPoint出力切替
+'
+' @Category
+' PathChart
+'
+' @Input
+' なし
+'
+' @Output
+' なし
+'
+' @Summary
+' PowerPoint出力設定に応じて
+' 方向選択を有効化する
+'
 Private Sub chkPowerPoint_Click()
 
     optPptAuto.Enabled = _

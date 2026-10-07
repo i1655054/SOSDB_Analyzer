@@ -9,6 +9,25 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Explicit
 
+'====================================================
+' TreeNode情報
+'====================================================
+'
+' @JPName
+' ツリーノード
+'
+' @Category
+' Model
+'
+' @Summary
+' PathChartTree出力用の
+' ツリー情報を保持する
+'
+' @Remarks
+' Procedure情報および
+' Tree表示情報を保持する
+'
+
 Private mLevel As Long
 
 Private mProcName As String
@@ -24,7 +43,7 @@ Private mTreeText As String
 Private mJPLine As String
 
 '====================================================
-' Tree用の日本語表示
+' 日本語Tree行
 '====================================================
 Public Property Get JPLine() As String
 
@@ -40,7 +59,7 @@ Public Property Let JPLine( _
 End Property
 
 '====================================================
-' Level
+' 階層レベル
 '====================================================
 Public Property Get Level() As Long
 
@@ -56,7 +75,7 @@ Public Property Let Level( _
 End Property
 
 '====================================================
-' Procedure Name
+' プロシージャ名
 '====================================================
 Public Property Get ProcName() As String
 
@@ -72,7 +91,7 @@ Public Property Let ProcName( _
 End Property
 
 '====================================================
-' Parent Procedure Name
+' 親プロシージャ名
 '====================================================
 Public Property Get ParentProcName() As String
 
@@ -88,7 +107,7 @@ Public Property Let ParentProcName( _
 End Property
 
 '====================================================
-' JPName
+' 日本語名
 '====================================================
 Public Property Get JPName() As String
 
@@ -104,7 +123,7 @@ Public Property Let JPName( _
 End Property
 
 '====================================================
-' Category
+' カテゴリ
 '====================================================
 Public Property Get Category() As String
 
@@ -120,7 +139,7 @@ Public Property Let Category( _
 End Property
 
 '====================================================
-' Module Name
+' モジュール名
 '====================================================
 Public Property Get ModuleName() As String
 
@@ -136,7 +155,7 @@ Public Property Let ModuleName( _
 End Property
 
 '====================================================
-' Summary
+' 概要
 '====================================================
 Public Property Get Summary() As String
 
@@ -152,7 +171,7 @@ Public Property Let Summary( _
 End Property
 
 '====================================================
-' Tree Text
+' Tree表示文字列
 '====================================================
 Public Property Get TreeText() As String
 

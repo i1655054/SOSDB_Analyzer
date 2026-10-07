@@ -79,6 +79,10 @@ Public Sub ExportVBABook( _
 
     Set FSO = CreateObject("Scripting.FileSystemObject")
     
+    If Not FSO.FolderExists(RootPath & "\src") Then
+        FSO.CreateFolder RootPath & "\src"
+    End If
+    
     If Not FSO.FolderExists(ModulesPath) Then
         FSO.CreateFolder ModulesPath
     End If
@@ -162,12 +166,16 @@ End Sub
 ' ToolIDに対応する
 ' GitHub管理フォルダを取得する
 '
+' @Remarks
+' OneDrive配下のGitHub管理フォルダを
+' 前提とする
+'
 Public Function GetGitRootPathByToolID( _
             ByVal ToolID As Long) As String
 
-    Dim Tool As ToolInfo
+    Dim Tool As clsToolInfo
 
-    Tool = GetToolInfo(ToolID)
+    Set Tool = GetToolInfo(ToolID)
 
     GetGitRootPathByToolID = _
         Environ$("OneDriveCommercial") & _
@@ -195,6 +203,10 @@ End Function
 ' @Summary
 ' 指定フォルダをカレントとして
 ' PowerShellを起動する
+'
+' @Remarks
+' 起動後のPowerShellは
+' 指定フォルダをカレントディレクトリとする
 '
 Public Sub OpenGitPowerShell( _
                     ByVal RootPath As String)

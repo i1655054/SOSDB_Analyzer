@@ -1,27 +1,44 @@
 Attribute VB_Name = "modPathChartText"
 Option Explicit
 
+' TreeNode一覧
 Private gTreeNodes As Collection
 
 '==================================================
 ' Tree表示文字
 '==================================================
 
+' 縦罫線
 Private Const TREE_BAR As String = "│"
 
+' ノード記号
 Private Const TREE_NODE_LAST As String = "└─"
 Private Const TREE_NODE_NEXT As String = "├─"
 
+' 空白
 Private Const TREE_SPACE As String = "　"
 
-' 日本語Tree継続用
+' 階層継続(日本語Tree)
 Private Const TREE_CONTINUE As String = "│　"
 
-' 次階層Prefix用
+' 次階層Prefix
 Private Const TREE_NEXT_LEVEL As String = "│　"
 
+' 最終階層Prefix
 Private Const TREE_LAST_LEVEL As String = "　　"
 
+'==================================================
+' Tree表示
+'==================================================
+
+' 日本語Tree行文字色 RGB(80,80,80)
+Private Const TREE_JP_FONT_COLOR As Long = &H505050
+
+' Treeフォント
+Private Const TREE_FONT_NAME As String = "ＭＳ ゴシック"
+
+' Tree列幅
+Private Const TREE_COLUMN_WIDTH As Double = 80
 
 '==================================================
 ' テキストチャート生成
@@ -153,7 +170,8 @@ Private Sub BuildTreeText( _
                 ByVal ParentProc As String, _
                 ByVal Prefix As String, _
                 ByVal Level As Long, _
-                ByVal MaxDepth As Long)
+                ByVal MaxDepth As Long, _
+                Optional ByVal PathText As String = "")
 
     '------------------------------------
     ' 日本語Tree行生成
@@ -182,8 +200,15 @@ Private Sub BuildTreeText( _
 
     Dim i As Long
     Dim IsLastChild As Boolean
-    
+
     Dim HasChildren As Boolean
+
+    If PathText = "" Then
+
+        PathText = _
+            "|" & UCase$(ParentProc) & "|"
+
+    End If
 
     If MaxDepth > 0 Then
 
@@ -202,6 +227,19 @@ Private Sub BuildTreeText( _
     For i = 1 To ChildCount
 
         ChildProc = CStr(Children(i))
+
+        '============================
+        ' 循環参照防止
+        '============================
+        If InStr( _
+                1, _
+                PathText, _
+                "|" & UCase$(ChildProc) & "|", _
+                vbTextCompare) > 0 Then
+
+            GoTo NextChild
+
+        End If
 
         IsLastChild = (i = ChildCount)
 
@@ -246,18 +284,19 @@ Private Sub BuildTreeText( _
         If Len(Node.ModuleName) > 0 Then
 
             If gShowModule Then
-            
+
                 Node.TreeText = _
                     Node.TreeText & _
                     " <" & _
                     Node.ModuleName & _
                     ">"
-            
+
             End If
 
         End If
 
-        HasChildren = (GetChildrenList(ChildProc).Count > 0)
+        HasChildren = _
+            (GetChildrenList(ChildProc).Count > 0)
 
         '---------------------------
         ' 日本語Tree行生成
@@ -285,21 +324,19 @@ Private Sub BuildTreeText( _
 
         gTreeNodes.Add Node
 
-        'Debug.Print _
-        '    "Level=" & Level & _
-        '    " Proc=" & ChildProc & _
-        '    " Prefix=[" & NextPrefix & "]"
-
         BuildTreeText _
             ChildProc, _
             NextPrefix, _
             Level + 1, _
-            MaxDepth
+            MaxDepth, _
+            PathText & _
+            UCase$(ChildProc) & "|"
+
+NextChild:
 
     Next i
 
 End Sub
-
 
 '==================================================
 ' Treeシート出力
@@ -311,8 +348,11 @@ End Sub
 ' @Category
 ' PathChart
 '
+' @Input
+' なし
+'
 ' @Output
-' PathChartTreeシート
+' PathChartTree(Worksheet)
 '
 ' @Summary
 ' TreeNode一覧をPathChartTreeシートへ出力する
@@ -331,35 +371,22 @@ Public Sub OutputTreeNodeList()
     Dim LastRow As Long
     Dim LastCol As Long
 
-    Dim ManagementBook As Workbook
-
-    Set ManagementBook = _
-        GetCurrentManagementWorkbook()
-
-    If Not CheckManagementWorkbook( _
-            ManagementBook, _
-            GetCurrentManagementFile()) Then
-
-        Exit Sub
-
-    End If
-
     On Error Resume Next
 
     Set ws = _
-        ManagementBook.Worksheets( _
-            "PathChartTree")
+        gContext.ManagementBook.Worksheets( _
+            SHEET_PATH_CHART_TREE)
 
     On Error GoTo 0
 
     If ws Is Nothing Then
 
         Set ws = _
-            ManagementBook.Worksheets.Add( _
-                After:=ManagementBook.Worksheets( _
-                    ManagementBook.Worksheets.Count))
+            gContext.ManagementBook.Worksheets.Add( _
+                After:=gContext.ManagementBook.Worksheets( _
+                    gContext.ManagementBook.Worksheets.Count))
 
-        ws.Name = "PathChartTree"
+        ws.Name = SHEET_PATH_CHART_TREE
 
     End If
 
@@ -418,7 +445,7 @@ Public Sub OutputTreeNodeList()
                 Node.JPLine
 
             ws.Cells(RowNo, 1).Font.Color = _
-                RGB(80, 80, 80)
+                TREE_JP_FONT_COLOR
 
             RowNo = RowNo + 1
 
@@ -433,10 +460,10 @@ Public Sub OutputTreeNodeList()
 
     ws.Columns("A:G").AutoFit
 
-    ws.Columns("A").ColumnWidth = 80
+    ws.Columns("A").ColumnWidth = TREE_COLUMN_WIDTH
 
     ws.Cells.Font.Name = _
-        "ＭＳ ゴシック"
+        TREE_FONT_NAME
 
     '------------------------------------
     ' オートフィルタ

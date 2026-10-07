@@ -15,7 +15,7 @@ Option Explicit
 ' ParentProc(String)
 '
 ' @Output
-' Collection
+' Children(Collection)
 '
 ' @Summary
 ' 指定プロシージャの子プロシージャ一覧を取得する
@@ -38,24 +38,11 @@ Public Function GetChildrenList( _
     Dim ParentModule As String
     Dim ChildModule As String
 
-    Dim ManagementBook As Workbook
-
-    Set ManagementBook = _
-        GetCurrentManagementWorkbook()
-
-    If Not CheckManagementWorkbook( _
-            ManagementBook, _
-            GetCurrentManagementFile()) Then
-
-        Exit Function
-
-    End If
-    
     Set Col = New Collection
 
     Set wsDep = _
-        ManagementBook.Worksheets( _
-            "関数依存関係")
+        gContext.ManagementBook.Worksheets( _
+            SHEET_FUNCTION_DEPENDENCY)
 
     LastRow = _
         wsDep.Cells( _
@@ -198,7 +185,7 @@ End Function
 ' ProcName(String)
 '
 ' @Output
-' Boolean
+' IsCommon(Boolean)
 '
 ' @Summary
 ' 共通関数として除外対象か判定する
@@ -242,7 +229,7 @@ End Function
 ' TreeText(String)
 '
 ' @Output
-' clsTreeNode
+' TreeNode(clsTreeNode)
 '
 ' @Summary
 ' PathChartおよびTextPathChart用の
