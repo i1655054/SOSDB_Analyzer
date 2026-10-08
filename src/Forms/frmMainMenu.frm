@@ -100,6 +100,8 @@ End Sub
 '
 Private Sub cmdClose_Click()
 
+    RestoreMainWindowState
+    
     Unload Me
 
 End Sub

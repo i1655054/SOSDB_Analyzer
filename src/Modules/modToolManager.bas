@@ -2,6 +2,30 @@ Attribute VB_Name = "modToolManager"
 Option Explicit
 
 '==================================================
+' Main Tool Book サイズ
+'==================================================
+
+' Main画面幅
+Private Const MAIN_WIDTH  As Long = 400
+
+' Main画面高さ
+Private Const MAIN_HEIGHT As Long = 250
+
+'==================================================
+' 管理ファイル表示サイズ
+'==================================================
+
+' 管理ファイル画面幅
+Private Const MANAGE_WIDTH As Long = 1200
+' 管理ファイル画面高さ
+Private Const MANAGE_HEIGHT As Long = 600
+
+' 管理ファイル画面Left
+Private Const MANAGE_LEFT As Long = 50
+' 管理ファイル画面Top
+Private Const MANAGE_TOP As Long = 50
+
+'==================================================
 ' Target Book名
 '==================================================
 Public Const BOOK_SOSDB As String = "●SOSDB問診票登録.xlsm"
@@ -44,6 +68,98 @@ Public gTargetToolID As Long
 
 ' 現在解析コンテキスト
 Public gContext As clsAnalyzeContext
+
+' @JPName
+' 起動時Window保存
+'
+' @Category
+' Common
+'
+' @Summary
+' 起動時のExcel Window位置と
+' サイズを保存する
+'
+Public Sub SaveMainWindowState()
+
+    With ThisWorkbook.Windows(1)
+
+        gMainOldState = .WindowState
+
+        gMainOldLeft = .Left
+        gMainOldTop = .Top
+
+        gMainOldWidth = .Width
+        gMainOldHeight = .Height
+
+    End With
+
+End Sub
+
+Public Sub RestoreMainWindowState()
+
+    If ThisWorkbook.Windows.Count = 0 Then
+    
+        Exit Sub
+    
+    End If
+    
+    With ThisWorkbook.Windows(1)
+
+        .WindowState = xlNormal
+
+        .Left = gMainOldLeft
+        .Top = gMainOldTop
+
+        .Width = gMainOldWidth
+        .Height = gMainOldHeight
+
+        .WindowState = gMainOldState
+
+    End With
+
+End Sub
+
+Public Sub ResizeMainWindow()
+
+    With ThisWorkbook.Windows(1)
+
+        .WindowState = xlNormal
+
+        .Top = 0
+        .Left = 0
+
+        .Width = MAIN_WIDTH
+        .Height = MAIN_HEIGHT
+
+    End With
+
+End Sub
+
+Public Sub ResizeManageWindow( _
+                ByVal wb As Workbook)
+
+    wb.Activate
+    
+    With ActiveWindow
+
+        .WindowState = xlNormal
+
+        .Left = MANAGE_LEFT
+        .Top = MANAGE_TOP
+
+        .Width = MANAGE_WIDTH
+        .Height = MANAGE_HEIGHT
+
+    End With
+
+End Sub
+
+Public Sub ActivateAnalyzerBook()
+
+    ThisWorkbook.Activate
+
+End Sub
+
 
 ' @JPName
 ' 現在ツール情報取得
@@ -227,16 +343,20 @@ Public Function GetManagementWorkbookByToolID( _
             Set GetManagementWorkbookByToolID = _
                 CreateManagementWorkbook(FullPath, Tool.ToolName)
             
-            ThisWorkbook.Activate
+            ResizeManageWindow _
+                GetManagementWorkbookByToolID
             
+           
             Exit Function
 
         Else
         
             Set GetManagementWorkbookByToolID = _
                 Workbooks.Open(FullPath)
-        
-            ThisWorkbook.Activate
+            
+            ResizeManageWindow _
+                GetManagementWorkbookByToolID
+            
             
         End If
         

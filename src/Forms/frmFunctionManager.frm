@@ -115,7 +115,25 @@ End Sub
 Private Sub cmdClose_Click()
 
     Unload Me
+    
+    frmMainMenu.Show vbModeless
+    'frmTarget.Show vbModeless
 
 End Sub
 
+Private Sub UserForm_Terminate()
+
+    Debug.Print "FunctionManager Terminate"
+
+End Sub
+
+Private Sub UserForm_QueryClose( _
+    Cancel As Integer, _
+    CloseMode As Integer)
+
+    Debug.Print _
+        "FunctionManager QueryClose=" & _
+        CloseMode
+
+End Sub
 

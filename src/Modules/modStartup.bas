@@ -2,14 +2,23 @@ Attribute VB_Name = "modStartup"
 Option Explicit
 
 '==================================================
-' Main Tool Book サイズ
+' 起動時Windowサイズ
 '==================================================
 
-' Main画面幅
-Private Const MAIN_WIDTH  As Long = 400
+' 起動時画面幅
+Public gMainOldWidth As Double
 
-' Main画面高さ
-Private Const MAIN_HEIGHT As Long = 250
+' 起動時画面高さ
+Public gMainOldHeight As Double
+
+' 起動時Left
+Public gMainOldLeft As Double
+
+' 起動時Top
+Public gMainOldTop As Double
+
+' 起動時旧画面状態
+Public gMainOldState As XlWindowState
 
 ' @JPName
 ' Analyzer初期化
@@ -35,20 +44,12 @@ Public Sub InitializeAnalyzer()
     RegisterShortcut
 
     LoadPathChartConfig
+    
+    SaveMainWindowState
 
     ThisWorkbook.Worksheets(SHEET_MAIN).Activate
     
-    With ThisWorkbook.Windows(1)
-
-        .WindowState = xlNormal
-
-        .Top = 0
-        .Left = 0
-
-        .Width = MAIN_WIDTH
-        .Height = MAIN_HEIGHT
-
-    End With
+    ResizeMainWindow
 
     ' フォームを表示したまま他を操作できる
     frmMainMenu.Show vbModeless

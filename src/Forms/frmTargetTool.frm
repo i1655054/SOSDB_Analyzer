@@ -132,6 +132,11 @@ Private Sub cmdOK_Click()
     
     Unload Me
 
+    ' 管理ファイル終了時に
+    ' FunctionManagerが終了しないよう
+    ' 解析ツールをアクティブ化する
+    ActivateAnalyzerBook
+    
     frmFunctionManager.Show vbModeless
 
 End Sub
@@ -158,3 +163,4 @@ Private Sub cmdClose_Click()
     frmMainMenu.Show vbModeless
     
 End Sub
+
