@@ -154,5 +154,7 @@ End Sub
 Private Sub cmdClose_Click()
 
     Unload Me
-
+    
+    frmMainMenu.Show vbModeless
+    
 End Sub

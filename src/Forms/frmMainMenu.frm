@@ -52,8 +52,11 @@ End Sub
 '
 Private Sub cmdExport_Click()
 
-    frmExportTool.Show vbModal
+    Unload Me
 
+    ' フォームを表示したまま他を操作できる
+    frmExportTool.Show vbModeless
+    
 End Sub
 
 ' @JPName
@@ -73,8 +76,11 @@ End Sub
 '
 Private Sub cmdFunction_Click()
 
-    frmTargetTool.Show vbModeless
+    Unload Me
 
+    ' フォームを表示したまま他を操作できる
+    frmTargetTool.Show vbModeless
+    
 End Sub
 
 ' @JPName
@@ -97,5 +103,4 @@ Private Sub cmdClose_Click()
     Unload Me
 
 End Sub
-
 

@@ -2,7 +2,7 @@ Attribute VB_Name = "modToolManager"
 Option Explicit
 
 '==================================================
-' Book名
+' Target Book名
 '==================================================
 Public Const BOOK_SOSDB As String = "●SOSDB問診票登録.xlsm"
 Public Const BOOK_ANALYZER As String = "SOSDB解析ツール.xlsm"
@@ -10,6 +10,9 @@ Public Const BOOK_ANALYZER As String = "SOSDB解析ツール.xlsm"
 '==================================================
 ' シート名
 '==================================================
+
+' Mainシート名
+Public Const SHEET_MAIN As String = "Main"
 
 ' ToolManagerシート名
 Public Const SHEET_TOOL_MANAGER As String = "ToolManager"
