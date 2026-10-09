@@ -159,59 +159,26 @@ Private Sub GetFunctions( _
             ByVal ModuleName As String, _
             ByRef FuncList As Object)
 
-    Dim RegEx As Object
-    Dim Matches As Object
-    Dim M As Object
+    Dim Lines() As String
+    Dim LineText As String
+
+    Dim i As Long
     Dim FuncName As String
+
     Dim Proc As clsProcInfo
 
-    Set RegEx = CreateObject("VBScript.RegExp")
+    Lines = Split(CodeText, vbCrLf)
 
-    RegEx.Global = True
+    For i = LBound(Lines) To UBound(Lines)
 
-    'RegEx.Pattern = _
-    '    "(Public|Private|Friend)?\s*(Sub|Function)\s+([A-Za-z0-9_]+)"
-    
-    RegEx.Pattern = _
-        "(Public|Private|Friend)?\s*" & _
-        "(Sub|Function|Property\s+Get|Property\s+Let|Property\s+Set)\s+" & _
-        "([A-Za-z0-9_]+)"
+        LineText = Trim$(Lines(i))
 
-    Set Matches = RegEx.Execute(CodeText)
+        If IsProcedureLine(LineText) Then
 
-    For Each M In Matches
+            FuncName = _
+                ExtractProcedureName(LineText)
 
-        FuncName = M.SubMatches(2)
-
-        If InStr(1, M.Value, _
-                 "Declare", _
-                 vbTextCompare) > 0 Then
-
-            GoTo NextMatch
-
-        End If
-        
-        Select Case UCase(FuncName)
-
-            Case "PUBLIC", _
-                 "PRIVATE", _
-                 "FRIEND", _
-                 "SUB", _
-                 "FUNCTION", _
-                 "IF", _
-                 "END", _
-                 "THEN", _
-                 "ELSE", _
-                 "DIM", _
-                 "CALL"
-                 
-                ' 登録しない
-                
-            Case "ISSUE"
-            
-                ' GitHub Issue 等の誤検出防止
-
-            Case Else
+            If FuncName <> "" Then
 
                 If Not FuncList.Exists(FuncName) Then
 
@@ -238,17 +205,20 @@ Private Sub GetFunctions( _
                             FuncName, _
                             "@Summary")
 
-                    FuncList.Add FuncName, Proc
+                    FuncList.Add _
+                        FuncName, _
+                        Proc
 
                 End If
 
-        End Select
-    
-NextMatch:
+            End If
 
-    Next M
+        End If
+
+    Next i
 
 End Sub
+
 
 '==================================================
 ' トレース解析
@@ -393,6 +363,7 @@ Private Function GetProcedureName( _
         GetProcedureName = CurrentName
 
     End If
+    
 
 End Function
 
@@ -508,4 +479,61 @@ Private Sub AddConditionColor( _
     fc.Interior.Color = FillColor
 
 End Sub
+
+'=================================================
+' VBAキーワード判定
+'=================================================
+'
+' @JPName
+' VBAキーワード判定
+'
+' @Category
+' FunctionTrace
+'
+' @Input
+' Name(String)
+'
+' @Output
+' IsKeyword(Boolean)
+'
+' @Summary
+' VBA予約語か判定する
+'
+' @Remarks
+' 関数依存関係解析時に
+' 誤検出を除外するため使用する
+'
+Private Function IsVBKeyword( _
+                ByVal Name As String) _
+                As Boolean
+
+    Select Case UCase$(Name)
+
+        Case "PUBLIC", _
+             "PRIVATE", _
+             "FRIEND", _
+             "SUB", _
+             "FUNCTION", _
+             "DIM", _
+             "CALL", _
+             "ON", _
+             "SET", _
+             "FOR", _
+             "NEXT", _
+             "IF", _
+             "THEN", _
+             "ELSE", _
+             "SELECT", _
+             "CASE", _
+             "WITH", _
+             "END", _
+             "DO", _
+             "LOOP", _
+             "EXIT"
+
+            IsVBKeyword = True
+
+    End Select
+
+End Function
 
