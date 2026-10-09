@@ -106,3 +106,35 @@ Private Sub cmdClose_Click()
 
 End Sub
 
+' @JPName
+' メインメニュー終了制御
+'
+' @Category
+' UI
+'
+' @Input
+' Cancel(Integer)
+' CloseMode(Integer)
+'
+' @Output
+' なし
+'
+' @Summary
+' メインメニュー終了時の制御を行う
+'
+' @Remarks
+' ×ボタン押下時は
+' PathChart画面を再表示する
+'
+Private Sub UserForm_QueryClose( _
+    Cancel As Integer, _
+    CloseMode As Integer)
+
+    If CloseMode = vbFormControlMenu Then
+    
+        RestoreMainWindowState
+    
+    End If
+
+End Sub
+

@@ -75,6 +75,8 @@ End Function
 '
 Public Sub AnalyzeAll()
 
+    Dim UnusedCount As Long
+
     If gContext Is Nothing Then
     
         MsgBox "解析コンテキスト未生成"
@@ -105,11 +107,18 @@ Public Sub AnalyzeAll()
 
     ProcedureList
     
+    UnusedCount = _
+        ExportUnusedProcedureList()
+    
     FunctionTrace
 
     FunctionDependency
 
-    MsgBox "解析完了"
+    MsgBox _
+        "解析完了" & vbCrLf & _
+        "未使用候補 : " & _
+        UnusedCount & "件", _
+        vbInformation
 
 End Sub
 
@@ -505,6 +514,10 @@ Public Function IsFunctionCall( _
 
     Dim RegEx As Object
 
+    If IsProcedureLine(LineText) Then
+        Exit Function
+    End If
+
     LineText = Trim$(LineText)
 
     ' コメント行除外
@@ -517,6 +530,21 @@ Public Function IsFunctionCall( _
 
     RegEx.IgnoreCase = True
 
+    '------------------------------------
+    ' 関数戻り値代入除外
+    ' GetCurrentToolID = xxx
+    '------------------------------------
+    RegEx.Pattern = _
+        "^\s*" & _
+        FuncName & _
+        "\s*="
+
+    If RegEx.Test(LineText) Then
+
+        Exit Function
+
+    End If
+    
     ' Call Function
     RegEx.Pattern = _
         "(^|\s)Call\s+" & _
@@ -535,6 +563,85 @@ Public Function IsFunctionCall( _
         "(^|[\s=\(,])" & _
         FuncName & _
         "\s*\("
+    If RegEx.Test(LineText) Then
+    
+        IsFunctionCall = True
+        Exit Function
+    
+    End If
+    
+    '------------------------------------
+    ' 行継続文字対応
+    ' CreatePathChart_V3 _
+    '------------------------------------
+    If Right$(Trim$(LineText), 1) = "_" Then
+
+        If Left$(Trim$(LineText), Len(FuncName)) = _
+            FuncName Then
+
+            IsFunctionCall = True
+            Exit Function
+
+        End If
+
+    End If
+    
+    ' Sub Arg1, Arg2
+    RegEx.Pattern = _
+        "^\s*" & _
+        FuncName & _
+        "\s+.+$"
+    
+    If RegEx.Test(LineText) Then
+
+        IsFunctionCall = True
+        Exit Function
+
+    End If
+    
+    ' Object.Method Arg1
+    RegEx.Pattern = _
+        "\." & FuncName & _
+        "(\s+|\s*\(|$)"
+
+    If RegEx.Test(LineText) Then
+
+        IsFunctionCall = True
+        Exit Function
+
+    End If
+
+    ' Module.Procedure Arg1, Arg2
+    RegEx.Pattern = _
+        "(^|\s)(\w+\.)+" & _
+        FuncName & _
+        "\s+.+$"
+
+    If RegEx.Test(LineText) Then
+
+        IsFunctionCall = True
+        Exit Function
+
+    End If
+
+    ' Call Module.Procedure(...)
+    RegEx.Pattern = _
+        "(^|\s)Call\s+(\w+\.)+" & _
+        FuncName & _
+        "\s*\("
+
+    If RegEx.Test(LineText) Then
+
+        IsFunctionCall = True
+        Exit Function
+
+    End If
+
+    ' Module.Procedure(...)
+    RegEx.Pattern = _
+        "(^|\s)(\w+\.)+" & _
+        FuncName & _
+        "\s*\("
 
     If RegEx.Test(LineText) Then
 
@@ -547,6 +654,7 @@ Public Function IsFunctionCall( _
     RegEx.Pattern = _
         "^\s*" & FuncName & "\s*$"
 
+    
     IsFunctionCall = RegEx.Test(LineText)
 
 End Function

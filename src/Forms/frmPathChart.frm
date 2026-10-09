@@ -374,48 +374,6 @@ Private Sub cmdNavigator_Click()
 End Sub
 
 ' @JPName
-' PathChart既定値初期化
-'
-' @Category
-' PathChart
-'
-' @Input
-' なし
-'
-' @Output
-' なし
-'
-' @Summary
-' PathChartの既定設定を初期化する
-'
-' @Remarks
-' 初回起動時の設定値を設定する
-'
-Public Sub InitPathChartOption()
-
-    gProperty = False
-    gPrivate = False
-    gPublic = True
-
-    gStdModule = True
-    gUserForm = True
-    gClassModule = True
-
-    gIgnoreAPI = True
-    gIgnoreExcel = False
-    gIgnoreSelf = False
-    gSameModuleOnly = False
-
-    gColorTheme = DEFAULT_COLOR_THEME
-
-    gMaxNode = DEFAULT_MAX_NODE
-    gMaxEdge = DEFAULT_MAX_EDGE
-    
-    InitSearchHistory
-
-End Sub
-
-' @JPName
 ' ログ追加
 '
 ' @Category

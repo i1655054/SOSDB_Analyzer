@@ -2,6 +2,25 @@ Attribute VB_Name = "modToolManager"
 Option Explicit
 
 '==================================================
+' Main画面状態
+'==================================================
+
+' 起動時Window状態
+Public gMainOldState As XlWindowState
+
+' 起動時Left
+Public gMainOldLeft As Double
+
+' 起動時Top
+Public gMainOldTop As Double
+
+' 起動時Width
+Public gMainOldWidth As Double
+
+' 起動時Height
+Public gMainOldHeight As Double
+
+'==================================================
 ' Main Tool Book サイズ
 '==================================================
 
@@ -47,6 +66,9 @@ Public Const SHEET_PATH_CHART_CONFIG As String = "PathChartConfig"
 ' ProcListシート名
 Public Const SHEET_PROC_LIST As String = "ProcList"
 
+' 未使用関数一覧シート名
+Public Const SHEET_UNUSED_PROC_LIST As String = "UnusedProcList"
+
 ' 関数トレースシート名
 Public Const SHEET_FUNCTION_TRACE As String = "関数トレース"
 
@@ -69,15 +91,30 @@ Public gTargetToolID As Long
 ' 現在解析コンテキスト
 Public gContext As clsAnalyzeContext
 
+
+'==================================================
+' Window制御
+'==================================================
+
 ' @JPName
-' 起動時Window保存
+' Main画面状態保存
 '
 ' @Category
-' Common
+' Window
+'
+' @Input
+' なし
+'
+' @Output
+' なし
 '
 ' @Summary
-' 起動時のExcel Window位置と
-' サイズを保存する
+' 解析ツール起動前の
+' Window位置およびサイズを保存する
+'
+' @Remarks
+' 終了時に元の画面状態へ
+' 復元するため使用する
 '
 Public Sub SaveMainWindowState()
 
@@ -95,6 +132,26 @@ Public Sub SaveMainWindowState()
 
 End Sub
 
+' @JPName
+' Main画面状態復元
+'
+' @Category
+' Window
+'
+' @Input
+' なし
+'
+' @Output
+' なし
+'
+' @Summary
+' 保存済みのWindow位置および
+' サイズを復元する
+'
+' @Remarks
+' MainMenu終了時および
+' Workbook終了時に実行する
+'
 Public Sub RestoreMainWindowState()
 
     If ThisWorkbook.Windows.Count = 0 Then
@@ -119,6 +176,25 @@ Public Sub RestoreMainWindowState()
 
 End Sub
 
+' @JPName
+' Main画面サイズ変更
+'
+' @Category
+' Window
+'
+' @Input
+' なし
+'
+' @Output
+' なし
+'
+' @Summary
+' 解析ツールBookを
+' 所定サイズへ変更する
+'
+' @Remarks
+' MainMenu表示時に使用する
+'
 Public Sub ResizeMainWindow()
 
     With ThisWorkbook.Windows(1)
@@ -135,6 +211,25 @@ Public Sub ResizeMainWindow()
 
 End Sub
 
+' @JPName
+' 管理画面サイズ変更
+'
+' @Category
+' Window
+'
+' @Input
+' Workbook
+'
+' @Output
+' なし
+'
+' @Summary
+' 管理ファイルのWindowサイズを
+' 所定サイズへ変更する
+'
+' @Remarks
+' 管理ファイルオープン時に使用する
+'
 Public Sub ResizeManageWindow( _
                 ByVal wb As Workbook)
 
@@ -154,12 +249,35 @@ Public Sub ResizeManageWindow( _
 
 End Sub
 
+' @JPName
+' 解析ツールBookアクティブ化
+'
+' @Category
+' Window
+'
+' @Input
+' なし
+'
+' @Output
+' なし
+'
+' @Summary
+' 解析ツールBookを
+' アクティブ状態にする
+'
+' @Remarks
+' UserFormの親Workbookを
+' 解析ツールBookへ戻す際に使用する
+'
 Public Sub ActivateAnalyzerBook()
 
     ThisWorkbook.Activate
 
 End Sub
 
+'==================================================
+' 現在選択情報
+'==================================================
 
 ' @JPName
 ' 現在ツール情報取得
@@ -207,35 +325,7 @@ Public Function GetCurrentTargetBook() _
 End Function
 
 ' @JPName
-' 管理ファイル取得
-'
-' @Category
-' ToolManager
-'
-' @Input
-' ToolID(Long)
-'
-' @Output
-' FileName(String)
-'
-' @Summary
-' ToolIDに対応する管理ファイル名を取得する
-'
-Public Function GetManagementFileByToolID( _
-                    ByVal ToolID As Long) _
-                    As String
-
-    Dim Tool As clsToolInfo
-
-    Set Tool = GetToolInfo(ToolID)
-
-    GetManagementFileByToolID = _
-        Tool.ManagementFile
-
-End Function
-
-' @JPName
-' 現在管理ファイル取得
+' 現在管理ブック取得
 '
 ' @Category
 ' ToolManager
@@ -244,59 +334,23 @@ End Function
 ' なし
 '
 ' @Output
-' FileName(String)
+' Workbook
 '
 ' @Summary
-' 現在選択中ツールの管理ファイル名を取得する
+' 現在選択中ツールの管理ブックを取得する
 '
-Public Function GetCurrentManagementFile() _
-                    As String
+Public Function GetCurrentManagementWorkbook() _
+                As Workbook
 
-    GetCurrentManagementFile = _
-        GetManagementFileByToolID( _
-            GetCurrentToolInfo().ToolID)
+    Set GetCurrentManagementWorkbook = _
+        GetManagementWorkbookByToolID( _
+            gTargetToolID)
 
 End Function
 
-' @JPName
-' 現在ツールID取得
-'
-' @Category
-' ToolManager
-'
-' @Input
-' なし
-'
-' @Output
-' ToolID(Long)
-'
-' @Summary
-' ToolManagerシートから
-' 現在選択中のToolIDを取得する
-'
-Public Function GetCurrentToolID() As Long
-
-    Dim ws As Worksheet
-    Dim LastRow As Long
-    Dim r As Long
-
-    Set ws = ThisWorkbook.Worksheets(SHEET_TOOL_MANAGER)
-
-    LastRow = ws.Cells(ws.Rows.Count, "A").End(xlUp).row
-
-    For r = 2 To LastRow
-
-        If ws.Cells(r, "H").Value = True Then
-
-            GetCurrentToolID = ws.Cells(r, "A").Value
-
-            Exit Function
-
-        End If
-
-    Next r
-
-End Function
+'==================================================
+' 管理ファイル
+'==================================================
 
 ' @JPName
 ' 管理ブック取得
@@ -364,29 +418,6 @@ Public Function GetManagementWorkbookByToolID( _
 
 End Function
 
-' @JPName
-' 現在管理ブック取得
-'
-' @Category
-' ToolManager
-'
-' @Input
-' なし
-'
-' @Output
-' Workbook
-'
-' @Summary
-' 現在選択中ツールの管理ブックを取得する
-'
-Public Function GetCurrentManagementWorkbook() _
-                As Workbook
-
-    Set GetCurrentManagementWorkbook = _
-        GetManagementWorkbookByToolID( _
-            gTargetToolID)
-
-End Function
 
 ' @JPName
 ' 管理ブック確認
@@ -455,31 +486,6 @@ Public Function GetManagementFilePathByToolID( _
     GetManagementFilePathByToolID = _
         GetOutputFolder() & _
         Tool.ManagementFile
-
-End Function
-
-' @JPName
-' 現在管理ファイルパス取得
-'
-' @Category
-' ToolManager
-'
-' @Input
-' なし
-'
-' @Output
-' FilePath(String)
-'
-' @Summary
-' 現在選択中ツールの
-' 管理ファイルフルパスを取得する
-'
-Public Function GetCurrentManagementFilePath() _
-                    As String
-
-    GetCurrentManagementFilePath = _
-        GetManagementFilePathByToolID( _
-            gTargetToolID)
 
 End Function
 
@@ -692,69 +698,3 @@ Public Function GetWorkbookByToolID( _
     On Error GoTo 0
 
 End Function
-
-' @JPName
-' Workbook取得
-'
-' @Category
-' ToolManager
-'
-' @Input
-' WorkbookName(String)
-'
-' @Output
-' Workbook
-'
-' @Summary
-' Workbook名から
-' Workbookオブジェクトを取得する
-'
-' @Remarks
-' Workbook未オープン時はNothingを返す
-'
-Public Function GetWorkbookByWorkbookName( _
-                    ByVal WorkbookName As String) _
-                    As Workbook
-
-    On Error Resume Next
-
-    Set GetWorkbookByWorkbookName = _
-        Workbooks(WorkbookName)
-
-    On Error GoTo 0
-
-End Function
-
-'==================================================
-' Repository取得
-'==================================================
-
-' @JPName
-' リポジトリ名取得
-'
-' @Category
-' ToolManager
-'
-' @Input
-' ToolID(Long)
-'
-' @Output
-' RepositoryName(String)
-'
-' @Summary
-' ToolIDに対応する
-' GitHubリポジトリ名を取得する
-'
-Public Function GetRepositoryByToolID( _
-                ByVal ToolID As Long) _
-                As String
-
-    Dim Tool As clsToolInfo
-
-    Set Tool = GetToolInfo(ToolID)
-
-    GetRepositoryByToolID = _
-        Tool.GitRepository
-
-End Function
-

@@ -1,25 +1,6 @@
 Attribute VB_Name = "modStartup"
 Option Explicit
 
-'==================================================
-' 起動時Windowサイズ
-'==================================================
-
-' 起動時画面幅
-Public gMainOldWidth As Double
-
-' 起動時画面高さ
-Public gMainOldHeight As Double
-
-' 起動時Left
-Public gMainOldLeft As Double
-
-' 起動時Top
-Public gMainOldTop As Double
-
-' 起動時旧画面状態
-Public gMainOldState As XlWindowState
-
 ' @JPName
 ' Analyzer初期化
 '

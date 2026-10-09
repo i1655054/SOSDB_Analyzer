@@ -261,3 +261,33 @@ Private Function JoinCollection( _
 
 End Function
 
+'=================================================
+' 呼出元件数取得
+'=================================================
+' @JPName
+' 呼出元件数取得
+'
+' @Category
+' Model
+'
+' @Input
+' なし
+'
+' @Output
+' Count(Long)
+'
+' @Summary
+' 呼出元プロシージャ件数を取得する
+'
+Public Property Get CalledByCount() As Long
+
+    CalledByCount = CalledBy.Count
+
+End Property
+
+Public Property Get CallCount() As Long
+
+    CallCount = Calls.Count
+
+End Property
+

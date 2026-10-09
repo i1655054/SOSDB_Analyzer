@@ -1,27 +1,6 @@
 Attribute VB_Name = "modExportVBA"
 Option Explicit
 
-' VBAエクスポート
-
-'==================================================
-' 画面表示
-'==================================================
-
-' @JPName
-' エクスポート画面表示
-'
-' @Category
-' Export
-'
-' @Summary
-' VBAソースエクスポート画面を表示する
-'
-Public Sub ShowExportTool()
-
-    frmExportTool.Show vbModal
-
-End Sub
-
 '==================================================
 ' VBAエクスポート
 '==================================================

@@ -210,6 +210,129 @@ Public Sub ProcedureList()
 
 End Sub
 
+
+' @JPName
+' 未使用関数一覧出力
+'
+' @Category
+' Analyze
+'
+' @Input
+' なし
+'
+' @Output
+' UnusedProcListシート
+'
+' @Summary
+' ProcListから未使用関数を抽出し
+' UnusedProcListシートへ出力する
+'
+' @Remarks
+' 判定が「削除候補」の関数のみ出力する
+'
+Public Function ExportUnusedProcedureList() As Long
+
+    Dim wsProc As Worksheet
+    Dim wsOut As Worksheet
+
+    Dim LastRow As Long
+    Dim OutRow As Long
+    Dim r As Long
+
+    On Error Resume Next
+
+    Set wsOut = _
+        gContext.ManagementBook.Worksheets( _
+            SHEET_UNUSED_PROC_LIST)
+
+    On Error GoTo 0
+
+    If wsOut Is Nothing Then
+
+        Set wsOut = _
+            gContext.ManagementBook.Worksheets.Add( _
+                After:=gContext.ManagementBook.Worksheets( _
+                    gContext.ManagementBook.Worksheets.Count))
+
+        wsOut.Name = _
+            SHEET_UNUSED_PROC_LIST
+
+    End If
+
+    Set wsProc = _
+        gContext.ManagementBook.Worksheets( _
+            SHEET_PROC_LIST)
+
+    wsOut.Cells.Clear
+
+    '------------------------------------
+    ' ヘッダ
+    '------------------------------------
+    wsOut.Range("A1:G1").Value = Array( _
+        "Module", _
+        "Type", _
+        "ProcedureName", _
+        "JPName", _
+        "Category", _
+        "UsageCount", _
+        "判定")
+
+    OutRow = 2
+
+    LastRow = _
+        wsProc.Cells( _
+            wsProc.Rows.Count, 1) _
+            .End(xlUp).row
+
+    '------------------------------------
+    ' 未使用関数抽出
+    '------------------------------------
+    For r = 2 To LastRow
+
+        If wsProc.Cells(r, 12).Value = _
+            STATUS_UNUSED Then
+
+            wsOut.Cells(OutRow, 1).Value = _
+                wsProc.Cells(r, 1).Value
+
+            wsOut.Cells(OutRow, 2).Value = _
+                wsProc.Cells(r, 2).Value
+
+            wsOut.Cells(OutRow, 3).Value = _
+                wsProc.Cells(r, 3).Value
+
+            wsOut.Cells(OutRow, 4).Value = _
+                wsProc.Cells(r, 4).Value
+
+            wsOut.Cells(OutRow, 5).Value = _
+                wsProc.Cells(r, 5).Value
+
+            wsOut.Cells(OutRow, 6).Value = _
+                wsProc.Cells(r, 11).Value
+
+            wsOut.Cells(OutRow, 7).Value = _
+                wsProc.Cells(r, 12).Value
+
+            OutRow = OutRow + 1
+
+        End If
+
+    Next r
+
+    ExportUnusedProcedureList = OutRow - 2
+    
+    '------------------------------------
+    ' 書式
+    '------------------------------------
+    wsOut.Columns.AutoFit
+
+    wsOut.Rows(1).Font.Bold = True
+
+    wsOut.Rows(1).AutoFilter
+    
+End Function
+
+
 '==================================================
 ' プロシージャ解析
 '==================================================
@@ -359,7 +482,7 @@ Public Function CountUsage( _
 
             LineText = _
                 Trim$(CodeMod.Lines(i, 1))
-                
+            
             If IsFunctionCall( _
                 LineText, ProcName) Then
                 
@@ -371,12 +494,9 @@ Public Function CountUsage( _
 
     Next VBComp
 
-    ' 宣言行を除外
-    If Count <= 1 Then
-        CountUsage = 0
-    Else
-        CountUsage = Count - 1
-    End If
+    ' 宣言行は
+    ' IsProcedureLineで除外済み
+    CountUsage = Count
 
 End Function
 
@@ -389,18 +509,26 @@ End Function
 ' @Summary
 ' プロシージャ名からイベント関数か判定する
 '
-Private Function IsEventProcedure(ProcName As String) As Boolean
+Private Function IsEventProcedure( _
+                ByVal ProcName As String) _
+                As Boolean
 
-    If ProcName Like "Workbook_*" _
-    Or ProcName Like "Worksheet_*" _
-    Or ProcName Like "UserForm_*" _
-    Or ProcName Like "*_Click" _
-    Or ProcName Like "*_Change" Then
-    
-        IsEventProcedure = True
-    Else
-        IsEventProcedure = False
-    End If
+    IsEventProcedure = _
+        ProcName Like "Workbook_*" _
+        Or ProcName Like "Worksheet_*" _
+        Or ProcName Like "UserForm_*" _
+        Or ProcName Like "Class_*" _
+        Or ProcName Like "*_Click" _
+        Or ProcName Like "*_DblClick" _
+        Or ProcName Like "*_Change" _
+        Or ProcName Like "*_MouseDown" _
+        Or ProcName Like "*_MouseUp" _
+        Or ProcName Like "*_MouseMove" _
+        Or ProcName Like "*_KeyDown" _
+        Or ProcName Like "*_KeyUp" _
+        Or ProcName Like "*_KeyPress" _
+        Or ProcName Like "*_ItemCheck" _
+        Or ProcName Like "*_ItemClick"
 
 End Function
 
@@ -428,17 +556,49 @@ End Function
 Private Function GetUsageStatus(ProcName As String, usage As Long) As String
 
     If IsEventProcedure(ProcName) Then
+    
         GetUsageStatus = STATUS_EVENT
         
+    ElseIf IsSpecialProcedure(ProcName) Then
+    
+        GetUsageStatus = STATUS_USED
+       
     ElseIf usage = 0 Then
+    
         GetUsageStatus = STATUS_UNUSED
         
     ElseIf usage = 1 Then
+    
         GetUsageStatus = STATUS_CONFIRM
         
     Else
         GetUsageStatus = STATUS_USED
         
     End If
+
+End Function
+
+' @JPName
+' 特殊関数判定
+'
+' @Category
+' Analyze
+'
+' @Summary
+' 動的呼出やイベント連携により
+' 使用中と見なす関数か判定する
+'
+Private Function IsSpecialProcedure( _
+                ByVal ProcName As String) _
+                As Boolean
+
+    Select Case ProcName
+
+        Case "SelectNode"
+
+            ' Shape.OnActionから起動
+            IsSpecialProcedure = True
+
+    End Select
 
 End Function
