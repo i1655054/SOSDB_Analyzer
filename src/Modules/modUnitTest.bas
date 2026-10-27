@@ -165,9 +165,11 @@ End Function
 
 Public Sub Test4()
 
-    Dim X As Long
+    Dim x As Long
 
-    X = FuncA()
+    x = FuncA()
 
 End Sub
+
+
 

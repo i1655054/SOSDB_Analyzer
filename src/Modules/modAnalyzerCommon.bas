@@ -104,14 +104,18 @@ Public Sub AnalyzeAll()
             gContext.Tool.ManagementFile) Then
         Exit Sub
     End If
-
+    
+    Debug.Print "AnalyzeAll -> Start: ProcedureList"
     ProcedureList
     
+    Debug.Print "AnalyzeAll -> Start: ExportUnusedProcedureList"
     UnusedCount = _
         ExportUnusedProcedureList()
     
+    Debug.Print "AnalyzeAll -> Start: FunctionTrace"
     FunctionTrace
 
+    Debug.Print "AnalyzeAll -> Start: FunctionDependency"
     FunctionDependency
 
     MsgBox _
@@ -336,6 +340,7 @@ Public Function GetTagValueFromCode( _
         ByVal TagName As String) As String
 
     Dim Lines() As String
+
     Dim i As Long
     Dim j As Long
 
@@ -343,37 +348,48 @@ Public Function GetTagValueFromCode( _
 
     For i = LBound(Lines) To UBound(Lines)
 
-        If InStr(1, Lines(i), _
-                 ProcName, _
-                 vbTextCompare) > 0 Then
+        If IsProcedureLine(Trim$(Lines(i))) Then
 
-            For j = i - 1 To 0 Step -1
+            If StrComp( _
+                    ExtractProcedureName( _
+                        Trim$(Lines(i))), _
+                    ProcName, _
+                    vbTextCompare) = 0 Then
 
-                If Left$(Trim$(Lines(j)), 1) <> "'" Then
-                    Exit For
-                End If
+                For j = i - 1 To 0 Step -1
 
-                If InStr(1, _
-                         Trim$(Lines(j)), _
-                         TagName, _
-                         vbTextCompare) = 2 Then
+                    If Left$(Trim$(Lines(j)), 1) <> "'" Then
+                        Exit For
+                    End If
 
-                    GetTagValueFromCode = _
-                        Trim$(Replace( _
+                    If StrComp( _
                             Trim$(Lines(j)), _
-                            "'" & TagName, ""))
+                            "'" & TagName, _
+                            vbTextCompare) = 0 Then
 
-                    Exit Function
+                        If j + 1 <= UBound(Lines) Then
 
-                End If
+                            GetTagValueFromCode = _
+                                Trim$(Replace( _
+                                    Trim$(Lines(j + 1)), _
+                                    "'", ""))
 
-            Next j
+                        End If
 
+                        Exit Function
+
+                    End If
+
+                Next j
+
+            End If
+        
         End If
 
     Next i
 
 End Function
+
 
 '==================================================
 ' ProcListŽQÆ
@@ -417,24 +433,24 @@ Public Function GetProcInfo( _
     For r = 2 To LastRow
 
         If StrComp( _
-                Trim$(ws.Cells(r, 3).Value), _
+                Trim$(ws.Cells(r, COL_PROC).Value), _
                 ProcName, _
                 vbTextCompare) = 0 Then
 
             Set Proc = New clsProcInfo
             
-            Proc.ModuleName = ws.Cells(r, 1).Value
+            Proc.ModuleName = ws.Cells(r, COL_MODULE).Value
 
             Proc.ProcName = ProcName
 
-            Proc.JPName = ws.Cells(r, 4).Value
-            Proc.Category = ws.Cells(r, 5).Value
+            Proc.JPName = ws.Cells(r, COL_JPNAME).Value
+            Proc.Category = ws.Cells(r, COL_CATEGORY).Value
 
-            Proc.InputText = ws.Cells(r, 6).Value
-            Proc.OutputText = ws.Cells(r, 7).Value
+            Proc.InputText = ws.Cells(r, COL_INPUT).Value
+            Proc.OutputText = ws.Cells(r, COL_OUTPUT).Value
 
-            Proc.Summary = ws.Cells(r, 8).Value
-            Proc.Remarks = ws.Cells(r, 9).Value
+            Proc.Summary = ws.Cells(r, COL_SUMMARY).Value
+            Proc.Remarks = ws.Cells(r, COL_REMARKS).Value
 
             Set GetProcInfo = Proc
 

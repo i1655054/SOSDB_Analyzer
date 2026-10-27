@@ -133,54 +133,6 @@ Public Sub AddCall(ByVal ProcName As String)
 End Sub
 
 '=================================================
-' 呼出元一覧
-'=================================================
-' @JPName
-' 呼出元一覧取得
-'
-' @Category
-' Model
-'
-' @Input
-' なし
-'
-' @Output
-' CalledByList(String)
-'
-' @Summary
-' 呼出元一覧をセミコロン区切りで取得する
-'
-Public Function GetCalledByText() As String
-
-    GetCalledByText = JoinCollection(CalledBy)
-
-End Function
-
-'=================================================
-' 呼出先一覧
-'=================================================
-' @JPName
-' 呼出先一覧取得
-'
-' @Category
-' Model
-'
-' @Input
-' なし
-'
-' @Output
-' CallList(String)
-'
-' @Summary
-' 呼出先一覧をセミコロン区切りで取得する
-'
-Public Function GetCallsText() As String
-
-    GetCallsText = JoinCollection(Calls)
-
-End Function
-
-'=================================================
 ' Collection存在チェック
 '=================================================
 ' @JPName
@@ -222,44 +174,7 @@ Private Function ExistsInCollection( _
 
 End Function
 
-'=================================================
-' Collection連結
-'=================================================
-' @JPName
-' Collection連結
-'
-' @Category
-' Internal
-'
-' @Input
-' Col(Collection)
-'
-' @Output
-' Text(String)
-'
-' @Summary
-' Collection内容を
-' セミコロン区切り文字列へ変換する
-'
-Private Function JoinCollection( _
-            ByVal Col As Collection) As String
 
-    Dim Result As String
-    Dim V As Variant
-
-    For Each V In Col
-
-        If Result <> "" Then
-            Result = Result & ";"
-        End If
-
-        Result = Result & CStr(V)
-
-    Next V
-
-    JoinCollection = Result
-
-End Function
 
 '=================================================
 ' 呼出元件数取得

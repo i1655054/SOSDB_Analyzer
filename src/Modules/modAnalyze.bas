@@ -137,40 +137,42 @@ Public Sub ProcedureList()
                     ProcName = PROC_UNKNOWN
                 End If
                 
-                ws.Cells(row, 1).Value = VBComp.Name
-                ws.Cells(row, 2).Value = GetProcedureType(line)
-                ws.Cells(row, 3).Value = ProcName
+                Debug.Print "ProcName : " & VBComp.Name & "." & ProcName
+                
+                ws.Cells(row, COL_MODULE).Value = VBComp.Name
+                ws.Cells(row, COL_TYPE).Value = GetProcedureType(line)
+                ws.Cells(row, COL_PROC).Value = ProcName
 
-                ws.Cells(row, 4).Value = _
+                ws.Cells(row, COL_JPNAME).Value = _
                     GetTagValue(CodeMod, i, "@JPName")
 
-                ws.Cells(row, 5).Value = _
+                ws.Cells(row, COL_CATEGORY).Value = _
                     GetTagValue(CodeMod, i, "@Category")
 
-                ws.Cells(row, 6).Value = _
+                ws.Cells(row, COL_INPUT).Value = _
                     GetTagValue(CodeMod, i, "@Input")
 
-                ws.Cells(row, 7).Value = _
+                ws.Cells(row, COL_OUTPUT).Value = _
                     GetTagValue(CodeMod, i, "@Output")
 
-                ws.Cells(row, 8).Value = _
+                ws.Cells(row, COL_SUMMARY).Value = _
                     GetTagValue(CodeMod, i, "@Summary")
 
-                ws.Cells(row, 9).Value = _
+                ws.Cells(row, COL_REMARKS).Value = _
                     GetTagValue(CodeMod, i, "@Remarks")
 
-                ws.Cells(row, 10).Value = line
+                ws.Cells(row, COL_DECLARATION).Value = line
 
                 ' égópâÒêî
                 If ProcName = PROC_UNKNOWN Then
-                    ws.Cells(row, 11).Value = 0
+                    ws.Cells(row, COL_USAGECOUNT).Value = 0
                 Else
-                    ws.Cells(row, 11).Value = CountUsage(ProcName)
+                    ws.Cells(row, COL_USAGECOUNT).Value = CountUsage(ProcName)
                 End If
                 
                 ' îªíË
-                ws.Cells(row, 12).Value = _
-                    GetUsageStatus(ProcName, ws.Cells(row, 11).Value)
+                ws.Cells(row, COL_STATUS).Value = _
+                    GetUsageStatus(ProcName, ws.Cells(row, COL_USAGECOUNT).Value)
                 
                 row = row + 1
                 
@@ -187,7 +189,7 @@ Public Sub ProcedureList()
     
     For r = 2 To LastRow
         
-        Select Case ws.Cells(r, 12).Value
+        Select Case ws.Cells(r, COL_STATUS).Value
             
             Case STATUS_UNUSED
                 ws.Rows(r).Interior.Color = COLOR_UNUSED
@@ -281,7 +283,7 @@ Public Function ExportUnusedProcedureList() As Long
 
     LastRow = _
         wsProc.Cells( _
-            wsProc.Rows.Count, 1) _
+            wsProc.Rows.Count, COL_MODULE) _
             .End(xlUp).row
 
     '------------------------------------
@@ -289,29 +291,29 @@ Public Function ExportUnusedProcedureList() As Long
     '------------------------------------
     For r = 2 To LastRow
 
-        If wsProc.Cells(r, 12).Value = _
+        If wsProc.Cells(r, COL_STATUS).Value = _
             STATUS_UNUSED Then
 
-            wsOut.Cells(OutRow, 1).Value = _
-                wsProc.Cells(r, 1).Value
+            wsOut.Cells(OutRow, COL_MODULE).Value = _
+                wsProc.Cells(r, COL_MODULE).Value
 
-            wsOut.Cells(OutRow, 2).Value = _
-                wsProc.Cells(r, 2).Value
+            wsOut.Cells(OutRow, COL_TYPE).Value = _
+                wsProc.Cells(r, COL_TYPE).Value
 
-            wsOut.Cells(OutRow, 3).Value = _
-                wsProc.Cells(r, 3).Value
+            wsOut.Cells(OutRow, COL_PROC).Value = _
+                wsProc.Cells(r, COL_PROC).Value
 
-            wsOut.Cells(OutRow, 4).Value = _
-                wsProc.Cells(r, 4).Value
+            wsOut.Cells(OutRow, COL_JPNAME).Value = _
+                wsProc.Cells(r, COL_JPNAME).Value
 
-            wsOut.Cells(OutRow, 5).Value = _
-                wsProc.Cells(r, 5).Value
+            wsOut.Cells(OutRow, COL_CATEGORY).Value = _
+                wsProc.Cells(r, COL_CATEGORY).Value
 
-            wsOut.Cells(OutRow, 6).Value = _
-                wsProc.Cells(r, 11).Value
+            wsOut.Cells(OutRow, COL_INPUT).Value = _
+                wsProc.Cells(r, COL_USAGECOUNT).Value
 
-            wsOut.Cells(OutRow, 7).Value = _
-                wsProc.Cells(r, 12).Value
+            wsOut.Cells(OutRow, COL_OUTPUT).Value = _
+                wsProc.Cells(r, COL_STATUS).Value
 
             OutRow = OutRow + 1
 

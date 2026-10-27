@@ -1,0 +1,141 @@
+modMonshinCore
+'「新規問診票を開く」
+Public Sub MonshinInfoHandler()
+    
+    Call EnsureCurrentIssue
+    Call GetUIToIssue(g_CurrentIssue)
+    Call RestoreAllColors
+
+    If Not ValidateForMonshin(g_CurrentIssue) Then Exit Sub
+    
+    Dim xlApp As Object
+    Dim xlBook As Object
+    Dim strMonShoFileName As String
+    Dim sheetType As enMonshinSheetType
+
+    Dim info As MonshinInfoType
+    Dim newIssue As IssueInfo
+
+    Dim PW As String
+
+    On Error GoTo ErrHandler
+   
+    '========================
+    ' UI初期化
+    '========================
+    ' Call Clear_InputCellDat(False)
+
+    ' 問診票なし
+    If Sheet1.CheckBox1.Value = False Then
+
+        Dim issue As IssueInfo
+
+        MsgBox "問診票フォルダを選択してください。"
+
+        Set issue = Get_MonshinInfo_NoForm()
+
+        If issue Is Nothing Then GoTo CleanUp
+
+        Set g_CurrentIssue = issue
+
+        ' 初回のみ
+        If g_OriginalIssue Is Nothing Then
+            Set g_OriginalIssue = issue.Clone
+        End If
+
+        ' UI反映（←重要）
+        Call SetIssueToUI(issue)
+
+        Call Button_Set_Check(issue)
+
+        GoTo CleanUp
+
+    End If
+
+    '========================
+    ' ファイル選択
+    '========================
+    strMonShoFileName = get_MonshinFile()
+    If strMonShoFileName = "" Then GoTo CleanUp
+
+    Call StartMessageDisplay
+    DoEvents
+
+    '========================
+    ' Excel起動
+    '========================
+    PW = GetPassword
+    Set xlApp = CreateObject("Excel.Application")
+    xlApp.Visible = False
+
+    On Error Resume Next
+    Set xlBook = xlApp.Workbooks.Open(Filename:=strMonShoFileName, Password:=PW)
+    If Err.Number <> 0 Then
+        Err.Clear
+        Set xlBook = xlApp.Workbooks.Open(Filename:=strMonShoFileName)
+    End If
+    On Error GoTo ErrHandler
+
+    If xlBook Is Nothing Then
+        MsgBox "問診票ファイルを開けませんでした。", vbCritical
+        GoTo CleanUp
+    End If
+
+    '========================
+    ' シート判定
+    '========================
+    sheetType = modMonshinCore.DetectMonshinSheetType(xlBook)
+    If sheetType = Monshin_NotFound Then
+        Debug.Print "Monshin_NotFound"
+        GoTo CleanUp
+    End If
+
+    '========================
+    ' info取得（生データ）
+    '========================
+    info = modMonshinCore.Get_MonshinInfo(xlBook, sheetType)
+
+    '========================
+    ' IssueInfo作成（最重要）
+    '========================
+    Set newIssue = CreateIssueFromInfo(info)
+    newIssue.Status = "新規"
+    newIssue.Priority = "通常"
+    
+    'Debug.Print "===== Issue内容 ====="
+    'newIssue.DebugPrint
+
+    ' ★ フォルダをIssueへ設定（CreateIssue後）
+    Call SetMonshinSource(newIssue, xlBook)
+    
+    Set g_CurrentIssue = newIssue
+    
+    '========================
+    ' UI反映
+    '========================
+    Call SetIssueToUI(newIssue)
+
+    ' ボタン制御
+    Call Button_Set_Check(newIssue)
+
+CleanUp:
+    On Error Resume Next
+
+    '========================
+    ' クローズ
+    '========================
+    If Not xlBook Is Nothing Then xlBook.Close False
+    If Not xlApp Is Nothing Then xlApp.Quit
+
+    Set xlBook = Nothing
+    Set xlApp = Nothing
+
+    Call StopMessageDisplay
+
+    Exit Sub
+
+ErrHandler:
+    MsgBox "エラー発生: " & Err.Description, vbCritical
+    Resume CleanUp
+
+End Sub

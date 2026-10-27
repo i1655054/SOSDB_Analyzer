@@ -373,8 +373,8 @@ End Sub
 Private Sub txtCurrentNode_MouseDown( _
         ByVal Button As Integer, _
         ByVal Shift As Integer, _
-        ByVal X As Single, _
-        ByVal Y As Single)
+        ByVal x As Single, _
+        ByVal y As Single)
 
     If Button = 2 Then
 
@@ -407,8 +407,8 @@ End Sub
 Private Sub txtStatus_MouseDown( _
         ByVal Button As Integer, _
         ByVal Shift As Integer, _
-        ByVal X As Single, _
-        ByVal Y As Single)
+        ByVal x As Single, _
+        ByVal y As Single)
 
     If Button = 2 Then
 
@@ -441,8 +441,8 @@ End Sub
 Private Sub lblJPName_MouseDown( _
         ByVal Button As Integer, _
         ByVal Shift As Integer, _
-        ByVal X As Single, _
-        ByVal Y As Single)
+        ByVal x As Single, _
+        ByVal y As Single)
 
     If Button = 2 Then
 
@@ -475,8 +475,8 @@ End Sub
 Private Sub lblCategory_MouseDown( _
         ByVal Button As Integer, _
         ByVal Shift As Integer, _
-        ByVal X As Single, _
-        ByVal Y As Single)
+        ByVal x As Single, _
+        ByVal y As Single)
 
     If Button = 2 Then
 
@@ -509,8 +509,8 @@ End Sub
 Private Sub lblModule_MouseDown( _
         ByVal Button As Integer, _
         ByVal Shift As Integer, _
-        ByVal X As Single, _
-        ByVal Y As Single)
+        ByVal x As Single, _
+        ByVal y As Single)
 
     If Button = 2 Then
 
@@ -543,8 +543,8 @@ End Sub
 Private Sub txtSummary_MouseDown( _
         ByVal Button As Integer, _
         ByVal Shift As Integer, _
-        ByVal X As Single, _
-        ByVal Y As Single)
+        ByVal x As Single, _
+        ByVal y As Single)
 
     If Button = 2 Then
 

@@ -130,6 +130,8 @@ Private Sub cmdOK_Click()
     Set gContext = _
         CreateAnalyzeContext()
     
+    ClearProcedureRepository
+    
     Unload Me
 
     ' 管理ファイル終了時に

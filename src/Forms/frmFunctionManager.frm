@@ -13,6 +13,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
 ' @JPName
 ' âÊñ èâä˙âª
 '
@@ -73,6 +74,17 @@ End Sub
 Private Sub cmdAnalyze_Click()
 
    AnalyzeAll
+   
+   ClearProcedureRepository
+
+End Sub
+
+' HCPê∂ê¨ÉtÉHÅ[ÉÄ
+Private Sub cmdHCP_Click()
+
+    InitializeProcedureRepository
+    
+    frmHCPGenerator.Show vbModeless
 
 End Sub
 
@@ -93,6 +105,8 @@ End Sub
 '
 Private Sub cmdPathChart_Click()
 
+    InitializeProcedureRepository
+    
     frmPathChart.Show vbModeless
 
 End Sub

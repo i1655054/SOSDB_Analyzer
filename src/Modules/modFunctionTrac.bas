@@ -154,7 +154,7 @@ End Sub
 ' ソースコードから関数一覧を取得し
 ' 関数情報を収集する
 '
-Private Sub GetFunctions( _
+Public Function GetFunctions( _
             ByVal CodeText As String, _
             ByVal ModuleName As String, _
             ByRef FuncList As Object)
@@ -192,7 +192,7 @@ Private Sub GetFunctions( _
                             CodeText, _
                             FuncName, _
                             "@JPName")
-
+    
                     Proc.Category = _
                         GetTagValueFromCode( _
                             CodeText, _
@@ -217,7 +217,7 @@ Private Sub GetFunctions( _
 
     Next i
 
-End Sub
+End Function
 
 
 '==================================================
@@ -480,60 +480,4 @@ Private Sub AddConditionColor( _
 
 End Sub
 
-'=================================================
-' VBAキーワード判定
-'=================================================
-'
-' @JPName
-' VBAキーワード判定
-'
-' @Category
-' FunctionTrace
-'
-' @Input
-' Name(String)
-'
-' @Output
-' IsKeyword(Boolean)
-'
-' @Summary
-' VBA予約語か判定する
-'
-' @Remarks
-' 関数依存関係解析時に
-' 誤検出を除外するため使用する
-'
-Private Function IsVBKeyword( _
-                ByVal Name As String) _
-                As Boolean
-
-    Select Case UCase$(Name)
-
-        Case "PUBLIC", _
-             "PRIVATE", _
-             "FRIEND", _
-             "SUB", _
-             "FUNCTION", _
-             "DIM", _
-             "CALL", _
-             "ON", _
-             "SET", _
-             "FOR", _
-             "NEXT", _
-             "IF", _
-             "THEN", _
-             "ELSE", _
-             "SELECT", _
-             "CASE", _
-             "WITH", _
-             "END", _
-             "DO", _
-             "LOOP", _
-             "EXIT"
-
-            IsVBKeyword = True
-
-    End Select
-
-End Function
 

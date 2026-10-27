@@ -1,0 +1,73 @@
+Module	modMonshinCore
+Procedure	MonshinInfoHandler
+	
+HCP	Business
+〇│MonshinInfoHandler	
+〇 Public Sub MonshinInfoHandler()	
+◎ Call EnsureCurrentIssue	CurrentIssue生成保証
+◎ Call GetUIToIssue(g_CurrentIssue)	画面情報取得
+◎ Call RestoreAllColors	全セル色復元
+◆┐If Not ValidateForMonshin(g_CurrentIssue) Then Exit Sub	
+│□ Dim xlApp As Object	
+│□ Dim xlBook As Object	
+│□ Dim strMonShoFileName As String	
+│□ Dim sheetType As enMonshinSheetType	
+│□ Dim info As MonshinInfoType	
+│□ Dim newIssue As IssueInfo	
+│□ Dim PW As String	
+│☆ On Error GoTo ErrHandler	
+│◆┐If Sheet1.CheckBox1.Value = False Then	
+││□ Dim issue As IssueInfo	
+││〇 MsgBox "問診票フォルダを選択してください。"	
+││◎ Set issue = Get_MonshinInfo_NoForm()	問診票なし登録
+││◆┐If issue Is Nothing Then GoTo CleanUp	
+│││〇 Set g_CurrentIssue = issue	
+│││◆┐If g_OriginalIssue Is Nothing Then	
+││││◎ Set g_OriginalIssue = issue.Clone	Issue情報複製
+││││┴End If	
+│││◎ Call SetIssueToUI(issue)	Issue画面反映
+│││◎ Call Button_Set_Check(issue)	詳細表示ボタン制御
+│││→ GoTo CleanUp	
+│││┴End If	
+││◎ strMonShoFileName = get_MonshinFile()	問診票ファイル選択
+││◆┐If strMonShoFileName = "" Then GoTo CleanUp	
+│││◎ Call StartMessageDisplay	処理中画面開始
+│││〇 DoEvents	
+│││〇 PW = GetPassword	
+│││〇 Set xlApp = CreateObject("Excel.Application")	
+│││〇 xlApp.Visible = False	
+│││☆ On Error Resume Next	
+│││〇 Set xlBook = xlApp.Workbooks.Open(Filename:=strMonShoFileName, Password:=PW)	
+│││◆┐If Err.Number <> 0 Then	
+││││◎ Err.Clear	Issue情報初期化
+││││〇 Set xlBook = xlApp.Workbooks.Open(Filename:=strMonShoFileName)	
+││││┴End If	
+│││☆ On Error GoTo ErrHandler	
+│││◆┐If xlBook Is Nothing Then	
+││││〇 MsgBox "問診票ファイルを開けませんでした。", vbCritical	
+││││→ GoTo CleanUp	
+││││┴End If	
+│││◎ sheetType = modMonshinCore.DetectMonshinSheetType(xlBook)	問診票形式判定
+│││◆┐If sheetType = Monshin_NotFound Then	
+││││→ GoTo CleanUp	
+││││┴End If	
+│││◎ info = modMonshinCore.Get_MonshinInfo(xlBook, sheetType)	問診情報取得
+│││◎ Set newIssue = CreateIssueFromInfo(info)	問診情報からIssue生成
+│││〇 newIssue.Status = "新規"	
+│││〇 newIssue.Priority = "通常"	
+│││◎ Call SetMonshinSource(newIssue, xlBook)	問診票保存元設定
+│││〇 Set g_CurrentIssue = newIssue	
+│││◎ Call SetIssueToUI(newIssue)	Issue画面反映
+│││◎ Call Button_Set_Check(newIssue)	詳細表示ボタン制御
+│││▼ CleanUp:	
+│││☆ On Error Resume Next	
+│││◆┐If Not xlBook Is Nothing Then xlBook.Close False	
+││││◆┐If Not xlApp Is Nothing Then xlApp.Quit	
+│││││〇 Set xlBook = Nothing	
+│││││〇 Set xlApp = Nothing	
+│││││◎ Call StopMessageDisplay	処理中画面終了
+│││││→ Exit Sub	
+│││││▼ ErrHandler:	
+│││││〇 MsgBox "エラー発生: " & Err.Description, vbCritical	
+│││││☆ Resume CleanUp	
+┴End Sub	

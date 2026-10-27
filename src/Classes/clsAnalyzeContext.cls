@@ -35,6 +35,15 @@ Public ManagementBook As Workbook
 ' ツール情報
 Public Tool As clsToolInfo
 
+' ProcList情報
+Public ProcInfoDic As Object
+
+' ProcName→モジュール一覧
+Public ProcIndexDic As Object
+
+' 読込済み判定
+Public ProcInfoLoaded As Boolean
+
 'Public ToolID As Long
 
 ' @JPName

@@ -2,6 +2,17 @@ Attribute VB_Name = "modToolManager"
 Option Explicit
 
 '==================================================
+' 開発者モード
+'==================================================
+Public Const DEV_MODE As Boolean = True
+'Public Const DEV_MODE As Boolean = False
+
+'==================================================
+' HCP表示方式
+'==================================================
+Public gHCPCompactMode As Boolean
+
+'==================================================
 ' Main画面状態
 '==================================================
 
@@ -54,6 +65,7 @@ Public Const BOOK_ANALYZER As String = "SOSDB解析ツール.xlsm"
 ' シート名
 '==================================================
 
+' ツールファイル
 ' Mainシート名
 Public Const SHEET_MAIN As String = "Main"
 
@@ -63,6 +75,7 @@ Public Const SHEET_TOOL_MANAGER As String = "ToolManager"
 ' PathChartConfigシート名
 Public Const SHEET_PATH_CHART_CONFIG As String = "PathChartConfig"
 
+' 管理ファイル
 ' ProcListシート名
 Public Const SHEET_PROC_LIST As String = "ProcList"
 
@@ -75,12 +88,42 @@ Public Const SHEET_FUNCTION_TRACE As String = "関数トレース"
 ' 関数依存関係シート名
 Public Const SHEET_FUNCTION_DEPENDENCY As String = "関数依存関係"
 
+' パスチャート生成関連シート
 ' PathChartシート名
 Public Const SHEET_PATH_CHART As String = "PathChart"
 
 ' PathChartTreeシート名
 Public Const SHEET_PATH_CHART_TREE As String = "PathChartTree"
-               
+
+' HCPチャート生成関連シート
+' ProcNodesシート名
+Public Const SHEET_PROC_NODES As String = "ProcNodes"
+
+' ProcChartシート名
+Public Const SHEET_PROC_CHART As String = "ProcChart"
+
+' HCPNodesシート名
+Public Const SHEET_HCP_NODES As String = "HCPNodes"
+
+' HCPChartシート名
+Public Const SHEET_HCP_CHART As String = "HCPChart"
+
+'==================================================
+' ProcListシート のヘッダカラム
+'==================================================
+Public Const COL_MODULE As Long = 1
+Public Const COL_TYPE As Long = 2
+Public Const COL_PROC As Long = 3
+Public Const COL_JPNAME As Long = 4
+Public Const COL_CATEGORY As Long = 5
+Public Const COL_INPUT As Long = 6
+Public Const COL_OUTPUT As Long = 7
+Public Const COL_SUMMARY As Long = 8
+Public Const COL_REMARKS As Long = 9
+Public Const COL_DECLARATION As Long = 10
+Public Const COL_USAGECOUNT As Long = 11
+Public Const COL_STATUS As Long = 12
+            
 '==================================================
 ' グローバル状態
 '==================================================

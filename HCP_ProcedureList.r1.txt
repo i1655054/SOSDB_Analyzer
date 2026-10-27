@@ -1,0 +1,74 @@
+┬
+〇│Public Sub ProcedureList()
+┴└┐
+　　□Dim VBComp As Object
+　　□Dim CodeMod As Object
+　　□Dim i As Long
+　　□Dim r As Long
+　　□Dim row As Long
+　　□Dim LastRow As Long
+　　□Dim ws As Worksheet
+　　□Dim line As String
+　　□Dim ProcName As String
+　　☆On Error Resume Next
+　　〇Set ws =  gContext.ManagementBook.Worksheets(SHEET_PROC_LIST)
+　　☆On Error GoTo 0
+　　◆┐If ws Is Nothing　シート未生成
+　　││THEN
+　　│〇 Set ws =  gContext.ManagementBook.Worksheets.Add(  After:=gContext.ManagementBook.Worksheets(  gContext.ManagementBook.Worksheets.Count))
+　　│〇 ws.Name = SHEET_PROC_LIST
+　　│┴End If
+　　〇 ws.Cells.Clear
+　　〇 ws.Range("A1:L1").Value = Array(  "Module",  "Type",  "ProcedureName",  "JPName",  "Category",  "Input",  "Output",  "Summary",  "Remarks",  "Declaration",  "UsageCount",  "判定")
+　　〇 row = 2
+　　＠┐For Each VBComp In gContext.TargetBook.VBProject.VBComponents
+　　│〇 Set CodeMod = VBComp.CodeModule
+　　│＠┐For i = 1 To CodeMod.CountOfLines
+　　││〇 line = Trim(CodeMod.Lines(i, 1))
+　　││◆┐If IsProcedureLine(line)
+　　││││THEN
+　　│││◎ ProcName = ExtractProcedureName(line)
+　　│││◆┐If Trim(ProcName) = ""
+　　│││││THEN
+　　││││〇ProcName = PROC_UNKNOWN
+　　││││┴End If
+　　│││〇ws.Cells(row, 1).Value = VBComp.Name
+　　│││〇ws.Cells(row, 2).Value = GetProcedureType(line)
+　　│││〇ws.Cells(row, 3).Value = ProcName
+　　│││〇ws.Cells(row, 4).Value = GetTagValue(CodeMod, i, "@JPName")
+　　│││〇ws.Cells(row, 5).Value = GetTagValue(CodeMod, i, "@Category")
+　　│││〇ws.Cells(row, 6).Value = GetTagValue(CodeMod, i, "@Input")
+　　│││〇ws.Cells(row, 7).Value = GetTagValue(CodeMod, i, "@Output")
+　　│││〇ws.Cells(row, 8).Value = GetTagValue(CodeMod, i, "@Summary")
+　　│││〇ws.Cells(row, 9).Value = GetTagValue(CodeMod, i, "@Remarks")
+　　│││〇ws.Cells(row, 10).Value = line
+　　│││◆┐If ProcName = PROC_UNKNOWN　Procedure名取得失敗
+　　│││││THEN
+　　││││〇ws.Cells(row, 11).Value = 0
+　　││││┴
+　　│││├┐ELSE
+　　││││◎ws.Cells(row, 11).Value = CountUsage(ProcName)使用回数集計
+　　││││┴
+　　│││〇ws.Cells(row, 12).Value = GetUsageStatus(ProcName, ws.Cells(row, 11).Value)利用状況判定
+　　│││〇row = row + 1
+　　│││┴End If
+　　││┴Next i
+　　│┴Next VBComp
+　　〇LastRow = ws.Cells(ws.Rows.Count, 1).End(xlUp).row
+　　＠┐For r = 2 To LastRow
+　　│◆┐Select Case ws.Cells(r, 12).Value
+　　│││Case STATUS_UNUSED
+　　││〇ws.Rows(r).Interior.Color = COLOR_UNUSED
+　　││┴
+　　│├┐Case STATUS_CONFIRM
+　　││〇ws.Rows(r).Interior.Color = COLOR_CONFIRM
+　　││┴
+　　│├┐Case STATUS_EVENT
+　　││〇ws.Rows(r).Interior.Color = COLOR_EVENT
+　　││┴End Select
+　　│┴Next r
+　　〇ws.Columns.AutoFit
+　　〇ws.Rows(1).AutoFilter
+　　〇ws.Rows(1).Font.Bold = True
+　　┴End Sub
+　　
