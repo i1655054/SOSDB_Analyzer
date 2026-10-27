@@ -73,17 +73,25 @@ End Sub
 '
 Private Sub cmdAnalyze_Click()
 
-   AnalyzeAll
-   
-   ClearProcedureRepository
+    If Not ValidateTargetBook("ä÷êîâêÕ") Then
+        Exit Sub
+    End If
+
+    AnalyzeAll
+
+    ClearProcedureRepository
 
 End Sub
 
 ' HCPê∂ê¨ÉtÉHÅ[ÉÄ
 Private Sub cmdHCP_Click()
 
+    If Not ValidateTargetBook("HCPê∂ê¨") Then
+        Exit Sub
+    End If
+
     InitializeProcedureRepository
-    
+
     frmHCPGenerator.Show vbModeless
 
 End Sub
@@ -105,8 +113,12 @@ End Sub
 '
 Private Sub cmdPathChart_Click()
 
+    If Not ValidateTargetBook("PathChart") Then
+        Exit Sub
+    End If
+
     InitializeProcedureRepository
-    
+
     frmPathChart.Show vbModeless
 
 End Sub

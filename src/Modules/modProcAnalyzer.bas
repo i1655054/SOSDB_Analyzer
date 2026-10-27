@@ -988,8 +988,20 @@ Private Function IsInlineIf( _
                 As Boolean
 
     Dim PosThen As Long
+    Dim PosComment As Long
 
     LineText = Trim$(LineText)
+
+    PosComment = InStr(LineText, "'")
+
+    If PosComment > 0 Then
+
+        LineText = _
+            Left$( _
+                LineText, _
+                PosComment - 1)
+
+    End If
 
     If Left$(LineText, 2) <> "If" Then Exit Function
 
@@ -1010,7 +1022,6 @@ Private Function IsInlineIf( _
     End If
 
 End Function
-
 
 
 Private Function BuildLogicalLines( _

@@ -4,8 +4,8 @@ Option Explicit
 '==================================================
 ' 開発者モード
 '==================================================
-Public Const DEV_MODE As Boolean = True
-'Public Const DEV_MODE As Boolean = False
+'Public Const DEV_MODE As Boolean = True
+Public Const DEV_MODE As Boolean = False
 
 '==================================================
 ' HCP表示方式
@@ -741,3 +741,64 @@ Public Function GetWorkbookByToolID( _
     On Error GoTo 0
 
 End Function
+
+'=================================================
+' 対象ブック存在確認
+'=================================================
+'
+' @JPName
+' 対象ブック存在確認
+'
+' @Category
+' ToolManager
+'
+' @Input
+' Title(String)
+'
+' @Output
+' Success(Boolean)
+'
+' @Summary
+' 解析対象ブックが開かれているか確認する
+'
+' @Remarks
+' 未オープンの場合は
+' エラーメッセージを表示する
+'
+Public Function ValidateTargetBook( _
+                Optional ByVal Title As String = "") _
+                As Boolean
+
+    Dim Tool As clsToolInfo
+
+    If Not gContext.TargetBook Is Nothing Then
+
+        ValidateTargetBook = True
+
+        Exit Function
+
+    End If
+
+    Set Tool = GetCurrentToolInfo()
+
+    If Tool Is Nothing Then
+
+        MsgBox _
+            "解析対象ブックが開かれていません。", _
+            vbExclamation, _
+            Title
+
+        Exit Function
+
+    End If
+
+    MsgBox _
+        "解析対象ブックが開かれていません。" & _
+        vbCrLf & vbCrLf & _
+        "対象 : " & Tool.ToolName & vbCrLf & _
+        "Book : " & Tool.WorkbookName, _
+        vbExclamation, _
+        Title
+
+End Function
+

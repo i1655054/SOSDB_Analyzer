@@ -166,6 +166,9 @@ Private Sub LoadProcedureInfo()
     Dim LastRow As Long
     Dim r As Long
 
+    Dim ModuleName As String
+    Dim ProcName As String
+    
     Set ws = _
         gContext.ManagementBook.Worksheets( _
             SHEET_PROC_LIST)
@@ -175,12 +178,15 @@ Private Sub LoadProcedureInfo()
             ws.Rows.Count, _
             1).End(xlUp).row
 
+    ModuleName = lstModule.Value
+    ProcName = lstProcedure.Value
+
     For r = 2 To LastRow
 
         If ws.Cells(r, COL_MODULE).Value = _
-                lstModule.Value _
+                ModuleName _
         And ws.Cells(r, COL_PROC).Value = _
-                lstProcedure.Value Then
+                ProcName Then
 
             txtJPName.Text = _
                 ws.Cells(r, COL_JPNAME).Value
@@ -196,31 +202,47 @@ Private Sub LoadProcedureInfo()
 
 End Sub
 
-
 Private Sub cmdGenerate_Click()
 
-    If lstModule.ListIndex < 0 Then
+    Dim Tool As clsToolInfo
+    
+    Dim ModuleName As String
+    Dim ProcName As String
 
+    If lstModule.ListIndex < 0 Then
         MsgBox "モジュールを選択してください。"
         Exit Sub
-
     End If
 
     If lstProcedure.ListIndex < 0 Then
-
         MsgBox "プロシージャを選択してください。"
         Exit Sub
-
     End If
 
-    gHCPCompactMode = _
-        optCompact.Value
-    
-    CreateHCP _
-        lstModule.Value, _
-        lstProcedure.Value
+    ModuleName = lstModule.Value
+    ProcName = lstProcedure.Value
 
+    gHCPCompactMode = optCompact.Value
+
+    CreateHCP _
+        ModuleName, _
+        ProcName
+   
+    Application.StatusBar = _
+        "HCP生成完了 : " & _
+        ModuleName & "." & ProcName
+    
+    Trace "HCP", _
+        "Complete " & _
+        ModuleName & "." & ProcName
+    
+    gContext.ManagementBook.Activate
+    
+    gContext.ManagementBook.Worksheets( _
+        SHEET_HCP_CHART).Activate
+    
 End Sub
+
 
 Private Sub cmdClose_Click()
 

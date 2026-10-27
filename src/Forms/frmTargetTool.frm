@@ -130,6 +130,10 @@ Private Sub cmdOK_Click()
     Set gContext = _
         CreateAnalyzeContext()
     
+    If Not ValidateTargetBook("‘ÎÛƒc[ƒ‹‘I‘ğ") Then
+        Exit Sub
+    End If
+    
     ClearProcedureRepository
     
     Unload Me

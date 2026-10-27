@@ -1,6 +1,10 @@
 Attribute VB_Name = "modHCPAnalyzer"
 Option Explicit
 
+Private Const HCP_COL_WIDTH As Double = 120
+
+Private Const BUSINESS_COL_WIDTH As Double = 40
+
 Public Sub CreateHCP( _
                 ByVal ModuleName As String, _
                 ByVal ProcName As String)
@@ -12,16 +16,25 @@ Public Sub CreateHCP( _
 
     Dim FuncList As Object
     
+    Trace "HCP", _
+        ModuleName & "." & ProcName
+    
     On Error GoTo ErrHandler
 
     Application.ScreenUpdating = False
     
+    Trace "HCP", "Step=10 BuildFuncList"
     Set FuncList = BuildFuncList()
     
+    Trace "HCP", "Step=20 GetProcedureCode"
     CodeText = GetProcedureCode( _
                     ModuleName, _
                     ProcName)
+    
+    Trace "HCP", _
+        "CodeLength=" & Len(CodeText)
 
+    Trace "HCP", "Step=30 AnalyzeProcedure"
     Set ProcNodes = AnalyzeProcedure( _
                         CodeText, _
                         ModuleName, _
@@ -29,10 +42,14 @@ Public Sub CreateHCP( _
                         FuncList)
 
     ' ãåÉVÅ[ÉgçÌèú
+    Trace "HCP", "Step=40 DeleteSheetIfExists SHEET_PROC_NODES"
     DeleteSheetIfExists SHEET_PROC_NODES
+    Trace "HCP", "Step=50 DeleteSheetIfExists SHEET_PROC_CHART"
     DeleteSheetIfExists SHEET_PROC_CHART
+    Trace "HCP", "Step=60 DeleteSheetIfExists SHEET_HCP_NODES"
     DeleteSheetIfExists SHEET_HCP_NODES
 
+    Trace "HCP", "Step=70 ConvertProcToHCP"
     Set HCPNodes = ConvertProcToHCP( _
                         ProcNodes)
 
@@ -44,19 +61,13 @@ Public Sub CreateHCP( _
 
     End If
 
+    Trace "HCP", "Step=80 ExportHCPText"
     ExportHCPText _
         HCPNodes, _
         ModuleName, _
         ProcName
 
     Application.ScreenUpdating = True
-    
-    MsgBox _
-        "HCPÉ`ÉÉÅ[Égê∂ê¨Ç™äÆóπÇµÇ‹ÇµÇΩÅB" & _
-        vbCrLf & _
-        "[" & ModuleName & "." & ProcName & "]", _
-        vbInformation, _
-        "HCPê∂ê¨"
     
     Exit Sub
 
@@ -68,6 +79,8 @@ ExitProc:
 
 ErrHandler:
 
+    Trace "HCP", "CreateHCP " & Err.Description
+    
     MsgBox _
         Err.Description, _
         vbExclamation, _
@@ -77,13 +90,13 @@ ErrHandler:
 
 End Sub
 
-
 Public Function ConvertProcToHCP( _
                 ByVal ProcNodes As Collection) _
                 As Collection
 
+    Trace "HCP", "ConvertProcToHCP Start"
+
     Dim HCPNodes As Collection
-    
     Dim MergeStack As Collection
 
     Dim ProcNode As clsProcNode
@@ -97,8 +110,10 @@ Public Function ConvertProcToHCP( _
 
     Dim NewID As Long
 
+    Trace "HCP", "CreateHCPNodes"
+
     Set HCPNodes = New Collection
-    
+
     Set MergeStack = New Collection
 
     Set IDMap = _
@@ -111,103 +126,27 @@ Public Function ConvertProcToHCP( _
     '--------------------------------
     For Each ProcNode In ProcNodes
 
+        Trace "PROC", _
+            ProcNode.NodeType & _
+            ":" & _
+            ProcNode.SourceLine
+
         Select Case ProcNode.NodeType
 
-            Case NODE_ENDIF
+            Case NODE_ENDIF, _
+                 NODE_ENDSELECT, _
+                 NODE_NEXT, _
+                 NODE_LOOP, _
+                 NODE_ENDWITH, _
+                 NODE_WEND, _
+                 NODE_COMPILE_ENDIF
 
-                AddMergeNode _
+                PopMergeStack _
+                    MergeStack, _
                     HCPNodes, _
                     NewID, _
-                    GetMergeParentID( _
-                        MergeStack(MergeStack.Count)), _
-                    ProcNode.SourceLine
-
-                MergeStack.Remove _
-                    MergeStack.Count
-
-                GoTo ContinueLoop
-
-            Case NODE_ENDSELECT
-
-                AddMergeNode _
-                    HCPNodes, _
-                    NewID, _
-                    GetMergeParentID( _
-                        MergeStack(MergeStack.Count)), _
-                    ProcNode.SourceLine
-
-                MergeStack.Remove _
-                    MergeStack.Count
-
-                GoTo ContinueLoop
-
-            Case NODE_NEXT
-
-                AddMergeNode _
-                    HCPNodes, _
-                    NewID, _
-                    GetMergeParentID( _
-                        MergeStack(MergeStack.Count)), _
-                    ProcNode.SourceLine
-
-                MergeStack.Remove _
-                   MergeStack.Count
-
-                GoTo ContinueLoop
-
-            Case NODE_LOOP
-
-                AddMergeNode _
-                    HCPNodes, _
-                    NewID, _
-                    GetMergeParentID( _
-                        MergeStack(MergeStack.Count)), _
-                    ProcNode.SourceLine
-
-                MergeStack.Remove _
-                    MergeStack.Count
-
-                GoTo ContinueLoop
-
-            Case NODE_ENDWITH
-
-                AddMergeNode _
-                    HCPNodes, _
-                    NewID, _
-                    GetMergeParentID( _
-                        MergeStack(MergeStack.Count)), _
-                    ProcNode.SourceLine
-
-                MergeStack.Remove _
-                    MergeStack.Count
-
-                GoTo ContinueLoop
-
-            Case NODE_WEND
-
-                AddMergeNode _
-                    HCPNodes, _
-                    NewID, _
-                    GetMergeParentID( _
-                        MergeStack(MergeStack.Count)), _
-                    ProcNode.SourceLine
-
-                MergeStack.Remove _
-                    MergeStack.Count
-
-                GoTo ContinueLoop
-
-            Case NODE_COMPILE_ENDIF
-
-                AddMergeNode _
-                    HCPNodes, _
-                    NewID, _
-                    GetMergeParentID( _
-                        MergeStack(MergeStack.Count)), _
-                    ProcNode.SourceLine
-
-                MergeStack.Remove _
-                    MergeStack.Count
+                    ProcNode.SourceLine, _
+                    ProcNode.NodeType
 
                 GoTo ContinueLoop
 
@@ -240,10 +179,10 @@ Public Function ConvertProcToHCP( _
 
         HCPNode.BranchType = _
             ProcNode.BranchType
-        
+
         HCPNode.SourceText = _
             ProcNode.NodeText
-        
+
         HCPNode.SourceLine = _
             ProcNode.SourceLine
 
@@ -256,25 +195,34 @@ Public Function ConvertProcToHCP( _
                 NODE_FALSE
 
         Else
-    
-            HCPNode.Text = ProcNode.NodeText
+
+            HCPNode.Text = _
+                ProcNode.NodeText
 
             HCPNode.BusinessText = _
                 GetBusinessText(ProcNode)
 
-            If HCPNode.BusinessText = "" Then
+        End If
+        
+        '-----------------------------
+        ' Debug.PrintèúäO
+        '-----------------------------
+        If gHCPCompactMode Then
 
-                HCPNode.BusinessText = ""
+            If IsDebugPrint( _
+                    HCPNode.Text) Then
+
+                GoTo ContinueLoop
 
             End If
 
         End If
-
+        
         '-----------------------------
         ' èdï°CALLèúäO
         '-----------------------------
         If gHCPCompactMode Then
-        
+
             If HCPNode.NodeType = NODE_CALL Then
 
                 If HCPNode.Text = LastText Then
@@ -284,14 +232,14 @@ Public Function ConvertProcToHCP( _
                 End If
 
             End If
-        
+
         End If
 
         '-----------------------------
         ' TagéÊìæèWñÒ
         '-----------------------------
         If gHCPCompactMode Then
-        
+
             If HCPNode.Text = _
                 "ProcedureèÓïÒéÊìæ" Then
 
@@ -313,79 +261,26 @@ Public Function ConvertProcToHCP( _
                 Set LastTagNode = Nothing
 
             End If
-        
+
         End If
 
         HCPNodes.Add HCPNode
 
+        If IsMergeNode(HCPNode.NodeType) Then
+
+            PushMergeStack _
+                MergeStack, _
+                HCPNode.NodeType, _
+                HCPNode.NodeID
+
+        End If
+
         If HCPNode.NodeType = NODE_IF Then
 
-            ' êßå‰ÉmÅ[Éhìoò^
-            MergeStack.Add NODE_IF & ":" & HCPNode.NodeID
-            
-            Dim TrueNode As clsHCPNode
-
-            Set TrueNode = New clsHCPNode
-
-            TrueNode.NodeID = NewID
-
-            NewID = NewID + 1
-
-            TrueNode.ParentID = _
-                -HCPNode.NodeID
-
-            TrueNode.NodeType = _
-                NODE_TRUE
-
-            TrueNode.BranchType = _
-                BRANCH_TRUE
-
-            TrueNode.Text = _
-                "TRUE"
-
-            HCPNodes.Add TrueNode
-
-        End If
-        
-        If HCPNode.NodeType = NODE_FOR Then
-
-            ' êßå‰ÉmÅ[Éhìoò^
-            MergeStack.Add NODE_FOR & ":" & HCPNode.NodeID
-
-        End If
-        
-        If HCPNode.NodeType = NODE_SELECT Then
-
-            ' êßå‰ÉmÅ[Éhìoò^
-            MergeStack.Add NODE_SELECT & ":" & HCPNode.NodeID
-
-        End If
-
-        If HCPNode.NodeType = NODE_DO Then
-
-            MergeStack.Add _
-                NODE_DO & ":" & HCPNode.NodeID
-
-        End If
-
-        If HCPNode.NodeType = NODE_WITH Then
-
-            MergeStack.Add _
-                NODE_WITH & ":" & HCPNode.NodeID
-
-        End If
-
-        If HCPNode.NodeType = NODE_WHILE Then
-
-            MergeStack.Add _
-                NODE_WHILE & ":" & HCPNode.NodeID
-
-        End If
-
-        If HCPNode.NodeType = NODE_COMPILE_IF Then
-
-            MergeStack.Add _
-                NODE_COMPILE_IF & ":" & HCPNode.NodeID
+            AddTrueNode _
+                HCPNodes, _
+                NewID, _
+                HCPNode.NodeID
 
         End If
 
@@ -396,8 +291,31 @@ ContinueLoop:
     Next ProcNode
 
     '--------------------------------
+    ' StackêÆçáê´É`ÉFÉbÉN
+    '--------------------------------
+    If MergeStack.Count <> 0 Then
+
+        Dim i As Long
+
+        Trace "ERROR", _
+            "Stack Remains Count=" & _
+            MergeStack.Count
+
+        For i = 1 To MergeStack.Count
+
+            Trace "ERROR", _
+                "Remain Stack[" & i & "]=" & _
+                MergeStack(i)
+
+        Next i
+
+    End If
+
+    '--------------------------------
     ' ParentIDï‚ê≥
     '--------------------------------
+    Trace "HCP", "RebuildParentID"
+
     RebuildParentID _
         HCPNodes, _
         IDMap
@@ -405,26 +323,151 @@ ContinueLoop:
     '--------------------------------
     ' Prev/Nextï‚ê≥
     '--------------------------------
+    Trace "HCP", "RebuildLinks"
+
     RebuildLinks _
         HCPNodes
-  
+
+    Trace "HCP", "FixTrueBranch"
+
     FixTrueBranch _
         HCPNodes
 
+    Trace "HCP", "FixFalseBranch"
+
     FixFalseBranch _
         HCPNodes
-    
+
     '--------------------------------
     ' LevelçƒåvéZ
     '--------------------------------
+    Trace "HCP", "RebuildHCPLevel"
 
     RebuildHCPLevel _
         HCPNodes
-    
+
+    Trace "HCP", _
+        "ConvertProcToHCP End Nodes=" & _
+        HCPNodes.Count & _
+        " Stack=" & _
+        MergeStack.Count
+        
     Set ConvertProcToHCP = _
         HCPNodes
-    
+
 End Function
+
+
+Private Function IsDebugPrint( _
+                ByVal Text As String) _
+                As Boolean
+
+    IsDebugPrint = _
+        (InStr(1, _
+               Text, _
+               "Debug.Print", _
+               vbTextCompare) > 0)
+
+End Function
+
+Private Sub AddTrueNode( _
+                ByVal HCPNodes As Collection, _
+                ByRef NewID As Long, _
+                ByVal IfNodeID As Long)
+
+    Dim TrueNode As clsHCPNode
+
+    Set TrueNode = New clsHCPNode
+
+    TrueNode.NodeID = NewID
+
+    NewID = NewID + 1
+
+    TrueNode.ParentID = _
+        -IfNodeID
+
+    TrueNode.NodeType = _
+        NODE_TRUE
+
+    TrueNode.BranchType = _
+        BRANCH_TRUE
+
+    TrueNode.Text = _
+        "TRUE"
+
+    HCPNodes.Add TrueNode
+
+End Sub
+
+Private Function IsMergeNode( _
+                ByVal NodeType As String) _
+                As Boolean
+
+    Select Case NodeType
+
+        Case NODE_IF, _
+             NODE_FOR, _
+             NODE_SELECT, _
+             NODE_DO, _
+             NODE_WITH, _
+             NODE_WHILE, _
+             NODE_COMPILE_IF
+
+            IsMergeNode = True
+
+    End Select
+
+End Function
+
+Private Sub PopMergeStack( _
+                ByVal MergeStack As Collection, _
+                ByVal HCPNodes As Collection, _
+                ByRef NewID As Long, _
+                ByVal SourceLine As String, _
+                ByVal NodeType As String)
+
+    If MergeStack.Count = 0 Then
+
+        Trace "ERROR", _
+            NodeType & _
+            " Stack Empty Line=" & _
+            SourceLine
+
+        Exit Sub
+
+    End If
+
+    TraceStack _
+        "POP", _
+        MergeStack(MergeStack.Count), _
+        MergeStack.Count
+
+    AddMergeNode _
+        HCPNodes, _
+        NewID, _
+        GetMergeParentID( _
+            MergeStack(MergeStack.Count)), _
+        SourceLine
+
+    MergeStack.Remove _
+        MergeStack.Count
+
+End Sub
+
+Private Sub PushMergeStack( _
+                ByVal MergeStack As Collection, _
+                ByVal NodeType As String, _
+                ByVal NodeID As Long)
+
+    MergeStack.Add _
+        NodeType & ":" & NodeID
+
+    TraceStack _
+        "PUSH", _
+        NodeType & ":" & NodeID, _
+        MergeStack.Count
+
+End Sub
 
 Private Function GetMergeParentID( _
                 ByVal StackValue As String) _
@@ -957,7 +1000,19 @@ Private Function GetHCPSymbol( _
             GetHCPSymbol = "Åü "
         
         Case NODE_INLINE_IF
-            GetHCPSymbol = "Åü "
+        
+            If InStr(1, _
+                Node.Text, _
+                "Exit ", _
+                vbTextCompare) > 0 Then
+
+                GetHCPSymbol = "ÅüÅ® "
+
+            Else
+
+                GetHCPSymbol = "Åü "
+
+            End If
 
         Case NODE_TRUE
             GetHCPSymbol = "THEN "
@@ -1017,6 +1072,7 @@ Public Sub ExportHCPText( _
     Dim RowOut As Long
     
     Dim Node As clsHCPNode
+    Dim ProcInfo As clsProcInfo
     Dim StartText As String
 
     On Error Resume Next
@@ -1026,6 +1082,11 @@ Public Sub ExportHCPText( _
     
     On Error GoTo 0
 
+    Set ProcInfo = _
+            ResolveProcedure( _
+                ModuleName, _
+                ProcName)
+    
     If ws Is Nothing Then
 
         Set ws = _
@@ -1044,6 +1105,7 @@ Public Sub ExportHCPText( _
         If Node.NodeType = NODE_START Then
 
             StartText = Node.Text
+            
             Exit For
 
         End If
@@ -1053,7 +1115,8 @@ Public Sub ExportHCPText( _
     ws.Cells.Clear
 
     ws.Cells(1, 1).Value = "Procedure: " & _
-        ModuleName & "." & ProcName
+        ModuleName & "." & ProcName & _
+        "  [ " & ProcInfo.JPName & "ÅÉ" & ProcInfo.ModuleName & "ÅÑ ]"
     
     ws.Cells(2, 1).Value = "HCP"
     ws.Cells(2, 2).Value = "Business"
@@ -1065,6 +1128,14 @@ Public Sub ExportHCPText( _
 
     ws.Cells(RowOut, 1).Value = _
         "ÅZÑ†" & StartText
+    
+    If Not ProcInfo Is Nothing Then
+        'Debug.Print "Stert:" & ProcInfo.JPName
+
+        ws.Cells(RowOut, 2).Value = _
+            ProcInfo.JPName & "ÅÉ" & ProcInfo.ModuleName & "ÅÑ"
+    End If
+    
     RowOut = RowOut + 1
 
     ws.Cells(RowOut, 1).Value = "Ñ®Ñ§Ñ¢"
@@ -1079,15 +1150,28 @@ Public Sub ExportHCPText( _
 
     ws.Columns("A:B").AutoFit
     
-    ws.Columns("A").ColumnWidth = 150
+    ws.Columns("A").ColumnWidth = HCP_COL_WIDTH
     
-    ws.Columns("B").ColumnWidth = 60
+    ws.Columns("B").ColumnWidth = BUSINESS_COL_WIDTH
     
     ws.Columns("A").WrapText = True
     
     gContext.ManagementBook.Activate
     ws.Activate
+    
+    ws.Range("B1").Select
 
+    With ActiveWindow
+
+        .FreezePanes = False
+
+        .SplitRow = 0
+        .SplitColumn = 1
+
+    End With
+    
+    ActiveWindow.Zoom = 85
+    
 End Sub
 
 Private Sub RenderNode( _
