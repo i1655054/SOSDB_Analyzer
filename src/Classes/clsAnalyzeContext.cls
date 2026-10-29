@@ -20,7 +20,8 @@ Option Explicit
 '
 ' @Summary
 ' 解析対象ブックおよび管理ブック、
-' ツール情報を保持する
+' 解析処理全体で共有する
+' 実行コンテキストを保持する
 '
 ' @Remarks
 ' 解析処理間で共有する実行コンテキスト
@@ -35,13 +36,13 @@ Public ManagementBook As Workbook
 ' ツール情報
 Public Tool As clsToolInfo
 
-' ProcList情報
+' Procedure情報辞書
 Public ProcInfoDic As Object
 
-' ProcName→モジュール一覧
+' Procedure名→モジュール一覧索引
 Public ProcIndexDic As Object
 
-' 読込済み判定
+' Procedure情報読込済み判定
 Public ProcInfoLoaded As Boolean
 
 'Public ToolID As Long

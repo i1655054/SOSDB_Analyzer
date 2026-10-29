@@ -14,11 +14,13 @@ Option Explicit
 ' なし
 '
 ' @Summary
-' Analyzer起動時の初期設定を行う
+' Analyzer起動時の初期化処理を実行する
 '
 ' @Remarks
-' ショートカット登録および
-' PathChart設定読込を実施する
+' ショートカット登録
+' PathChart設定読込
+' メインシート表示
+' メインメニュー表示を実施する
 '
 Public Sub InitializeAnalyzer()
 

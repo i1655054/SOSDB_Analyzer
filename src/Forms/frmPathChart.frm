@@ -15,6 +15,7 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
 
+
 ' @JPName
 ' PathChart画面初期化
 '
@@ -35,6 +36,15 @@ Option Explicit
 '
 Private Sub UserForm_Initialize()
 
+    ' 開始関数ComboBoxのIndex
+    Dim i As Long
+    
+    ' 保存済み開始関数
+    Dim DefaultProc As String
+
+    ' 開始関数存在フラグ
+    Dim Found As Boolean
+    
     LoadPathChartConfig
     
     chkExternal.Value = gExternal
@@ -45,13 +55,8 @@ Private Sub UserForm_Initialize()
     
     LoadStartProcedure cmbStartProc
 
-    Dim i As Long
-    Dim DefaultProc As String
-
     DefaultProc = GetDefaultStartProcedure()
 
-    Dim Found As Boolean
-    
     For i = 0 To cmbStartProc.ListCount - 1
     
         If cmbStartProc.List(i) = DefaultProc Then
@@ -105,11 +110,15 @@ End Sub
 ' 選択された開始関数の情報を表示する
 '
 ' @Remarks
-' JPName、Category、Summaryを更新する
+' Procedure情報を取得し
+' JPName、Category、Summaryを画面へ表示する
 '
 Private Sub cmbStartProc_Change()
 
+    ' Procedure情報
     Dim Proc As clsProcInfo
+    
+    ' 選択されたProcedure名
     Dim ProcName As String
     
     ProcName = Trim$(cmbStartProc.Value)
@@ -188,13 +197,19 @@ End Sub
 ' 指定開始関数からPathChart解析を実行する
 '
 ' @Remarks
-' 最大深度保存および
-' 開始関数保存を行う
+' 解析前に開始関数および
+' 最大深度設定を保存する
+' 実行結果をログと画面へ反映する
 '
 Private Sub cmdAnalyze_Click()
 
+    ' 開始時刻
     Dim StartTime As Double
+    
+    ' 開始Procedure
     Dim StartProc As String
+    
+    ' 最大探索深度
     Dim MaxDepth As Long
 
     On Error GoTo EH
@@ -307,6 +322,10 @@ End Sub
 ' @Summary
 ' ログおよび統計情報を初期化する
 '
+' @Remarks
+' ログ一覧および統計情報表示を
+' 初期状態へ戻す
+'
 Private Sub cmdClear_Click()
 
     lstLog.Clear
@@ -334,6 +353,10 @@ End Sub
 '
 ' @Summary
 ' PathChartオプション画面を表示する
+'
+' @Remarks
+' PathChart設定変更用の
+' オプション画面を表示する
 '
 Private Sub cmdOption_Click()
 
@@ -389,7 +412,8 @@ End Sub
 ' ログ一覧へメッセージを追加する
 '
 ' @Remarks
-' 追加時に最新行へスクロールする
+' ログ追加後に末尾行を選択し
+' 最新ログが表示されるようにする
 '
 Public Sub AddLog(ByVal Msg As String)
 

@@ -1,9 +1,12 @@
 Attribute VB_Name = "modFunctionTrac"
 Option Explicit
 
-'==================================================
-' 関数トレース
-'==================================================
+'===================================================================
+'@JPName     関数トレース解析
+'@Category   FunctionTrace
+'@Summary    VBAソースコードの関数呼出関係を解析し
+'            関数トレースシートを作成する
+'===================================================================
 
 ' @JPName
 ' 関数トレース作成
@@ -27,13 +30,19 @@ Option Explicit
 '
 Public Sub FunctionTrace()
        
+    ' 関数トレース出力シート
     Dim wsOut As Worksheet
     
+    ' VBAコンポーネント
     Dim VBComp As Object
+    
+    ' Procedure情報一覧
     Dim FuncList As Object
     
+    ' モジュールソースコード
     Dim CodeText As String
 
+    ' 出力行番号
     Dim RowOut As Long
 
     If gContext Is Nothing Then Exit Sub
@@ -82,6 +91,8 @@ Public Sub FunctionTrace()
 
     For Each VBComp In gContext.TargetBook.VBProject.VBComponents
 
+        ' 標準モジュールのみ対象
+        ' VBEXT_CT_STDMODULE = 1
         If VBComp.Type = 1 Then
 
             If VBComp.CodeModule.CountOfLines > 0 Then
@@ -106,6 +117,8 @@ Public Sub FunctionTrace()
 
     For Each VBComp In gContext.TargetBook.VBProject.VBComponents
 
+        ' 標準モジュールのみ対象
+        ' VBEXT_CT_STDMODULE = 1
         If VBComp.Type = 1 Then
             
             If VBComp.CodeModule.CountOfLines > 0 Then
@@ -148,23 +161,38 @@ End Sub
 ' FuncList(Dictionary)
 '
 ' @Output
-' FuncList
+' FuncList(Dictionary)
 '
 ' @Summary
 ' ソースコードから関数一覧を取得し
 ' 関数情報を収集する
+'
+' @Remarks
+' プロシージャ定義行を検出し
+' ProcInfoオブジェクトを生成する
+' JPName、Category、Summaryなどの
+' コメントタグ情報も併せて取得する
+' 同名プロシージャが登録済みの場合は
+' 重複登録を行わない
 '
 Public Function GetFunctions( _
             ByVal CodeText As String, _
             ByVal ModuleName As String, _
             ByRef FuncList As Object)
 
+    ' ソースコード行配列
     Dim Lines() As String
+    
+    ' 現在行
     Dim LineText As String
 
+    ' 行走査用Index
     Dim i As Long
+    
+    ' Procedure名
     Dim FuncName As String
 
+    ' Procedure情報
     Dim Proc As clsProcInfo
 
     Lines = Split(CodeText, vbCrLf)
@@ -237,11 +265,17 @@ End Function
 ' RowOut(Long)
 '
 ' @Output
-' 次出力行番号
+' NextRow(Long)
 '
 ' @Summary
 ' モジュール内の関数呼出関係を解析し
 ' 関数トレースシートへ出力する
+'
+' @Remarks
+' 呼出元プロシージャと呼出先プロシージャを判定し
+' 呼出関係をFuncListへ登録するとともに
+' 関数トレースシートへ詳細情報を出力する
+' 自己呼出は出力対象外とする
 '
 Private Function TraceModule( _
             ByVal CodeText As String, _
@@ -250,12 +284,16 @@ Private Function TraceModule( _
             ByRef wsOut As Worksheet, _
             ByVal RowOut As Long) As Long
 
+    ' ソースコード行配列
     Dim Lines() As String
 
+    ' 現在解析中Procedure
     Dim CurrentProc As String
 
+    ' 行走査用Index
     Dim i As Long
 
+    ' Procedure一覧走査用
     Dim Key As Variant
 
     Lines = Split(CodeText, vbCrLf)
@@ -350,6 +388,11 @@ End Function
 ' ソース行から現在解析中の
 ' プロシージャ名を取得する
 '
+' @Remarks
+' プロシージャ定義行の場合は
+' 定義されたプロシージャ名を返す
+' それ以外の行は現在のプロシージャ名を返す
+'
 Private Function GetProcedureName( _
             ByVal LineText As String, _
             ByVal CurrentName As String) As String
@@ -377,12 +420,23 @@ End Function
 ' @Category
 ' FunctionTrace
 '
+' @Input
+' ws(Worksheet)
+'
+' @Output
+' なし
+'
 ' @Summary
 ' 関数トレースシートへ
 ' 入力規則と条件付き書式を設定する
 '
+' @Remarks
+' 確認列(K列)に入力規則を設定し
+' 判定結果に応じた色付けを行う
+'
 Private Sub SetupTraceValidation(ByVal ws As Worksheet)
 
+    ' 最終行
     Dim LastRow As Long
 
     LastRow = ws.Cells(ws.Rows.Count, "A").End(xlUp).row
@@ -463,13 +517,19 @@ End Sub
 ' なし
 '
 ' @Summary
-' 条件付き書式の色設定を追加する
+' 指定範囲へ条件付き書式を追加し
+' 条件成立時の背景色を設定する
+'
+' @Remarks
+' 条件式は数式形式で指定する
+' 既存の条件付き書式は削除しない
 '
 Private Sub AddConditionColor( _
             ByVal rng As Range, _
             ByVal Formula As String, _
             ByVal FillColor As Long)
 
+    ' 条件付き書式
     Dim fc As FormatCondition
 
     Set fc = rng.FormatConditions.Add( _

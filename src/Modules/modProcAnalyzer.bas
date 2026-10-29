@@ -1,67 +1,148 @@
 Attribute VB_Name = "modProcAnalyzer"
 Option Explicit
 
-Public Const NODE_START  As String = "START"
-Public Const NODE_END    As String = "END"
+' 開始ノード
+Public Const NODE_START As String = "START"
 
+' 終了ノード
+Public Const NODE_END As String = "END"
+
+' 変数宣言ノード
 Public Const NODE_DECLARE As String = "DECLARE"
+
+' 制御文ノード(On Error等)
 Public Const NODE_CONTROL As String = "CONTROL"
+
+' 分岐合流ノード
 Public Const NODE_MERGE As String = "MERGE"
+
+' 参照情報ノード
 Public Const NODE_REFERENCE As String = "REFERENCE"
 
-Public Const NODE_CALL   As String = "CALL"
+' 関数呼出ノード
+Public Const NODE_CALL As String = "CALL"
 
-Public Const NODE_IF     As String = "IF"
-Public Const NODE_ELSE   As String = "ELSE"
-Public Const NODE_ENDIF  As String = "ENDIF"
-Public Const NODE_INLINE_IF = "INLINE_IF"
+' If開始ノード
+Public Const NODE_IF As String = "IF"
 
-Public Const NODE_TRUE  As String = "TRUE"
+' Else / ElseIfノード
+Public Const NODE_ELSE As String = "ELSE"
+
+' End Ifノード
+Public Const NODE_ENDIF As String = "ENDIF"
+
+' 1行Ifノード
+Public Const NODE_INLINE_IF As String = "INLINE_IF"
+
+' True分岐
+Public Const NODE_TRUE As String = "TRUE"
+
+' False分岐
 Public Const NODE_FALSE As String = "FALSE"
 
-Public Const NODE_FOR    As String = "FOR"
-Public Const NODE_NEXT   As String = "NEXT"
+' For開始ノード
+Public Const NODE_FOR As String = "FOR"
 
+' Nextノード
+Public Const NODE_NEXT As String = "NEXT"
+
+' Select Case開始ノード
 Public Const NODE_SELECT As String = "SELECT"
-Public Const NODE_CASE   As String = "CASE"
+
+' Caseノード
+Public Const NODE_CASE As String = "CASE"
+
+' End Selectノード
 Public Const NODE_ENDSELECT As String = "ENDSELECT"
 
-Public Const NODE_EXIT   As String = "EXIT"
+' Exit文ノード
+Public Const NODE_EXIT As String = "EXIT"
 
-Public Const NODE_GOTO   As String = "GOTO"
-Public Const NODE_LABEL  As String = "LABEL"
+' GoTo文ノード
+Public Const NODE_GOTO As String = "GOTO"
+
+' ラベル定義ノード
+Public Const NODE_LABEL As String = "LABEL"
+
+' Resume文ノード
 Public Const NODE_RESUME As String = "RESUME"
 
+
+' 通常処理ノード
 Public Const NODE_NORMAL As String = "NORMAL"
 
-Public Const NODE_DO          As String = "DO"
-Public Const NODE_LOOP        As String = "LOOP"
+' Do開始ノード
+Public Const NODE_DO As String = "DO"
 
-Public Const NODE_WITH        As String = "WITH"
-Public Const NODE_ENDWITH     As String = "ENDWITH"
+' Loopノード
+Public Const NODE_LOOP As String = "LOOP"
 
-Public Const NODE_WHILE       As String = "WHILE"
-Public Const NODE_WEND        As String = "WEND"
+' With開始ノード
+Public Const NODE_WITH As String = "WITH"
 
-Public Const NODE_COMPILE_IF      As String = "COMPILE_IF"
-Public Const NODE_COMPILE_ELSEIF  As String = "COMPILE_ELSEIF"
-Public Const NODE_COMPILE_ELSE    As String = "COMPILE_ELSE"
-Public Const NODE_COMPILE_ENDIF   As String = "COMPILE_ENDIF"
+' End Withノード
+Public Const NODE_ENDWITH As String = "ENDWITH"
 
-Public Const BRANCH_NONE  As String = ""
-Public Const BRANCH_TRUE  As String = "TRUE"
+' While開始ノード
+Public Const NODE_WHILE As String = "WHILE"
+
+' Wendノード
+Public Const NODE_WEND As String = "WEND"
+
+' コンパイル条件開始(#If)
+Public Const NODE_COMPILE_IF As String = "COMPILE_IF"
+
+' コンパイル条件分岐(#ElseIf)
+Public Const NODE_COMPILE_ELSEIF As String = "COMPILE_ELSEIF"
+
+' コンパイル条件Else(#Else)
+Public Const NODE_COMPILE_ELSE As String = "COMPILE_ELSE"
+
+' コンパイル条件終了(#End If)
+Public Const NODE_COMPILE_ENDIF As String = "COMPILE_ENDIF"
+
+' 分岐なし
+Public Const BRANCH_NONE As String = ""
+
+' True側分岐
+Public Const BRANCH_TRUE As String = "TRUE"
+
+' False側分岐
 Public Const BRANCH_FALSE As String = "FALSE"
 
+' ProcStartLine/ProcCountLinesで使用する
+' 標準Procedure種別(vbext_pk_Proc)
 Private Const PROC_KIND As Long = 0
 
 '------------------------------------------------
 ' キーワード判定
 '------------------------------------------------
+' @JPName
+' キーワード前方一致判定
+'
+' @Category
+' ProcAnalyzer
+'
+' @Input
+' LineText(String)
+' Keyword(String)
+'
+' @Output
+' Boolean
+'
+' @Summary
+' 行文字列が指定キーワードで開始するか判定する
+'
+' @Remarks
+' キーワード後続文字を確認し
+' 識別子の部分一致を除外する
+'
 Private Function StartsWithKeyword( _
                 ByVal LineText As String, _
                 ByVal Keyword As String) _
                 As Boolean
 
+    ' Keyword直後の文字
     Dim NextChar As String
 
     If Len(LineText) < Len(Keyword) Then
@@ -101,10 +182,30 @@ End Function
 '------------------------------------------------
 ' 行種別判定
 '------------------------------------------------
+' @JPName
+' ノード種別判定
+'
+' @Category
+' ProcAnalyzer
+'
+' @Input
+' LineText(String)
+'
+' @Output
+' NodeType(String)
+'
+' @Summary
+' ソースコード行からノード種別を判定する
+'
+' @Remarks
+' If、For、Select等の制御構文を判定し
+' ProcNode生成時の種別として利用する
+'
 Private Function GetNodeType( _
                 ByVal LineText As String) _
                 As String
 
+    ' 判定対象文字列
     LineText = Trim$(LineText)
 
     If StartsWithKeyword(LineText, "#ElseIf") Then
@@ -245,13 +346,36 @@ End Function
 
 
 ' 呼び出し先取得
+
+' @JPName
+' 呼出関数一覧取得
+'
+' @Category
+' ProcAnalyzer
+'
+' @Input
+' LineText(String)
+' FuncList(Object)
+'
+' @Output
+' Names(Collection)
+'
+' @Summary
+' ソースコード行から呼出関数一覧を取得する
+'
+' @Remarks
+' 登録済みProcedureとの照合により
+' 呼出関数を抽出する
+'
 Private Function ExtractCallNames( _
                 ByVal LineText As String, _
                 ByVal FuncList As Object) _
                 As Collection
 
+    ' 検出した呼出関数一覧
     Dim Names As Collection
 
+    ' Procedure名検索用Key
     Dim Key As Variant
 
     Set Names = New Collection
@@ -310,6 +434,24 @@ Private Function ExtractCallNames( _
 
 End Function
 
+' @JPName
+' 親ノード取得
+'
+' @Category
+' ProcAnalyzer
+'
+' @Input
+' ParentStack(Collection)
+'
+' @Output
+' ParentID(Long)
+'
+' @Summary
+' 現在有効な親ノードIDを取得する
+'
+' @Remarks
+' ParentStack最上位のノードIDを返却する
+'
 Private Function GetCurrentParentID( _
                 ByVal ParentStack As Collection) _
                 As Long
@@ -347,6 +489,11 @@ End Function
 ' @Summary
 ' プロシージャ内部を解析し
 ' ProcNode一覧を生成する
+'
+' @Remarks
+' STARTノードおよびENDノードを生成する
+' 制御構造を解析してProcNode一覧を作成する
+'
 Public Function AnalyzeProcedure( _
                 ByVal CodeText As String, _
                 ByVal ModuleName As String, _
@@ -354,37 +501,61 @@ Public Function AnalyzeProcedure( _
                 ByVal FuncList As Object) _
                 As Collection
 
+    ' ProcNode一覧
     Dim Nodes As Collection
-
+    
+    ' 現在処理中ノード
     Dim Node As clsProcNode
 
+    ' 直前追加ノード
     Dim PrevNode As clsProcNode
 
+    ' 論理行一覧
     Dim LogicalLines As Collection
+    
+    ' 処理対象論理行
     Dim LineText As Variant
 
+    ' ソース行番号
     Dim i As Long
 
+    ' 採番用ノードID
     Dim NodeID As Long
+    
+    ' 最終追加ノードID
     Dim LastNodeID As Long
 
+    ' 現在行のノード種別
     Dim NodeType As String
 
+    ' コンパイル条件階層
     Dim CompileLevel As Long
+    
+    ' 制御構造階層
     Dim Level As Long
+    
+    ' 出力時階層
     Dim OutputLevel As Long
 
+    ' 親ノード管理スタック
     Dim ParentStack As Collection
 
+    ' 分岐種別(TRUE/FALSE)
     Dim CurrentBranch As String
 
+    ' 呼出関数一覧
     Dim CallNames As Collection
+    
+    ' 呼出関数名
     Dim CallName As Variant
 
+    ' Select Case 現在CaseノードID
     Dim CurrentCaseID As Long
     
+    ' 分岐状態スタック
     Dim BranchStack As Collection
     
+    ' Procedure宣言部
     Dim ProcHeader As String
 
     Set Nodes = New Collection
@@ -825,6 +996,25 @@ NextLine:
 
 End Function
 
+' @JPName
+' 終了構文取得
+'
+' @Category
+' ProcAnalyzer
+'
+' @Input
+' ProcHeader(String)
+'
+' @Output
+' EndText(String)
+'
+' @Summary
+' Procedure種別に対応する終了構文を取得する
+'
+' @Remarks
+' Function、Property、Subを判定して
+' 対応する終了文を返却する
+'
 Private Function GetProcedureEndText( _
                 ByVal ProcHeader As String) _
                 As String
@@ -864,13 +1054,39 @@ Private Function GetProcedureEndText( _
 
 End Function
 
+' @JPName
+' Procedure宣言取得
+'
+' @Category
+' ProcAnalyzer
+'
+' @Input
+' CodeText(String)
+'
+' @Output
+' Header(String)
+'
+' @Summary
+' Procedure宣言行を取得する
+'
+' @Remarks
+' 行継続文字を考慮して
+' 宣言部を1行に結合して返却する
+'
 Private Function ExtractProcedureHeader( _
                 ByVal CodeText As String) _
                 As String
 
+    ' ソースコード行配列
     Dim Lines() As String
+    
+    ' 行走査用Index
     Dim i As Long
+    
+    ' Procedure宣言部
     Dim Header As String
+    
+    ' 現在行文字列
     Dim Text As String
 
     Lines = Split(CodeText, vbCrLf)
@@ -905,10 +1121,30 @@ Private Function ExtractProcedureHeader( _
 
 End Function
 
+' @JPName
+' 通常文出力判定
+'
+' @Category
+' ProcAnalyzer
+'
+' @Input
+' LineText(String)
+'
+' @Output
+' Boolean
+'
+' @Summary
+' 通常ノードとして出力するか判定する
+'
+' @Remarks
+' CompactMode設定に応じて
+' 宣言文や書式設定文を除外する
+'
 Private Function IsOutputNormal( _
                 ByVal LineText As String) _
                 As Boolean
 
+    ' 判定対象文字列
     Dim Text As String
 
     Text = Trim$(LineText)
@@ -961,6 +1197,25 @@ Private Function IsOutputNormal( _
 
 End Function
 
+' @JPName
+' 参照行判定
+'
+' @Category
+' ProcAnalyzer
+'
+' @Input
+' LineText(String)
+'
+' @Output
+' Boolean
+'
+' @Summary
+' 管理対象参照ノードか判定する
+'
+' @Remarks
+' 問診関連マップやシート参照を
+' REFERENCEノードとして扱う
+'
 Private Function IsReferenceLine( _
                 ByVal LineText As String) _
                 As Boolean
@@ -983,11 +1238,33 @@ Private Function IsReferenceLine( _
 
 End Function
 
+' @JPName
+' インラインIf判定
+'
+' @Category
+' ProcAnalyzer
+'
+' @Input
+' LineText(String)
+'
+' @Output
+' Boolean
+'
+' @Summary
+' 単一行If文か判定する
+'
+' @Remarks
+' Then以降に実行文が存在する場合を
+' インラインIfとして判定する
+'
 Private Function IsInlineIf( _
                 ByVal LineText As String) _
                 As Boolean
 
+    ' Then位置
     Dim PosThen As Long
+    
+    ' コメント開始位置
     Dim PosComment As Long
 
     LineText = Trim$(LineText)
@@ -1023,26 +1300,49 @@ Private Function IsInlineIf( _
 
 End Function
 
-
+' @JPName
+' 論理行生成
+'
+' @Category
+' ProcAnalyzer
+'
+' @Input
+' CodeText(String)
+'
+' @Output
+' LogicalLines(Collection)
+'
+' @Summary
+' ソースコードを論理行単位へ変換する
+'
+' @Remarks
+' VBAの行継続文字(_)を考慮して
+' 複数行を1つの論理行へ結合する
+'
 Private Function BuildLogicalLines( _
                 ByVal CodeText As String) _
                 As Collection
 
+    ' 論理行一覧
     Dim Result As Collection
 
+    ' ソースコード行配列
     Dim Lines() As String
 
+    ' 行走査用Index
     Dim i As Long
 
+    ' 行継続結合中の論理行
     Dim CurrentLine As String
+    
+    ' 現在行文字列
+    Dim LineText As String
 
     Set Result = New Collection
 
     Lines = Split(CodeText, vbCrLf)
 
     For i = LBound(Lines) To UBound(Lines)
-
-        Dim LineText As String
 
         LineText = Trim$(Lines(i))
 
@@ -1077,13 +1377,35 @@ Private Function BuildLogicalLines( _
 
 End Function
 
+' @JPName
+' ProcNode出力
+'
+' @Category
+' ProcAnalyzer
+'
+' @Input
+' Nodes(Collection)
+'
+' @Output
+' ProcNodesシート
+'
+' @Summary
+' ProcNode一覧をシートへ出力する
+'
+' @Remarks
+' ノードの親子関係および種別情報を
+' 一覧形式で出力する
+'
 Public Sub ExportProcNodes( _
                 ByVal Nodes As Collection)
 
+    ' 出力先シート
     Dim ws As Worksheet
 
+    ' 出力対象ノード
     Dim Node As clsProcNode
 
+    ' 出力行番号
     Dim RowOut As Long
 
     On Error Resume Next
@@ -1207,13 +1529,20 @@ End Sub
 ' 対象ブック内の全プロシージャを収集し
 ' Dictionaryとして返却する
 '
+' @Remarks
+' 対象ブック内の全モジュールを走査し
+' Procedure一覧をDictionaryとして生成する
+'
 Public Function BuildFuncList() _
                 As Object
 
+    ' Procedure一覧(Dictionary)
     Dim FuncList As Object
 
+    ' VBAコンポーネント
     Dim VBComp As Object
 
+    ' モジュールソースコード
     Dim CodeText As String
 
     Set FuncList = _
@@ -1242,12 +1571,35 @@ Public Function BuildFuncList() _
 
 End Function
 
+' @JPName
+' Procedureソース取得
+'
+' @Category
+' ProcAnalyzer
+'
+' @Input
+' ModuleName(String)
+' ProcName(String)
+'
+' @Output
+' CodeText(String)
+'
+' @Summary
+' 指定Procedureのソースコードを取得する
+'
+' @Remarks
+' モジュール内のProcedure範囲を取得して
+' ソースコード全体を返却する
+'
 Public Function GetProcedureCode( _
                 ByVal ModuleName As String, _
                 ByVal ProcName As String) _
                 As String
 
+    ' VBAコンポーネント
     Dim VBComp As Object
+    
+    ' コードモジュール
     Dim CodeMod As Object
 
     For Each VBComp In _
@@ -1290,7 +1642,28 @@ Public Function GetProcedureCode( _
 
 End Function
 
-
+' @JPName
+' ProcNode追加
+'
+' @Category
+' ProcAnalyzer
+'
+' @Input
+' Nodes(Collection)
+' Node(clsProcNode)
+' PrevNode(clsProcNode)
+' LastNodeID(Long)
+'
+' @Output
+' なし
+'
+' @Summary
+' ProcNodeを一覧へ追加する
+'
+' @Remarks
+' ProcNodeの前後リンク情報を設定し
+' Collectionへ追加する
+'
 Private Sub AddProcNode( _
                 ByVal Nodes As Collection, _
                 ByVal Node As clsProcNode, _
@@ -1315,15 +1688,36 @@ Private Sub AddProcNode( _
 
 End Sub
 
-
-
-
+' @JPName
+' 呼出関数名取得
+'
+' @Category
+' ProcAnalyzer
+'
+' @Input
+' SourceLine(String)
+'
+' @Output
+' ProcedureName(String)
+'
+' @Summary
+' 呼出文からProcedure名を取得する
+'
+' @Remarks
+' 代入文およびモジュール名付き呼出に対応し
+' Procedure名のみを抽出する
+'
 Public Function ExtractCalledProcedureName( _
                 ByVal SourceLine As String) _
                 As String
 
+    ' "="位置
     Dim PosEqual As Long
+    
+    ' 空白位置
     Dim PosSpace As Long
+    
+    ' "("位置
     Dim PosParen As Long
 
     SourceLine = Trim$(SourceLine)

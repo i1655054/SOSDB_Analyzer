@@ -1,9 +1,28 @@
 Attribute VB_Name = "modExportVBA"
 Option Explicit
 
-'==================================================
-' VBAエクスポート
-'==================================================
+'===================================================================
+'@JPName     VBAソース管理
+'@Category   Export
+'@Summary    VBAソースエクスポートおよびGit連携機能を提供する
+'===================================================================
+
+' 標準モジュール (*.bas)
+' VBComponent.Type : vbext_ct_StdModule
+Const VBEXT_CT_STDMODULE As Long = 1
+
+' クラスモジュール (*.cls)
+' VBComponent.Type : vbext_ct_ClassModule
+Const VBEXT_CT_CLASSMODULE As Long = 2
+
+' ユーザーフォーム (*.frm)
+' VBComponent.Type : vbext_ct_MSForm
+Const VBEXT_CT_MSFORM As Long = 3
+
+' ドキュメントモジュール
+' (ThisWorkbook、Sheet1 など)
+' VBComponent.Type : vbext_ct_Document
+Const VBEXT_CT_DOCUMENT As Long = 100
 
 '**************************************
 '====  VBA ソース自動エクスポート  ====
@@ -38,15 +57,28 @@ Public Sub ExportVBABook( _
                 ByVal TargetBook As Workbook, _
                 ByVal ToolID As Long)
     
+    ' VBAコンポーネント
     Dim VBComp As Object
 
+    ' Gitルートフォルダ
     Dim RootPath As String
+    
+    ' 標準モジュール出力先
     Dim ModulesPath As String
+    
+    ' クラスモジュール出力先
     Dim ClassesPath As String
+    
+    ' フォーム出力先
     Dim FormsPath As String
+    
+    ' ドキュメントモジュール出力先
     Dim DocumentsPath As String
+    
+    ' FileSystemObject
     Dim FSO As Object
 
+    ' エクスポートファイル名
     Dim ExportFile As String
 
     RootPath = GetGitRootPathByToolID(ToolID)
@@ -89,16 +121,16 @@ Public Sub ExportVBABook( _
 
         Select Case VBComp.Type
 
-            Case 1
+            Case VBEXT_CT_STDMODULE
                 ExportFile = ModulesPath & VBComp.Name & ".bas"
 
-            Case 2
+            Case VBEXT_CT_CLASSMODULE
                 ExportFile = ClassesPath & VBComp.Name & ".cls"
 
-            Case 3
+            Case VBEXT_CT_MSFORM
                 ExportFile = FormsPath & VBComp.Name & ".frm"
 
-            Case 100
+            Case VBEXT_CT_DOCUMENT
                 ExportFile = DocumentsPath & VBComp.Name & ".cls"
 
             Case Else
@@ -146,12 +178,13 @@ End Sub
 ' GitHub管理フォルダを取得する
 '
 ' @Remarks
-' OneDrive配下のGitHub管理フォルダを
-' 前提とする
+' OneDrive\ドキュメント\GitHub配下の
+' リポジトリ構成を前提とする
 '
 Public Function GetGitRootPathByToolID( _
             ByVal ToolID As Long) As String
 
+    ' ツール情報
     Dim Tool As clsToolInfo
 
     Set Tool = GetToolInfo(ToolID)
@@ -190,6 +223,7 @@ End Function
 Public Sub OpenGitPowerShell( _
                     ByVal RootPath As String)
 
+    ' PowerShell起動コマンド
     Dim Cmd As String
 
     Cmd = _

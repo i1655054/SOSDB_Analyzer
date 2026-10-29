@@ -1,9 +1,11 @@
 Attribute VB_Name = "modFunctionDependency"
 Option Explicit
 
-'==================================================
-' 関数依存関係
-'==================================================
+'===================================================================
+'@JPName     関数依存関係解析
+'@Category   FunctionDependency
+'@Summary    関数トレース結果から関数依存関係を集計し依存関係シートを作成する
+'===================================================================
 
 ' @JPName
 ' 関数依存関係作成
@@ -27,24 +29,43 @@ Option Explicit
 '
 Public Sub FunctionDependency()
     
+    ' 関数トレースシート
     Dim wsTrace As Worksheet
+    
+    ' 関数依存関係シート
     Dim wsDep As Worksheet
 
+    ' 最終行
     Dim LastRow As Long
+    
+    ' 行Index
     Dim r As Long
 
+    ' 呼出元|呼出先キー
     Dim Key As String
+    
+    ' Dictionary走査用
     Dim V As Variant
 
+    ' 呼出回数管理
     Dim Dic As Object
 
+    ' 呼出元JPName管理
     Dim DicCallerJP As Object
+    
+    ' 呼出先JPName管理
     Dim DicCalleeJP As Object
 
+    ' 呼出元モジュール管理
     Dim DicFromModule As Object
+    
+    ' 呼出先モジュール管理
     Dim DicToModule As Object
 
+    ' 呼出先カテゴリ管理
     Dim DicCategory As Object
+    
+    ' 呼出先概要管理
     Dim DicSummary As Object
 
     Set Dic = CreateObject("Scripting.Dictionary")

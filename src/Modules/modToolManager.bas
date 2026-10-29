@@ -3,6 +3,8 @@ Option Explicit
 
 '==================================================
 ' 開発者モード
+' True : デバッグ機能有効
+' False: 本番モード
 '==================================================
 'Public Const DEV_MODE As Boolean = True
 Public Const DEV_MODE As Boolean = False
@@ -337,6 +339,10 @@ End Sub
 ' @Summary
 ' 現在選択中ツールの情報を取得する
 '
+' @Remarks
+' gTargetToolIDに対応する
+' ツール情報を取得する
+'
 Public Function GetCurrentToolInfo() As clsToolInfo
 
     Set GetCurrentToolInfo = _
@@ -358,6 +364,10 @@ End Function
 '
 ' @Summary
 ' 現在選択中ツールのWorkbookを取得する
+'
+' @Remarks
+' gTargetToolIDに対応する
+' 解析対象ブックを取得する
 '
 Public Function GetCurrentTargetBook() _
         As Workbook
@@ -381,6 +391,10 @@ End Function
 '
 ' @Summary
 ' 現在選択中ツールの管理ブックを取得する
+'
+' @Remarks
+' gTargetToolIDに対応する
+' 管理ブックを取得する
 '
 Public Function GetCurrentManagementWorkbook() _
                 As Workbook
@@ -418,7 +432,10 @@ Public Function GetManagementWorkbookByToolID( _
                     ByVal ToolID As Long) _
                     As Workbook
 
+    ' ツール情報
     Dim Tool As clsToolInfo
+    
+    ' 管理ファイルフルパス
     Dim FullPath As String
 
     Set Tool = GetToolInfo(ToolID)
@@ -518,10 +535,15 @@ End Function
 ' ToolIDに対応する
 ' 管理ファイルのフルパスを取得する
 '
+' @Remarks
+' 出力フォルダ配下の
+' 管理ファイルフルパスを生成する
+'
 Public Function GetManagementFilePathByToolID( _
                     ByVal ToolID As Long) _
                     As String
     
+    ' ツール情報
     Dim Tool As clsToolInfo
 
     Set Tool = GetToolInfo(ToolID)
@@ -561,10 +583,11 @@ Public Function CreateManagementWorkbook( _
                     ByVal ToolName As String) _
                     As Workbook
     
-    On Error GoTo ErrHandler
-    
+    ' 管理ブック
     Dim wb As Workbook
 
+    On Error GoTo ErrHandler
+    
     Set wb = Workbooks.Add
 
     wb.Worksheets(1).Name = SHEET_PROC_LIST
@@ -633,10 +656,16 @@ Public Function GetToolInfo( _
                 ByVal ToolID As Long) _
                 As clsToolInfo
 
+    ' ToolManagerシート
     Dim ws As Worksheet
+    
+    ' 最終行
     Dim LastRow As Long
+    
+    ' 行Index
     Dim r As Long
 
+    ' ツール情報
     Dim Tool As clsToolInfo
 
     Set ws = ThisWorkbook.Worksheets(SHEET_TOOL_MANAGER)
@@ -696,6 +725,10 @@ End Function
 ' @Summary
 ' 前後空白および全角空白を除去する
 '
+' @Remarks
+' 半角空白および全角空白を除去し
+' 文字列として返却する
+'
 Private Function TrimEx(ByVal Value As Variant) As String
 
     TrimEx = Trim$(Replace(CStr(Value), "　", ""))
@@ -729,6 +762,7 @@ Public Function GetWorkbookByToolID( _
                 ByVal ToolID As Long) _
                 As Workbook
 
+    ' ツール情報
     Dim Tool As clsToolInfo
 
     Set Tool = GetToolInfo(ToolID)
@@ -769,6 +803,7 @@ Public Function ValidateTargetBook( _
                 Optional ByVal Title As String = "") _
                 As Boolean
 
+    ' 現在選択中ツール情報
     Dim Tool As clsToolInfo
 
     If Not gContext.TargetBook Is Nothing Then

@@ -6,27 +6,36 @@ Option Explicit
 '==================================================
 
 ' 使用状況
+' 未使用関数
 Private Const STATUS_UNUSED As String = "削除候補"
+
+' 使用状況確認対象
 Private Const STATUS_CONFIRM As String = "要確認"
+
+' イベントプロシージャ
 Private Const STATUS_EVENT As String = "イベント"
+
+' 使用中プロシージャ
 Private Const STATUS_USED As String = "使用中"
 
+'==================================================
 ' 表示色
+'==================================================
 
-' 削除候補
+' 未使用関数行色
 Private Const COLOR_UNUSED As Long = &HC8C8FF
 
-' 要確認
+' 要確認関数行色
 Private Const COLOR_CONFIRM As Long = &HC8FFFF
 
-' イベント
+' イベント関数行色
 Private Const COLOR_EVENT As Long = &HFFC8C8
 
-' 関数名抽出失敗時
+' 関数名抽出失敗時の表示名
 Private Const PROC_UNKNOWN As String = "(Unknown)"
     
 '==================================================
-' ProcList生成
+' 公開API
 '==================================================
 
 ' @JPName
@@ -62,18 +71,31 @@ Public Sub ProcedureList()
 ' 3+         通常 使用中
 
     
+    ' VBAコンポーネント
     Dim VBComp As Object
+    
+    ' コードモジュール
     Dim CodeMod As Object
     
+    ' 行走査用Index
     Dim i As Long
+    
+    ' 色付け用行番号
     Dim r As Long
+    
+    ' 出力行番号
     Dim row As Long
     
+    ' ProcList最終行
     Dim LastRow As Long
     
+    ' ProcListシート
     Dim ws As Worksheet
     
+    ' 処理対象行
     Dim line As String
+    
+    ' プロシージャ名
     Dim ProcName As String
     
     '------------------------------------
@@ -234,11 +256,19 @@ End Sub
 '
 Public Function ExportUnusedProcedureList() As Long
 
+    ' ProcListシート
     Dim wsProc As Worksheet
+    
+    ' 出力先シート
     Dim wsOut As Worksheet
 
+    ' ProcList最終行
     Dim LastRow As Long
+    
+    ' 出力行番号
     Dim OutRow As Long
+    
+    ' 行走査用Index
     Dim r As Long
 
     On Error Resume Next
@@ -338,16 +368,33 @@ End Function
 '==================================================
 ' プロシージャ解析
 '==================================================
+
 ' @JPName
-' プロシージャ宣言判定
+' プロシージャ定義判定
 '
 ' @Category
 ' Analyze
 '
-' @Summary
-' 指定行がプロシージャ宣言行か判定する
+' @Input
+' LineText(String)
 '
-Public Function IsProcedureLine(line As String) As Boolean
+' @Output
+' True:プロシージャ定義行
+' False:プロシージャ定義行以外
+'
+' @Summary
+' 指定行がプロシージャの
+' 定義行であるか判定する
+'
+' @Remarks
+' Public Sub、Private Sub、
+' Public Function、Private Function、
+' Property Let/Get/Set などの
+' プロシージャ定義を判定対象とする
+'
+Public Function IsProcedureLine( _
+                ByVal line As String) _
+                As Boolean
 
     ' コメント行は除外
     If Left(Trim(line), 1) = "'" Then
@@ -373,6 +420,51 @@ Public Function IsProcedureLine(line As String) As Boolean
     Else
         IsProcedureLine = False
     End If
+
+End Function
+
+' @JPName
+' プロシージャ名抽出
+'
+' @Category
+' Analyze
+'
+' @Input
+' LineText(String)
+'
+' @Output
+' ProcedureName(String)
+'
+' @Summary
+' プロシージャ定義行から
+' プロシージャ名を抽出する
+'
+' @Remarks
+' Sub、Function、Propertyの
+' 定義行を解析対象とする
+' プロシージャ名を取得できない場合は
+' 空文字列を返す
+'
+Public Function ExtractProcedureName(line As String) As String
+
+    ' 加工用文字列
+    Dim tmp As String
+    
+    tmp = line
+    tmp = Replace(tmp, "Public ", "")
+    tmp = Replace(tmp, "Private ", "")
+    tmp = Replace(tmp, "Sub ", "")
+    tmp = Replace(tmp, "Function ", "")
+    tmp = Replace(tmp, "Property Get ", "")
+    tmp = Replace(tmp, "Property Let ", "")
+    tmp = Replace(tmp, "Property Set ", "")
+    tmp = Replace(tmp, "Friend ", "")
+    
+    If InStr(tmp, "(") > 0 Then
+        tmp = Left(tmp, InStr(tmp, "(") - 1)
+    End If
+    
+    ExtractProcedureName = Trim(tmp)
 
 End Function
 
@@ -409,69 +501,57 @@ Private Function GetProcedureType(line As String) As String
 
 End Function
 
-' @JPName
-' 関数名抽出
-'
-' @Category
-' Analyze
-'
-' @Summary
-' プロシージャ宣言行から
-' プロシージャ名を抽出する
-'
-Public Function ExtractProcedureName(line As String) As String
-
-    Dim tmp As String
-    
-    tmp = line
-    tmp = Replace(tmp, "Public ", "")
-    tmp = Replace(tmp, "Private ", "")
-    tmp = Replace(tmp, "Sub ", "")
-    tmp = Replace(tmp, "Function ", "")
-    tmp = Replace(tmp, "Property Get ", "")
-    tmp = Replace(tmp, "Property Let ", "")
-    tmp = Replace(tmp, "Property Set ", "")
-    tmp = Replace(tmp, "Friend ", "")
-    
-    If InStr(tmp, "(") > 0 Then
-        tmp = Left(tmp, InStr(tmp, "(") - 1)
-    End If
-    
-    ExtractProcedureName = Trim(tmp)
-
-End Function
-
 '==================================================
 ' 使用状況判定
 '==================================================
 
 ' @JPName
-' 関数使用回数取得
+' 使用回数集計
 '
 ' @Category
 ' Analyze
 '
+' @Input
+' ProcName(String)
+'
+' @Output
+' UsageCount(Long)
+'
 ' @Summary
-' 対象ブック内のプロシージャ呼出回数を集計する
+' 指定プロシージャの
+' 呼出回数を取得する
 '
 ' @Remarks
-' プロシージャ宣言行は使用回数に含めない
-' IsFunctionCallを利用して呼出判定を行う
+' 関数トレース情報または
+' 関数依存関係情報を参照して
+' 呼出回数を集計する
+' 対象が存在しない場合は
+' 0を返す
 '
 Public Function CountUsage( _
             ByVal ProcName As String) _
             As Long
 
+    ' 解析対象ブック
     Dim TargetBook As Workbook
 
     Set TargetBook = gContext.TargetBook
 
     If TargetBook Is Nothing Then Exit Function
 
+    ' VBAコンポーネント
     Dim VBComp As Object
+    
+    ' コードモジュール
     Dim CodeMod As Object
+    
+    ' 行番号
     Dim i As Long
+    
+    ' 呼出回数
     Dim Count As Long
+    
+    ' 判定対象行
     Dim LineText As String
 
     Count = 0
@@ -499,38 +579,6 @@ Public Function CountUsage( _
     ' 宣言行は
     ' IsProcedureLineで除外済み
     CountUsage = Count
-
-End Function
-
-' @JPName
-' イベント関数判定
-'
-' @Category
-' Analyze
-'
-' @Summary
-' プロシージャ名からイベント関数か判定する
-'
-Private Function IsEventProcedure( _
-                ByVal ProcName As String) _
-                As Boolean
-
-    IsEventProcedure = _
-        ProcName Like "Workbook_*" _
-        Or ProcName Like "Worksheet_*" _
-        Or ProcName Like "UserForm_*" _
-        Or ProcName Like "Class_*" _
-        Or ProcName Like "*_Click" _
-        Or ProcName Like "*_DblClick" _
-        Or ProcName Like "*_Change" _
-        Or ProcName Like "*_MouseDown" _
-        Or ProcName Like "*_MouseUp" _
-        Or ProcName Like "*_MouseMove" _
-        Or ProcName Like "*_KeyDown" _
-        Or ProcName Like "*_KeyUp" _
-        Or ProcName Like "*_KeyPress" _
-        Or ProcName Like "*_ItemCheck" _
-        Or ProcName Like "*_ItemClick"
 
 End Function
 
@@ -581,14 +629,76 @@ Private Function GetUsageStatus(ProcName As String, usage As Long) As String
 End Function
 
 ' @JPName
-' 特殊関数判定
+' イベントプロシージャ判定
 '
 ' @Category
 ' Analyze
 '
+' @Input
+' ProcName(String)
+'
+' @Output
+' True : イベントプロシージャ
+' False: 通常プロシージャ
+'
 ' @Summary
-' 動的呼出やイベント連携により
-' 使用中と見なす関数か判定する
+' 指定プロシージャが
+' イベントプロシージャか判定する
+'
+' @Remarks
+' Workbook_Open、
+' Worksheet_Change、
+' CommandButton_Clickなどの
+' イベントハンドラを判定対象とする
+' イベントプロシージャの場合は
+' Trueを返す
+'
+Private Function IsEventProcedure( _
+                ByVal ProcName As String) _
+                As Boolean
+
+    IsEventProcedure = _
+        ProcName Like "Workbook_*" _
+        Or ProcName Like "Worksheet_*" _
+        Or ProcName Like "UserForm_*" _
+        Or ProcName Like "Class_*" _
+        Or ProcName Like "*_Click" _
+        Or ProcName Like "*_DblClick" _
+        Or ProcName Like "*_Change" _
+        Or ProcName Like "*_MouseDown" _
+        Or ProcName Like "*_MouseUp" _
+        Or ProcName Like "*_MouseMove" _
+        Or ProcName Like "*_KeyDown" _
+        Or ProcName Like "*_KeyUp" _
+        Or ProcName Like "*_KeyPress" _
+        Or ProcName Like "*_ItemCheck" _
+        Or ProcName Like "*_ItemClick"
+
+End Function
+
+' @JPName
+' 特殊プロシージャ判定
+'
+' @Category
+' Analyze
+'
+' @Input
+' ProcName(String)
+'
+' @Output
+' True : 特殊プロシージャ
+' False: 通常プロシージャ
+'
+' @Summary
+' 指定プロシージャが
+' 特殊プロシージャか判定する
+'
+' @Remarks
+' 初期化処理や終了処理など
+' 解析上で特別扱いする
+' プロシージャを判定対象とする
+' 特殊プロシージャの場合は
+' Trueを返す
 '
 Private Function IsSpecialProcedure( _
                 ByVal ProcName As String) _
