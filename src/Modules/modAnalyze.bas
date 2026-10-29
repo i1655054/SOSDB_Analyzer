@@ -6,8 +6,8 @@ Option Explicit
 '==================================================
 
 ' 使用状況
-' 未使用関数
-Private Const STATUS_UNUSED As String = "削除候補"
+' 呼出元なし
+Private Const STATUS_NOCALLER As String = "呼出元なし"
 
 ' 使用状況確認対象
 Private Const STATUS_CONFIRM As String = "要確認"
@@ -22,14 +22,14 @@ Private Const STATUS_USED As String = "使用中"
 ' 表示色
 '==================================================
 
-' 未使用関数行色
-Private Const COLOR_UNUSED As Long = &HC8C8FF
+' 呼出元なし関数行色（薄い紫）
+Private Const COLOR_NOCALLER As Long = &HFFC8C8
 
-' 要確認関数行色
+' 要確認関数行色（黄色）
 Private Const COLOR_CONFIRM As Long = &HC8FFFF
 
-' イベント関数行色
-Private Const COLOR_EVENT As Long = &HFFC8C8
+' イベント関数行色（薄緑）
+Private Const COLOR_EVENT As Long = &HCEEEC6
 
 ' 関数名抽出失敗時の表示名
 Private Const PROC_UNKNOWN As String = "(Unknown)"
@@ -64,11 +64,11 @@ Public Sub ProcedureList()
 ' Module  Type    ProcedureName   Declaration Line    UsageCount
 '         種別                                行番号  使用回数
 '
-' UsageCount 色   意味
-' 0          赤   完全未使用
-' 1          赤   定義のみ
-' 2          黄   要確認（1回しか呼ばれてない）
-' 3+         通常 使用中
+' UsageCount 色     意味
+' 0          薄紫   呼出元なし
+' 1          黄色   要確認（1回しか呼ばれてない）
+' 2+         なし　 使用中
+' n          薄緑   イベント（Workbook*Open、*_Click 等）
 
     
     ' VBAコンポーネント
@@ -88,6 +88,12 @@ Public Sub ProcedureList()
     
     ' ProcList最終行
     Dim LastRow As Long
+    
+    ' 総Procedure数
+    Dim TotalProcCount As Long
+
+    ' 現在Procedure数
+    Dim CurrentProcCount As Long
     
     ' ProcListシート
     Dim ws As Worksheet
@@ -141,6 +147,27 @@ Public Sub ProcedureList()
     row = 2
     
     '------------------------------------
+    ' 関数総数を数える
+    '------------------------------------
+    TotalProcCount = 0
+
+    For Each VBComp In gContext.TargetBook.VBProject.VBComponents
+
+        Set CodeMod = VBComp.CodeModule
+
+        For i = 1 To CodeMod.CountOfLines
+
+            line = Trim$(CodeMod.Lines(i, 1))
+
+            If IsProcedureLine(line) Then
+                TotalProcCount = TotalProcCount + 1
+            End If
+
+        Next i
+
+    Next VBComp
+    
+    '------------------------------------
     ' 関数抽出
     '------------------------------------
     For Each VBComp In gContext.TargetBook.VBProject.VBComponents
@@ -159,7 +186,18 @@ Public Sub ProcedureList()
                     ProcName = PROC_UNKNOWN
                 End If
                 
-                Debug.Print "ProcName : " & VBComp.Name & "." & ProcName
+                'Debug.Print "ProcName : " & VBComp.Name & "." & ProcName
+                
+                CurrentProcCount = CurrentProcCount + 1
+                
+                Application.StatusBar = _
+                        "ProcList解析中 [" & _
+                        CurrentProcCount & "/" & _
+                        TotalProcCount & _
+                        "] " & _
+                        VBComp.Name & "." & ProcName
+
+                DoEvents
                 
                 ws.Cells(row, COL_MODULE).Value = VBComp.Name
                 ws.Cells(row, COL_TYPE).Value = GetProcedureType(line)
@@ -213,8 +251,8 @@ Public Sub ProcedureList()
         
         Select Case ws.Cells(r, COL_STATUS).Value
             
-            Case STATUS_UNUSED
-                ws.Rows(r).Interior.Color = COLOR_UNUSED
+            Case STATUS_NOCALLER
+                ws.Rows(r).Interior.Color = COLOR_NOCALLER
                 
             Case STATUS_CONFIRM
                 ws.Rows(r).Interior.Color = COLOR_CONFIRM
@@ -234,9 +272,8 @@ Public Sub ProcedureList()
 
 End Sub
 
-
 ' @JPName
-' 未使用関数一覧出力
+' 呼出元なし関数一覧出力
 '
 ' @Category
 ' Analyze
@@ -245,16 +282,16 @@ End Sub
 ' なし
 '
 ' @Output
-' UnusedProcListシート
+' NoCallerProcListシート
 '
 ' @Summary
-' ProcListから未使用関数を抽出し
-' UnusedProcListシートへ出力する
+' ProcListから呼出元なし関数を抽出し
+' NoCallerProcListシートへ出力する
 '
 ' @Remarks
-' 判定が「削除候補」の関数のみ出力する
+' 判定が「呼出元なし」の関数のみ出力する
 '
-Public Function ExportUnusedProcedureList() As Long
+Public Function ExportNoCallerProcedureList() As Long
 
     ' ProcListシート
     Dim wsProc As Worksheet
@@ -275,7 +312,7 @@ Public Function ExportUnusedProcedureList() As Long
 
     Set wsOut = _
         gContext.ManagementBook.Worksheets( _
-            SHEET_UNUSED_PROC_LIST)
+            SHEET_NO_CALLER_PROC_LIST)
 
     On Error GoTo 0
 
@@ -287,7 +324,7 @@ Public Function ExportUnusedProcedureList() As Long
                     gContext.ManagementBook.Worksheets.Count))
 
         wsOut.Name = _
-            SHEET_UNUSED_PROC_LIST
+            SHEET_NO_CALLER_PROC_LIST
 
     End If
 
@@ -317,12 +354,12 @@ Public Function ExportUnusedProcedureList() As Long
             .End(xlUp).row
 
     '------------------------------------
-    ' 未使用関数抽出
+    ' 呼出元なし関数抽出
     '------------------------------------
     For r = 2 To LastRow
 
         If wsProc.Cells(r, COL_STATUS).Value = _
-            STATUS_UNUSED Then
+            STATUS_NOCALLER Then
 
             wsOut.Cells(OutRow, COL_MODULE).Value = _
                 wsProc.Cells(r, COL_MODULE).Value
@@ -351,7 +388,7 @@ Public Function ExportUnusedProcedureList() As Long
 
     Next r
 
-    ExportUnusedProcedureList = OutRow - 2
+    ExportNoCallerProcedureList = OutRow - 2
     
     '------------------------------------
     ' 書式
@@ -363,7 +400,6 @@ Public Function ExportUnusedProcedureList() As Long
     wsOut.Rows(1).AutoFilter
     
 End Function
-
 
 '==================================================
 ' プロシージャ解析
@@ -615,7 +651,7 @@ Private Function GetUsageStatus(ProcName As String, usage As Long) As String
        
     ElseIf usage = 0 Then
     
-        GetUsageStatus = STATUS_UNUSED
+        GetUsageStatus = STATUS_NOCALLER
         
     ElseIf usage = 1 Then
     
