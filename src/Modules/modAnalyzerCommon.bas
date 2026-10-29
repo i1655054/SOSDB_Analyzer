@@ -1,6 +1,15 @@
 Attribute VB_Name = "modAnalyzerCommon"
 Option Explicit
 
+'==================================================
+' 共通解析ユーティリティ
+'
+' 解析共通処理
+' コメント解析処理
+' ProcList参照処理
+' を提供する
+'==================================================
+
 ' API宣言
 #If VBA7 Then
     ' ユーザー32.dll（クリップボード操作）
@@ -17,7 +26,11 @@ Option Explicit
     ' VBA6 用の宣言（必要なら追加）
 #End If
 
+' GlobalAllocフラグ
+' GMEM_MOVEABLE + GMEM_ZEROINIT
 Const GHND = &H42
+
+' Unicodeテキスト形式
 Const CF_UNICODETEXT = 13
 
 ' @JPName
@@ -25,6 +38,9 @@ Const CF_UNICODETEXT = 13
 '
 ' @Category
 ' Analyze
+'
+' @Input
+' なし
 '
 ' @Output
 ' clsAnalyzeContext
@@ -42,6 +58,7 @@ Const CF_UNICODETEXT = 13
 Public Function CreateAnalyzeContext() _
             As clsAnalyzeContext
 
+    ' 解析コンテキスト
     Dim Context As clsAnalyzeContext
 
     Set Context = New clsAnalyzeContext
@@ -65,6 +82,12 @@ End Function
 ' @Category
 ' Analyze
 '
+' @Input
+' なし
+'
+' @Output
+' なし
+'
 ' @Summary
 ' ProcList、関数トレース、
 ' 関数依存関係の解析を実行する
@@ -75,6 +98,7 @@ End Function
 '
 Public Sub AnalyzeAll()
 
+    ' 未使用関数件数
     Dim UnusedCount As Long
 
     If gContext Is Nothing Then
@@ -190,8 +214,14 @@ End Function
 '@Remarks    Unicode形式でコピーする
 '===================================================================
 Public Sub CopyTextToClipboard(Text As String)
+
+    ' グローバルメモリハンドル
     Dim hGlobalMemory As LongPtr
+    
+    ' メモリポインタ
     Dim lpGlobalMemory As LongPtr
+    
+    ' コピーサイズ(Byte)
     Dim Size As LongPtr
 
     Size = (Len(Text) + 1) * 2 ' Unicodeは2バイト
@@ -229,14 +259,25 @@ End Sub
 ' プロシージャ定義直前のコメントから
 ' 指定タグの値を取得する
 '
+' @Remarks
+' 旧形式コメントおよび
+' 複数行コメント形式の両方に対応する
+'
 Public Function GetTagValue( _
         CodeMod As Object, _
         ByVal StartLine As Long, _
         ByVal TagName As String) As String
 
+    ' コメント行走査用
     Dim i As Long
+    
+    ' タグ内容走査用
     Dim j As Long
+    
+    ' 現在行文字列
     Dim txt As String
+    
+    ' 取得結果
     Dim Result As String
 
     For i = StartLine - 1 To 1 Step -1
@@ -334,14 +375,22 @@ End Function
 ' ソースコード文字列から
 ' 指定タグの値を取得する
 '
+' @Remarks
+' 指定Procedure宣言部直前の
+' コメントタグを検索する
+'
 Public Function GetTagValueFromCode( _
         ByVal CodeText As String, _
         ByVal ProcName As String, _
         ByVal TagName As String) As String
 
+    ' ソースコード行配列
     Dim Lines() As String
 
+    ' 行走査用
     Dim i As Long
+    
+    ' コメント走査用
     Dim j As Long
 
     Lines = Split(CodeText, vbCrLf)
@@ -418,10 +467,16 @@ Public Function GetProcInfo( _
                 ByVal ProcName As String) _
                 As clsProcInfo
     
+    ' ProcListシート
     Dim ws As Worksheet
+    
+    ' 最終行
     Dim LastRow As Long
+    
+    ' 行Index
     Dim r As Long
 
+    ' Procedure情報
     Dim Proc As clsProcInfo
 
     If gContext Is Nothing Then Exit Function
@@ -478,6 +533,13 @@ End Function
 ' 表示文字列から
 ' プロシージャ名部分を取得する
 '
+' @Remarks
+' 「ProcName : JPName」形式の場合は
+' 区切り文字「 : 」より前の
+' プロシージャ名を返す
+' 区切り文字が存在しない場合は
+' 入力文字列をそのまま返す
+'
 Public Function GetProcNameFromDisplay( _
                     ByVal DisplayText As String) _
                     As String
@@ -528,6 +590,7 @@ Public Function IsFunctionCall( _
         ByVal LineText As String, _
         ByVal FuncName As String) As Boolean
 
+    ' 正規表現オブジェクト
     Dim RegEx As Object
 
     If IsProcedureLine(LineText) Then

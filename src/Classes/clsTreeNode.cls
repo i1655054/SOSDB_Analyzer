@@ -28,18 +28,31 @@ Option Explicit
 ' Tree表示情報を保持する
 '
 
+' 階層レベル
 Private mLevel As Long
 
+' プロシージャ名
 Private mProcName As String
+
+' 親プロシージャ名
 Private mParentProcName As String
 
+' 日本語名
 Private mJPName As String
+
+' カテゴリ
 Private mCategory As String
+
+' モジュール名
 Private mModuleName As String
+
+' 概要
 Private mSummary As String
 
+' Tree表示文字列
 Private mTreeText As String
 
+' 日本語Tree行
 Private mJPLine As String
 
 '====================================================

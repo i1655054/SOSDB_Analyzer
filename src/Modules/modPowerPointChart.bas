@@ -17,11 +17,15 @@ Private Const PPT_LAYOUT_BLANK As Long = 12
 Private Const PPT_TEXT_HORIZONTAL As Long = 1
 
 ' 縦スライド
+' 縦スライド幅
 Private Const PPT_WIDTH_PORTRAIT As Long = 540
+' 縦スライド高さ
 Private Const PPT_HEIGHT_PORTRAIT As Long = 960
 
 ' 横スライド
+' 横スライド幅
 Private Const PPT_WIDTH_LANDSCAPE As Long = 960
+' 横スライド高さ
 Private Const PPT_HEIGHT_LANDSCAPE As Long = 540
 
 ' タイトル位置
@@ -62,8 +66,10 @@ Private Const PPT_BOTTOM_MARGIN As Long = 80
 ' PathChartをPowerPointファイルとして出力する
 '
 ' @Remarks
-' スライドサイズは設定値または
-' チャートサイズから自動決定する
+' PathChartシートを画像として取得し
+' PowerPointへ貼り付けて保存する
+' スライド向きは設定値または
+' チャートサイズに応じて決定する
 '
 Public Sub CreatePowerPointPathChart( _
                 ByVal StartProc As String, _
@@ -84,9 +90,6 @@ Public Sub CreatePowerPointPathChart( _
     ' タイトル図形
     Dim pptTitle As Object
 
-    ' PathChartシート
-    Dim ws As Worksheet
-    
     ' チャート範囲
     Dim rng As Range
 
@@ -94,13 +97,11 @@ Public Sub CreatePowerPointPathChart( _
     Dim ChartWidth As Double
     Dim ChartHeight As Double
     
-    ' グリッド線表示状態
+    ' グリッド線表示状態退避
     Dim GridLineFlg As Boolean
 
-    ' 出力ファイル
+    ' 出力ファイルパス
     Dim PptFile As String
-
-    Set ws = gContext.ManagementBook.Worksheets(SHEET_PATH_CHART)
 
     Set rng = GetChartRange()
 
@@ -281,7 +282,8 @@ End Sub
 ' PathChartをPNG形式で出力する
 '
 ' @Remarks
-' PowerPoint経由で画像ファイルを生成する
+' PathChartシートをPowerPointへ貼り付け
+' PNG画像として保存する
 '
 Public Sub ExportPathChartToPNG( _
         ByVal StartProc As String, _
@@ -305,10 +307,10 @@ Public Sub ExportPathChartToPNG( _
     ' チャート範囲
     Dim rng As Range
 
-    ' グリッド線表示状態
+    ' グリッド線表示状態退避
     Dim GridLineFlg As Boolean
 
-    ' 出力ファイル
+    ' 出力PNGファイルパス
     Dim PngFile As String
 
     Set ws = gContext.ManagementBook.Worksheets(SHEET_PATH_CHART)
@@ -425,6 +427,7 @@ End Sub
 '
 Public Function GetOutputFolder() As String
 
+    ' 出力フォルダ
     Dim Folder As String
 
     Folder = _
@@ -456,6 +459,10 @@ End Function
 '
 ' @Summary
 ' ファイル名用タイムスタンプを取得する
+'
+' @Remarks
+' 出力ファイル名の重複を防止するため
+' 現在日時を文字列形式で返却する
 '
 Public Function GetTimeStamp() As String
 

@@ -37,6 +37,7 @@ Private Sub UserForm_Initialize()
 
     Me.Caption = "関数管理"
 
+    ' 現在選択中ツール情報
     Dim Tool As clsToolInfo
 
     Set Tool = GetCurrentToolInfo()
@@ -71,6 +72,10 @@ End Sub
 ' @Summary
 ' 関数解析処理を実行する
 '
+' @Remarks
+' 関数一覧解析実行後に
+' ProcedureRepositoryを初期化する
+'
 Private Sub cmdAnalyze_Click()
 
     If Not ValidateTargetBook("関数解析") Then
@@ -83,7 +88,25 @@ Private Sub cmdAnalyze_Click()
 
 End Sub
 
-' HCP生成フォーム
+' @JPName
+' HCP生成起動
+'
+' @Category
+' FunctionManager
+'
+' @Input
+' なし
+'
+' @Output
+' なし
+'
+' @Summary
+' HCP生成画面を表示する
+'
+' @Remarks
+' ProcedureRepositoryを初期化後
+' HCP生成フォームを表示する
+'
 Private Sub cmdHCP_Click()
 
     If Not ValidateTargetBook("HCP生成") Then
@@ -111,6 +134,10 @@ End Sub
 ' @Summary
 ' PathChart画面を表示する
 '
+' @Remarks
+' ProcedureRepositoryを初期化後
+' PathChartフォームを表示する
+'
 Private Sub cmdPathChart_Click()
 
     If Not ValidateTargetBook("PathChart") Then
@@ -137,6 +164,10 @@ End Sub
 '
 ' @Summary
 ' 関数管理画面を閉じる
+'
+' @Remarks
+' 関数管理画面を閉じた後
+' メインメニューを再表示する
 '
 Private Sub cmdClose_Click()
 

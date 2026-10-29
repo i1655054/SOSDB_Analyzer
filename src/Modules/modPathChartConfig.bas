@@ -13,10 +13,14 @@ Public Const PPT_ORIENT_LANDSCAPE As String = "LANDSCAPE"
 ' PathChartConfigセル定義
 '==================================================
 
+' 共通関数除外設定
 Private Const CFG_SKIP_COMMON      As String = "B1"
+' 呼出回数表示設定
 Private Const CFG_SHOW_COUNT       As String = "B2"
 
+' PowerPoint出力設定
 Private Const CFG_POWERPOINT       As String = "B3"
+' PowerPoint向き設定
 Private Const CFG_PPT_ORIENTATION  As String = "B4"
 
 Private Const CFG_PNG_OUTPUT       As String = "B5"
@@ -165,6 +169,7 @@ Public gShowCategory As Boolean
 '
 Public Sub SavePathChartConfig()
 
+    ' PathChart設定シート
     Dim ws As Worksheet
 
     Set ws = _
@@ -228,6 +233,7 @@ End Sub
 '
 Public Sub LoadPathChartConfig()
 
+    ' PathChart設定シート
     Dim ws As Worksheet
 
     Set ws = _
@@ -271,6 +277,8 @@ Public Sub LoadPathChartConfig()
 
     gExternal = ws.Range(CFG_EXTERNAL).Value
 
+    ' 旧バージョン設定シート対策
+    ' 未設定時は既定値(True)
     If Trim$(ws.Range(CFG_EXTERNAL).Value & "") = "" Then
 
         gExternal = True
@@ -279,6 +287,8 @@ Public Sub LoadPathChartConfig()
 
     gRecursive = ws.Range(CFG_RECURSIVE).Value
 
+    ' 旧バージョン設定シート対策
+    ' 未設定時は既定値(True)
     If Trim$(ws.Range(CFG_RECURSIVE).Value & "") = "" Then
 
         gRecursive = True
@@ -319,9 +329,14 @@ End Sub
 ' @Summary
 ' PathChart作成時の既定探索深度を保存する
 '
+' @Remarks
+' PathChart作成時の既定探索深度を
+' 設定シートへ保存する
+'
 Public Sub SaveDefaultMaxDepth( _
                     ByVal MaxDepth As Long)
 
+    ' PathChart設定シート
     Dim ws As Worksheet
 
     Set ws = _
@@ -351,6 +366,7 @@ End Sub
 '
 Public Function GetDefaultMaxDepth() As Long
 
+    ' PathChart設定シート
     Dim ws As Worksheet
 
     Set ws = ThisWorkbook.Worksheets(SHEET_PATH_CHART_CONFIG)
@@ -380,9 +396,14 @@ End Function
 ' @Summary
 ' PathChart作成時の開始関数を保存する
 '
+' @Remarks
+' PathChart作成時の開始関数を
+' 設定シートへ保存する
+'
 Public Sub SaveDefaultStartProcedure( _
                     ByVal StartProc As String)
 
+    ' PathChart設定シート
     Dim ws As Worksheet
 
     Set ws = _
@@ -407,8 +428,13 @@ End Sub
 ' @Summary
 ' PathChart作成時の開始関数を取得する
 '
+' @Remarks
+' PathChart作成時に使用する
+' 開始関数設定値を取得する
+'
 Public Function GetDefaultStartProcedure() As String
 
+    ' PathChart設定シート
     Dim ws As Worksheet
 
     Set ws = ThisWorkbook.Worksheets(SHEET_PATH_CHART_CONFIG)

@@ -15,6 +15,25 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
 
+' @JPName
+' 画面初期化
+'
+' @Category
+' HCPGenerator
+'
+' @Input
+' なし
+'
+' @Output
+' なし
+'
+' @Summary
+' HCP生成画面の初期化を行う
+'
+' @Remarks
+' Compactモードを初期設定し
+' モジュール一覧を読み込む
+'
 Private Sub UserForm_Initialize()
 
     optCompact.Value = True
@@ -23,14 +42,40 @@ Private Sub UserForm_Initialize()
 
 End Sub
 
-
+' @JPName
+' モジュール一覧読込
+'
+' @Category
+' HCPGenerator
+'
+' @Input
+' なし
+'
+' @Output
+' なし
+'
+' @Summary
+' ProcListからモジュール一覧を取得する
+'
+' @Remarks
+' 重複を除外したモジュール名を
+' ソートして一覧へ表示する
+'
 Private Sub LoadModuleList()
 
+    ' ProcListシート
     Dim ws As Worksheet
+    
+    ' 最終行
     Dim LastRow As Long
+    
+    ' 行Index
     Dim r As Long
 
+    ' モジュール名管理Dictionary
     Dim Dic As Object
+    
+    ' ソート対象キー配列
     Dim Keys As Variant
 
     Set Dic = _
@@ -67,12 +112,35 @@ Private Sub LoadModuleList()
 
 End Sub
 
+' @JPName
+' 文字列配列ソート
+'
+' @Category
+' HCPGenerator
+'
+' @Input
+' Arr(Variant)
+'
+' @Output
+' なし
+'
+' @Summary
+' 文字列配列を昇順に並び替える
+'
+' @Remarks
+' 大文字小文字を区別せずに
+' 配列要素をソートする
+'
 Private Sub SortStringArray( _
                 ByRef Arr As Variant)
 
+    ' 比較用Index
     Dim i As Long
+    
+    ' 比較用Index
     Dim j As Long
 
+    ' 交換用退避文字列
     Dim Temp As String
 
     For i = LBound(Arr) To UBound(Arr) - 1
@@ -98,6 +166,25 @@ Private Sub SortStringArray( _
 
 End Sub
 
+' @JPName
+' モジュール選択
+'
+' @Category
+' HCPGenerator
+'
+' @Input
+' なし
+'
+' @Output
+' なし
+'
+' @Summary
+' 選択モジュールのプロシージャ一覧を表示する
+'
+' @Remarks
+' モジュール変更時に
+' プロシージャ一覧を再読込する
+'
 Private Sub lstModule_Click()
 
     LoadProcedureList _
@@ -105,15 +192,44 @@ Private Sub lstModule_Click()
 
 End Sub
 
+' @JPName
+' プロシージャ一覧読込
+'
+' @Category
+' HCPGenerator
+'
+' @Input
+' ModuleName(String)
+'
+' @Output
+' なし
+'
+' @Summary
+' 指定モジュールのプロシージャ一覧を取得する
+'
+' @Remarks
+' 重複を除外して
+' ソート後に一覧へ表示する
+'
 Private Sub LoadProcedureList( _
                 ByVal ModuleName As String)
 
+    ' ProcListシート
     Dim ws As Worksheet
+    
+    ' 最終行
     Dim LastRow As Long
+    
+    ' 行Index
     Dim r As Long
 
+    ' プロシージャ名管理Dictionary
     Dim Dic As Object
+    
+    ' ソート対象キー配列
     Dim Keys As Variant
+    
+    ' 配列Index
     Dim i As Long
 
     Set Dic = _
@@ -154,19 +270,65 @@ Private Sub LoadProcedureList( _
 
 End Sub
 
+' @JPName
+' プロシージャ選択
+'
+' @Category
+' HCPGenerator
+'
+' @Input
+' なし
+'
+' @Output
+' なし
+'
+' @Summary
+' 選択プロシージャの情報を表示する
+'
+' @Remarks
+' 日本語名および概要を
+' 画面へ表示する
+'
 Private Sub lstProcedure_Click()
 
     LoadProcedureInfo
 
 End Sub
 
+' @JPName
+' プロシージャ情報読込
+'
+' @Category
+' HCPGenerator
+'
+' @Input
+' なし
+'
+' @Output
+' なし
+'
+' @Summary
+' 選択プロシージャの情報を取得する
+'
+' @Remarks
+' ProcListから日本語名および
+' Summaryを取得して表示する
+'
 Private Sub LoadProcedureInfo()
 
+    ' ProcListシート
     Dim ws As Worksheet
+    
+    ' 最終行
     Dim LastRow As Long
+    
+    ' 行Index
     Dim r As Long
 
+    ' 選択モジュール名
     Dim ModuleName As String
+    
+    ' 選択プロシージャ名
     Dim ProcName As String
     
     Set ws = _
@@ -202,11 +364,31 @@ Private Sub LoadProcedureInfo()
 
 End Sub
 
+' @JPName
+' HCP生成
+'
+' @Category
+' HCPGenerator
+'
+' @Input
+' なし
+'
+' @Output
+' なし
+'
+' @Summary
+' HCPチャートを生成する
+'
+' @Remarks
+' 選択プロシージャを解析し
+' HCPシートを生成して表示する
+'
 Private Sub cmdGenerate_Click()
 
-    Dim Tool As clsToolInfo
-    
+    ' 対象モジュール名
     Dim ModuleName As String
+    
+    ' 対象プロシージャ名
     Dim ProcName As String
 
     If lstModule.ListIndex < 0 Then
@@ -243,7 +425,24 @@ Private Sub cmdGenerate_Click()
     
 End Sub
 
-
+' @JPName
+' 画面終了
+'
+' @Category
+' HCPGenerator
+'
+' @Input
+' なし
+'
+' @Output
+' なし
+'
+' @Summary
+' HCP生成画面を閉じる
+'
+' @Remarks
+' フォームをアンロードして終了する
+'
 Private Sub cmdClose_Click()
 
     Unload Me

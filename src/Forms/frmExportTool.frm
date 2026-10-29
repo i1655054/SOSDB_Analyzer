@@ -30,6 +30,10 @@ Option Explicit
 ' @Summary
 ' エクスポート画面の初期表示処理を行う
 '
+' @Remarks
+' ListView初期化および
+' ツール一覧読込を実施する
+'
 Private Sub UserForm_Initialize()
 
     SetupListView
@@ -52,6 +56,10 @@ End Sub
 '
 ' @Summary
 ' ツール一覧表示用ListViewを初期化する
+'
+' @Remarks
+' ListViewの表示形式および
+' 列定義を初期設定する
 '
 Private Sub SetupListView()
 
@@ -94,11 +102,19 @@ End Sub
 '
 Private Sub LoadToolList()
 
+    ' ToolManagerシート
     Dim ws As Worksheet
+    
+    ' 最終行
     Dim LastRow As Long
+    
+    ' 行Index
     Dim r As Long
 
+    ' ListView項目
     Dim itm As ListItem
+    
+    ' 対象Workbook
     Dim wb As Workbook
 
     Set ws = _
@@ -169,9 +185,16 @@ End Sub
 ' @Summary
 ' チェック済みツール件数を表示する
 '
+' @Remarks
+' チェック済み件数を集計し
+' ラベルへ表示する
+'
 Private Sub UpdateSelectedCount()
 
+    ' ListView項目
     Dim itm As ListItem
+    
+    ' 選択件数
     Dim Count As Long
 
     For Each itm In lvwTools.ListItems
@@ -195,9 +218,19 @@ End Sub
 ' @Category
 ' Export
 '
+' @Input
+' なし
+'
+' @Output
+' なし
+'
 ' @Summary
 ' ツール一覧を再読込し
 ' Open/Close状態を更新する
+'
+' @Remarks
+' ツール一覧を再取得し
+' 最新状態を反映する
 '
 Private Sub cmdRefresh_Click()
 
@@ -211,11 +244,23 @@ End Sub
 ' @Category
 ' Export
 '
+' @Input
+' なし
+'
+' @Output
+' なし
+'
 ' @Summary
 ' 一覧の全ツールを選択する
 '
+' @Remarks
+' 一覧内の全ツールへ
+' チェックを設定する
+'
+'
 Private Sub cmdSelectAll_Click()
 
+    ' ListView項目
     Dim itm As ListItem
 
     For Each itm In lvwTools.ListItems
@@ -234,11 +279,22 @@ End Sub
 ' @Category
 ' Export
 '
+' @Input
+' なし
+'
+' @Output
+' なし
+'
 ' @Summary
 ' 一覧の全ツールの選択を解除する
 '
+' @Remarks
+' 一覧内の全ツールの
+' チェックを解除する
+'
 Private Sub cmdSelectNone_Click()
 
+    ' ListView項目
     Dim itm As ListItem
 
     For Each itm In lvwTools.ListItems
@@ -266,6 +322,10 @@ End Sub
 ' @Summary
 ' チェック状態変更時に
 ' 選択件数を更新する
+'
+' @Remarks
+' チェック済みツール数を再集計し
+' 画面の選択件数表示へ反映する
 '
 Private Sub lvwTools_ItemCheck( _
     ByVal Item As MSComctlLib.ListItem)
@@ -296,14 +356,22 @@ End Sub
 '
 Private Sub cmdExport_Click()
 
+    ' ListView項目
     Dim itm As ListItem
 
+    ' ツールID
     Dim ToolID As Long
+    
+    ' 対象Workbook
     Dim wb As Workbook
 
+    ' エクスポート件数
     Dim Count As Long
     
+    ' 実際に出力成功した件数
     Dim ExportCount As Long
+    
+    ' 最終出力Gitルート
     Dim LastRootPath As String
 
     For Each itm In lvwTools.ListItems
@@ -367,11 +435,21 @@ End Sub
 ' @JPName
 ' 画面終了
 '
+' @Input
+' なし
+'
+' @Output
+' なし
+'
 ' @Category
 ' Export
 '
 ' @Summary
 ' エクスポート画面を閉じる
+'
+' @Remarks
+' 画面を閉じた後に
+' メインメニューを再表示する
 '
 Private Sub cmdClose_Click()
 

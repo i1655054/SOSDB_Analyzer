@@ -65,8 +65,13 @@ End Sub
 '
 Private Sub LoadToolList()
 
+    ' ToolManagerシート
     Dim ws As Worksheet
+    
+    ' 最終行
     Dim LastRow As Long
+    
+    ' 行Index
     Dim r As Long
 
     Set ws = _
@@ -109,6 +114,7 @@ End Sub
 '
 ' @Remarks
 ' 解析コンテキスト生成後に
+' Repositoryを初期化し
 ' 関数管理画面を表示する
 '
 Private Sub cmdOK_Click()
@@ -122,6 +128,8 @@ Private Sub cmdOK_Click()
 
     End If
 
+    ' 選択ツールIDを取得し
+    ' 解析コンテキストを生成する
     gTargetToolID = _
         CLng(lstTool.List( _
             lstTool.ListIndex, _
@@ -161,6 +169,10 @@ End Sub
 '
 ' @Summary
 ' ツール選択画面を閉じる
+'
+' @Remarks
+' ツール選択画面を閉じた後
+' メインメニューを再表示する
 '
 Private Sub cmdClose_Click()
 

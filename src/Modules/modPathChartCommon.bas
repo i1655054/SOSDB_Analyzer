@@ -28,14 +28,25 @@ Public Function GetChildrenList( _
                 ByVal ParentProc As String) _
                 As Collection
 
+    ' 子Procedure一覧
     Dim Col As Collection
 
+    ' 関数依存関係シート
     Dim wsDep As Worksheet
+    
+    ' 最終行
     Dim LastRow As Long
+    
+    ' 行Index
     Dim r As Long
 
+    ' 子Procedure名
     Dim ChildProc As String
+    
+    ' 呼出元モジュール
     Dim ParentModule As String
+    
+    ' 呼出先モジュール
     Dim ChildModule As String
 
     Set Col = New Collection
@@ -190,6 +201,10 @@ End Function
 ' @Summary
 ' 共通関数として除外対象か判定する
 '
+' @Remarks
+' PathChart出力時に除外対象とする
+' 共通ユーティリティ関数か判定する
+'
 Public Function IsCommonFunction( _
                 ByVal ProcName As String) As Boolean
 
@@ -246,7 +261,10 @@ Public Function CreateTreeNode( _
                 ByVal TreeText As String) _
                 As clsTreeNode
 
+    ' ツリーノード
     Dim Node As clsTreeNode
+    
+    ' Procedure情報
     Dim Proc As clsProcInfo
 
     Set Node = New clsTreeNode
@@ -259,6 +277,7 @@ Public Function CreateTreeNode( _
     '--------------------------
     ' Procedure情報
     '--------------------------
+    ' ProcListから詳細情報取得
     Set Proc = GetProcInfo(ProcName)
 
     If Not Proc Is Nothing Then

@@ -1,7 +1,7 @@
 Attribute VB_Name = "modPathChartText"
 Option Explicit
 
-' TreeNode一覧
+' 出力用TreeNode一覧
 Private gTreeNodes As Collection
 
 '==================================================
@@ -103,9 +103,14 @@ End Sub
 ' ツリー構造のルートノードを生成し
 ' TreeNode一覧へ追加する
 '
+' @Remarks
+' 開始関数をルートノードとして生成する
+' 日本語名称およびモジュール名表示を設定する
+'
 Private Sub AddRootNode( _
                 ByVal StartProc As String)
 
+    ' ルートTreeNode
     Dim Node As clsTreeNode
 
     Set Node = CreateTreeNode( _
@@ -165,6 +170,8 @@ End Sub
 '
 ' @Remarks
 ' 英語Tree行および日本語Tree行を生成する
+' 循環参照を検出した場合は
+' 再帰展開を行わない
 '
 Private Sub BuildTreeText( _
                 ByVal ParentProc As String, _
@@ -184,23 +191,40 @@ Private Sub BuildTreeText( _
     '               TREE_BAR = 子ノードあり
     '               TREE_SPACE = 子ノードなし
     '------------------------------------
+    ' 日本語Tree行
     Dim JPText As String
+    
+    ' 親階層接続文字
     Dim JPParent As String
+    
+    ' 子ノード有無記号
     Dim JPChild As String
 
+    ' 子ノード一覧
     Dim Children As Collection
 
+    ' 子Procedure名
     Dim ChildProc As Variant
+    
+    ' 子ノード数
     Dim ChildCount As Long
 
+    ' 英語Tree行
     Dim TreeText As String
+    
+    ' 次階層Prefix
     Dim NextPrefix As String
 
+    ' TreeNode
     Dim Node As clsTreeNode
 
+    ' 子ノード走査Index
     Dim i As Long
+    
+    ' 最終子ノード判定
     Dim IsLastChild As Boolean
 
+    ' 子ノード存在フラグ
     Dim HasChildren As Boolean
 
     If PathText = "" Then
@@ -295,6 +319,7 @@ Private Sub BuildTreeText( _
 
         End If
 
+        ' 子ノード有無判定
         HasChildren = _
             (GetChildrenList(ChildProc).Count > 0)
 
@@ -360,15 +385,24 @@ End Sub
 ' @Remarks
 ' 英語Tree行と日本語Tree行を
 ' 交互に出力する
+' TreeNode一覧をシートへ出力する
+' 出力後に書式設定およびフィルタ設定を行う
 '
 Public Sub OutputTreeNodeList()
 
+    ' 出力シート
     Dim ws As Worksheet
+    
+    ' TreeNode
     Dim Node As clsTreeNode
 
+    ' 出力行
     Dim RowNo As Long
 
+    ' 最終行
     Dim LastRow As Long
+    
+    ' 最終列
     Dim LastCol As Long
 
     On Error Resume Next

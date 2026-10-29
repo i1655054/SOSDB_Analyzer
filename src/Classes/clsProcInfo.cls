@@ -29,25 +29,48 @@ Option Explicit
 '
 
 ' 基本情報
+' Procedure名
 Public ProcName As String
+
+' モジュール名
 Public ModuleName As String
+
+' Procedure種別
 Public ProcType As String
 
 ' コメント情報
+' 日本語名称
 Public JPName As String
+
+' カテゴリ
 Public Category As String
+
+' 入力情報
 Public InputText As String
+
+' 出力情報
 Public OutputText As String
+
+' 概要
 Public Summary As String
+
+' 備考
 Public Remarks As String
 
 ' 解析情報
+' 呼出回数
 Public UsageCount As Long
+
+' 状態
 Public Status As String
 
 ' 呼出関係
+' 呼出元一覧
 Public CalledBy As Collection
+
+' 呼出先一覧
 Public Calls As Collection
+
 
 '=================================================
 ' 初期化
@@ -156,6 +179,7 @@ Private Function ExistsInCollection( _
             ByVal Col As Collection, _
             ByVal Value As String) As Boolean
             
+    ' コレクション要素
     Dim V As Variant
 
     For Each V In Col
@@ -200,6 +224,24 @@ Public Property Get CalledByCount() As Long
 
 End Property
 
+'=================================================
+' 呼出先件数取得
+'=================================================
+' @JPName
+' 呼出先件数取得
+'
+' @Category
+' Model
+'
+' @Input
+' なし
+'
+' @Output
+' Count(Long)
+'
+' @Summary
+' 呼出先プロシージャ件数を取得する
+'
 Public Property Get CallCount() As Long
 
     CallCount = Calls.Count

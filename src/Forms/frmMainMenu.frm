@@ -29,6 +29,10 @@ Attribute VB_Exposed = False
 ' @Summary
 ' メインメニュー画面を初期化する
 '
+' @Remarks
+' フォームタイトルを設定して
+' メインメニューを初期化する
+'
 Private Sub UserForm_Initialize()
 
     Me.Caption = "解析ツール"
@@ -48,6 +52,10 @@ End Sub
 ' なし
 '
 ' @Summary
+' ソース管理画面を表示する
+'
+' @Remarks
+' メインメニューを閉じて
 ' ソース管理画面を表示する
 '
 Private Sub cmdExport_Click()
@@ -74,6 +82,10 @@ End Sub
 ' @Summary
 ' 対象ツール選択画面を表示する
 '
+' @Remarks
+' メインメニューを閉じて
+' 対象ツール選択画面を表示する
+'
 Private Sub cmdFunction_Click()
 
     Unload Me
@@ -97,6 +109,10 @@ End Sub
 '
 ' @Summary
 ' メインメニュー画面を閉じる
+'
+' @Remarks
+' Main画面状態を復元した後
+' メインメニューを終了する
 '
 Private Sub cmdClose_Click()
 
@@ -123,8 +139,8 @@ End Sub
 ' メインメニュー終了時の制御を行う
 '
 ' @Remarks
-' ×ボタン押下時は
-' PathChart画面を再表示する
+' ×ボタンによる終了時は
+' Main画面状態を復元する
 '
 Private Sub UserForm_QueryClose( _
     Cancel As Integer, _

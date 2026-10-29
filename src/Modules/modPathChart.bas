@@ -1,6 +1,7 @@
 Attribute VB_Name = "modPathChart"
 Option Explicit
 
+' PathChartデバッグ出力有効化
 #Const DEBUG_MODE = False
 
 '==================================================
@@ -144,10 +145,10 @@ Private Const MODULE_COLOR_DEFAULT As Long = &HC8C8C8
 ' PathChart生成状態
 '==================================================
 
-' 生成ノード採番
+' 現在採番済みノード数
 Private gNodeNo As Long
 
-' 最大探索階層
+' 探索上限階層
 Private gMaxLevel As Long
 
 '==================================================
@@ -240,13 +241,25 @@ Public gNavigatorStatus As String
 ' 関数依存関係シートを参照し
 ' 指定関数を起点としたパスチャート図を生成する
 '
+' @Remarks
+' パスチャート生成前に内部状態を初期化する
+' ノード生成後にPowerPoint、PNG、
+' テキスト出力を実行する
+'
 Public Sub CreatePathChart_V3( _
                 ByVal StartProc As String, _
                 ByVal MaxDepth As Long)
 
+    ' PathChartシート
     Dim ws As Worksheet
+    
+    ' ルートノード図形
     Dim RootShape As Shape
+    
+    ' ルートノードX座標
     Dim RootLeft As Double
+    
+    ' ルート表示文字列
     Dim RootCaption As String
 
     gNodeNo = 0
@@ -349,6 +362,7 @@ Public Sub CreatePathChart_V3( _
 
     NodeCount = gNodeNo
 
+    ' 出力範囲
     Dim ChartRange As Range
 
     Set ChartRange = GetChartRange()
@@ -371,6 +385,7 @@ End Sub
 ' Level(Long)
 ' TopPos(Double)
 ' LeftPos(Double)
+' PathText(String)
 '
 ' @Output
 ' なし
@@ -378,6 +393,11 @@ End Sub
 ' @Summary
 ' 関数依存関係を再帰的にたどり
 ' 子ノードおよび接続線を描画する
+'
+' @Remarks
+' 再帰ループを検出した場合は探索しない
+' 外部呼出や共通関数除外条件を考慮する
+' 親子関係情報を内部管理表へ登録する
 '
 Private Sub DrawCallTreeShape( _
             ByVal ParentFunc As String, _
@@ -387,12 +407,19 @@ Private Sub DrawCallTreeShape( _
             ByVal LeftPos As Double, _
             Optional ByVal PathText As String = "")
 
+    ' 関数依存関係シート
     Dim wsDep As Worksheet
 
+    ' 最終行
     Dim LastRow As Long
+    
+    ' 行Index
     Dim r As Long
 
+    ' 子ノードオフセット
     Dim BranchOffset As Long
+    
+    ' 分岐サイズ
     Dim BranchSize As Long
 
     If PathText = "" Then
@@ -436,22 +463,38 @@ Private Sub DrawCallTreeShape( _
 
         If wsDep.Cells(r, 1).Value = ParentFunc Then
 
+            ' === 呼出先情報 ===
+            ' 呼出先関数
             Dim ChildFunc As String
+            
+            ' 呼出回数
             Dim CallCount As Long
 
+            ' 呼出元モジュール
             Dim ParentModule As String
+            
+            ' 呼出先モジュール
             Dim ChildModule As String
+            
+            ' 表示対象モジュール名
             Dim ModuleName As String
 
+            ' Procedure情報
             Dim Proc As clsProcInfo
 
+            ' ノード表示文字列
             Dim CaptionText As String
 
+            ' 子ノードY座標
             Dim ChildTop As Double
+            
+            ' 子ノードX座標
             Dim ChildLeft As Double
 
+            ' ノード色
             Dim FillColor As Long
 
+            ' 子ノードShape
             Dim shpChild As Shape
 
             ChildFunc = _
@@ -648,6 +691,7 @@ End Sub
 '
 ' @Input
 ' ParentFunc(String)
+' PathText(String)
 '
 ' @Output
 ' BranchSize(Long)
@@ -655,17 +699,28 @@ End Sub
 ' @Summary
 ' ノード配列計算用の分岐サイズを取得する
 '
+' @Remarks
+' 子孫ノード数を再帰的に集計する
+' ノード配置時の縦方向サイズ算出に利用する
+'
 Private Function GetBranchSize( _
                 ByVal ParentFunc As String, _
                 Optional ByVal PathText As String = "") _
                 As Long
 
+    ' 関数依存関係シート
     Dim wsDep As Worksheet
 
+    ' 最終行
     Dim LastRow As Long
+    
+    ' 行Index
     Dim r As Long
 
+    ' 呼出先関数
     Dim ChildFunc As String
+    
+    ' 分岐サイズ
     Dim Size As Long
 
     If PathText = "" Then
@@ -751,6 +806,10 @@ End Function
 ' @Summary
 ' パスチャート用ノード図形を作成する
 '
+' @Remarks
+' ノード名の採番を行う
+' 図形書式およびクリックイベントを設定する
+'
 Private Function DrawNode( _
             ws As Worksheet, _
             ByVal CaptionText As String, _
@@ -758,6 +817,7 @@ Private Function DrawNode( _
             ByVal LeftPos As Double, _
             ByVal FillColor As Long) As Shape
     
+    ' 作成Shape
     Dim shp As Shape
     
     ' DrawNode制限
@@ -836,8 +896,10 @@ Private Function BuildCaptionText( _
                 Optional ByVal CallCount As Long = 0) _
                 As String
 
+    ' Procedure情報
     Dim Proc As clsProcInfo
 
+    ' ノード表示文字列
     Dim CaptionText As String
 
     Set Proc = GetProcInfo(ProcName)
@@ -897,6 +959,10 @@ End Function
 ' @Summary
 ' モジュール名に対応する表示色を取得する
 '
+' @Remarks
+' モジュール種別ごとの固定色を返却する
+' 未定義モジュールは既定色を返却する
+'
 Private Function GetModuleColor( _
                     ByVal ModuleName As String) As Long
 
@@ -948,11 +1014,16 @@ End Function
 ' @Summary
 ' 親ノードと子ノード間の接続線を作成する
 '
+' @Remarks
+' エルボコネクタを使用する
+' 接続線名は親子ノード名から生成する
+'
 Private Sub ConnectShapes( _
             ws As Worksheet, _
             ByVal ParentName As String, _
             ByVal ChildName As String)
 
+    ' 接続線Shape
     Dim Con As Shape
 
     Set Con = ws.Shapes.AddConnector( _
@@ -999,8 +1070,12 @@ End Sub
 ' @Summary
 ' PathChart上の作成済みノードと接続線を削除する
 '
+' @Remarks
+' ノード(N_)および接続線(C_)のみ削除する
+'
 Private Sub ClearChartShapes(ws As Worksheet)
 
+    ' Shape走査Index
     Dim i As Long
 
     For i = ws.Shapes.Count To 1 Step -1
@@ -1031,15 +1106,28 @@ End Sub
 ' @Summary
 ' PathChart全体を含むセル範囲を取得する
 '
+' @Remarks
+' ノードおよび接続線の配置位置を走査する
+' Chart全体を含むセル範囲を返却する
+'
 Public Function GetChartRange() As Range
     
+    ' PathChartシート
     Dim ws As Worksheet
+    
+    ' Shape
     Dim shp As Shape
 
+    ' 最大右端座標
     Dim MaxRight As Double
+    
+    ' 最大下端座標
     Dim MaxBottom As Double
 
+    ' 最終列
     Dim LastCol As Long
+    
+    ' 最終行
     Dim LastRow As Long
 
     Set ws = gContext.ManagementBook.Worksheets(SHEET_PATH_CHART)
@@ -1112,10 +1200,15 @@ End Function
 ' @Summary
 ' PathChart生成を実行し結果を表示する
 '
+' @Remarks
+' PathChart生成処理実行後に
+' 統計情報およびログを更新する
+'
 Public Sub ExecutePathChart( _
                 ByVal StartProc As String, _
                 ByVal MaxDepth As Long)
 
+    ' PathChartシート
     Dim ws As Worksheet
 
     Set ws = _
@@ -1184,6 +1277,10 @@ End Sub
 ' @Summary
 ' 指定文字列でノードを検索する
 '
+' @Remarks
+' 新規検索として検索状態を初期化し
+' 検索処理を実行する
+'
 Public Sub FindNode()
 
     'MsgBox "FindNode Start"
@@ -1207,6 +1304,9 @@ End Sub
 ' @Summary
 ' 次の検索候補ノードを検索する
 '
+' @Remarks
+' 前回検索位置以降から検索を継続する
+'
 Public Sub FindNextNode()
 
     FindNodeCore True
@@ -1228,14 +1328,26 @@ End Sub
 ' @Summary
 ' PathChart内のノード検索処理を実行する
 '
+' @Remarks
+' 検索条件に一致したノードを探索する
+' 一致ノードを強調表示し
+' Navigator情報を更新する
+'
 Private Sub FindNodeCore(ByVal IsNext As Boolean)
 
+    ' PathChartシート
     Dim ws As Worksheet
+    
+    ' ノードShape
     Dim shp As Shape
 
+    ' 検索文字列
     Dim FindText As String
+    
+    ' 完全一致検索フラグ
     Dim ExactMatch As Boolean
 
+    ' Shape通番
     Dim ShapeNo As Long
 
     Set ws = gContext.ManagementBook.Worksheets(SHEET_PATH_CHART)
@@ -1434,6 +1546,10 @@ End Sub
 ' @Summary
 ' ノード文字列が検索条件に一致するか判定する
 '
+' @Remarks
+' 完全一致検索および部分一致検索を
+' 指定に応じて切り替えて判定する
+'
 Private Function IsMatchNode( _
                 ByVal NodeText As String, _
                 ByVal FindText As String, _
@@ -1442,6 +1558,7 @@ Private Function IsMatchNode( _
 
     If ExactMatch Then
 
+        ' 判定用ノード文字列
         Dim BaseText As String
 
         BaseText = Split(NodeText, "(")(0)
@@ -1485,6 +1602,10 @@ End Function
 ' @Summary
 ' 選択されたノードを現在ノードとして設定する
 '
+' @Remarks
+' クリックされたノードを現在ノードとして設定する
+' ハイライト表示およびNavigator更新を行う
+'
 Public Sub SelectNode()
 
     If gParentMap Is Nothing Then
@@ -1507,8 +1628,13 @@ Public Sub SelectNode()
 
     End If
     
+    ' PathChartシート
     Dim ws As Worksheet
+    
+    ' 選択ノード
     Dim shp As Shape
+    
+    ' Shape名
     Dim ShapeName As String
 
     Set ws = gContext.ManagementBook.Worksheets(SHEET_PATH_CHART)
@@ -1591,6 +1717,7 @@ Public Function GetProcedureNameFromNodeText( _
                 ByVal NodeText As String) _
                 As String
 
+    ' Procedure名
     Dim ProcName As String
 
     ProcName = Split(NodeText, vbLf)(0)
@@ -1616,9 +1743,14 @@ End Function
 ' @Summary
 ' 選択ノードの情報をNavigatorへ表示する
 '
+' @Remarks
+' Procedure情報を取得し
+' Navigatorの表示内容を更新する
+'
 Public Sub UpdateCurrentNodeInfo( _
                 ByVal ProcName As String)
     
+    ' Procedure情報
     Dim Proc As clsProcInfo
 
     Set Proc = GetProcInfo(ProcName)
@@ -1676,6 +1808,10 @@ End Sub
 ' @Summary
 ' 現在ノードの親ノードへ移動する
 '
+' @Remarks
+' 現在ノードの親ノードへ移動する
+' ナビゲーション状態および表示情報を更新する
+'
 Public Sub MoveToParentNode()
 
     If gParentMap Is Nothing Then
@@ -1686,7 +1822,10 @@ Public Sub MoveToParentNode()
 
     End If
 
+    ' PathChartシート
     Dim ws As Worksheet
+    
+    ' 移動先ノード
     Dim shp As Shape
 
     Set ws = gContext.ManagementBook.Worksheets(SHEET_PATH_CHART)
@@ -1770,6 +1909,10 @@ End Sub
 ' @Summary
 ' 現在ノードの子ノードへ移動する
 '
+' @Remarks
+' 現在ノード配下の子ノードを巡回する
+' 子ノード選択状態および表示情報を更新する
+'
 Public Sub MoveToChildNode()
 
     If gChildMap Is Nothing Then
@@ -1780,9 +1923,13 @@ Public Sub MoveToChildNode()
 
     End If
 
+    ' PathChartシート
     Dim ws As Worksheet
+    
+    ' 移動先ノード
     Dim shp As Shape
 
+    ' 子ノード一覧
     Dim Ary As Variant
     
     Set ws = gContext.ManagementBook.Worksheets(SHEET_PATH_CHART)
@@ -1904,6 +2051,10 @@ End Sub
 ' @Summary
 ' 現在ノードと同一親を持つ兄弟ノードへ移動する
 '
+' @Remarks
+' 同一親配下の兄弟ノードを巡回する
+' ノード選択状態および表示情報を更新する
+'
 Public Sub MoveToSiblingNode()
 
     If gParentMap Is Nothing Then
@@ -1914,13 +2065,22 @@ Public Sub MoveToSiblingNode()
 
     End If
     
+    ' PathChartシート
     Dim ws As Worksheet
+    
+    ' 移動先ノード
     Dim shp As Shape
 
+    ' 親ノード名
     Dim ParentName As String
+    
+    ' 兄弟ノード一覧
     Dim Ary As Variant
 
+    ' 配列走査Index
     Dim i As Long
+    
+    ' 現在位置
     Dim CurrentPos As Long
 
     Set ws = gContext.ManagementBook.Worksheets(SHEET_PATH_CHART)
@@ -2042,6 +2202,10 @@ End Sub
 ' @Summary
 ' 現在ノードおよび関連ノードを強調表示する
 '
+' @Remarks
+' 現在ノード、親ノード、兄弟ノード、
+' 子ノードおよび接続線を強調表示する
+'
 Private Sub HighlightNode( _
                 ByVal shp As Shape)
 
@@ -2087,6 +2251,9 @@ End Sub
 ' @Summary
 ' 現在選択中ノードを強調表示する
 '
+' @Remarks
+' 現在選択中ノードを赤枠で強調表示する
+'
 Private Sub HighlightCurrentNode( _
                 ByVal shp As Shape)
 
@@ -2115,9 +2282,14 @@ End Sub
 ' @Summary
 ' 親ノードを強調表示する
 '
+' @Remarks
+' 現在ノードの親ノードを強調表示する
+' 背景色は変更しない
+'
 Private Sub HighlightParentNode( _
                 ByVal ParentShapeName As String)
 
+    ' PathChartシート
     Dim ws As Worksheet
 
     If gParentMap Is Nothing Then Exit Sub
@@ -2152,6 +2324,10 @@ End Sub
 ' @Summary
 ' 親ノードとの接続線を強調表示する
 '
+' @Remarks
+' 親ノードと現在ノード間の接続線を
+' 強調表示する
+'
 Private Sub HighlightParentConnector()
 
     If gParentMap Is Nothing Then Exit Sub
@@ -2184,12 +2360,20 @@ End Sub
 ' @Summary
 ' 現在ノードの子ノードを強調表示する
 '
+' @Remarks
+' 現在ノード配下の子ノードを強調表示し
+' 関連接続線も強調表示する
+'
 Private Sub HighlightChildNodes( _
                 ByVal ParentShapeName As String)
 
+    ' PathChartシート
     Dim ws As Worksheet
+    
+    ' 子ノード一覧
     Dim Ary As Variant
 
+    ' 子ノード名
     Dim ChildName As Variant
 
     If gContext Is Nothing Then Exit Sub
@@ -2252,11 +2436,20 @@ End Sub
 ' @Summary
 ' 兄弟ノードを強調表示する
 '
+' @Remarks
+' 現在ノード以外の兄弟ノードを
+' 強調表示する
+'
 Private Sub HighlightSiblingNodes( _
                 ByVal ParentShapeName As String)
 
+    ' PathChartシート
     Dim ws As Worksheet
+    
+    ' 兄弟ノード一覧
     Dim Ary As Variant
+    
+    ' 兄弟ノード名
     Dim ChildName As Variant
 
     Set ws = gContext.ManagementBook.Worksheets(SHEET_PATH_CHART)
@@ -2314,10 +2507,17 @@ End Sub
 ' @Summary
 ' 兄弟ノードへの接続線を強調表示する
 '
+' @Remarks
+' 兄弟ノードへの接続線を
+' 強調表示する
+'
 Private Sub HighlightSiblingConnectors( _
                 ByVal ParentShapeName As String)
 
+    ' 兄弟ノード一覧
     Dim Ary As Variant
+    
+    ' 兄弟ノード名
     Dim ChildName As Variant
 
     If gChildMap Is Nothing Then Exit Sub
@@ -2365,13 +2565,20 @@ End Sub
 ' @Summary
 ' 指定ノード間の接続線を強調表示する
 '
+' @Remarks
+' 指定された親子ノード間の接続線へ
+' 強調表示書式を設定する
+'
 Private Sub HighlightConnector( _
                 ByVal ParentShapeName As String, _
                 ByVal ChildShapeName As String, _
                 ByVal LineColor As Long, _
                 ByVal LineWeight As Double)
 
+    ' PathChartシート
     Dim ws As Worksheet
+    
+    ' 接続線名
     Dim ConnectorName As String
 
     Set ws = gContext.ManagementBook.Worksheets(SHEET_PATH_CHART)
@@ -2410,9 +2617,16 @@ End Sub
 ' @Summary
 ' PathChartの強調表示を初期状態へ戻す
 '
+' @Remarks
+' ノードおよび接続線の表示属性を
+' 初期状態へ戻す
+'
 Private Sub ResetChartHighlight()
 
+    ' PathChartシート
     Dim ws As Worksheet
+    
+    ' Shape
     Dim shp As Shape
 
     Set ws = gContext.ManagementBook.Worksheets(SHEET_PATH_CHART)
@@ -2514,6 +2728,10 @@ End Sub
 ' @Summary
 ' Navigatorおよびステータスバーへ状態を表示する
 '
+' @Remarks
+' Navigator画面とステータスバーへ
+' 状態メッセージを表示する
+'
 Public Sub UpdateNavigatorStatus( _
                 ByVal Msg As String)
 
@@ -2554,13 +2772,23 @@ End Sub
 ' @Summary
 ' 開始関数候補をコンボボックスへ設定する
 '
+' @Remarks
+' 関数依存関係シートから
+' 開始関数候補一覧を生成する
+'
 Public Sub LoadStartProcedure( _
                 ByVal cbo As MSForms.ComboBox)
 
+    ' 関数依存関係シート
     Dim ws As Worksheet
+    
+    ' 最終行
     Dim LastRow As Long
+    
+    ' 行Index
     Dim r As Long
 
+    ' 重複除外管理
     Dim Dic As Object
 
     Set Dic = CreateObject("Scripting.Dictionary")
@@ -2615,6 +2843,10 @@ End Sub
 ' @Summary
 ' 検索履歴コレクションを初期化する
 '
+' @Remarks
+' 検索履歴コレクション未生成時のみ
+' 初期化を実施する
+'
 Public Sub InitSearchHistory()
 
     If gSearchHistory Is Nothing Then
@@ -2640,9 +2872,14 @@ End Sub
 ' @Summary
 ' 検索履歴へキーワードを追加する
 '
+' @Remarks
+' 重複登録を防止しながら
+' 検索履歴へ追加する
+'
 Public Sub AddSearchHistory( _
                 ByVal SearchText As String)
 
+    ' 検索履歴走査用
     Dim V As Variant
 
     If Trim$(SearchText) = "" Then Exit Sub
@@ -2677,9 +2914,14 @@ End Sub
 ' @Summary
 ' 検索履歴をコンボボックスへ設定する
 '
+' @Remarks
+' 保持している検索履歴を
+' コンボボックスへ設定する
+'
 Public Sub LoadSearchHistory( _
                 ByVal cbo As MSForms.ComboBox)
 
+    ' 検索履歴
     Dim V As Variant
 
     InitSearchHistory
@@ -2711,13 +2953,26 @@ End Sub
 ' @Summary
 ' PathChart内のノード一覧を検索候補として読み込む
 '
+' @Remarks
+' PathChart内のノードから
+' 重複除外した候補一覧を生成する
+'
 Public Sub LoadSearchNodeList( _
                 ByVal cbo As MSForms.ComboBox)
 
+    ' PathChartシート
     Dim ws As Worksheet
+    
+    ' ノードShape
     Dim shp As Shape
+    
+    ' 重複除外管理
     Dim Dic As Object
+    
+    ' ノード文字列
     Dim NodeText As String
+    
+    ' Dictionary走査用
     Dim V As Variant
 
     Set ws = gContext.ManagementBook.Worksheets(SHEET_PATH_CHART)
@@ -2785,6 +3040,10 @@ End Sub
 ' @Summary
 ' PathChart操作用ショートカットキーを登録する
 '
+' @Remarks
+' PathChart操作用ショートカットキーを
+' Excelへ登録する
+'
 Public Sub RegisterShortcut()
 
     ' 検索 Ctrl + Shift + F
@@ -2822,6 +3081,9 @@ End Sub
 ' @Summary
 ' PathChart操作用ショートカットキーを解除する
 '
+' @Remarks
+' 登録済みショートカットキーを解除する
+'
 Public Sub UnRegisterShortcut()
 
     Application.OnKey "^+F"
@@ -2857,6 +3119,10 @@ End Sub
 '
 ' @Summary
 ' PathChartをPowerPointへ出力する
+'
+' @Remarks
+' PowerPoint出力モジュールを呼び出して
+' PathChartをPowerPoint形式で出力する
 '
 Private Sub ExportPathChartToPowerPoint( _
                 ByVal StartProc As String, _

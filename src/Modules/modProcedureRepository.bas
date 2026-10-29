@@ -1,7 +1,32 @@
 Attribute VB_Name = "modProcedureRepository"
 Option Explicit
 
-' InitializeProcedureRepository
+'==================================================
+' ProcedureRepository
+'
+' ProcListシートからProcedure情報を読み込み
+' Procedure検索用Dictionaryを管理する
+'==================================================
+
+' @JPName
+' ProcedureRepository初期化
+'
+' @Category
+' ProcedureRepository
+'
+' @Input
+' なし
+'
+' @Output
+' なし
+'
+' @Summary
+' ProcedureRepositoryを初期化する
+'
+' @Remarks
+' Procedure情報未読込時のみ
+' ProcInfo辞書を生成する
+'
 Public Sub InitializeProcedureRepository()
 
     If gContext Is Nothing Then Exit Sub
@@ -18,16 +43,40 @@ Public Sub InitializeProcedureRepository()
 
 End Sub
 
-' BuildProcInfoDictionary
-' ProcListシートから辞書を生成します。
+' @JPName
+' Procedure辞書作成
+'
+' @Category
+' ProcedureRepository
+'
+' @Input
+' なし
+'
+' @Output
+' なし
+'
+' @Summary
+' ProcListシートからProcedure情報辞書を生成する
+'
+' @Remarks
+' ProcInfoDicおよびProcIndexDicを生成し
+' Procedure情報を格納する
+'
 Public Sub BuildProcInfoDictionary()
 
+    ' ProcListシート
     Dim ws As Worksheet
 
+    ' 最終行
     Dim LastRow As Long
+    
+    ' 行Index
     Dim r As Long
 
+    ' Procedure情報
     Dim Info As clsProcInfo
+    
+    ' Dictionary格納キー
     Dim Key As String
 
     On Error Resume Next
@@ -107,6 +156,7 @@ Public Sub BuildProcInfoDictionary()
 
         Else
 
+            ' 既存情報更新
             Set gContext.ProcInfoDic(Key) = Info
 
         End If
@@ -117,11 +167,29 @@ Public Sub BuildProcInfoDictionary()
 
 End Sub
 
-' BuildProcIndex
-' プロシージャ名だけから候補モジュールを取得する索引です。
+' @JPName
+' Procedure索引作成
+'
+' @Category
+' ProcedureRepository
+'
+' @Input
+' Info(clsProcInfo)
+'
+' @Output
+' なし
+'
+' @Summary
+' Procedure名検索用索引を作成する
+'
+' @Remarks
+' Procedure名から候補モジュール一覧を
+' 取得するための索引を生成する
+'
 Private Sub BuildProcIndex( _
                 ByVal Info As clsProcInfo)
 
+    ' モジュール名一覧
     Dim Col As Collection
 
     If gContext.ProcIndexDic.Exists( _
@@ -150,16 +218,38 @@ Private Sub BuildProcIndex( _
 End Sub
 
 
-' ResolveProcedure
-' 呼出元モジュールを優先して候補を決定します。
+' @JPName
+' Procedure解決
+'
+' @Category
+' ProcedureRepository
+'
+' @Input
+' CallerModule(String)
+' ProcName(String)
+'
+' @Output
+' ProcInfo(clsProcInfo)
+'
+' @Summary
+' 呼出先Procedure情報を取得する
+'
+' @Remarks
+' 呼出元モジュールを優先して
+' Procedure候補を決定する
+'
 Public Function ResolveProcedure( _
                 ByVal CallerModule As String, _
                 ByVal ProcName As String) _
                 As clsProcInfo
   
+    ' Procedure検索キー
     Dim Key As String
     
+    ' 候補モジュール一覧
     Dim Col As Collection
+    
+    ' 候補モジュール名
     Dim V As Variant
 
     If gContext Is Nothing Then Exit Function
@@ -220,8 +310,25 @@ Public Function ResolveProcedure( _
 End Function
 
 
-' ClearProcedureRepository
-' 対象ツール変更時や再解析時に実行します。
+' @JPName
+' ProcedureRepository初期化解除
+'
+' @Category
+' ProcedureRepository
+'
+' @Input
+' なし
+'
+' @Output
+' なし
+'
+' @Summary
+' ProcedureRepositoryをクリアする
+'
+' @Remarks
+' 再解析時にProcedure情報および
+' 索引情報を破棄する
+'
 Public Sub ClearProcedureRepository()
 
     If gContext Is Nothing Then Exit Sub
@@ -233,11 +340,31 @@ Public Sub ClearProcedureRepository()
 
 End Sub
 
+' @JPName
+' モジュール存在判定
+'
+' @Category
+' ProcedureRepository
+'
+' @Input
+' Col(Collection)
+' ModuleName(String)
+'
+' @Output
+' Boolean
+'
+' @Summary
+' 指定モジュールが一覧内に存在するか判定する
+'
+' @Remarks
+' 大文字小文字を区別せずに比較する
+'
 Private Function ExistsModule( _
             ByVal Col As Collection, _
             ByVal ModuleName As String) _
             As Boolean
 
+    ' コレクション要素
     Dim V As Variant
 
     For Each V In Col

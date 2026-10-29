@@ -120,6 +120,10 @@ End Sub
 ' @Summary
 ' オプション画面を閉じる
 '
+' @Remarks
+' 設定変更を反映せずに
+' オプション画面を閉じる
+'
 Private Sub cmdCancel_Click()
 
     Unload Me
@@ -200,6 +204,10 @@ End Sub
 ' @Summary
 ' 画面の全オプションを初期状態へ戻す
 '
+' @Remarks
+' PathChartオプションを
+' 既定値へ戻す
+'
 Private Sub cmdDefault_Click()
 
     chkSkipCommon.Value = False
@@ -232,6 +240,10 @@ End Sub
 '
 ' @Summary
 ' PowerPoint出力方向設定を反映する
+'
+' @Remarks
+' 選択された出力方向を
+' グローバル設定へ反映する
 '
 Private Sub SetOptionValue()
 
@@ -266,6 +278,10 @@ End Sub
 ' @Summary
 ' PowerPoint出力設定に応じて
 ' 方向選択を有効化する
+'
+' @Remarks
+' PowerPoint出力ON時のみ
+' 出力方向選択を有効にする
 '
 Private Sub chkPowerPoint_Click()
 

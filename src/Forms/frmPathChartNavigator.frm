@@ -58,7 +58,7 @@ End Sub
 '
 ' @Remarks
 ' Excel画面右上へ配置し
-' 表示情報を初期化する
+' ナビゲータ表示内容を初期化する
 '
 Private Sub UserForm_Activate()
 
@@ -154,6 +154,10 @@ End Sub
 ' @Summary
 ' 次の検索候補を検索する
 '
+' @Remarks
+' 前回検索位置を基準に
+' 次の一致ノードを検索する
+'
 Private Sub cmdNext_Click()
 
     gExactMatch = chkExactMatch.Value
@@ -177,6 +181,9 @@ End Sub
 ' @Summary
 ' 親ノードへ移動する
 '
+' @Remarks
+' 現在選択ノードの親ノードへ移動する
+'
 Private Sub cmdParent_Click()
 
     MoveToParentNode
@@ -197,6 +204,9 @@ End Sub
 '
 ' @Summary
 ' 子ノードへ移動する
+'
+' @Remarks
+' 現在選択ノードの子ノードへ移動する
 '
 Private Sub cmdChild_Click()
 
@@ -219,6 +229,9 @@ End Sub
 ' @Summary
 ' 兄弟ノードへ移動する
 '
+' @Remarks
+' 現在選択ノードの兄弟ノードへ移動する
+'
 Private Sub cmdSibling_Click()
 
     MoveToSiblingNode
@@ -240,6 +253,10 @@ End Sub
 ' @Summary
 ' ノード強調表示を解除する
 '
+' @Remarks
+' ノードおよび接続線の
+' 強調表示を解除する
+'
 Private Sub cmdClear_Click()
 
     ClearHighlight
@@ -260,6 +277,10 @@ End Sub
 '
 ' @Summary
 ' ナビゲータ表示情報を初期化する
+'
+' @Remarks
+' ナビゲータ上の
+' ノード情報表示をクリアする
 '
 Public Sub ClearNavigatorInfo()
 
@@ -292,8 +313,13 @@ End Sub
 ' @Summary
 ' 現在ノード情報をクリップボードへコピーする
 '
+' @Remarks
+' 現在ノードの表示情報を
+' クリップボードへコピーする
+'
 Private Sub cmdCopyCurrentInfo_Click()
 
+    ' コピー対象文字列
     Dim S As String
 
     S = _
@@ -370,6 +396,10 @@ End Sub
 ' @Summary
 ' 右クリック時に表示値をコピーする
 '
+' @Remarks
+' 右クリック時に表示内容を
+' クリップボードへコピーする
+'
 Private Sub txtCurrentNode_MouseDown( _
         ByVal Button As Integer, _
         ByVal Shift As Integer, _
@@ -403,6 +433,10 @@ End Sub
 '
 ' @Summary
 ' 右クリック時に表示値をコピーする
+'
+' @Remarks
+' 右クリック時に表示内容を
+' クリップボードへコピーする
 '
 Private Sub txtStatus_MouseDown( _
         ByVal Button As Integer, _
@@ -438,6 +472,10 @@ End Sub
 ' @Summary
 ' 右クリック時に表示値をコピーする
 '
+' @Remarks
+' 右クリック時に表示内容を
+' クリップボードへコピーする
+'
 Private Sub lblJPName_MouseDown( _
         ByVal Button As Integer, _
         ByVal Shift As Integer, _
@@ -471,6 +509,10 @@ End Sub
 '
 ' @Summary
 ' 右クリック時に表示値をコピーする
+'
+' @Remarks
+' 右クリック時に表示内容を
+' クリップボードへコピーする
 '
 Private Sub lblCategory_MouseDown( _
         ByVal Button As Integer, _
@@ -506,6 +548,10 @@ End Sub
 ' @Summary
 ' 右クリック時に表示値をコピーする
 '
+' @Remarks
+' 右クリック時に表示内容を
+' クリップボードへコピーする
+'
 Private Sub lblModule_MouseDown( _
         ByVal Button As Integer, _
         ByVal Shift As Integer, _
@@ -539,6 +585,10 @@ End Sub
 '
 ' @Summary
 ' 右クリック時に表示値をコピーする
+'
+' @Remarks
+' 右クリック時に表示内容を
+' クリップボードへコピーする
 '
 Private Sub txtSummary_MouseDown( _
         ByVal Button As Integer, _
