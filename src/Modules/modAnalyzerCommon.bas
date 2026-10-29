@@ -99,7 +99,10 @@ End Function
 Public Sub AnalyzeAll()
 
     ' 未使用関数件数
-    Dim UnusedCount As Long
+    'Dim UnusedCount As Long
+
+    ' 呼出元なし関数件数
+    Dim NoCallerCount As Long
 
     If gContext Is Nothing Then
     
@@ -129,23 +132,42 @@ Public Sub AnalyzeAll()
         Exit Sub
     End If
     
-    Debug.Print "AnalyzeAll -> Start: ProcedureList"
+    On Error GoTo ExitProc
+    
+    Application.StatusBar = "Step 1/4 ProcedureList生成中"
+    
     ProcedureList
     
-    Debug.Print "AnalyzeAll -> Start: ExportUnusedProcedureList"
-    UnusedCount = _
-        ExportUnusedProcedureList()
+    Application.StatusBar = "Step 2/4 NoCallerProcList生成中"
     
-    Debug.Print "AnalyzeAll -> Start: FunctionTrace"
+    NoCallerCount = _
+        ExportNoCallerProcedureList()
+    
+    Application.StatusBar = "Step 3/4 FunctionTrace生成中"
+    
     FunctionTrace
 
-    Debug.Print "AnalyzeAll -> Start: FunctionDependency"
+    Application.StatusBar = "Step 4/4 FunctionDependency生成中"
+    
     FunctionDependency
 
+    Application.StatusBar = False
+    
     MsgBox _
         "解析完了" & vbCrLf & _
-        "未使用候補 : " & _
-        UnusedCount & "件", _
+        "呼出元なし : " & _
+        NoCallerCount & "件", _
+        vbInformation
+
+    Exit Sub
+    
+ExitProc:
+
+    Application.StatusBar = False
+    
+    MsgBox _
+        "解析中にエラーが発生しました。" & vbCrLf & _
+        Err.Description, _
         vbInformation
 
 End Sub

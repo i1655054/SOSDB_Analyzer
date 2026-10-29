@@ -44,6 +44,12 @@ Public Sub FunctionTrace()
 
     ' 出力行番号
     Dim RowOut As Long
+    
+    ' 総モジュール数
+    Dim TotalModuleCount As Long
+
+    ' 現在モジュール数
+    Dim CurrentModuleCount As Long
 
     If gContext Is Nothing Then Exit Sub
     
@@ -88,6 +94,10 @@ Public Sub FunctionTrace()
     '======================
     ' 関数一覧取得
     '======================
+    TotalModuleCount = _
+        gContext.TargetBook.VBProject.VBComponents.Count
+
+    CurrentModuleCount = 0
 
     For Each VBComp In gContext.TargetBook.VBProject.VBComponents
 
@@ -117,6 +127,19 @@ Public Sub FunctionTrace()
 
     For Each VBComp In gContext.TargetBook.VBProject.VBComponents
 
+        CurrentModuleCount = _
+            CurrentModuleCount + 1
+        
+        Application.StatusBar = _
+                "FunctionTrace解析中 [" & _
+                CurrentModuleCount & "/" & _
+                TotalModuleCount & _
+                "] " & _
+                VBComp.Name & _
+                " Trace=" & RowOut
+
+        DoEvents
+        
         ' 標準モジュールのみ対象
         ' VBEXT_CT_STDMODULE = 1
         If VBComp.Type = 1 Then

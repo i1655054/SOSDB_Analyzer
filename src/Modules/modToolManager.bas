@@ -81,8 +81,8 @@ Public Const SHEET_PATH_CHART_CONFIG As String = "PathChartConfig"
 ' ProcListシート名
 Public Const SHEET_PROC_LIST As String = "ProcList"
 
-' 未使用関数一覧シート名
-Public Const SHEET_UNUSED_PROC_LIST As String = "UnusedProcList"
+' 呼出元なし関数一覧シート名
+Public Const SHEET_NO_CALLER_PROC_LIST As String = "NoCallerProcList"
 
 ' 関数トレースシート名
 Public Const SHEET_FUNCTION_TRACE As String = "関数トレース"
