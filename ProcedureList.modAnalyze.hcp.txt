@@ -1,0 +1,101 @@
+Procedure: modAnalyze.ProcedureList  [ 関数一覧作成＜modAnalyze＞ ]
+HCP	Business
+┬
+〇│Public Sub ProcedureList()	関数一覧作成＜modAnalyze＞
+┴└┐
+　　□ Dim VBComp As Object
+　　□ Dim CodeMod As Object
+　　□ Dim i As Long
+　　□ Dim r As Long
+　　□ Dim row As Long
+　　□ Dim LastRow As Long
+　　□ Dim TotalProcCount As Long
+　　□ Dim CurrentProcCount As Long
+　　□ Dim ws As Worksheet
+　　□ Dim line As String
+　　□ Dim ProcName As String
+　　☆ On Error Resume Next
+　　〇 Set ws =  gContext.ManagementBook.Worksheets(
+　　│ SHEET_PROC_LIST)
+　　☆ On Error GoTo 0
+　　│#  ProcListシート準備
+　　◆┐If ws Is Nothing Then
+　　│〇 Set ws =  gContext.ManagementBook.Worksheets.Add(
+　　││   After:=gContext.ManagementBook.Worksheets(
+　　││   gContext.ManagementBook.Worksheets.Count))
+　　│〇 ws.Name = SHEET_PROC_LIST
+　　│┴End If
+　　〇 ws.Cells.Clear
+　　│#  ProcListヘッダ出力
+　　〇 ws.Range("A1:L1").Value = Array(
+　　│   "Module",  "Type",  "ProcedureName",  "JPName",  "Category",  "Input",  "Output",  "Summary",  "Remarks",  "Declaration",  "UsageCount",  "判定")
+　　〇 row = 2
+　　〇 TotalProcCount = 0
+　　│#  進捗表示用にProcedure総数を集計
+　　＠┐For Each VBComp In gContext.TargetBook.VBProject.VBComponents
+　　│〇 Set CodeMod = VBComp.CodeModule
+　　│＠┐For i = 1 To CodeMod.CountOfLines
+　　││〇 line = Trim$(CodeMod.Lines(i, 1))
+　　││◆┐If IsProcedureLine(line) Then
+　　│││〇 TotalProcCount = TotalProcCount + 1
+　　│││┴End If
+　　││┴Next i
+　　│┴Next VBComp
+　　│#  Procedure情報抽出開始
+　　＠┐For Each VBComp In gContext.TargetBook.VBProject.VBComponents
+　　│〇 Set CodeMod = VBComp.CodeModule
+　　│＠┐For i = 1 To CodeMod.CountOfLines
+　　││〇 line = Trim(CodeMod.Lines(i, 1))
+　　││◆┐If IsProcedureLine(line) Then
+　　│││◎ ProcName = ExtractProcedureName(line)	プロシージャ名抽出＜modAnalyze＞
+　　│││◆┐If Trim(ProcName) = "" Then
+　　││││〇 ProcName = PROC_UNKNOWN
+　　││││┴End If
+　　│││〇 CurrentProcCount = CurrentProcCount + 1
+　　│││〇 Application.StatusBar =  "ProcList解析中 [" &  CurrentProcCount & "/" &  TotalProcCount &  "] " &  VBComp.Name & "." & ProcName
+　　│││〇 DoEvents
+　　│││〇 ws.Cells(row, COL_MODULE).Value = VBComp.Name
+　　│││◎ ws.Cells(row, COL_TYPE).Value = GetProcedureType(line)	プロシージャ種別取得＜modAnalyze＞
+　　│││〇 ws.Cells(row, COL_PROC).Value = ProcName
+　　││││#  コメントタグからJPName取得
+　　│││◎ ws.Cells(row, COL_JPNAME).Value =  GetTagValue(CodeMod, i, "@JPName")	タグ値取得＜modAnalyzerCommon＞
+　　││││#  コメントタグからCategory取得
+　　│││◎ ws.Cells(row, COL_CATEGORY).Value =  GetTagValue(CodeMod, i, "@Category")	タグ値取得＜modAnalyzerCommon＞
+　　││││#  コメントタグからInput取得
+　　│││◎ ws.Cells(row, COL_INPUT).Value =  GetTagValue(CodeMod, i, "@Input")	タグ値取得＜modAnalyzerCommon＞
+　　││││#  コメントタグからOutput取得
+　　│││◎ ws.Cells(row, COL_OUTPUT).Value =  GetTagValue(CodeMod, i, "@Output")	タグ値取得＜modAnalyzerCommon＞
+　　││││#  コメントタグからSummary取得
+　　│││◎ ws.Cells(row, COL_SUMMARY).Value =  GetTagValue(CodeMod, i, "@Summary")	タグ値取得＜modAnalyzerCommon＞
+　　││││#  コメントタグからRemarks取得
+　　│││◎ ws.Cells(row, COL_REMARKS).Value =  GetTagValue(CodeMod, i, "@Remarks")	タグ値取得＜modAnalyzerCommon＞
+　　│││〇 ws.Cells(row, COL_DECLARATION).Value = line
+　　││││#  Procedure呼出回数集計
+　　│││◆┐If ProcName = PROC_UNKNOWN Then
+　　││││〇 ws.Cells(row, COL_USAGECOUNT).Value = 0
+　　│││├┐ELSE
+　　││││◎ ws.Cells(row, COL_USAGECOUNT).Value = CountUsage(ProcName)	使用回数集計＜modAnalyze＞
+　　││││┴End If
+　　││││#  UsageCountから状態判定
+　　│││◎ ws.Cells(row, COL_STATUS).Value =  GetUsageStatus(ProcName, ws.Cells(row, COL_USAGECOUNT).Value)	使用状況判定＜modAnalyze＞
+　　│││〇 row = row + 1
+　　│││┴End If
+　　││┴Next i
+　　│┴Next VBComp
+　　〇 LastRow = ws.Cells(ws.Rows.Count, 1).End(xlUp).row
+　　│#  判定結果に応じて色付け
+　　＠┐For r = 2 To LastRow
+　　│◆┐Select Case ws.Cells(r, COL_STATUS).Value
+　　│││Case STATUS_NOCALLER
+　　││〇 ws.Rows(r).Interior.Color = COLOR_NOCALLER
+　　│├┐Case STATUS_CONFIRM
+　　││〇 ws.Rows(r).Interior.Color = COLOR_CONFIRM
+　　│├┐Case STATUS_EVENT
+　　││〇 ws.Rows(r).Interior.Color = COLOR_EVENT
+　　││┴End Select
+　　│┴Next r
+　　│#  ProcListシート体裁設定
+　　〇 ws.Columns.AutoFit
+　　〇 ws.Rows(1).AutoFilter
+　　〇 ws.Rows(1).Font.Bold = True
+　　┴End Sub

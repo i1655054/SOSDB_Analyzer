@@ -676,13 +676,31 @@ Public Function IsFunctionCall( _
     ' CreatePathChart_V3 _
     '------------------------------------
     If Right$(Trim$(LineText), 1) = "_" Then
+    
+        Dim WorkText As String
+        
+        WorkText = Trim$(LineText)
 
-        If Left$(Trim$(LineText), Len(FuncName)) = _
-            FuncName Then
+        If Left$(Trim$(LineText), Len(FuncName)) = FuncName Then
 
-            IsFunctionCall = True
-            Exit Function
+            If Len(WorkText) = Len(FuncName) + 1 Then
+                IsFunctionCall = True
+                Exit Function
 
+            End If
+        
+            Select Case Mid$( _
+                            WorkText, _
+                            Len(FuncName) + 1, _
+                            1)
+
+                Case " ", "(", vbTab
+
+                    IsFunctionCall = True
+                    Exit Function
+
+            End Select
+            
         End If
 
     End If
@@ -757,6 +775,64 @@ Public Function IsFunctionCall( _
 
     
     IsFunctionCall = RegEx.Test(LineText)
+
+End Function
+
+' @JPName
+' Procedure名完全一致判定
+'
+' @Category
+' Analyze
+'
+' @Input
+' Text(String)
+' ProcName(String)
+'
+' @Output
+' Boolean
+'
+' @Summary
+' Procedure名が完全一致するか判定する
+'
+' @Remarks
+' Procedure名の後続文字が
+' 英数字またはアンダースコアの場合は
+' 不一致とする
+'
+'------------------------------------------------
+' 現在未使用
+'
+' Procedure名完全一致判定用
+'
+' IsFunctionCall強化のために追加したが
+' 現在は未適用
+'------------------------------------------------
+Private Function IsExactProcedureName( _
+                ByVal Text As String, _
+                ByVal ProcName As String) _
+                As Boolean
+
+    If Left$(Text, Len(ProcName)) <> ProcName Then
+        Exit Function
+    End If
+
+    If Len(Text) = Len(ProcName) Then
+
+        IsExactProcedureName = True
+        Exit Function
+
+    End If
+
+    Select Case Mid$( _
+                    Text, _
+                    Len(ProcName) + 1, _
+                    1)
+
+        Case " ", "(", vbTab
+
+            IsExactProcedureName = True
+
+    End Select
 
 End Function
 

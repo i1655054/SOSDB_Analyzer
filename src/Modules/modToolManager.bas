@@ -6,8 +6,8 @@ Option Explicit
 ' True : デバッグ機能有効
 ' False: 本番モード
 '==================================================
-'Public Const DEV_MODE As Boolean = True
-Public Const DEV_MODE As Boolean = False
+Public Const DEV_MODE As Boolean = True
+'Public Const DEV_MODE As Boolean = False
 
 '==================================================
 ' HCP表示方式

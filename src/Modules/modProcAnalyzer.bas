@@ -469,6 +469,7 @@ Private Function GetCurrentParentID( _
 
 End Function
 
+
 '=================================================
 ' Proc解析
 '=================================================
@@ -557,6 +558,9 @@ Public Function AnalyzeProcedure( _
     
     ' Procedure宣言部
     Dim ProcHeader As String
+    
+    ' HCPコメント保持
+    Dim PendingComment As String
 
     Set Nodes = New Collection
     Set ParentStack = New Collection
@@ -603,6 +607,22 @@ Public Function AnalyzeProcedure( _
         BuildLogicalLines(CodeText)
 
     For Each LineText In LogicalLines
+    
+        If Left$(Trim$(CStr(LineText)), 2) = "'#" Then
+
+            If PendingComment <> "" Then
+                PendingComment = _
+                    PendingComment & vbCrLf & _
+                    Mid$(Trim$(CStr(LineText)), 3)
+            Else
+                PendingComment = _
+                    Mid$(Trim$(CStr(LineText)), 3)
+            End If
+
+            GoTo NextLine
+
+        End If
+
 
         If IsProcedureLine(Trim$(CStr(LineText))) Then
             GoTo NextLine
@@ -775,6 +795,9 @@ Public Function AnalyzeProcedure( _
             Node.NodeText = _
                 Trim$(CStr(LineText))
 
+            Node.CommentText = PendingComment
+            PendingComment = ""
+
             Node.LineNo = i
 
             AddProcNode _
@@ -871,7 +894,10 @@ Public Function AnalyzeProcedure( _
 
                 Node.SourceLine = _
                     Trim$(CStr(LineText))
-                
+
+                Node.CommentText = PendingComment
+                PendingComment = ""
+
                 Node.CallName = _
                     CStr(CallName)
 
@@ -916,6 +942,9 @@ Public Function AnalyzeProcedure( _
             Node.SourceLine = _
                 Trim$(CStr(LineText))
 
+            Node.CommentText = PendingComment
+            PendingComment = ""
+
             AddProcNode _
                 Nodes, _
                 Node, _
@@ -952,6 +981,9 @@ Public Function AnalyzeProcedure( _
 
             Node.SourceLine = _
                 Trim$(CStr(LineText))
+
+            Node.CommentText = PendingComment
+            PendingComment = ""
 
             Node.LineNo = i
 
@@ -1707,6 +1739,16 @@ End Sub
 ' 代入文およびモジュール名付き呼出に対応し
 ' Procedure名のみを抽出する
 '
+'------------------------------------------------
+' 現在未使用
+'
+' 呼出文からProcedure名を抽出する
+' ユーティリティとして作成したが
+' 現在は参照箇所なし
+'
+' 将来的なFunctionTrace改善時の
+' 利用候補として保持する
+'------------------------------------------------
 Public Function ExtractCalledProcedureName( _
                 ByVal SourceLine As String) _
                 As String

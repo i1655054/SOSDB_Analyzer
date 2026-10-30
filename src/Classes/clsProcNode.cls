@@ -66,3 +66,7 @@ Public BranchType As String
 
 ' ソースコード行
 Public SourceLine As String
+
+' HCP出力用コメント
+Public CommentText As String
+

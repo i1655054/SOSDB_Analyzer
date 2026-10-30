@@ -1,0 +1,255 @@
+私なら 「実装 → 全面適用」ではなく、「関数追加 → テスト → 一部適用 → 全面適用」 の順で進めます。
+
+今の Analyzer は
+
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　Plain Text　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　CountUsage　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　FunctionTrace 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　FunctionDependency　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 4　PathChart 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 5　HCP 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+
+全部が
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　VisualBasic 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　IsFunctionCall()　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+に依存しているので、一気に変えるのは危険です。
+
+Step1 関数だけ追加
+
+まず使わない状態で追加。
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　VisualBasic 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　' @JPName 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　' Procedure名完全一致判定 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　' 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 4　' @Category 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 5　' Analyze 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 6　' 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 7　' @Input　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 8　' Text(String)　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 9　' ProcName(String)　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　10　' 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　11　' @Output 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　12　' Boolean 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　13　' 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　14　' @Summary　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　15　' Procedure名が完全一致するか判定する 　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　16　' 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　17　' @Remarks　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　18　' Procedure名の後続文字が 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　19　' 英数字またはアンダースコアの場合は　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　20　' 不一致とする　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　21　' 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　22　Private Function IsExactProcedureName( _　　　　　　　　　　　　　　　　　　　　　　│
+　　│　23　                ByVal Text As String, _ 　　　　　　　　　　　　　　　　　　　　　　│
+　　│　24　                ByVal ProcName As String) _ 　　　　　　　　　　　　　　　　　　　　│
+　　│　25　                As Boolean　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　26　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　27　    If Left$(Text, Len(ProcName)) <> ProcName Then　　　　　　　　　　　　　　　　　│
+　　│　28　        Exit Function 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　29　    End If　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　30　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　31　    If Len(Text) = Len(ProcName) Then 　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　32　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　33　        IsExactProcedureName = True 　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　34　        Exit Function 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　35　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　36　    End If　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　37　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　38　    Select Case Mid$( _ 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　39　                    Text, _ 　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　40　                    Len(ProcName) + 1, _　　　　　　　　　　　　　　　　　　　　　　│
+　　│　41　                    1)　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　42　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　43　        Case " ", "(", vbTab　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　44　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　45　            IsExactProcedureName = True 　　　　　　　　　　　　　　　　　　　　　　│
+　　│　46　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　47　    End Select　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　48　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　49　End Function　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+
+まだどこからも呼ばない。
+
+Step2 テストを作る
+
+modUnitTest に追加。
+
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　VisualBasic 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　Debug.Print IsExactProcedureName( _ 　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　            "ExportHCPTextFile", _　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　            "ExportHCPTextFile")　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 4　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 5　' True　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 6　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 7　Debug.Print IsExactProcedureName( _ 　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 8　            "ExportHCPTextFile(", _ 　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 9　            "ExportHCPTextFile")　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　10　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　11　' True　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　12　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　13　Debug.Print IsExactProcedureName( _ 　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　14　            "ExportHCPTextFile _", _　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　15　            "ExportHCPTextFile")　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　16　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　17　' True　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　18　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　19　Debug.Print IsExactProcedureName( _ 　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　20　            "ExportHCPTextFileFromSheet", _ 　　　　　　　　　　　　　　　　　　　　│
+　　│　21　            "ExportHCPTextFile")　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　22　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　23　' False 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　24　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　25　Debug.Print IsExactProcedureName( _ 　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　26　            "LoadDataEx", _ 　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　27　            "LoadData") 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　28　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　29　' False 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　30　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+
+まずこの確認。
+
+Step3 影響範囲の小さい箇所へ適用
+
+今回発見された箇所だけ置き換える。
+
+現在
+
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　VisualBasic 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　If Right$(Trim$(LineText), 1) = "_" Then　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　    If Left$(WorkText, Len(FuncName)) = FuncName Then 　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+　　↓
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　VisualBasic 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　If Right$(Trim$(LineText), 1) = "_" Then　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　    If IsExactProcedureName( _　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 4　            WorkText, _ 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 5　            FuncName) Then　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+
+ここだけ変更。
+
+Step4 再解析
+
+確認。
+
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　Plain Text　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　ExportHCPTextFile 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　↓　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　呼出元なし　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 4　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+
+になる。
+
+Step5 FunctionTrace確認
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　Plain Text　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　FunctionTrace 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　FunctionDependency　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　PathChart 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+が従来と同じになることを確認。
+
+Step6 全面適用
+
+効果が確認できたら、
+
+他の
+
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　VisualBasic 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　FuncName　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+
+比較箇所も順次
+
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　VisualBasic 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　IsExactProcedureName()　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+
+へ寄せる。
+
+私のおすすめ
+
+現時点では
+
+ ✅ Step1
+ ✅ Step2
+ ✅ Step3
+
+までやります。
+
+今回の誤検出は既に修正できているので、
+
+全面改修ではなく「共通関数を先に用意しておく」方針 が一番安全です。
+
+将来また
+
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　Plain Text　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　LoadData　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 2　LoadDataEx　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 3　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 4　CreateHCP 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 5　CreateHCPChart　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+
+問題が出たとき、
+
+　　┌─────────────────────────────────────────────┐
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　VisualBasic 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　 1　IsExactProcedureName()　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　│
+　　└─────────────────────────────────────────────┘
+
+
+が既にあると修正が非常に楽になります。

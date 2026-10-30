@@ -56,6 +56,9 @@ Public SourceText As String
 ' ソース行番号
 Public SourceLine As String
 
+' HCPコメント
+Public CommentText As String
+
 '--------------------------------
 ' 業務説明用
 '--------------------------------

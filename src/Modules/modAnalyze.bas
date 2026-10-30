@@ -64,12 +64,11 @@ Public Sub ProcedureList()
 ' Module  Type    ProcedureName   Declaration Line    UsageCount
 '         種別                                行番号  使用回数
 '
-' UsageCount 色     意味
-' 0          薄紫   呼出元なし
-' 1          黄色   要確認（1回しか呼ばれてない）
-' 2+         なし　 使用中
-' n          薄緑   イベント（Workbook*Open、*_Click 等）
-
+' 判定        色     条件
+' 呼出元なし  薄紫   UsageCount = 0
+' 要確認      黄色   UsageCount = 1
+' 使用中      なし   UsageCount >= 2
+' イベント    薄緑   Workbook_*、*_Click 等
     
     ' VBAコンポーネント
     Dim VBComp As Object
@@ -114,6 +113,7 @@ Public Sub ProcedureList()
     
     On Error GoTo 0
     
+    '# ProcListシート準備
     If ws Is Nothing Then
     
         Set ws = _
@@ -130,6 +130,7 @@ Public Sub ProcedureList()
     '------------------------------------
     ' ヘッダ
     '------------------------------------
+    '# ProcListヘッダ出力
     ws.Range("A1:L1").Value = Array( _
         "Module", _
         "Type", _
@@ -151,6 +152,7 @@ Public Sub ProcedureList()
     '------------------------------------
     TotalProcCount = 0
 
+    '# 進捗表示用にProcedure総数を集計
     For Each VBComp In gContext.TargetBook.VBProject.VBComponents
 
         Set CodeMod = VBComp.CodeModule
@@ -170,6 +172,7 @@ Public Sub ProcedureList()
     '------------------------------------
     ' 関数抽出
     '------------------------------------
+    '# Procedure情報抽出開始
     For Each VBComp In gContext.TargetBook.VBProject.VBComponents
         
         Set CodeMod = VBComp.CodeModule
@@ -203,34 +206,40 @@ Public Sub ProcedureList()
                 ws.Cells(row, COL_TYPE).Value = GetProcedureType(line)
                 ws.Cells(row, COL_PROC).Value = ProcName
 
+                '# コメントタグからJPName取得
                 ws.Cells(row, COL_JPNAME).Value = _
                     GetTagValue(CodeMod, i, "@JPName")
 
+                '# コメントタグからCategory取得
                 ws.Cells(row, COL_CATEGORY).Value = _
                     GetTagValue(CodeMod, i, "@Category")
 
+                '# コメントタグからInput取得
                 ws.Cells(row, COL_INPUT).Value = _
                     GetTagValue(CodeMod, i, "@Input")
 
+                '# コメントタグからOutput取得
                 ws.Cells(row, COL_OUTPUT).Value = _
                     GetTagValue(CodeMod, i, "@Output")
 
+                '# コメントタグからSummary取得
                 ws.Cells(row, COL_SUMMARY).Value = _
                     GetTagValue(CodeMod, i, "@Summary")
 
+                '# コメントタグからRemarks取得
                 ws.Cells(row, COL_REMARKS).Value = _
                     GetTagValue(CodeMod, i, "@Remarks")
 
                 ws.Cells(row, COL_DECLARATION).Value = line
 
-                ' 使用回数
+                '# Procedure呼出回数集計
                 If ProcName = PROC_UNKNOWN Then
                     ws.Cells(row, COL_USAGECOUNT).Value = 0
                 Else
                     ws.Cells(row, COL_USAGECOUNT).Value = CountUsage(ProcName)
                 End If
                 
-                ' 判定
+                '# UsageCountから状態判定
                 ws.Cells(row, COL_STATUS).Value = _
                     GetUsageStatus(ProcName, ws.Cells(row, COL_USAGECOUNT).Value)
                 
@@ -247,6 +256,7 @@ Public Sub ProcedureList()
     '------------------------------------
     LastRow = ws.Cells(ws.Rows.Count, 1).End(xlUp).row
     
+    '# 判定結果に応じて色付け
     For r = 2 To LastRow
         
         Select Case ws.Cells(r, COL_STATUS).Value
@@ -264,7 +274,7 @@ Public Sub ProcedureList()
         
     Next r
     
-    ' 見た目
+    '# ProcListシート体裁設定
     ws.Columns.AutoFit
     ws.Rows(1).AutoFilter
     ws.Rows(1).Font.Bold = True
@@ -289,7 +299,8 @@ End Sub
 ' NoCallerProcListシートへ出力する
 '
 ' @Remarks
-' 判定が「呼出元なし」の関数のみ出力する
+' 他Procedureから参照されていない
+' Procedureのみ出力する
 '
 Public Function ExportNoCallerProcedureList() As Long
 
@@ -376,9 +387,11 @@ Public Function ExportNoCallerProcedureList() As Long
             wsOut.Cells(OutRow, COL_CATEGORY).Value = _
                 wsProc.Cells(r, COL_CATEGORY).Value
 
+            ' F列(UsageCount)
             wsOut.Cells(OutRow, COL_INPUT).Value = _
                 wsProc.Cells(r, COL_USAGECOUNT).Value
 
+            ' G列(Status)
             wsOut.Cells(OutRow, COL_OUTPUT).Value = _
                 wsProc.Cells(r, COL_STATUS).Value
 

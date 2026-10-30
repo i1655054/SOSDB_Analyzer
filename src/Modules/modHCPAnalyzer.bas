@@ -59,9 +59,11 @@ Public Sub CreateHCP( _
     Application.ScreenUpdating = False
     
     Trace "HCP", "Step=10 BuildFuncList"
+    
     Set FuncList = BuildFuncList()
     
     Trace "HCP", "Step=20 GetProcedureCode"
+    
     CodeText = GetProcedureCode( _
                     ModuleName, _
                     ProcName)
@@ -70,6 +72,7 @@ Public Sub CreateHCP( _
         "CodeLength=" & Len(CodeText)
 
     Trace "HCP", "Step=30 AnalyzeProcedure"
+    
     Set ProcNodes = AnalyzeProcedure( _
                         CodeText, _
                         ModuleName, _
@@ -78,13 +81,19 @@ Public Sub CreateHCP( _
 
     ' 旧シート削除
     Trace "HCP", "Step=40 DeleteSheetIfExists SHEET_PROC_NODES"
+    
     DeleteSheetIfExists SHEET_PROC_NODES
+    
     Trace "HCP", "Step=50 DeleteSheetIfExists SHEET_PROC_CHART"
+    
     DeleteSheetIfExists SHEET_PROC_CHART
+    
     Trace "HCP", "Step=60 DeleteSheetIfExists SHEET_HCP_NODES"
+    
     DeleteSheetIfExists SHEET_HCP_NODES
 
     Trace "HCP", "Step=70 ConvertProcToHCP"
+    
     Set HCPNodes = ConvertProcToHCP( _
                         ProcNodes)
 
@@ -97,11 +106,18 @@ Public Sub CreateHCP( _
     End If
 
     Trace "HCP", "Step=80 ExportHCPText"
+    
     ExportHCPText _
         HCPNodes, _
         ModuleName, _
         ProcName
 
+    Trace "HCP", "Step=90 ExportHCPTextFileFromSheet"
+    
+    ExportHCPTextFileFromSheet _
+        ModuleName, _
+        ProcName
+    
     Application.ScreenUpdating = True
     
     Exit Sub
@@ -253,6 +269,9 @@ Public Function ConvertProcToHCP( _
 
         HCPNode.SourceLine = _
             ProcNode.SourceLine
+        
+        HCPNode.CommentText = _
+            ProcNode.CommentText
 
         If ProcNode.NodeType = NODE_ELSE Then
 
@@ -1242,7 +1261,7 @@ Public Sub ExportHCPNodes( _
 
     ws.Cells.Clear
 
-    ws.Range("A1:J1").Value = _
+    ws.Range("A1:K1").Value = _
         Array( _
             "NodeID", _
             "ParentID", _
@@ -1253,7 +1272,8 @@ Public Sub ExportHCPNodes( _
             "BranchType", _
             "Text", _
             "SourceText", _
-            "BusinessText")
+            "BusinessText", _
+            "CommentText")
 
     RowOut = 2
 
@@ -1278,6 +1298,8 @@ Public Sub ExportHCPNodes( _
         ws.Cells(RowOut, 9) = Node.SourceText
         
         ws.Cells(RowOut, 10) = Node.BusinessText
+        
+        ws.Cells(RowOut, 11) = Node.CommentText
 
         RowOut = RowOut + 1
 
@@ -1878,6 +1900,12 @@ Private Sub RenderIfBlock( _
     '-----------------------------
     ' IF
     '-----------------------------
+    OutputComment _
+        IfNode, _
+        Prefix, _
+        ws, _
+        RowOut
+    
     ws.Cells(RowOut, 1).Value = _
         Prefix & _
         "◆┐" & _
@@ -2075,6 +2103,13 @@ Private Sub RenderForBlock( _
     ' MERGEノード
     Dim MergeNode As clsHCPNode
 
+    OutputComment _
+        ForNode, _
+        Prefix, _
+        ws, _
+        RowOut
+    
+    
     ws.Cells(RowOut, 1).Value = _
         Prefix & _
         "＠┐" & _
@@ -2189,6 +2224,12 @@ Private Sub RenderSelectBlock( _
     ' 現在CASE番号
     Dim CaseIndex As Long
 
+    OutputComment _
+        SelectNode, _
+        Prefix, _
+        ws, _
+        RowOut
+       
     ws.Cells(RowOut, 1).Value = _
         Prefix & _
         "◆┐" & _
@@ -2341,6 +2382,12 @@ Private Sub RenderDoBlock( _
     ' 終端MERGEノード
     Dim EndNode As clsHCPNode
 
+    OutputComment _
+        DoNode, _
+        Prefix, _
+        ws, _
+        RowOut
+    
     ws.Cells(RowOut, 1).Value = _
         Prefix & _
         "＠┐" & _
@@ -2419,6 +2466,12 @@ Private Sub RenderWithBlock( _
     ' 終端MERGEノード
     Dim EndNode As clsHCPNode
 
+    OutputComment _
+        WithNode, _
+        Prefix, _
+        ws, _
+        RowOut
+    
     ws.Cells(RowOut, 1).Value = _
         Prefix & _
         "＠┐" & _
@@ -2497,6 +2550,12 @@ Private Sub RenderWhileBlock( _
     ' 終端MERGEノード
     Dim EndNode As clsHCPNode
 
+    OutputComment _
+        WhileNode, _
+        Prefix, _
+        ws, _
+        RowOut
+    
     ws.Cells(RowOut, 1).Value = _
         Prefix & _
         "＠┐" & _
@@ -2575,6 +2634,12 @@ Private Sub RenderCompileBlock( _
     ' 終端MERGEノード
     Dim MergeNode As clsHCPNode
 
+    OutputComment _
+        CompileNode, _
+        Prefix, _
+        ws, _
+        RowOut
+    
     ws.Cells(RowOut, 1).Value = _
         Prefix & _
         "＃┐" & _
@@ -2616,6 +2681,28 @@ Private Sub RenderCompileBlock( _
 
 End Sub
 
+Private Sub OutputComment( _
+                ByVal Node As clsHCPNode, _
+                ByVal Prefix As String, _
+                ByVal ws As Worksheet, _
+                ByRef RowOut As Long)
+
+    Dim V As Variant
+    
+    If Trim$(Node.CommentText) = "" Then Exit Sub
+
+    For Each V In Split(Node.CommentText, vbCrLf)
+
+        ws.Cells(RowOut, 1).Value = _
+            Prefix & "│#  " & _
+            Trim$(CStr(V))
+            
+        RowOut = RowOut + 1
+
+    Next V
+
+End Sub
+
 ' @JPName
 ' ノード出力
 '
@@ -2647,6 +2734,12 @@ Private Sub OutputHCPNode( _
     ' 出力文字列
     Dim Text As String
 
+    OutputComment _
+        Node, _
+        Prefix, _
+        ws, _
+        RowOut
+   
     If Node.NodeType = NODE_LABEL Then
 
         Text = _
