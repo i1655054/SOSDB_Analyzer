@@ -28,6 +28,7 @@ Attribute VB_Exposed = True
 '
 Private Sub Workbook_Open()
 
+    '# Analyzer初期化
     InitializeAnalyzer
 
 End Sub
@@ -56,8 +57,10 @@ Private Sub Workbook_BeforeClose(Cancel As Boolean)
 
     On Error Resume Next
     
+    '# Main画面状態復元
     RestoreMainWindowState
     
+    '# ショートカット解除
     UnRegisterShortcut
 
 End Sub

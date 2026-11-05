@@ -49,24 +49,30 @@ Public Function GetChildrenList( _
     ' 呼出先モジュール
     Dim ChildModule As String
 
+    '# 子Procedure一覧初期化
     Set Col = New Collection
 
+    '# 関数依存関係シート取得
     Set wsDep = _
         gContext.ManagementBook.Worksheets( _
             SHEET_FUNCTION_DEPENDENCY)
 
+    '# 関数依存関係最終行取得
     LastRow = _
         wsDep.Cells( _
             wsDep.Rows.Count, _
             "A").End(xlUp).row
 
+    '# 子Procedure探索
     For r = 2 To LastRow
 
+        '# 親Procedure一致判定
         If StrComp( _
                 Trim$(wsDep.Cells(r, 1).Value), _
                 ParentProc, _
                 vbTextCompare) = 0 Then
 
+            '# 呼出関係情報取得
             ChildProc = _
                 Trim$(wsDep.Cells(r, 3).Value)
 
@@ -76,12 +82,14 @@ Public Function GetChildrenList( _
             ChildModule = _
                 Trim$(wsDep.Cells(r, 7).Value)
 
+            '# 出力対象判定
             If IsTargetRelation( _
                     ParentProc, _
                     ChildProc, _
                     ParentModule, _
                     ChildModule) Then
 
+                '# 子Procedure追加
                 Col.Add ChildProc
 
             End If
@@ -90,6 +98,7 @@ Public Function GetChildrenList( _
 
     Next r
 
+    '# 子Procedure一覧返却
     Set GetChildrenList = Col
 
 End Function
@@ -129,13 +138,15 @@ Public Function IsTargetRelation( _
                 ByVal ChildModule As String) _
                 As Boolean
 
+    '# 出力対象初期設定
     IsTargetRelation = True
 
     '------------------------------
-    ' 再帰除外
+    '# 再帰呼出判定
     '------------------------------
     If Not gRecursive Then
 
+        '# 再帰呼出除外
         If StrComp( _
                 ParentProc, _
                 ChildProc, _
@@ -151,8 +162,10 @@ Public Function IsTargetRelation( _
     '------------------------------
     ' 外部モジュール除外
     '------------------------------
+    '# 外部モジュール判定
     If Not gExternal Then
 
+        '# 外部モジュール除外
         If StrComp( _
                 ParentModule, _
                 ChildModule, _
@@ -168,8 +181,10 @@ Public Function IsTargetRelation( _
     '------------------------------
     ' 共通関数除外
     '------------------------------
+    '# 共通関数判定
     If gSkipCommon Then
 
+        '# 共通関数除外
         If IsCommonFunction( _
                 ChildProc) Then
 
@@ -208,6 +223,7 @@ End Function
 Public Function IsCommonFunction( _
                 ByVal ProcName As String) As Boolean
 
+    '# 共通関数判定
     Select Case UCase$(ProcName)
 
         Case "CHK_PERSON", _
@@ -267,8 +283,10 @@ Public Function CreateTreeNode( _
     ' Procedure情報
     Dim Proc As clsProcInfo
 
+    '# TreeNode生成
     Set Node = New clsTreeNode
 
+    '# TreeNode基本情報設定
     Node.Level = Level
     Node.ProcName = ProcName
     Node.ParentProcName = ParentProcName
@@ -277,9 +295,10 @@ Public Function CreateTreeNode( _
     '--------------------------
     ' Procedure情報
     '--------------------------
-    ' ProcListから詳細情報取得
+    '# Procedure情報取得
     Set Proc = GetProcInfo(ProcName)
 
+    '# Procedure詳細情報設定
     If Not Proc Is Nothing Then
 
         Node.JPName = Proc.JPName
@@ -289,6 +308,7 @@ Public Function CreateTreeNode( _
 
     End If
 
+    '# TreeNode返却
     Set CreateTreeNode = Node
 
 End Function

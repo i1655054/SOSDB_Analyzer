@@ -36,8 +36,10 @@ Option Explicit
 '
 Private Sub UserForm_Initialize()
 
+    '# HCP表示設定初期化
     optCompact.Value = True
     
+    '# モジュール一覧読込
     LoadModuleList
 
 End Sub
@@ -78,32 +80,40 @@ Private Sub LoadModuleList()
     ' ソート対象キー配列
     Dim Keys As Variant
 
+    '# モジュール管理初期化
     Set Dic = _
         CreateObject("Scripting.Dictionary")
 
+    '# ProcListシート取得
     Set ws = _
         gContext.ManagementBook.Worksheets( _
             SHEET_PROC_LIST)
 
+    '# ProcList最終行取得
     LastRow = _
         ws.Cells(ws.Rows.Count, COL_MODULE).End(xlUp).row
 
+    '# モジュール一覧収集
     For r = 2 To LastRow
 
         If Trim$(ws.Cells(r, COL_MODULE).Value) <> "" Then
 
+            '# モジュール名登録
             Dic(CStr(ws.Cells(r, COL_MODULE).Value)) = True
 
         End If
 
     Next r
 
+    '# モジュール一覧ソート
     Keys = Dic.Keys
 
     SortStringArray Keys
 
+    '# モジュール一覧初期化
     lstModule.Clear
 
+    '# モジュール一覧表示
     For r = LBound(Keys) To UBound(Keys)
 
         lstModule.AddItem Keys(r)
@@ -143,15 +153,18 @@ Private Sub SortStringArray( _
     ' 交換用退避文字列
     Dim Temp As String
 
+    '# 文字列配列ソート
     For i = LBound(Arr) To UBound(Arr) - 1
 
         For j = i + 1 To UBound(Arr)
 
+            '# 配列要素比較
             If StrComp( _
                     Arr(i), _
                     Arr(j), _
                     vbTextCompare) > 0 Then
 
+                '# 配列要素入替
                 Temp = Arr(i)
 
                 Arr(i) = Arr(j)
@@ -187,6 +200,7 @@ End Sub
 '
 Private Sub lstModule_Click()
 
+    '# プロシージャ一覧読込
     LoadProcedureList _
         lstModule.Value
 
@@ -232,11 +246,14 @@ Private Sub LoadProcedureList( _
     ' 配列Index
     Dim i As Long
 
+    '# Procedure管理初期化
     Set Dic = _
         CreateObject("Scripting.Dictionary")
 
+    '# Procedure一覧初期化
     lstProcedure.Clear
 
+    '# ProcListシート取得
     Set ws = _
         gContext.ManagementBook.Worksheets( _
             SHEET_PROC_LIST)
@@ -246,11 +263,14 @@ Private Sub LoadProcedureList( _
             ws.Rows.Count, _
             1).End(xlUp).row
 
+    '# Procedure一覧収集
     For r = 2 To LastRow
 
+        '# モジュール一致判定
         If ws.Cells(r, COL_MODULE).Value = _
                 ModuleName Then
 
+            '# Procedure名登録
             Dic( _
                 CStr(ws.Cells(r, COL_PROC).Value)) = True
 
@@ -258,10 +278,12 @@ Private Sub LoadProcedureList( _
 
     Next r
 
+    '# Procedure一覧ソート
     Keys = Dic.Keys
 
     SortStringArray Keys
 
+    '# Procedure一覧表示
     For i = LBound(Keys) To UBound(Keys)
 
         lstProcedure.AddItem Keys(i)
@@ -291,6 +313,7 @@ End Sub
 '
 Private Sub lstProcedure_Click()
 
+    '# Procedure情報読込
     LoadProcedureInfo
 
 End Sub
@@ -331,6 +354,7 @@ Private Sub LoadProcedureInfo()
     ' 選択プロシージャ名
     Dim ProcName As String
     
+    '# ProcListシート取得
     Set ws = _
         gContext.ManagementBook.Worksheets( _
             SHEET_PROC_LIST)
@@ -340,16 +364,20 @@ Private Sub LoadProcedureInfo()
             ws.Rows.Count, _
             1).End(xlUp).row
 
+    '# 選択Procedure取得
     ModuleName = lstModule.Value
     ProcName = lstProcedure.Value
 
+    '# Procedure情報検索
     For r = 2 To LastRow
 
+        '# Procedure一致判定
         If ws.Cells(r, COL_MODULE).Value = _
                 ModuleName _
         And ws.Cells(r, COL_PROC).Value = _
                 ProcName Then
 
+            '# Procedure情報表示
             txtJPName.Text = _
                 ws.Cells(r, COL_JPNAME).Value
 
@@ -391,35 +419,44 @@ Private Sub cmdGenerate_Click()
     ' 対象プロシージャ名
     Dim ProcName As String
 
+    '# モジュール選択確認
     If lstModule.ListIndex < 0 Then
         MsgBox "モジュールを選択してください。"
         Exit Sub
     End If
 
+    '# Procedure選択確認
     If lstProcedure.ListIndex < 0 Then
         MsgBox "プロシージャを選択してください。"
         Exit Sub
     End If
 
+    '# 対象Procedure取得
     ModuleName = lstModule.Value
     ProcName = lstProcedure.Value
 
+    '# HCP表示設定反映
     gHCPCompactMode = optCompact.Value
 
+    '# HCP生成実行
     CreateHCP _
         ModuleName, _
         ProcName
    
+    '# ステータスバー更新
     Application.StatusBar = _
         "HCP生成完了 : " & _
         ModuleName & "." & ProcName
     
+    '# HCP生成ログ出力
     Trace "HCP", _
         "Complete " & _
         ModuleName & "." & ProcName
     
+    '# HCPチャート表示
     gContext.ManagementBook.Activate
     
+    '# HCPチャートシート表示
     gContext.ManagementBook.Worksheets( _
         SHEET_HCP_CHART).Activate
     
@@ -445,6 +482,7 @@ End Sub
 '
 Private Sub cmdClose_Click()
 
+    '# HCP生成画面終了
     Unload Me
 
 End Sub

@@ -55,6 +55,7 @@ Public Sub FunctionTrace()
     
     On Error Resume Next
     
+    '# FunctionTraceシート準備
     Set wsOut = gContext.ManagementBook.Worksheets(SHEET_FUNCTION_TRACE)
     
     On Error GoTo 0
@@ -89,28 +90,33 @@ Public Sub FunctionTrace()
     wsOut.Range("I1") = "行番号"
     wsOut.Range("J1") = "元コード"
 
+    '# Procedure一覧管理初期化
     Set FuncList = CreateObject("Scripting.Dictionary")
 
     '======================
     ' 関数一覧取得
     '======================
+    '# 解析対象モジュール数取得
     TotalModuleCount = _
         gContext.TargetBook.VBProject.VBComponents.Count
 
     CurrentModuleCount = 0
 
+    '# Procedure一覧収集
     For Each VBComp In gContext.TargetBook.VBProject.VBComponents
 
-        ' 標準モジュールのみ対象
+        '# 標準モジュールのみ解析
         ' VBEXT_CT_STDMODULE = 1
         If VBComp.Type = 1 Then
 
             If VBComp.CodeModule.CountOfLines > 0 Then
 
+                '# モジュールソース取得
                 CodeText = VBComp.CodeModule.Lines( _
                             1, _
                             VBComp.CodeModule.CountOfLines)
 
+                '# Procedure情報収集
                 Call GetFunctions(CodeText, VBComp.Name, FuncList)
 
             End If
@@ -125,11 +131,13 @@ Public Sub FunctionTrace()
 
     RowOut = 2
 
+    '# 呼出関係解析開始
     For Each VBComp In gContext.TargetBook.VBProject.VBComponents
 
         CurrentModuleCount = _
             CurrentModuleCount + 1
         
+        '# 解析進捗表示更新
         Application.StatusBar = _
                 "FunctionTrace解析中 [" & _
                 CurrentModuleCount & "/" & _
@@ -146,10 +154,12 @@ Public Sub FunctionTrace()
             
             If VBComp.CodeModule.CountOfLines > 0 Then
         
+                '# モジュールソース取得
                 CodeText = VBComp.CodeModule.Lines( _
                             1, _
                             VBComp.CodeModule.CountOfLines)
 
+                '# モジュール呼出関係解析
                 RowOut = TraceModule( _
                             CodeText, _
                             VBComp.Name, _
@@ -162,8 +172,10 @@ Public Sub FunctionTrace()
 
     Next VBComp
 
+    '# 確認支援設定
     Call SetupTraceValidation(wsOut)
     
+    '# FunctionTraceシート体裁設定
     wsOut.Columns.AutoFit
 
 End Sub
@@ -218,26 +230,34 @@ Public Function GetFunctions( _
     ' Procedure情報
     Dim Proc As clsProcInfo
 
+    '# ソースコード行分割
     Lines = Split(CodeText, vbCrLf)
 
+    '# Procedure定義走査
     For i = LBound(Lines) To UBound(Lines)
 
         LineText = Trim$(Lines(i))
 
+        '# Procedure定義判定
         If IsProcedureLine(LineText) Then
 
+            '# Procedure名取得
             FuncName = _
                 ExtractProcedureName(LineText)
 
             If FuncName <> "" Then
 
+                '# 未登録Procedure判定
                 If Not FuncList.Exists(FuncName) Then
 
+                    '# Procedure情報生成
                     Set Proc = New clsProcInfo
 
+                    
                     Proc.ProcName = FuncName
                     Proc.ModuleName = ModuleName
 
+                    '# Procedureコメント情報取得
                     Proc.JPName = _
                         GetTagValueFromCode( _
                             CodeText, _
@@ -256,6 +276,7 @@ Public Function GetFunctions( _
                             FuncName, _
                             "@Summary")
 
+                    '# Procedure一覧登録
                     FuncList.Add _
                         FuncName, _
                         Proc
@@ -319,33 +340,42 @@ Private Function TraceModule( _
     ' Procedure一覧走査用
     Dim Key As Variant
 
+    '# ソースコード行分割
     Lines = Split(CodeText, vbCrLf)
 
+    '# モジュール解析開始
     For i = LBound(Lines) To UBound(Lines)
 
+        '# 現在Procedure取得
         CurrentProc = GetProcedureName( _
                         Lines(i), _
                         CurrentProc)
 
         If CurrentProc <> "" Then
 
+            '# 呼出先Procedure探索
             For Each Key In FuncList.Keys
 
+                '# Procedure呼出判定
                 If IsFunctionCall( _
                         Lines(i), _
                         CStr(Key)) Then
 
+                    '# 自己呼出除外
                     If UCase(Key) <> _
                        UCase(CurrentProc) Then
                        
+                        '# 呼出関係登録
                         If FuncList.Exists(CurrentProc) Then
                             FuncList(CurrentProc).AddCall Key
                         End If
 
+                        '# 被呼出関係登録
                         If FuncList.Exists(Key) Then
                             FuncList(Key).AddCalledBy CurrentProc
                         End If
                         
+                        '# FunctionTrace出力
                         wsOut.Cells(RowOut, 1) = CurrentProc
 
                         If FuncList.Exists(CurrentProc) Then
@@ -378,6 +408,7 @@ Private Function TraceModule( _
                         wsOut.Cells(RowOut, 10) = _
                             Trim$(Lines(i))
 
+                        '# 次出力行へ移動
                         RowOut = RowOut + 1
 
                     End If
@@ -390,6 +421,7 @@ Private Function TraceModule( _
 
     Next i
 
+    '# 次出力行返却
     TraceModule = RowOut
 
 End Function
@@ -420,12 +452,15 @@ Private Function GetProcedureName( _
             ByVal LineText As String, _
             ByVal CurrentName As String) As String
 
+    '# Procedure定義判定
     If IsProcedureLine(LineText) Then
     
+        '# 現在Procedure更新
         GetProcedureName = _
             ExtractProcedureName(LineText)
     Else
 
+        '# 現在Procedure継続
         GetProcedureName = CurrentName
 
     End If
@@ -462,15 +497,18 @@ Private Sub SetupTraceValidation(ByVal ws As Worksheet)
     ' 最終行
     Dim LastRow As Long
 
+    '# FunctionTrace最終行取得
     LastRow = ws.Cells(ws.Rows.Count, "A").End(xlUp).row
 
     ' 見出し
+    '# 確認列作成
     ws.Range("K1").Value = "確認"
     ws.Range("L1").Value = "コメント"
 
     If LastRow < 2 Then Exit Sub
 
     ' 入力規則
+    '# 確認入力規則設定
     With ws.Range("K2:K" & LastRow).Validation
     
         On Error Resume Next
@@ -496,28 +534,32 @@ Private Sub SetupTraceValidation(ByVal ws As Worksheet)
     End With
 
 
-    ' 条件付き書式クリア
+    '# 条件付き書式初期化
     ws.Range("A2:L" & LastRow).FormatConditions.Delete
 
     ' ○ 正常（薄緑）
+    '# 正常判定色設定
     AddConditionColor _
         ws.Range("A2:L" & LastRow), _
         "=$K2=""○ 正常""", _
         RGB(198, 239, 206)
 
     ' × 誤検出（薄赤）
+    '# 誤検出色設定
     AddConditionColor _
         ws.Range("A2:L" & LastRow), _
         "=$K2=""× 誤検出""", _
         RGB(255, 199, 206)
 
     ' △ 要確認（薄黄）
+    '# 要確認色設定
     AddConditionColor _
         ws.Range("A2:L" & LastRow), _
         "=$K2=""△ 要確認""", _
         RGB(255, 235, 156)
 
     ' 除外（薄灰）
+    '# 除外色設定
     AddConditionColor _
         ws.Range("A2:L" & LastRow), _
         "=$K2=""除外""", _
@@ -555,10 +597,12 @@ Private Sub AddConditionColor( _
     ' 条件付き書式
     Dim fc As FormatCondition
 
+    '# 条件付き書式追加
     Set fc = rng.FormatConditions.Add( _
                 Type:=xlExpression, _
                 Formula1:=Formula)
 
+    '# 背景色設定
     fc.Interior.Color = FillColor
 
 End Sub

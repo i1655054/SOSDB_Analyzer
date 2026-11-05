@@ -35,8 +35,10 @@ Option Explicit
 '
 Private Sub UserForm_Initialize()
 
+    '# 検索履歴読込
     LoadSearchHistory cmbSearch
     
+    '# 入力補完設定
     cmbSearch.MatchEntry = fmMatchEntryComplete
     
 End Sub
@@ -62,6 +64,7 @@ End Sub
 '
 Private Sub UserForm_Activate()
 
+    '# ナビゲータ表示位置設定
     Me.Left = _
         Application.Left + _
         Application.Width - _
@@ -70,6 +73,7 @@ Private Sub UserForm_Activate()
     Me.Top = _
         Application.Top + 80
     
+    '# ノード情報初期化
     Call ClearNavigatorInfo
     
 End Sub
@@ -98,10 +102,12 @@ Private Sub UserForm_QueryClose( _
     Cancel As Integer, _
     CloseMode As Integer)
 
+    '# ×ボタン終了判定
     If CloseMode = vbFormControlMenu Then
 
         'Cancel = True
         
+        '# PathChart画面再表示
         frmPathChart.Show vbModeless
 
     End If
@@ -128,13 +134,17 @@ End Sub
 '
 Private Sub cmdFind_Click()
 
+    '# 検索文字列取得
     gSearchText = GetProcNameFromDisplay( _
                     Trim$(cmbSearch.Text))
     
+    '# 完全一致検索設定
     gExactMatch = chkExactMatch.Value
     
+    '# 検索履歴登録
     AddSearchHistory gSearchText
 
+    '# ノード検索実行
     FindNode
 
 End Sub
@@ -160,8 +170,10 @@ End Sub
 '
 Private Sub cmdNext_Click()
 
+    '# 完全一致検索設定
     gExactMatch = chkExactMatch.Value
     
+    '# 次候補検索実行
     FindNextNode
 
 End Sub
@@ -186,6 +198,7 @@ End Sub
 '
 Private Sub cmdParent_Click()
 
+    '# 親ノード移動
     MoveToParentNode
 
 End Sub
@@ -210,6 +223,7 @@ End Sub
 '
 Private Sub cmdChild_Click()
 
+    '# 子ノード移動
     MoveToChildNode
 
 End Sub
@@ -234,6 +248,7 @@ End Sub
 '
 Private Sub cmdSibling_Click()
 
+    '# 兄弟ノード移動
     MoveToSiblingNode
 
 End Sub
@@ -259,6 +274,7 @@ End Sub
 '
 Private Sub cmdClear_Click()
 
+    '# 強調表示解除
     ClearHighlight
 
 End Sub
@@ -284,16 +300,20 @@ End Sub
 '
 Public Sub ClearNavigatorInfo()
 
+    '# 現在ノード表示初期化
     txtCurrentNode.Text = "-"
 
+    '# Procedure情報表示初期化
     lblJPName.Caption = ""
 
     lblCategory.Caption = ""
 
     lblModule.Caption = ""
 
+    '# 概要表示初期化
     txtSummary.Text = ""
 
+    '# 状態表示初期化
     txtStatus.Text = ""
 
 End Sub
@@ -322,6 +342,7 @@ Private Sub cmdCopyCurrentInfo_Click()
     ' コピー対象文字列
     Dim S As String
 
+    '# コピー文字列生成
     S = _
         "Procedure : " & txtCurrentNode.Text & vbCrLf & _
         "JPName    : " & lblJPName.Caption & vbCrLf & _
@@ -329,8 +350,10 @@ Private Sub cmdCopyCurrentInfo_Click()
         "Module    : " & lblModule.Caption & vbCrLf & _
         "Summary   : " & txtSummary.Text
 
+    '# 現在ノード情報コピー
     Call CopyTextToClipboard(S)
 
+    '# コピー完了表示
     Application.StatusBar = "現在情報をコピーしました"
     
 End Sub
@@ -358,10 +381,13 @@ Private Sub CopyControlValue( _
                 ByVal TextValue As String, _
                 Optional ByVal Title As String = "")
 
+    '# コピー文字列確認
     If Trim$(TextValue) = "" Then Exit Sub
 
+    '# クリップボードコピー
     Call CopyTextToClipboard(TextValue)
 
+    '# コピー結果表示
     If Title <> "" Then
 
         Application.StatusBar = _
@@ -406,8 +432,10 @@ Private Sub txtCurrentNode_MouseDown( _
         ByVal x As Single, _
         ByVal y As Single)
 
+    '# 右クリック判定
     If Button = 2 Then
 
+        '# 現在ノードコピー
         CopyControlValue _
             txtCurrentNode.Text, _
             "現在ノード"
@@ -444,8 +472,10 @@ Private Sub txtStatus_MouseDown( _
         ByVal x As Single, _
         ByVal y As Single)
 
+    '# 右クリック判定
     If Button = 2 Then
 
+        '# 状態コピー
         CopyControlValue _
             txtStatus.Text, _
             "状態"
@@ -482,8 +512,10 @@ Private Sub lblJPName_MouseDown( _
         ByVal x As Single, _
         ByVal y As Single)
 
+    '# 右クリック判定
     If Button = 2 Then
 
+        '# 日本語名コピー
         CopyControlValue _
             lblJPName.Caption, _
             "日本語名"
@@ -520,8 +552,10 @@ Private Sub lblCategory_MouseDown( _
         ByVal x As Single, _
         ByVal y As Single)
 
+    '# 右クリック判定
     If Button = 2 Then
 
+        '# カテゴリコピー
         CopyControlValue _
             lblCategory.Caption, _
             "カテゴリ"
@@ -558,8 +592,10 @@ Private Sub lblModule_MouseDown( _
         ByVal x As Single, _
         ByVal y As Single)
 
+    '# 右クリック判定
     If Button = 2 Then
 
+        '# モジュール名コピー
         CopyControlValue _
             lblModule.Caption, _
             "モジュール"
@@ -596,8 +632,10 @@ Private Sub txtSummary_MouseDown( _
         ByVal x As Single, _
         ByVal y As Single)
 
+    '# 右クリック判定
     If Button = 2 Then
 
+        '# 概要コピー
         CopyControlValue _
             txtSummary.Text, _
             "概要"

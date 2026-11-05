@@ -163,13 +163,16 @@ Public gContext As clsAnalyzeContext
 '
 Public Sub SaveMainWindowState()
 
+    '# Main画面状態保存
     With ThisWorkbook.Windows(1)
 
         gMainOldState = .WindowState
 
+        '# Main画面位置保存
         gMainOldLeft = .Left
         gMainOldTop = .Top
 
+        '# Main画面サイズ保存
         gMainOldWidth = .Width
         gMainOldHeight = .Height
 
@@ -199,19 +202,23 @@ End Sub
 '
 Public Sub RestoreMainWindowState()
 
+    '# Main画面存在確認
     If ThisWorkbook.Windows.Count = 0 Then
     
         Exit Sub
     
     End If
     
+    '# Main画面状態復元
     With ThisWorkbook.Windows(1)
 
         .WindowState = xlNormal
 
+        '# Main画面位置復元
         .Left = gMainOldLeft
         .Top = gMainOldTop
 
+        '# Main画面サイズ復元
         .Width = gMainOldWidth
         .Height = gMainOldHeight
 
@@ -242,13 +249,16 @@ End Sub
 '
 Public Sub ResizeMainWindow()
 
+    '# Main画面サイズ変更
     With ThisWorkbook.Windows(1)
 
         .WindowState = xlNormal
 
+        '# Main画面位置設定
         .Top = 0
         .Left = 0
 
+        '# Main画面サイズ設定
         .Width = MAIN_WIDTH
         .Height = MAIN_HEIGHT
 
@@ -278,15 +288,19 @@ End Sub
 Public Sub ResizeManageWindow( _
                 ByVal wb As Workbook)
 
+    '# 管理ブック表示
     wb.Activate
     
+    '# 管理画面サイズ変更
     With ActiveWindow
 
         .WindowState = xlNormal
 
+        '# 管理画面位置設定
         .Left = MANAGE_LEFT
         .Top = MANAGE_TOP
 
+        '# 管理画面サイズ設定
         .Width = MANAGE_WIDTH
         .Height = MANAGE_HEIGHT
 
@@ -316,6 +330,7 @@ End Sub
 '
 Public Sub ActivateAnalyzerBook()
 
+    '# AnalyzerBookアクティブ化
     ThisWorkbook.Activate
 
 End Sub
@@ -345,6 +360,7 @@ End Sub
 '
 Public Function GetCurrentToolInfo() As clsToolInfo
 
+    '# 現在ツール情報取得
     Set GetCurrentToolInfo = _
         GetToolInfo(gTargetToolID)
 
@@ -372,6 +388,7 @@ End Function
 Public Function GetCurrentTargetBook() _
         As Workbook
 
+    '# 現在対象ブック取得
     Set GetCurrentTargetBook = _
         GetWorkbookByToolID(gTargetToolID)
 
@@ -399,6 +416,7 @@ End Function
 Public Function GetCurrentManagementWorkbook() _
                 As Workbook
 
+    '# 現在管理ブック取得
     Set GetCurrentManagementWorkbook = _
         GetManagementWorkbookByToolID( _
             gTargetToolID)
@@ -438,25 +456,32 @@ Public Function GetManagementWorkbookByToolID( _
     ' 管理ファイルフルパス
     Dim FullPath As String
 
+    '# ツール情報取得
     Set Tool = GetToolInfo(ToolID)
 
     On Error Resume Next
 
+    '# 管理ブック取得
     Set GetManagementWorkbookByToolID = _
         Workbooks(Tool.ManagementFile)
 
     On Error GoTo 0
 
+    '# 管理ブック存在確認
     If GetManagementWorkbookByToolID Is Nothing Then
 
+        '# 管理ファイルパス取得
         FullPath = _
             GetManagementFilePathByToolID(ToolID)
 
+        '# 管理ファイル存在確認
         If Dir(FullPath) = "" Then
 
+            '# 管理ブック作成
             Set GetManagementWorkbookByToolID = _
                 CreateManagementWorkbook(FullPath, Tool.ToolName)
             
+            '# 管理画面サイズ設定
             ResizeManageWindow _
                 GetManagementWorkbookByToolID
             
@@ -465,9 +490,11 @@ Public Function GetManagementWorkbookByToolID( _
 
         Else
         
+            '# 管理ブックオープン
             Set GetManagementWorkbookByToolID = _
                 Workbooks.Open(FullPath)
             
+            '# 管理画面サイズ設定
             ResizeManageWindow _
                 GetManagementWorkbookByToolID
             
@@ -503,6 +530,7 @@ Public Function CheckManagementWorkbook( _
                 ByVal FileName As String) _
                 As Boolean
     
+    '# 管理ブック存在確認
     If TargetBook Is Nothing Then
 
         MsgBox _
@@ -515,6 +543,7 @@ Public Function CheckManagementWorkbook( _
 
     End If
 
+    '# 管理ブック有効
     CheckManagementWorkbook = True
 
 End Function
@@ -546,8 +575,10 @@ Public Function GetManagementFilePathByToolID( _
     ' ツール情報
     Dim Tool As clsToolInfo
 
+    '# ツール情報取得
     Set Tool = GetToolInfo(ToolID)
     
+    '# 管理ファイルパス生成
     GetManagementFilePathByToolID = _
         GetOutputFolder() & _
         Tool.ManagementFile
@@ -588,24 +619,34 @@ Public Function CreateManagementWorkbook( _
 
     On Error GoTo ErrHandler
     
+    '# 管理ブック生成
     Set wb = Workbooks.Add
 
+    '# ProcListシート作成
     wb.Worksheets(1).Name = SHEET_PROC_LIST
 
+    '# 関数トレースシート作成
     wb.Worksheets.Add.Name = SHEET_FUNCTION_TRACE
 
+    '# 関数依存関係シート作成
     wb.Worksheets.Add.Name = SHEET_FUNCTION_DEPENDENCY
 
+    '# PathChartシート作成
     wb.Worksheets.Add.Name = SHEET_PATH_CHART
 
+    '# PathChartTreeシート作成
     wb.Worksheets.Add.Name = SHEET_PATH_CHART_TREE
 
+    '# 保存確認抑止
     Application.DisplayAlerts = False
 
+    '# 管理ブック保存
     wb.SaveAs FilePath
 
+    '# 保存確認復元
     Application.DisplayAlerts = True
 
+    '# 管理ブック作成完了通知
     MsgBox _
         "管理ファイルを作成しました。" _
         & vbCrLf & vbCrLf _
@@ -614,6 +655,7 @@ Public Function CreateManagementWorkbook( _
         & "管理ファイル : " & FilePath, _
         vbInformation
 
+    '# 管理ブック返却
     Set CreateManagementWorkbook = wb
     
     'Debug.Print "SaveOK"
@@ -622,6 +664,7 @@ Public Function CreateManagementWorkbook( _
     
 ErrHandler:
 
+    '# 管理ブック作成エラー通知
     MsgBox _
         "管理ファイル作成失敗" & vbCrLf & _
         Err.Number & " : " & _
@@ -668,16 +711,20 @@ Public Function GetToolInfo( _
     ' ツール情報
     Dim Tool As clsToolInfo
 
+    '# ToolManagerシート取得
     Set ws = ThisWorkbook.Worksheets(SHEET_TOOL_MANAGER)
 
+    '# ToolManager最終行取得
     LastRow = _
         ws.Cells(ws.Rows.Count, "A") _
           .End(xlUp).row
 
+    '# ツール情報検索
     For r = 2 To LastRow
 
         If ws.Cells(r, "A").Value = ToolID Then
 
+            '# ツール情報生成
             Set Tool = New clsToolInfo
 
             Tool.ToolID = ToolID
@@ -700,6 +747,7 @@ Public Function GetToolInfo( _
             Tool.ManagementFile = _
                 TrimEx(ws.Cells(r, "G").Value)
 
+            '# ツール情報返却
             Set GetToolInfo = Tool
 
             Exit Function
@@ -731,6 +779,7 @@ End Function
 '
 Private Function TrimEx(ByVal Value As Variant) As String
 
+    '# 前後空白除去
     TrimEx = Trim$(Replace(CStr(Value), "　", ""))
 
 End Function
@@ -765,10 +814,12 @@ Public Function GetWorkbookByToolID( _
     ' ツール情報
     Dim Tool As clsToolInfo
 
+    '# ツール情報取得
     Set Tool = GetToolInfo(ToolID)
 
     On Error Resume Next
 
+    '# 対象ブック取得
     Set GetWorkbookByToolID = _
         Workbooks(Tool.WorkbookName)
 
@@ -806,6 +857,7 @@ Public Function ValidateTargetBook( _
     ' 現在選択中ツール情報
     Dim Tool As clsToolInfo
 
+    '# 対象ブック存在確認
     If Not gContext.TargetBook Is Nothing Then
 
         ValidateTargetBook = True
@@ -816,8 +868,10 @@ Public Function ValidateTargetBook( _
 
     Set Tool = GetCurrentToolInfo()
 
+    '# ツール情報存在確認
     If Tool Is Nothing Then
 
+        '# 対象ブック未オープン通知
         MsgBox _
             "解析対象ブックが開かれていません。", _
             vbExclamation, _
@@ -827,6 +881,7 @@ Public Function ValidateTargetBook( _
 
     End If
 
+    '# 対象ブック未オープン通知
     MsgBox _
         "解析対象ブックが開かれていません。" & _
         vbCrLf & vbCrLf & _

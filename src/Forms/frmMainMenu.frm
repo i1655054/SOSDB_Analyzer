@@ -35,6 +35,7 @@ Attribute VB_Exposed = False
 '
 Private Sub UserForm_Initialize()
 
+    '# メインメニュータイトル設定
     Me.Caption = "解析ツール"
 
 End Sub
@@ -60,9 +61,11 @@ End Sub
 '
 Private Sub cmdExport_Click()
 
+    '# メインメニュー終了
     Unload Me
 
     ' フォームを表示したまま他を操作できる
+    '# ソース管理画面表示
     frmExportTool.Show vbModeless
     
 End Sub
@@ -88,9 +91,11 @@ End Sub
 '
 Private Sub cmdFunction_Click()
 
+    '# メインメニュー終了
     Unload Me
 
     ' フォームを表示したまま他を操作できる
+    '# 対象ツール選択画面表示
     frmTargetTool.Show vbModeless
     
 End Sub
@@ -116,8 +121,10 @@ End Sub
 '
 Private Sub cmdClose_Click()
 
+    '# Main画面状態復元
     RestoreMainWindowState
     
+    '# メインメニュー終了
     Unload Me
 
 End Sub
@@ -146,8 +153,10 @@ Private Sub UserForm_QueryClose( _
     Cancel As Integer, _
     CloseMode As Integer)
 
+    '# ×ボタン終了判定
     If CloseMode = vbFormControlMenu Then
     
+        '# Main画面状態復元
         RestoreMainWindowState
     
     End If

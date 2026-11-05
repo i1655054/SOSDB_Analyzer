@@ -61,17 +61,19 @@ Public Function CreateAnalyzeContext() _
     ' 解析コンテキスト
     Dim Context As clsAnalyzeContext
 
+    '# 解析コンテキスト生成
     Set Context = New clsAnalyzeContext
 
-    ' TargetBook取得
+    '# 対象ブック取得
     Set Context.TargetBook = GetCurrentTargetBook()
 
-    ' ManagementBook取得
+    '# 管理ブック取得
     Set Context.ManagementBook = GetCurrentManagementWorkbook()
 
-    ' ToolInfo取得
+    '# 選択ツール情報取得
     Set Context.Tool = GetCurrentToolInfo()
 
+    '# 解析コンテキスト返却
     Set CreateAnalyzeContext = Context
 
 End Function
@@ -104,6 +106,7 @@ Public Sub AnalyzeAll()
     ' 呼出元なし関数件数
     Dim NoCallerCount As Long
 
+    '# 解析コンテキスト確認
     If gContext Is Nothing Then
     
         MsgBox "解析コンテキスト未生成"
@@ -112,6 +115,7 @@ Public Sub AnalyzeAll()
 
     End If
 
+    '# 解析コンテキスト妥当性確認
     If Not gContext.IsValid Then
 
         MsgBox "解析コンテキスト生成失敗"
@@ -120,12 +124,14 @@ Public Sub AnalyzeAll()
 
     End If
 
+    '# 対象ブック確認
     If Not CheckTargetBook( _
             gContext.TargetBook, _
             gContext.Tool.WorkbookName) Then
         Exit Sub
     End If
 
+    '# 管理ブック確認
     If Not CheckManagementWorkbook( _
             gContext.ManagementBook, _
             gContext.Tool.ManagementFile) Then
@@ -136,23 +142,28 @@ Public Sub AnalyzeAll()
     
     Application.StatusBar = "Step 1/4 ProcedureList生成中"
     
+    '# ProcList生成
     ProcedureList
     
     Application.StatusBar = "Step 2/4 NoCallerProcList生成中"
     
+    '# 呼出元なしProcedure抽出
     NoCallerCount = _
         ExportNoCallerProcedureList()
     
     Application.StatusBar = "Step 3/4 FunctionTrace生成中"
     
+    '# FunctionTrace生成
     FunctionTrace
 
     Application.StatusBar = "Step 4/4 FunctionDependency生成中"
     
+    '# FunctionDependency生成
     FunctionDependency
 
     Application.StatusBar = False
     
+    '# 解析結果通知
     MsgBox _
         "解析完了" & vbCrLf & _
         "呼出元なし : " & _
@@ -165,6 +176,7 @@ ExitProc:
 
     Application.StatusBar = False
     
+    '# エラー内容通知
     MsgBox _
         "解析中にエラーが発生しました。" & vbCrLf & _
         Err.Description, _
@@ -201,10 +213,12 @@ Public Function CheckTargetBook( _
                     Optional ByVal BookName As String = "") _
                     As Boolean
 
+    '# 対象ブック存在確認
     If TargetBook Is Nothing Then
 
         If Trim$(BookName) = "" Then
 
+            '# 対象ブック未オープン通知
             MsgBox _
                 "対象ブックが開かれていません。" & vbCrLf & _
                 "対象ブック名が指定されていません。", _
@@ -223,6 +237,7 @@ Public Function CheckTargetBook( _
 
     End If
 
+    '# 対象ブック有効
     CheckTargetBook = True
 
 End Function
@@ -246,8 +261,10 @@ Public Sub CopyTextToClipboard(Text As String)
     ' コピーサイズ(Byte)
     Dim Size As LongPtr
 
+    '# コピーサイズ算出
     Size = (Len(Text) + 1) * 2 ' Unicodeは2バイト
 
+    '# クリップボードへコピー
     If OpenClipboard(0&) Then
         EmptyClipboard
         hGlobalMemory = GlobalAlloc(GHND, Size)
@@ -302,14 +319,16 @@ Public Function GetTagValue( _
     ' 取得結果
     Dim Result As String
 
+    '# コメントブロック走査
     For i = StartLine - 1 To 1 Step -1
 
+        '# コメント行抽出
         txt = Trim$(CodeMod.Lines(i, 1))
 
         ' コメントブロック終了
         If Left$(txt, 1) <> "'" Then Exit For
 
-        ' コメント記号除去
+        '# コメント記号除去
         txt = Mid$(txt, 2)
         txt = Trim$(txt)
 
@@ -317,8 +336,10 @@ Public Function GetTagValue( _
         ' 旧形式
         ' '@JPName 〇〇
         '==========================
+        '# 旧形式タグ検索
         If InStr(1, txt, TagName, vbTextCompare) = 1 Then
 
+            '# 単一行タグ取得
             Result = Trim$(Replace( _
                         txt, _
                         TagName, _
@@ -338,6 +359,7 @@ Public Function GetTagValue( _
             ' @JPName
             ' ○○○
             '==========================
+            '# 新形式複数行タグ取得
             For j = i + 1 To StartLine - 1
 
                 txt = Trim$(CodeMod.Lines(j, 1))
@@ -367,6 +389,7 @@ Public Function GetTagValue( _
 ContinueLoop:
             Next j
 
+            '# タグ値返却
             GetTagValue = Result
             
             'Debug.Print "Result=[" & Result & "]"
@@ -415,18 +438,22 @@ Public Function GetTagValueFromCode( _
     ' コメント走査用
     Dim j As Long
 
+    '# ソースコード行分割
     Lines = Split(CodeText, vbCrLf)
 
+    '# Procedure定義検索
     For i = LBound(Lines) To UBound(Lines)
 
         If IsProcedureLine(Trim$(Lines(i))) Then
 
+            '# 対象Procedure一致確認
             If StrComp( _
                     ExtractProcedureName( _
                         Trim$(Lines(i))), _
                     ProcName, _
                     vbTextCompare) = 0 Then
 
+                '# コメントタグ検索
                 For j = i - 1 To 0 Step -1
 
                     If Left$(Trim$(Lines(j)), 1) <> "'" Then
@@ -440,6 +467,7 @@ Public Function GetTagValueFromCode( _
 
                         If j + 1 <= UBound(Lines) Then
 
+                            '# タグ値取得
                             GetTagValueFromCode = _
                                 Trim$(Replace( _
                                     Trim$(Lines(j + 1)), _
@@ -503,17 +531,21 @@ Public Function GetProcInfo( _
 
     If gContext Is Nothing Then Exit Function
     
+    '# ProcListシート取得
     Set ws = gContext.ManagementBook.Worksheets(SHEET_PROC_LIST)
 
     LastRow = ws.Cells(ws.Rows.Count, "C").End(xlUp).row
 
+    '# ProcList走査
     For r = 2 To LastRow
 
+        '# Procedure一致確認
         If StrComp( _
                 Trim$(ws.Cells(r, COL_PROC).Value), _
                 ProcName, _
                 vbTextCompare) = 0 Then
 
+            '# Procedure情報生成
             Set Proc = New clsProcInfo
             
             Proc.ModuleName = ws.Cells(r, COL_MODULE).Value
@@ -529,6 +561,7 @@ Public Function GetProcInfo( _
             Proc.Summary = ws.Cells(r, COL_SUMMARY).Value
             Proc.Remarks = ws.Cells(r, COL_REMARKS).Value
 
+            '# Procedure情報返却
             Set GetProcInfo = Proc
 
             Exit Function
@@ -566,6 +599,7 @@ Public Function GetProcNameFromDisplay( _
                     ByVal DisplayText As String) _
                     As String
 
+    '# 表示名からProcedure名抽出
     If InStr(DisplayText, " : ") > 0 Then
 
         GetProcNameFromDisplay = _
@@ -573,6 +607,7 @@ Public Function GetProcNameFromDisplay( _
 
     Else
 
+        '# 表示文字列をそのまま使用
         GetProcNameFromDisplay = _
             Trim$(DisplayText)
 
@@ -615,16 +650,17 @@ Public Function IsFunctionCall( _
     ' 正規表現オブジェクト
     Dim RegEx As Object
 
+    '# Procedure定義行除外
     If IsProcedureLine(LineText) Then
         Exit Function
     End If
 
     LineText = Trim$(LineText)
 
-    ' コメント行除外
+    '# コメント行除外
     If Left$(LineText, 1) = "'" Then Exit Function
 
-    ' API説明行除外
+    '# API説明行除外
     If Left$(LineText, 1) = "■" Then Exit Function
 
     Set RegEx = CreateObject("VBScript.RegExp")
@@ -635,6 +671,7 @@ Public Function IsFunctionCall( _
     ' 関数戻り値代入除外
     ' GetCurrentToolID = xxx
     '------------------------------------
+    '# 関数戻り値代入除外
     RegEx.Pattern = _
         "^\s*" & _
         FuncName & _
@@ -646,6 +683,7 @@ Public Function IsFunctionCall( _
 
     End If
     
+    '# Call構文判定
     ' Call Function
     RegEx.Pattern = _
         "(^|\s)Call\s+" & _
@@ -659,6 +697,7 @@ Public Function IsFunctionCall( _
 
     End If
 
+    '# Function呼出判定
     ' Function(...)
     RegEx.Pattern = _
         "(^|[\s=\(,])" & _
@@ -675,6 +714,7 @@ Public Function IsFunctionCall( _
     ' 行継続文字対応
     ' CreatePathChart_V3 _
     '------------------------------------
+    '# 行継続呼出判定
     If Right$(Trim$(LineText), 1) = "_" Then
     
         Dim WorkText As String
@@ -705,6 +745,7 @@ Public Function IsFunctionCall( _
 
     End If
     
+    '# Sub呼出判定
     ' Sub Arg1, Arg2
     RegEx.Pattern = _
         "^\s*" & _
@@ -718,6 +759,7 @@ Public Function IsFunctionCall( _
 
     End If
     
+    '# オブジェクトメソッド呼出判定
     ' Object.Method Arg1
     RegEx.Pattern = _
         "\." & FuncName & _
@@ -730,6 +772,7 @@ Public Function IsFunctionCall( _
 
     End If
 
+    '# モジュール修飾呼出判定
     ' Module.Procedure Arg1, Arg2
     RegEx.Pattern = _
         "(^|\s)(\w+\.)+" & _
@@ -743,6 +786,7 @@ Public Function IsFunctionCall( _
 
     End If
 
+    '# 単独呼出判定
     ' Call Module.Procedure(...)
     RegEx.Pattern = _
         "(^|\s)Call\s+(\w+\.)+" & _
@@ -812,10 +856,12 @@ Private Function IsExactProcedureName( _
                 ByVal ProcName As String) _
                 As Boolean
 
+    '# Procedure名先頭一致確認
     If Left$(Text, Len(ProcName)) <> ProcName Then
         Exit Function
     End If
 
+    '# 完全一致判定
     If Len(Text) = Len(ProcName) Then
 
         IsExactProcedureName = True
@@ -823,6 +869,7 @@ Private Function IsExactProcedureName( _
 
     End If
 
+    '# 後続文字判定
     Select Case Mid$( _
                     Text, _
                     Len(ProcName) + 1, _

@@ -45,18 +45,25 @@ Private Sub UserForm_Initialize()
     ' 開始関数存在フラグ
     Dim Found As Boolean
     
+    '# PathChart設定読込
     LoadPathChartConfig
     
+    '# 呼出条件設定反映
     chkExternal.Value = gExternal
     
+    '# 再帰表示設定反映
     chkRecursive.Value = gRecursive
 
+    '# 最大深度初期設定
     txtMaxDepth.Text = GetDefaultMaxDepth()
     
+    '# 開始関数候補読込
     LoadStartProcedure cmbStartProc
 
+    '# 既定開始関数取得
     DefaultProc = GetDefaultStartProcedure()
 
+    '# 保存済み開始関数選択
     For i = 0 To cmbStartProc.ListCount - 1
     
         If cmbStartProc.List(i) = DefaultProc Then
@@ -71,6 +78,7 @@ Private Sub UserForm_Initialize()
 
     Next i
     
+    '# 開始関数既定設定
     If Not Found Then
 
         If cmbStartProc.ListCount > 0 Then
@@ -88,6 +96,7 @@ Private Sub UserForm_Initialize()
 
     End If
 
+    '# 初期画面状態設定
     lblStatus.Caption = "状態： 待機中"
     
     lblElapsed.Caption = "解析時間： 0.00 秒"
@@ -121,12 +130,15 @@ Private Sub cmbStartProc_Change()
     ' 選択されたProcedure名
     Dim ProcName As String
     
+    '# 選択Procedure取得
     ProcName = Trim$(cmbStartProc.Value)
     
     If ProcName = "" Then Exit Sub
 
+    '# Procedure情報取得
     Set Proc = GetProcInfo(ProcName)
     
+    '# Procedure情報表示
     If Not Proc Is Nothing Then
       
         If Proc.JPName <> "" Then
@@ -138,6 +150,7 @@ Private Sub cmbStartProc_Change()
         lblCategory.Caption = Proc.Category
         txtSummary.Text = Proc.Summary
 
+    '# Procedure情報クリア
     Else
 
         lblSelectProc.Caption = ""
@@ -172,9 +185,11 @@ Private Sub UserForm_QueryClose( _
     Cancel As Integer, _
     CloseMode As Integer)
 
+    '# ×ボタン終了判定
     If CloseMode = vbFormControlMenu Then
 
         'Cancel = True
+        '# 関数管理画面表示
         frmFunctionManager.Show vbModeless
 
     End If
@@ -214,9 +229,11 @@ Private Sub cmdAnalyze_Click()
 
     On Error GoTo EH
 
+    '# 開始Procedure取得
     StartProc = Trim$(cmbStartProc.Text)
 
     ' 開始Procedure未選択チェック
+    '# 開始Procedure確認
     If StartProc = "" Then
 
         MsgBox _
@@ -227,13 +244,16 @@ Private Sub cmdAnalyze_Click()
 
     End If
 
+    '# 最大深度取得
     MaxDepth = CLng(txtMaxDepth.Text)
     
+    '# PathChart条件設定
     gRecursive = chkRecursive.Value
 
+    '# 外部呼出設定
     gExternal = chkExternal.Value
 
-    ' 最大深度チェック
+    '# 最大深度確認
     If MaxDepth <= 0 Then
 
         MsgBox _
@@ -245,20 +265,23 @@ Private Sub cmdAnalyze_Click()
     End If
 
     '=======================================
-    '初期化
+    '# 解析状態初期化
     '=======================================
     StartTime = Timer
 
+    '# ログ初期化
     lstLog.Clear
 
     lblStatus.Caption = "状態： 解析中"
 
+    '# 統計表示初期化
     lblNodeCount.Caption = "Node数： 0"
     lblEdgeCount.Caption = "Edge数： 0"
     lblDepth.Caption = "最大深度： 0"
 
     frmPathChart.AddLog String(40, "=")
 
+    '# 解析開始ログ出力
     AddLog "解析開始"
     AddLog "開始Procedure ： " & StartProc
     AddLog "最大深度 ： " & MaxDepth
@@ -266,17 +289,17 @@ Private Sub cmdAnalyze_Click()
     DoEvents
 
     '=======================================
-    '最大深度保存実行
+    '# 最大深度保存
     '=======================================
     SaveDefaultMaxDepth MaxDepth
 
     '=======================================
-    '開Procedure設定実行
+    '# 開始Procedure保存
     '=======================================
     SaveDefaultStartProcedure StartProc
 
     '=======================================
-    '解析実行
+    '# PathChart解析実行
     '=======================================
     ExecutePathChart _
         StartProc, _
@@ -284,25 +307,31 @@ Private Sub cmdAnalyze_Click()
 
     '=======================================
     '結果表示
+    '# 実行時間表示
     '=======================================
     lblElapsed.Caption = _
         "解析時間: " & _
         Format(Timer - StartTime, "0.00 秒")
 
+    '# 解析完了表示
     lblStatus.Caption = "状態： 完了"
 
+    '# 解析完了ログ出力
     AddLog "解析完了"
 
     Exit Sub
-
+    
+'# 異常終了処理
 EH:
 
     lblStatus.Caption = _
         "状態： 異常終了"
 
+    '# エラーログ出力
     AddLog _
         "ERROR ： " & Err.Description
 
+    '# エラー通知
     MsgBox Err.Description, vbCritical
 
 End Sub
@@ -328,11 +357,14 @@ End Sub
 '
 Private Sub cmdClear_Click()
 
+    '# ログ初期化
     lstLog.Clear
 
+    '# 状態表示初期化
     lblStatus.Caption = "状態： 待機中"
     lblElapsed.Caption = "解析時間： 0.00 秒"
 
+    '# 統計表示初期化
     lblNodeCount.Caption = "Node数： 0"
     lblEdgeCount.Caption = "Edge数： 0"
     lblDepth.Caption = "最大深度： 0"
@@ -360,6 +392,7 @@ End Sub
 '
 Private Sub cmdOption_Click()
 
+    '# オプション画面表示
     frmPathChartOption.Show vbModal
 
 End Sub
@@ -384,14 +417,18 @@ End Sub
 '
 Private Sub cmdNavigator_Click()
 
+    '# 検索候補初期化
     frmPathChartNavigator.cmbSearch.Clear
     
+    '# 検索候補読込
     LoadSearchNodeList _
         frmPathChartNavigator.cmbSearch
     
+    '# PathChartナビゲータ表示
     frmPathChartNavigator.Show _
         vbModeless
     
+    '# PathChart画面非表示
     Me.Hide
 
 End Sub
@@ -417,16 +454,19 @@ End Sub
 '
 Public Sub AddLog(ByVal Msg As String)
 
+    '# ログ追加
     lstLog.AddItem _
         Format(Now, "hh:nn:ss") & _
         "  " & Msg
 
+    '# 最新ログ選択
     If lstLog.ListCount > 0 Then
 
         lstLog.ListIndex = lstLog.ListCount - 1
 
     End If
 
+    '# 画面更新
     DoEvents
 
 End Sub

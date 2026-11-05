@@ -60,10 +60,12 @@ Public Sub CreateHCP( _
     
     Trace "HCP", "Step=10 BuildFuncList"
     
+    '# Procedure一覧取得
     Set FuncList = BuildFuncList()
     
     Trace "HCP", "Step=20 GetProcedureCode"
     
+    '# Procedureソース取得
     CodeText = GetProcedureCode( _
                     ModuleName, _
                     ProcName)
@@ -73,6 +75,7 @@ Public Sub CreateHCP( _
 
     Trace "HCP", "Step=30 AnalyzeProcedure"
     
+    '# Procedure解析
     Set ProcNodes = AnalyzeProcedure( _
                         CodeText, _
                         ModuleName, _
@@ -82,6 +85,7 @@ Public Sub CreateHCP( _
     ' 旧シート削除
     Trace "HCP", "Step=40 DeleteSheetIfExists SHEET_PROC_NODES"
     
+    '# HCP関連シート初期化
     DeleteSheetIfExists SHEET_PROC_NODES
     
     Trace "HCP", "Step=50 DeleteSheetIfExists SHEET_PROC_CHART"
@@ -94,9 +98,11 @@ Public Sub CreateHCP( _
 
     Trace "HCP", "Step=70 ConvertProcToHCP"
     
+    '# ProcNodeからHCPNodeへ変換
     Set HCPNodes = ConvertProcToHCP( _
                         ProcNodes)
 
+    '# デバッグ情報出力
     If DEV_MODE Then
 
         ExportProcNodes ProcNodes
@@ -107,6 +113,7 @@ Public Sub CreateHCP( _
 
     Trace "HCP", "Step=80 ExportHCPText"
     
+    '# HCPチャート出力
     ExportHCPText _
         HCPNodes, _
         ModuleName, _
@@ -114,6 +121,7 @@ Public Sub CreateHCP( _
 
     Trace "HCP", "Step=90 ExportHCPTextFileFromSheet"
     
+    '# HCPテキスト出力
     ExportHCPTextFileFromSheet _
         ModuleName, _
         ProcName
@@ -132,6 +140,7 @@ ErrHandler:
 
     Trace "HCP", "CreateHCP " & Err.Description
     
+    '# HCP生成エラー内容通知
     MsgBox _
         Err.Description, _
         vbExclamation, _
@@ -196,10 +205,12 @@ Public Function ConvertProcToHCP( _
 
     Trace "HCP", "CreateHCPNodes"
 
+    '# HCP変換管理初期化
     Set HCPNodes = New Collection
 
     Set MergeStack = New Collection
 
+    '# ProcNode-HCPNode変換表作成
     Set IDMap = _
         CreateObject("Scripting.Dictionary")
 
@@ -208,6 +219,7 @@ Public Function ConvertProcToHCP( _
     '--------------------------------
     ' Proc → HCP変換
     '--------------------------------
+    '# ProcNode走査開始
     For Each ProcNode In ProcNodes
 
         Trace "PROC", _
@@ -215,6 +227,7 @@ Public Function ConvertProcToHCP( _
             ":" & _
             ProcNode.SourceLine
 
+        '# 制御構造終了処理
         Select Case ProcNode.NodeType
 
             Case NODE_ENDIF, _
@@ -236,6 +249,7 @@ Public Function ConvertProcToHCP( _
 
         End Select
 
+        '# HCPNode生成
         Set HCPNode = New clsHCPNode
 
         HCPNode.NodeID = NewID
@@ -246,6 +260,7 @@ Public Function ConvertProcToHCP( _
 
         NewID = NewID + 1
 
+        '# ProcNode属性引継ぎ
         HCPNode.ParentID = _
             ProcNode.ParentID
 
@@ -270,9 +285,11 @@ Public Function ConvertProcToHCP( _
         HCPNode.SourceLine = _
             ProcNode.SourceLine
         
+        '# コメント情報引継ぎ
         HCPNode.CommentText = _
             ProcNode.CommentText
 
+        '# ELSEノード変換
         If ProcNode.NodeType = NODE_ELSE Then
 
             HCPNode.Text = _
@@ -286,6 +303,7 @@ Public Function ConvertProcToHCP( _
             HCPNode.Text = _
                 ProcNode.NodeText
 
+            '# CALLノード業務説明取得
             HCPNode.BusinessText = _
                 GetBusinessText(ProcNode)
 
@@ -294,6 +312,7 @@ Public Function ConvertProcToHCP( _
         '-----------------------------
         ' Debug.Print除外
         '-----------------------------
+        '# Debug.Print除外
         If gHCPCompactMode Then
 
             If IsDebugPrint( _
@@ -308,6 +327,7 @@ Public Function ConvertProcToHCP( _
         '-----------------------------
         ' 重複CALL除外
         '-----------------------------
+        '# 重複CALL除外
         If gHCPCompactMode Then
 
             If HCPNode.NodeType = NODE_CALL Then
@@ -327,6 +347,7 @@ Public Function ConvertProcToHCP( _
         '-----------------------------
         If gHCPCompactMode Then
 
+            '# Tag取得処理集約
             If HCPNode.Text = _
                 "Procedure情報取得" Then
 
@@ -351,8 +372,10 @@ Public Function ConvertProcToHCP( _
 
         End If
 
+        '# HCPNode登録
         HCPNodes.Add HCPNode
 
+        '# 制御構造開始登録
         If IsMergeNode(HCPNode.NodeType) Then
 
             PushMergeStack _
@@ -362,6 +385,7 @@ Public Function ConvertProcToHCP( _
 
         End If
 
+        '# TRUEノード生成
         If HCPNode.NodeType = NODE_IF Then
 
             AddTrueNode _
@@ -380,6 +404,7 @@ ContinueLoop:
     '--------------------------------
     ' Stack整合性チェック
     '--------------------------------
+    '# 制御構造整合性確認
     If MergeStack.Count <> 0 Then
 
         ' スタック残数確認用Index
@@ -404,6 +429,7 @@ ContinueLoop:
     '--------------------------------
     Trace "HCP", "RebuildParentID"
 
+    '# ParentID再構築
     RebuildParentID _
         HCPNodes, _
         IDMap
@@ -413,16 +439,19 @@ ContinueLoop:
     '--------------------------------
     Trace "HCP", "RebuildLinks"
 
+    '# ノードリンク再構築
     RebuildLinks _
         HCPNodes
 
     Trace "HCP", "FixTrueBranch"
 
+    '# TRUE枝階層補正
     FixTrueBranch _
         HCPNodes
 
     Trace "HCP", "FixFalseBranch"
 
+    '# FALSE枝階層補正
     FixFalseBranch _
         HCPNodes
 
@@ -431,6 +460,7 @@ ContinueLoop:
     '--------------------------------
     Trace "HCP", "RebuildHCPLevel"
 
+    '# HCPレベル再計算
     RebuildHCPLevel _
         HCPNodes
 
@@ -507,6 +537,7 @@ Private Sub AddTrueNode( _
     ' TRUEノード
     Dim TrueNode As clsHCPNode
 
+    '# TRUEノード生成
     Set TrueNode = New clsHCPNode
 
     TrueNode.NodeID = NewID
@@ -525,6 +556,7 @@ Private Sub AddTrueNode( _
     TrueNode.Text = _
         "TRUE"
 
+    '# TRUEノード登録
     HCPNodes.Add TrueNode
 
 End Sub
@@ -603,6 +635,7 @@ Private Sub PopMergeStack( _
                 ByVal SourceLine As String, _
                 ByVal NodeType As String)
 
+    '# マージスタック空判定
     If MergeStack.Count = 0 Then
 
         Trace "ERROR", _
@@ -619,6 +652,7 @@ Private Sub PopMergeStack( _
         MergeStack(MergeStack.Count), _
         MergeStack.Count
 
+    '# MERGEノード生成
     AddMergeNode _
         HCPNodes, _
         NewID, _
@@ -626,6 +660,7 @@ Private Sub PopMergeStack( _
             MergeStack(MergeStack.Count)), _
         SourceLine
 
+    '# マージスタック削除
     MergeStack.Remove _
         MergeStack.Count
 
@@ -659,6 +694,7 @@ Private Sub PushMergeStack( _
                 ByVal NodeType As String, _
                 ByVal NodeID As Long)
 
+    '# 制御構造開始位置登録
     MergeStack.Add _
         NodeType & ":" & NodeID
 
@@ -697,6 +733,7 @@ Private Function GetMergeParentID( _
     ' 分解文字列
     Dim Parts() As String
 
+    '# スタック情報分解
     Parts = Split(StackValue, ":")
 
     If UBound(Parts) <> 1 Then
@@ -704,6 +741,7 @@ Private Function GetMergeParentID( _
         Exit Function
     End If
 
+    '# ParentID返却
     GetMergeParentID = CLng(Parts(1))
 
 End Function
@@ -738,8 +776,10 @@ Private Function GetBusinessText( _
     ' 呼出先Procedure情報
     Dim Info As clsProcInfo
 
+    '# CALLノード以外除外
     If ProcNode.NodeType <> NODE_CALL Then Exit Function
 
+    '# 呼出先Procedure解決
     Set Info = _
         ResolveProcedure( _
             ProcNode.ModuleName, _
@@ -747,6 +787,7 @@ Private Function GetBusinessText( _
 
     If Info Is Nothing Then Exit Function
 
+    '# JPName優先表示
     If Trim$(Info.JPName) <> "" Then
 
         GetBusinessText = _
@@ -757,6 +798,7 @@ Private Function GetBusinessText( _
 
     Else
 
+        '# Procedure名表示
         GetBusinessText = _
             ProcNode.CallName & _
             "＜" & _
@@ -800,6 +842,7 @@ Private Sub AddMergeNode( _
     ' MERGEノード
     Dim HCPNode As clsHCPNode
 
+    '# MERGEノード生成
     Set HCPNode = New clsHCPNode
 
     HCPNode.NodeID = NewID
@@ -812,6 +855,7 @@ Private Sub AddMergeNode( _
 
     HCPNode.Text = Text
 
+    '# MERGEノード登録
     HCPNodes.Add HCPNode
 
 End Sub
@@ -848,6 +892,7 @@ Private Sub RebuildParentID( _
     ' ProcNode時点の親ID
     Dim OldParentID As Long
 
+    '# ParentID再マッピング
     For Each Node In HCPNodes
 
         ' MERGEはすでに正しいParentIDを持つ
@@ -859,6 +904,7 @@ Private Sub RebuildParentID( _
 
             OldParentID = Abs(Node.ParentID)
 
+            '# HCPNode親ID変換
             If IDMap.Exists(CStr(OldParentID)) Then
 
                 Node.ParentID = _
@@ -907,6 +953,7 @@ Private Sub RebuildLinks( _
     ' HCPノード
     Dim Node As clsHCPNode
 
+    '# ノード前後関係再構築
     For i = 1 To HCPNodes.Count
 
         Set Node = HCPNodes(i)
@@ -972,6 +1019,7 @@ Private Sub RebuildHCPLevel( _
     '-------------------------
     ' Node検索用
     '-------------------------
+    '# Node検索表生成
     For Each Node In HCPNodes
 
         NodeMap.Add _
@@ -983,6 +1031,7 @@ Private Sub RebuildHCPLevel( _
     '-------------------------
     ' Level再計算
     '-------------------------
+    '# HCPレベル再計算
     For Each Node In HCPNodes
 
         Node.Level = _
@@ -1030,12 +1079,14 @@ Private Function CalcLevel( _
 
     ParentID = Node.ParentID
 
+    '# 親ノード階層探索
     Do While ParentID <> 0
 
         Level = Level + 1
 
         SafeCount = SafeCount + 1
 
+        '# 無限ループ防止
         If SafeCount > 100 Then
 
             Exit Do
@@ -1095,6 +1146,7 @@ Private Sub FixTrueBranch( _
     ' TRUEノードID
     Dim TrueID As Long
 
+    '# TRUE枝補正開始
     For i = 2 To HCPNodes.Count
 
         If HCPNodes(i).NodeType = NODE_TRUE Then
@@ -1102,6 +1154,7 @@ Private Sub FixTrueBranch( _
             IfID = HCPNodes(i - 1).NodeID
             TrueID = HCPNodes(i).NodeID
 
+            '# TRUEノード親設定
             HCPNodes(i).ParentID = IfID
 
             For j = i + 1 To HCPNodes.Count
@@ -1128,6 +1181,7 @@ Private Sub FixTrueBranch( _
                 End If
                 
 
+                '# TRUE配下親補正
                 If HCPNodes(j).BranchType = BRANCH_TRUE Then
 
                     If HCPNodes(j).ParentID = IfID Then
@@ -1181,14 +1235,17 @@ Private Sub FixFalseBranch( _
 
     FalseNodeID = 0
 
+    '# FALSE枝補正開始
     For i = 1 To HCPNodes.Count
 
         Set Node = HCPNodes(i)
 
+        '# FALSEノード検出
         If Node.NodeType = NODE_FALSE Then
 
             FalseNodeID = Node.NodeID
 
+        '# FALSE配下親補正
         ElseIf FalseNodeID <> 0 Then
 
             If Node.NodeType = NODE_MERGE Then
@@ -1242,12 +1299,14 @@ Public Sub ExportHCPNodes( _
 
     On Error Resume Next
 
+    '# HCPNodesシート取得
     Set ws = _
         gContext.ManagementBook.Worksheets( _
             SHEET_HCP_NODES)
     
     On Error GoTo 0
 
+    '# HCPNodesシート作成
     If ws Is Nothing Then
 
         Set ws = _
@@ -1259,8 +1318,10 @@ Public Sub ExportHCPNodes( _
 
     End If
 
+    '# HCPNodesシート初期化
     ws.Cells.Clear
 
+    '# HCPNodesヘッダ出力
     ws.Range("A1:K1").Value = _
         Array( _
             "NodeID", _
@@ -1277,6 +1338,7 @@ Public Sub ExportHCPNodes( _
 
     RowOut = 2
 
+    '# HCPノード一覧出力
     For Each Node In HCPNodes
 
         ws.Cells(RowOut, 1) = Node.NodeID
@@ -1305,6 +1367,7 @@ Public Sub ExportHCPNodes( _
 
     Next Node
     
+    '# HCPNodesシート体裁設定
     ws.Columns.AutoFit
 
 End Sub
@@ -1343,9 +1406,10 @@ Public Function GetChildNodes( _
     ' HCPノード
     Dim Node As clsHCPNode
 
+    '# 子ノード一覧初期化
     Set Result = New Collection
 
-    ' TRUE
+   '# TRUEノード収集
     For Each Node In HCPNodes
 
         If Node.ParentID = ParentID Then
@@ -1360,7 +1424,7 @@ Public Function GetChildNodes( _
 
     Next Node
 
-    ' FALSE
+    '# FALSEノード収集
     For Each Node In HCPNodes
 
         If Node.ParentID = ParentID Then
@@ -1375,7 +1439,7 @@ Public Function GetChildNodes( _
 
     Next Node
 
-    ' その他
+    '# 通常ノード収集
     For Each Node In HCPNodes
 
         If Node.ParentID = ParentID Then
@@ -1391,6 +1455,7 @@ Public Function GetChildNodes( _
 
     Next Node
 
+    '# 子ノード一覧返却
     Set GetChildNodes = Result
 
 End Function
@@ -1430,6 +1495,7 @@ Private Sub LayoutTree( _
     ' 子ノード
     Dim Child As clsHCPNode
 
+    '# ノード表示位置設定
     Node.PosX = _
         20 + Level * 220
 
@@ -1439,11 +1505,13 @@ Private Sub LayoutTree( _
     CurrentY = _
         CurrentY + 60
 
+    '# 子ノード取得
     Set Children = _
         GetChildNodes( _
             Node.NodeID, _
             HCPNodes)
 
+    '# 子ノード配置
     For Each Child In Children
 
         LayoutTree _
@@ -1480,6 +1548,7 @@ Private Function GetHCPSymbol( _
                 ByVal Node As clsHCPNode) _
                 As String
 
+    '# HCP記号判定
     Select Case Node.NodeType
 
         Case NODE_START
@@ -1611,16 +1680,19 @@ Public Sub ExportHCPText( _
 
     On Error Resume Next
 
+    '# HCPチャートシート取得
     Set ws = gContext.ManagementBook.Worksheets( _
                 SHEET_HCP_CHART)
     
     On Error GoTo 0
 
+    '# Procedure情報取得
     Set ProcInfo = _
             ResolveProcedure( _
                 ModuleName, _
                 ProcName)
     
+    '# HCPチャートシート作成
     If ws Is Nothing Then
 
         Set ws = _
@@ -1634,6 +1706,7 @@ Public Sub ExportHCPText( _
 
     StartText = ProcName
 
+    '# 開始ノード検索
     For Each Node In HCPNodes
 
         If Node.NodeType = NODE_START Then
@@ -1646,23 +1719,28 @@ Public Sub ExportHCPText( _
 
     Next Node
 
+    '# HCPチャート初期化
     ws.Cells.Clear
 
+    '# Procedure情報出力
     ws.Cells(1, 1).Value = "Procedure: " & _
         ModuleName & "." & ProcName & _
         "  [ " & ProcInfo.JPName & "＜" & ProcInfo.ModuleName & "＞ ]"
     
+    '# HCPヘッダ出力
     ws.Cells(2, 1).Value = "HCP"
     ws.Cells(2, 2).Value = "Business"
 
     RowOut = 3
 
+    '# 開始ノード出力
     ws.Cells(RowOut, 1).Value = "┬"
     RowOut = RowOut + 1
 
     ws.Cells(RowOut, 1).Value = _
         "〇│" & StartText
     
+    '# 開始Procedure業務説明出力
     If Not ProcInfo Is Nothing Then
         'Debug.Print "Stert:" & ProcInfo.JPName
 
@@ -1675,6 +1753,7 @@ Public Sub ExportHCPText( _
     ws.Cells(RowOut, 1).Value = "┴└┐"
     RowOut = RowOut + 1
 
+    '# HCP描画開始
     RenderNode _
         HCPNodes, _
         0, _
@@ -1682,6 +1761,7 @@ Public Sub ExportHCPText( _
         ws, _
         RowOut
 
+    '# HCPチャート体裁設定
     ws.Columns("A:B").AutoFit
     
     ws.Columns("A").ColumnWidth = HCP_COL_WIDTH
@@ -1691,6 +1771,8 @@ Public Sub ExportHCPText( _
     ws.Columns("A").WrapText = True
     
     gContext.ManagementBook.Activate
+    
+    '# HCPチャート表示
     ws.Activate
     
     ws.Range("B1").Select
@@ -1742,10 +1824,12 @@ Private Sub RenderNode( _
     ' 描画対象ノード
     Dim Node As clsHCPNode
 
+    '# 指定階層ノード描画
     For Each Node In HCPNodes
 
         If Node.ParentID = ParentID Then
 
+            '# ノード種別毎に描画
             Select Case Node.NodeType
 
                 Case NODE_START
@@ -1906,6 +1990,7 @@ Private Sub RenderIfBlock( _
         ws, _
         RowOut
     
+    '# IF条件出力
     ws.Cells(RowOut, 1).Value = _
         Prefix & _
         "◆┐" & _
@@ -1916,7 +2001,7 @@ Private Sub RenderIfBlock( _
     RowOut = RowOut + 1
 
     '-----------------------------
-    ' TRUE/FALSE/MERGE検索
+    '# TRUE/FALSE/MERGE検索
     '-----------------------------
     For Each Node In HCPNodes
 
@@ -1944,13 +2029,7 @@ Private Sub RenderIfBlock( _
     '-----------------------------
     If Not TrueNode Is Nothing Then
 
-        ' THEN見出し
-        'ws.Cells(RowOut, 1).Value = _
-        '    Prefix & "││THEN"
-
-        'RowOut = RowOut + 1
-
-        ' THEN本体
+        '# TRUEブランチ描画
         RenderNode _
             HCPNodes, _
             TrueNode.NodeID, _
@@ -1958,22 +2037,10 @@ Private Sub RenderIfBlock( _
             ws, _
             RowOut
 
-        ' THEN終端
-        'If Not FalseNode Is Nothing Then
-
-        '    ws.Cells(RowOut, 1).Value = _
-        '        Prefix & "│┴"
-            
-        '    ws.Cells(RowOut, 1).WrapText = True
-
-        '    RowOut = RowOut + 1
-
-        'End If
-
     End If
 
     '-----------------------------
-    ' IF直下の通常ノード
+    '# IF直下ノード描画
     '-----------------------------
     For Each Node In HCPNodes
 
@@ -2039,7 +2106,7 @@ Private Sub RenderIfBlock( _
 
         RowOut = RowOut + 1
 
-        ' ELSE本体
+        '# FALSEブランチ描画
         RenderNode _
             HCPNodes, _
             FalseNode.NodeID, _
@@ -2050,7 +2117,7 @@ Private Sub RenderIfBlock( _
     End If
 
     '-----------------------------
-    ' End If
+    '# End If描画
     '-----------------------------
     If Not MergeNode Is Nothing Then
 
@@ -2110,6 +2177,7 @@ Private Sub RenderForBlock( _
         RowOut
     
     
+    '# FOR開始出力
     ws.Cells(RowOut, 1).Value = _
         Prefix & _
         "＠┐" & _
@@ -2119,6 +2187,7 @@ Private Sub RenderForBlock( _
 
     RowOut = RowOut + 1
 
+    '# FOR配下ノード描画
     For Each Node In HCPNodes
 
         If Node.ParentID = ForNode.NodeID Then
@@ -2168,6 +2237,7 @@ Private Sub RenderForBlock( _
 
     Next Node
 
+    '# FOR終端描画
     If Not MergeNode Is Nothing Then
 
         ws.Cells(RowOut, 1).Value = _
@@ -2230,6 +2300,7 @@ Private Sub RenderSelectBlock( _
         ws, _
         RowOut
        
+    '# SELECT開始出力
     ws.Cells(RowOut, 1).Value = _
         Prefix & _
         "◆┐" & _
@@ -2240,7 +2311,7 @@ Private Sub RenderSelectBlock( _
     RowOut = RowOut + 1
 
     '-----------------------------
-    ' CASE数取得
+    '# CASE数集計
     '-----------------------------
     CaseCount = 0
 
@@ -2265,7 +2336,7 @@ Private Sub RenderSelectBlock( _
     CaseIndex = 0
 
     '-----------------------------
-    ' CASE出力
+    '# CASEブロック描画
     '-----------------------------
     For Each Node In HCPNodes
 
@@ -2299,7 +2370,7 @@ Private Sub RenderSelectBlock( _
                     RowOut = RowOut + 1
 
                     '-----------------------------
-                    ' CASE本体
+                    '# CASE配下描画
                     '-----------------------------
                     RenderNode _
                         HCPNodes, _
@@ -2308,21 +2379,6 @@ Private Sub RenderSelectBlock( _
                         ws, _
                         RowOut
 
-                    '-----------------------------
-                    ' CASE終端
-                    ' 最終CASE以外
-                    '-----------------------------
-                    'If CaseIndex < CaseCount Then
-
-                    '    ws.Cells(RowOut, 1).Value = _
-                    '        Prefix & "│┴"
-                        
-                    '    ws.Cells(RowOut, 1).WrapText = True
-
-                    '    RowOut = RowOut + 1
-
-                    'End If
-
             End Select
 
         End If
@@ -2330,7 +2386,7 @@ Private Sub RenderSelectBlock( _
     Next Node
 
     '-----------------------------
-    ' End Select
+    '# End Select描画
     '-----------------------------
     If Not MergeNode Is Nothing Then
 
@@ -2388,6 +2444,7 @@ Private Sub RenderDoBlock( _
         ws, _
         RowOut
     
+    '# DO開始出力
     ws.Cells(RowOut, 1).Value = _
         Prefix & _
         "＠┐" & _
@@ -2397,6 +2454,8 @@ Private Sub RenderDoBlock( _
 
     RowOut = RowOut + 1
 
+    
+    '# 終端MERGEノード検索
     For Each Node In HCPNodes
 
         If Node.ParentID = DoNode.NodeID Then
@@ -2411,6 +2470,7 @@ Private Sub RenderDoBlock( _
 
     Next Node
 
+    '# DO配下ノード描画
     RenderNode _
         HCPNodes, _
         DoNode.NodeID, _
@@ -2418,6 +2478,7 @@ Private Sub RenderDoBlock( _
         ws, _
         RowOut
 
+    '# DO終端出力
     If Not EndNode Is Nothing Then
 
         ws.Cells(RowOut, 1).Value = _
@@ -2472,6 +2533,7 @@ Private Sub RenderWithBlock( _
         ws, _
         RowOut
     
+    '# WITH開始出力
     ws.Cells(RowOut, 1).Value = _
         Prefix & _
         "＠┐" & _
@@ -2481,6 +2543,7 @@ Private Sub RenderWithBlock( _
 
     RowOut = RowOut + 1
 
+    '# 終端MERGEノード検索
     For Each Node In HCPNodes
 
         If Node.ParentID = WithNode.NodeID Then
@@ -2495,6 +2558,7 @@ Private Sub RenderWithBlock( _
 
     Next Node
 
+    '# WITH配下ノード描画
     RenderNode _
         HCPNodes, _
         WithNode.NodeID, _
@@ -2502,6 +2566,7 @@ Private Sub RenderWithBlock( _
         ws, _
         RowOut
 
+    '# WITH終端出力
     If Not EndNode Is Nothing Then
 
         ws.Cells(RowOut, 1).Value = _
@@ -2556,6 +2621,7 @@ Private Sub RenderWhileBlock( _
         ws, _
         RowOut
     
+    '# WHILE開始出力
     ws.Cells(RowOut, 1).Value = _
         Prefix & _
         "＠┐" & _
@@ -2565,6 +2631,7 @@ Private Sub RenderWhileBlock( _
 
     RowOut = RowOut + 1
 
+    '# 終端MERGEノード検索
     For Each Node In HCPNodes
 
         If Node.ParentID = WhileNode.NodeID Then
@@ -2579,6 +2646,7 @@ Private Sub RenderWhileBlock( _
 
     Next Node
 
+    '# WHILE配下ノード描画
     RenderNode _
         HCPNodes, _
         WhileNode.NodeID, _
@@ -2586,6 +2654,7 @@ Private Sub RenderWhileBlock( _
         ws, _
         RowOut
 
+    '# WHILE終端出力
     If Not EndNode Is Nothing Then
 
         ws.Cells(RowOut, 1).Value = _
@@ -2640,6 +2709,7 @@ Private Sub RenderCompileBlock( _
         ws, _
         RowOut
     
+    '# 条件コンパイル開始出力
     ws.Cells(RowOut, 1).Value = _
         Prefix & _
         "＃┐" & _
@@ -2647,6 +2717,7 @@ Private Sub RenderCompileBlock( _
 
     RowOut = RowOut + 1
 
+    '# 条件コンパイル配下ノード描画
     RenderNode _
         HCPNodes, _
         CompileNode.NodeID, _
@@ -2654,6 +2725,7 @@ Private Sub RenderCompileBlock( _
         ws, _
         RowOut
 
+    '# 終端MERGEノード検索
     For Each Node In HCPNodes
 
         If Node.ParentID = CompileNode.NodeID Then
@@ -2669,6 +2741,7 @@ Private Sub RenderCompileBlock( _
 
     Next Node
 
+    '# 条件コンパイル終端出力
     If Not MergeNode Is Nothing Then
 
         ws.Cells(RowOut, 1).Value = _
@@ -2689,8 +2762,10 @@ Private Sub OutputComment( _
 
     Dim V As Variant
     
+    '# コメント有無確認
     If Trim$(Node.CommentText) = "" Then Exit Sub
 
+    '# HCPコメント出力
     For Each V In Split(Node.CommentText, vbCrLf)
 
         ws.Cells(RowOut, 1).Value = _
@@ -2734,12 +2809,14 @@ Private Sub OutputHCPNode( _
     ' 出力文字列
     Dim Text As String
 
+    '# ノードコメント出力
     OutputComment _
         Node, _
         Prefix, _
         ws, _
         RowOut
    
+    '# HCP表示文字列生成
     If Node.NodeType = NODE_LABEL Then
 
         Text = _
@@ -2755,10 +2832,12 @@ Private Sub OutputHCPNode( _
 
     End If
 
+    '# HCPノード出力
     ws.Cells(RowOut, 1).Value = Text
 
     ws.Cells(RowOut, 1).WrapText = True
 
+    '# 業務説明出力
     If Trim$(Node.BusinessText) <> "" Then
 
         ws.Cells(RowOut, 2).Value = _
@@ -2795,6 +2874,7 @@ Private Function FormatHCPText( _
 
     Const MAX_LEN As Long = 60
 
+    '# 長文判定
     If Len(Text) <= MAX_LEN Then
 
         FormatHCPText = Text
@@ -2802,6 +2882,7 @@ Private Function FormatHCPText( _
 
     End If
 
+    '# HCP表示向け改行挿入
     Text = Replace( _
                 Text, _
                 "Array(", _
@@ -2849,6 +2930,7 @@ Private Function GetRenderText( _
                 ByVal Node As clsHCPNode) _
                 As String
 
+    '# HCP描画文字列取得
     GetRenderText = _
         FormatHCPText(Node.Text)
 
@@ -2879,6 +2961,7 @@ Private Function AddIndentToMultiLine( _
                 ByVal Prefix As String) _
                 As String
 
+    '# 複数行インデント付与
     AddIndentToMultiLine = _
         Replace( _
             Text, _
@@ -2912,6 +2995,7 @@ Private Function GetDisplayText( _
                 ByVal Prefix As String) _
                 As String
 
+    '# HCP表示文字列生成
     GetDisplayText = _
         AddIndentToMultiLine( _
             GetRenderText(Node), _
@@ -2946,16 +3030,20 @@ Public Sub DeleteSheetIfExists( _
 
     On Error Resume Next
 
+    '# 削除対象シート取得
     Set ws = _
         gContext.ManagementBook.Worksheets( _
             SheetName)
 
     On Error GoTo 0
 
+    '# シート存在確認
     If ws Is Nothing Then Exit Sub
 
+    '# 削除確認ダイアログ抑止
     Application.DisplayAlerts = False
 
+    '# シート削除
     ws.Delete
 
     Application.DisplayAlerts = True

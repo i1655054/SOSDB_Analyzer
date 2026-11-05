@@ -81,18 +81,21 @@ Public Sub FunctionDependency()
 
     If gContext Is Nothing Then Exit Sub
     
+    '# FunctionTraceシート取得
     Set wsTrace = gContext.ManagementBook.Worksheets(SHEET_FUNCTION_TRACE)
 
     Application.DisplayAlerts = False
     
     On Error Resume Next
     
+    '# FunctionDependencyシート再作成
     gContext.ManagementBook.Worksheets(SHEET_FUNCTION_DEPENDENCY).Delete
     
     On Error GoTo 0
 
     Application.DisplayAlerts = True
     
+    '# FunctionDependencyシート作成
     Set wsDep = _
         gContext.ManagementBook.Worksheets.Add( _
             After:=gContext.ManagementBook.Worksheets( _
@@ -103,6 +106,7 @@ Public Sub FunctionDependency()
     '=========================
     ' ヘッダ
     '=========================
+    '# FunctionDependencyヘッダ出力
     wsDep.Range("A1") = "呼出元"
     wsDep.Range("B1") = "呼出元JPName"
 
@@ -117,6 +121,7 @@ Public Sub FunctionDependency()
     wsDep.Range("H1") = "呼出先Category"
     wsDep.Range("I1") = "呼出先Summary"
 
+    '# FunctionTrace最終行取得
     LastRow = wsTrace.Cells( _
                     wsTrace.Rows.Count, _
                     "A").End(xlUp).row
@@ -124,35 +129,45 @@ Public Sub FunctionDependency()
     '=========================
     ' 集計
     '=========================
+    '# 呼出関係集計
     For r = 2 To LastRow
 
+        '# 呼出元・呼出先キー生成
         Key = _
             wsTrace.Cells(r, 1).Value & "|" & _
             wsTrace.Cells(r, 3).Value
 
+        '# 呼出回数加算
         If Dic.Exists(Key) Then
 
             Dic(Key) = Dic(Key) + 1
 
+        '# 呼出関係初回登録
         Else
 
             Dic.Add Key, 1
 
+            '# 呼出元JPName保存
             DicCallerJP.Add _
                 Key, wsTrace.Cells(r, 2).Value
 
+            '# 呼出先JPName保存
             DicCalleeJP.Add _
                 Key, wsTrace.Cells(r, 4).Value
 
+            '# 呼出元モジュール保存
             DicFromModule.Add _
                 Key, wsTrace.Cells(r, 5).Value
 
+            '# 呼出先モジュール保存
             DicToModule.Add _
                 Key, wsTrace.Cells(r, 6).Value
 
+            '# 呼出先Category保存
             DicCategory.Add _
                 Key, wsTrace.Cells(r, 7).Value
 
+            '# 呼出先Summary保存
             DicSummary.Add _
                 Key, wsTrace.Cells(r, 8).Value
 
@@ -165,19 +180,23 @@ Public Sub FunctionDependency()
     '=========================
     r = 2
 
+    '# 依存関係一覧出力
     For Each V In Dic.Keys
 
+        '# 呼出元情報出力
         wsDep.Cells(r, 1).Value = Split(V, "|")(0)
         wsDep.Cells(r, 2).Value = DicCallerJP(V)
 
+        '# 呼出先情報出力
         wsDep.Cells(r, 3).Value = Split(V, "|")(1)
         wsDep.Cells(r, 4).Value = DicCalleeJP(V)
 
+        '# 呼出回数出力
         wsDep.Cells(r, 5).Value = Dic(V)
-
         wsDep.Cells(r, 6).Value = DicFromModule(V)
         wsDep.Cells(r, 7).Value = DicToModule(V)
 
+        '# 呼出先付帯情報出力
         wsDep.Cells(r, 8).Value = DicCategory(V)
         wsDep.Cells(r, 9).Value = DicSummary(V)
 
@@ -185,6 +204,7 @@ Public Sub FunctionDependency()
 
     Next V
 
+    '# FunctionDependencyシート体裁設定
     wsDep.Rows(1).Font.Bold = True
     wsDep.Rows(1).AutoFilter
     wsDep.Columns.AutoFit

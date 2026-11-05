@@ -40,8 +40,10 @@ Private Sub UserForm_Initialize()
     ' 現在選択中ツール情報
     Dim Tool As clsToolInfo
 
+    '# 現在ツール情報取得
     Set Tool = GetCurrentToolInfo()
 
+    '# ツール情報存在確認
     If Tool Is Nothing Then
 
         MsgBox "ツール情報取得失敗", _
@@ -51,6 +53,7 @@ Private Sub UserForm_Initialize()
 
     End If
 
+    '# ツール情報表示
     lblTool.Caption = _
         "対象 : " & Tool.ToolName & vbCrLf & _
         "Book : " & Tool.WorkbookName
@@ -78,12 +81,15 @@ End Sub
 '
 Private Sub cmdAnalyze_Click()
 
+    '# 解析対象ブック確認
     If Not ValidateTargetBook("関数解析") Then
         Exit Sub
     End If
 
+    '# 関数解析実行
     AnalyzeAll
 
+    '# ProcedureRepository初期化解除
     ClearProcedureRepository
 
 End Sub
@@ -109,12 +115,15 @@ End Sub
 '
 Private Sub cmdHCP_Click()
 
+    '# 解析対象ブック確認
     If Not ValidateTargetBook("HCP生成") Then
         Exit Sub
     End If
 
+    '# ProcedureRepository初期化
     InitializeProcedureRepository
 
+    '# HCP生成画面表示
     frmHCPGenerator.Show vbModeless
 
 End Sub
@@ -140,12 +149,15 @@ End Sub
 '
 Private Sub cmdPathChart_Click()
 
+    '# 解析対象ブック確認
     If Not ValidateTargetBook("PathChart") Then
         Exit Sub
     End If
 
+    '# ProcedureRepository初期化
     InitializeProcedureRepository
 
+    '# PathChart画面表示
     frmPathChart.Show vbModeless
 
 End Sub
@@ -171,8 +183,10 @@ End Sub
 '
 Private Sub cmdClose_Click()
 
+    '# 関数管理画面終了
     Unload Me
     
+    '# メインメニュー再表示
     frmMainMenu.Show vbModeless
     'frmTarget.Show vbModeless
 

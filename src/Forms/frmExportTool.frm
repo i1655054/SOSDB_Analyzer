@@ -36,8 +36,10 @@ Option Explicit
 '
 Private Sub UserForm_Initialize()
 
+    '# ListView初期化
     SetupListView
 
+    '# ツール一覧読込
     LoadToolList
 
 End Sub
@@ -63,6 +65,7 @@ End Sub
 '
 Private Sub SetupListView()
 
+    '# ListView表示設定
     With lvwTools
 
         .View = lvwReport
@@ -70,8 +73,10 @@ Private Sub SetupListView()
         .Gridlines = True
         .CheckBoxes = True
 
+        '# ListView列初期化
         .ColumnHeaders.Clear
 
+        '# ListView列設定
         .ColumnHeaders.Add , , "ID", 35
         .ColumnHeaders.Add , , "ツール名", 160
         .ColumnHeaders.Add , , "状態", 60
@@ -117,19 +122,25 @@ Private Sub LoadToolList()
     ' 対象Workbook
     Dim wb As Workbook
 
+    '# ToolManagerシート取得
     Set ws = _
         ThisWorkbook.Worksheets(SHEET_TOOL_MANAGER)
 
+    '# ToolManager最終行取得
     LastRow = _
         ws.Cells(ws.Rows.Count, "A") _
           .End(xlUp).row
 
+    '# ツール一覧初期化
     lvwTools.ListItems.Clear
 
+    '# ツール一覧生成
     For r = 2 To LastRow
 
+        '# エクスポート対象判定
         If ws.Cells(r, "E").Value = True Then
 
+            '# ListView項目追加
             Set itm = _
                 lvwTools.ListItems.Add( _
                     , , _
@@ -138,6 +149,7 @@ Private Sub LoadToolList()
             itm.SubItems(1) = _
                 ws.Cells(r, "B").Value
 
+            '# Workbook状態確認
             Set wb = Nothing
             
             On Error Resume Next
@@ -145,6 +157,7 @@ Private Sub LoadToolList()
             Set wb = _
                 Workbooks(ws.Cells(r, "C").Value)
 
+            '# Workbook状態設定
             If wb Is Nothing Then
 
                 itm.SubItems(2) = "Close"
@@ -159,6 +172,7 @@ Private Sub LoadToolList()
 
             On Error GoTo 0
 
+            '# Repository設定
             itm.SubItems(3) = _
                 ws.Cells(r, "D").Value
 
@@ -166,6 +180,7 @@ Private Sub LoadToolList()
 
     Next r
 
+    '# 選択件数更新
     UpdateSelectedCount
 
 End Sub
@@ -197,8 +212,10 @@ Private Sub UpdateSelectedCount()
     ' 選択件数
     Dim Count As Long
 
+    '# 選択件数集計
     For Each itm In lvwTools.ListItems
 
+        '# チェック状態判定
         If itm.Checked Then
 
             Count = Count + 1
@@ -207,6 +224,7 @@ Private Sub UpdateSelectedCount()
 
     Next itm
 
+    '# 選択件数表示
     lblSelectedCount.Caption = _
         "選択: " & Count & " 件"
 
@@ -234,6 +252,7 @@ End Sub
 '
 Private Sub cmdRefresh_Click()
 
+    '# ツール一覧再読込
     LoadToolList
 
 End Sub
@@ -263,12 +282,14 @@ Private Sub cmdSelectAll_Click()
     ' ListView項目
     Dim itm As ListItem
 
+    '# 全件選択
     For Each itm In lvwTools.ListItems
 
         itm.Checked = True
 
     Next itm
 
+    '# 選択件数更新
     UpdateSelectedCount
 
 End Sub
@@ -297,12 +318,14 @@ Private Sub cmdSelectNone_Click()
     ' ListView項目
     Dim itm As ListItem
 
+    '# 全件解除
     For Each itm In lvwTools.ListItems
 
         itm.Checked = False
 
     Next itm
 
+    '# 選択件数更新
     UpdateSelectedCount
 
 End Sub
@@ -330,6 +353,7 @@ End Sub
 Private Sub lvwTools_ItemCheck( _
     ByVal Item As MSComctlLib.ListItem)
 
+    '# 選択件数更新
     UpdateSelectedCount
 
 End Sub
@@ -374,12 +398,15 @@ Private Sub cmdExport_Click()
     ' 最終出力Gitルート
     Dim LastRootPath As String
 
+    '# エクスポート対象走査
     For Each itm In lvwTools.ListItems
 
+        '# 選択状態判定
         If itm.Checked Then
 
             ToolID = CLng(itm.Text)
             
+            '# 対象Workbook取得
             Set wb = _
                 GetWorkbookByToolID(ToolID)
 
@@ -387,17 +414,21 @@ Private Sub cmdExport_Click()
 
                 ExportCount = ExportCount + 1
                 
+                '# Git出力先取得
                 LastRootPath = _
                     GetGitRootPathByToolID(ToolID)
 
+                '# VBAエクスポート実行
                 ExportVBABook wb, ToolID
                 
+                '# エクスポート件数更新
                 Count = Count + 1
 
             Else
 
                 Debug.Print "Workbook Not Found"
                 
+                '# Workbook未オープン通知
                 MsgBox _
                     "対象ブックが開かれていません。" _
                     & vbCrLf _
@@ -410,8 +441,10 @@ Private Sub cmdExport_Click()
 
     Next itm
 
+    '# エクスポート対象確認
     If Count = 0 Then
 
+        '# Workbook未選択通知
         MsgBox _
             "選択されたツールはありません。", _
             vbInformation
@@ -420,10 +453,12 @@ Private Sub cmdExport_Click()
 
     End If
 
+    '# エクスポート完了通知
     MsgBox _
         Count & " 件のエクスポートが完了しました。", _
         vbInformation
         
+    '# Git PowerShell起動
     If ExportCount = 1 Then
     
         OpenGitPowerShell LastRootPath
@@ -453,8 +488,10 @@ End Sub
 '
 Private Sub cmdClose_Click()
 
+    '# エクスポート画面終了
     Unload Me
     
+    '# メインメニュー再表示
     frmMainMenu.Show vbModeless
 
 End Sub

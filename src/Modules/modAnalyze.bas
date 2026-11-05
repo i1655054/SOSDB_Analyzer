@@ -183,8 +183,10 @@ Public Sub ProcedureList()
             
             If IsProcedureLine(line) Then
                 
+                '# Procedure名抽出
                 ProcName = ExtractProcedureName(line)
                 
+                '# Procedure名未取得時はUnknown設定
                 If Trim(ProcName) = "" Then
                     ProcName = PROC_UNKNOWN
                 End If
@@ -193,6 +195,7 @@ Public Sub ProcedureList()
                 
                 CurrentProcCount = CurrentProcCount + 1
                 
+                '# 解析進捗表示更新
                 Application.StatusBar = _
                         "ProcList解析中 [" & _
                         CurrentProcCount & "/" & _
@@ -206,6 +209,7 @@ Public Sub ProcedureList()
                 ws.Cells(row, COL_TYPE).Value = GetProcedureType(line)
                 ws.Cells(row, COL_PROC).Value = ProcName
 
+                '# Procedureコメント情報取得
                 '# コメントタグからJPName取得
                 ws.Cells(row, COL_JPNAME).Value = _
                     GetTagValue(CodeMod, i, "@JPName")
@@ -327,6 +331,7 @@ Public Function ExportNoCallerProcedureList() As Long
 
     On Error GoTo 0
 
+    '# NoCallerProcListシート準備
     If wsOut Is Nothing Then
 
         Set wsOut = _
@@ -339,15 +344,18 @@ Public Function ExportNoCallerProcedureList() As Long
 
     End If
 
+    '# ProcListシート取得
     Set wsProc = _
         gContext.ManagementBook.Worksheets( _
             SHEET_PROC_LIST)
 
+    '# 出力シート初期化
     wsOut.Cells.Clear
 
     '------------------------------------
     ' ヘッダ
     '------------------------------------
+    '# NoCallerProcListヘッダ出力
     wsOut.Range("A1:G1").Value = Array( _
         "Module", _
         "Type", _
@@ -367,8 +375,10 @@ Public Function ExportNoCallerProcedureList() As Long
     '------------------------------------
     ' 呼出元なし関数抽出
     '------------------------------------
+    '# 呼出元なしProcedure抽出
     For r = 2 To LastRow
 
+        '# 呼出元なしProcedure出力
         If wsProc.Cells(r, COL_STATUS).Value = _
             STATUS_NOCALLER Then
 
@@ -401,11 +411,13 @@ Public Function ExportNoCallerProcedureList() As Long
 
     Next r
 
+    '# 出力件数返却
     ExportNoCallerProcedureList = OutRow - 2
     
     '------------------------------------
     ' 書式
     '------------------------------------
+    '# NoCallerProcListシート体裁設定
     wsOut.Columns.AutoFit
 
     wsOut.Rows(1).Font.Bold = True
@@ -445,7 +457,7 @@ Public Function IsProcedureLine( _
                 ByVal line As String) _
                 As Boolean
 
-    ' コメント行は除外
+    '# コメント行除外
     If Left(Trim(line), 1) = "'" Then
         IsProcedureLine = False
         Exit Function
@@ -454,6 +466,7 @@ Public Function IsProcedureLine( _
     ' 宣言行だけ判定（先頭一致）
     line = Trim(line)
     
+    '# Procedure宣言判定
     If line Like "Sub *" _
     Or line Like "Public Sub *" _
     Or line Like "Private Sub *" _
@@ -499,6 +512,7 @@ Public Function ExtractProcedureName(line As String) As String
     ' 加工用文字列
     Dim tmp As String
     
+    '# Procedure宣言文字列正規化
     tmp = line
     tmp = Replace(tmp, "Public ", "")
     tmp = Replace(tmp, "Private ", "")
@@ -509,10 +523,12 @@ Public Function ExtractProcedureName(line As String) As String
     tmp = Replace(tmp, "Property Set ", "")
     tmp = Replace(tmp, "Friend ", "")
     
+    '# 引数部除去
     If InStr(tmp, "(") > 0 Then
         tmp = Left(tmp, InStr(tmp, "(") - 1)
     End If
     
+    '# Procedure名返却
     ExtractProcedureName = Trim(tmp)
 
 End Function
@@ -538,6 +554,7 @@ End Function
 '
 Private Function GetProcedureType(line As String) As String
 
+    '# プロシージャ種別判定
     If InStr(line, "Sub") > 0 Then
         GetProcedureType = "Sub"
     ElseIf InStr(line, "Function") > 0 Then
@@ -603,8 +620,10 @@ Public Function CountUsage( _
     ' 判定対象行
     Dim LineText As String
 
+    '# 使用回数初期化
     Count = 0
 
+    '# 全モジュールの呼出回数集計
     For Each VBComp In TargetBook.VBProject.VBComponents
     
         Set CodeMod = VBComp.CodeModule
@@ -614,6 +633,7 @@ Public Function CountUsage( _
             LineText = _
                 Trim$(CodeMod.Lines(i, 1))
             
+            '# Procedure呼出検出
             If IsFunctionCall( _
                 LineText, ProcName) Then
                 
@@ -627,6 +647,7 @@ Public Function CountUsage( _
 
     ' 宣言行は
     ' IsProcedureLineで除外済み
+    '# 使用回数返却
     CountUsage = Count
 
 End Function
@@ -654,22 +675,27 @@ End Function
 '
 Private Function GetUsageStatus(ProcName As String, usage As Long) As String
 
+    '# イベントProcedure判定
     If IsEventProcedure(ProcName) Then
     
         GetUsageStatus = STATUS_EVENT
         
+    '# 特殊Procedure判定
     ElseIf IsSpecialProcedure(ProcName) Then
     
         GetUsageStatus = STATUS_USED
        
+    '# 呼出元なし判定
     ElseIf usage = 0 Then
     
         GetUsageStatus = STATUS_NOCALLER
         
+    '# 要確認判定
     ElseIf usage = 1 Then
     
         GetUsageStatus = STATUS_CONFIRM
         
+    '# 使用中判定
     Else
         GetUsageStatus = STATUS_USED
         
@@ -706,6 +732,7 @@ Private Function IsEventProcedure( _
                 ByVal ProcName As String) _
                 As Boolean
 
+    '# イベントプロシージャ判定
     IsEventProcedure = _
         ProcName Like "Workbook_*" _
         Or ProcName Like "Worksheet_*" _
@@ -753,6 +780,7 @@ Private Function IsSpecialProcedure( _
                 ByVal ProcName As String) _
                 As Boolean
 
+    '# 特殊起動Procedure判定
     Select Case ProcName
 
         Case "SelectNode"

@@ -1,0 +1,29 @@
+Procedure: modAnalyze.CountUsage  [ 使用回数集計＜modAnalyze＞ ]
+HCP	Business
+┬
+〇│Public Function CountUsage(  ByVal ProcName As String)  As Long	使用回数集計＜modAnalyze＞
+┴└┐
+　　□ Dim TargetBook As Workbook
+　　〇 Set TargetBook = gContext.TargetBook
+　　◆→ If TargetBook Is Nothing Then Exit Function
+　　□ Dim VBComp As Object
+　　□ Dim CodeMod As Object
+　　□ Dim i As Long
+　　□ Dim Count As Long
+　　□ Dim LineText As String
+　　│#  使用回数初期化
+　　〇 Count = 0
+　　│#  全モジュールの呼出回数集計
+　　＠┐For Each VBComp In TargetBook.VBProject.VBComponents
+　　│〇 Set CodeMod = VBComp.CodeModule
+　　│＠┐For i = 1 To CodeMod.CountOfLines
+　　││〇 LineText =  Trim$(CodeMod.Lines(i, 1))
+　　│││#  Procedure呼出検出
+　　││◆┐If IsFunctionCall(  LineText, ProcName) Then
+　　│││〇 Count = Count + 1
+　　│││┴End If
+　　││┴Next i
+　　│┴Next VBComp
+　　│#  使用回数返却
+　　〇 CountUsage = Count
+　　┴End Function

@@ -145,10 +145,12 @@ Private Function StartsWithKeyword( _
     ' Keyword直後の文字
     Dim NextChar As String
 
+    '# キーワード長確認
     If Len(LineText) < Len(Keyword) Then
         Exit Function
     End If
 
+    '# キーワード前方一致確認
     If StrComp( _
             Left$(LineText, Len(Keyword)), _
             Keyword, _
@@ -156,7 +158,7 @@ Private Function StartsWithKeyword( _
         Exit Function
     End If
 
-    ' 完全一致
+    '# 完全一致判定
     If Len(LineText) = Len(Keyword) Then
 
         StartsWithKeyword = True
@@ -164,11 +166,13 @@ Private Function StartsWithKeyword( _
 
     End If
 
+    '# キーワード後続文字取得
     NextChar = Mid$( _
                     LineText, _
                     Len(Keyword) + 1, _
                     1)
 
+    '# キーワード境界判定
     Select Case NextChar
 
         Case " ", vbTab, "(", ":"
@@ -205,9 +209,10 @@ Private Function GetNodeType( _
                 ByVal LineText As String) _
                 As String
 
-    ' 判定対象文字列
+    '# 判定対象整形
     LineText = Trim$(LineText)
 
+    '# ノード種別判定
     If StartsWithKeyword(LineText, "#ElseIf") Then
 
         GetNodeType = NODE_COMPILE_ELSEIF
@@ -378,12 +383,13 @@ Private Function ExtractCallNames( _
     ' Procedure名検索用Key
     Dim Key As Variant
 
+    '# 呼出関数一覧初期化
     Set Names = New Collection
 
     LineText = Trim$(LineText)
 
     '----------------------------------
-    ' 宣言行除外
+    '# Procedure宣言行除外
     '----------------------------------
     If IsProcedureLine(LineText) Then
 
@@ -394,7 +400,7 @@ Private Function ExtractCallNames( _
     End If
 
     '----------------------------------
-    ' コメント除外
+    '# コメント行除外
     '----------------------------------
     If Left$(LineText, 1) = "'" Then
 
@@ -405,7 +411,7 @@ Private Function ExtractCallNames( _
     End If
 
     '----------------------------------
-    ' CALL解析対象外
+    '# CALL解析対象判定
     '----------------------------------
     If GetNodeType(LineText) <> NODE_NORMAL Then
 
@@ -416,7 +422,7 @@ Private Function ExtractCallNames( _
     End If
 
     '----------------------------------
-    ' 登録済みProcedureのみ検索
+    '# 登録Procedure探索
     '----------------------------------
     For Each Key In FuncList.Keys
 
@@ -424,12 +430,14 @@ Private Function ExtractCallNames( _
                 LineText, _
                 CStr(Key)) Then
 
+            '# 呼出関数登録
             Names.Add CStr(Key)
 
         End If
 
     Next Key
 
+    '# 呼出関数一覧返却
     Set ExtractCallNames = Names
 
 End Function
@@ -456,6 +464,7 @@ Private Function GetCurrentParentID( _
                 ByVal ParentStack As Collection) _
                 As Long
 
+    '# 現在親ノード取得
     If ParentStack.Count = 0 Then
 
         GetCurrentParentID = 0
@@ -562,10 +571,12 @@ Public Function AnalyzeProcedure( _
     ' HCPコメント保持
     Dim PendingComment As String
 
+    '# ProcNode管理初期化
     Set Nodes = New Collection
     Set ParentStack = New Collection
     Set BranchStack = New Collection
 
+    '# 解析状態初期化
     CompileLevel = 0
     
     NodeID = 1
@@ -574,11 +585,12 @@ Public Function AnalyzeProcedure( _
 
     CurrentBranch = BRANCH_NONE
 
+    '# Procedure宣言取得
     ProcHeader = _
         ExtractProcedureHeader(CodeText)
     
     '--------------------------
-    ' START
+    '# STARTノード生成
     '--------------------------
     Set Node = New clsProcNode
 
@@ -592,6 +604,7 @@ Public Function AnalyzeProcedure( _
     Node.NodeText = ProcHeader
     Node.SourceLine = ""
 
+    '# STARTノード追加
     AddProcNode _
         Nodes, _
         Node, _
@@ -601,13 +614,15 @@ Public Function AnalyzeProcedure( _
     NodeID = NodeID + 1
 
     '--------------------------
-    ' 本体
+    '# 論理行生成
     '--------------------------
     Set LogicalLines = _
         BuildLogicalLines(CodeText)
 
+    '# 論理行解析開始
     For Each LineText In LogicalLines
     
+        '# HCPコメント取得
         If Left$(Trim$(CStr(LineText)), 2) = "'#" Then
 
             If PendingComment <> "" Then
@@ -624,19 +639,23 @@ Public Function AnalyzeProcedure( _
         End If
 
 
+        '# Procedure宣言除外
         If IsProcedureLine(Trim$(CStr(LineText))) Then
             GoTo NextLine
         End If
 
+        '# コメント行除外
         If Left$(Trim$(CStr(LineText)), 1) = "'" Then
             GoTo NextLine
         End If
 
         i = i + 1
 
+        '# ノード種別判定
         NodeType = _
             GetNodeType(CStr(LineText))
 
+        '# 条件コンパイル解析
         Select Case NodeType
 
             Case NODE_COMPILE_IF
@@ -667,12 +686,14 @@ Public Function AnalyzeProcedure( _
 
         End Select
         
+        '# 条件コンパイル範囲除外
         If CompileLevel > 0 Then
 
             GoTo NextLine
 
         End If
 
+        '# 呼出関数解析
         Set CallNames = _
             ExtractCallNames( _
                 CStr(LineText), _
@@ -681,7 +702,7 @@ Public Function AnalyzeProcedure( _
         OutputLevel = Level
 
         '--------------------------
-        ' END SELECT
+        '# END SELECT処理
         '--------------------------
         If NodeType = NODE_ENDSELECT Then
 
@@ -706,7 +727,7 @@ Public Function AnalyzeProcedure( _
         End If
 
         '--------------------------
-        ' END IF / NEXT
+        '# 制御構造終了処理
         '--------------------------
         If NodeType = NODE_ENDIF _
         Or NodeType = NODE_NEXT _
@@ -740,7 +761,7 @@ Public Function AnalyzeProcedure( _
         End If
 
         '--------------------------
-        ' ELSE
+        '# ELSE分岐切替
         '--------------------------
         If NodeType = NODE_ELSE Then
 
@@ -755,7 +776,7 @@ Public Function AnalyzeProcedure( _
         End If
 
         '--------------------------
-        ' CASE切替
+        '# CASE切替処理
         '--------------------------
         If NodeType = NODE_CASE Then
 
@@ -772,7 +793,7 @@ Public Function AnalyzeProcedure( _
         End If
         
         '--------------------------
-        ' 制御構造
+        '# 制御構造ノード生成
         '--------------------------
         If NodeType <> NODE_NORMAL Then
 
@@ -800,12 +821,14 @@ Public Function AnalyzeProcedure( _
 
             Node.LineNo = i
 
+            '# 制御構造ノード追加
             AddProcNode _
                 Nodes, _
                 Node, _
                 PrevNode, _
                 LastNodeID
 
+            '# 制御構造状態更新
             Select Case NodeType
 
                 Case NODE_IF
@@ -870,7 +893,7 @@ Public Function AnalyzeProcedure( _
             NodeID = NodeID + 1
 
         '--------------------------
-        ' CALL
+        '# CALLノード生成
         '--------------------------
         ElseIf CallNames.Count > 0 Then
 
@@ -903,6 +926,7 @@ Public Function AnalyzeProcedure( _
 
                 Node.LineNo = i
 
+                '# CALLノード追加
                 AddProcNode _
                     Nodes, _
                     Node, _
@@ -914,7 +938,7 @@ Public Function AnalyzeProcedure( _
             Next CallName
 
         '--------------------------
-        ' Reference
+        '# REFERENCEノード生成
         '--------------------------
         ElseIf IsReferenceLine( _
                     Trim$(CStr(LineText))) Then
@@ -945,6 +969,7 @@ Public Function AnalyzeProcedure( _
             Node.CommentText = PendingComment
             PendingComment = ""
 
+            '# REFERENCEノード追加
             AddProcNode _
                 Nodes, _
                 Node, _
@@ -954,7 +979,7 @@ Public Function AnalyzeProcedure( _
             NodeID = NodeID + 1
     
         '--------------------------
-        ' NORMAL
+        '# NORMALノード生成
         '--------------------------
         ElseIf IsOutputNormal( _
                 Trim$(CStr(LineText))) Then
@@ -987,6 +1012,7 @@ Public Function AnalyzeProcedure( _
 
             Node.LineNo = i
 
+            '# NORMALノード追加
             AddProcNode _
                 Nodes, _
                 Node, _
@@ -1002,7 +1028,7 @@ NextLine:
     Next
 
     '--------------------------
-    ' END
+    '# ENDノード生成
     '--------------------------
     Set Node = New clsProcNode
 
@@ -1018,12 +1044,14 @@ NextLine:
             ProcHeader)
     Node.SourceLine = ""
 
+    '# ENDノード追加
     AddProcNode _
         Nodes, _
         Node, _
         PrevNode, _
         LastNodeID
 
+    '# ProcNode一覧返却
     Set AnalyzeProcedure = Nodes
 
 End Function
@@ -1051,6 +1079,7 @@ Private Function GetProcedureEndText( _
                 ByVal ProcHeader As String) _
                 As String
 
+    '# Procedure種別判定
     If StartsWithKeyword( _
             ProcHeader, _
             "Public Function") _
@@ -1061,6 +1090,7 @@ Private Function GetProcedureEndText( _
             ProcHeader, _
             "Friend Function") Then
 
+        '# End Function返却
         GetProcedureEndText = _
             "End Function"
 
@@ -1074,11 +1104,13 @@ Private Function GetProcedureEndText( _
                 ProcHeader, _
                 "Friend Property") Then
 
+        '# End Property返却
         GetProcedureEndText = _
             "End Property"
 
     Else
 
+        '# End Sub返却
         GetProcedureEndText = _
             "End Sub"
 
@@ -1121,8 +1153,10 @@ Private Function ExtractProcedureHeader( _
     ' 現在行文字列
     Dim Text As String
 
+    '# ソース行分解
     Lines = Split(CodeText, vbCrLf)
 
+    '# Procedure宣言探索
     For i = LBound(Lines) To UBound(Lines)
 
         Text = Trim$(Lines(i))
@@ -1131,6 +1165,7 @@ Private Function ExtractProcedureHeader( _
 
             Header = Text
 
+            '# 行継続結合
             Do While _
                 Right$(Trim$(Lines(i)), 1) = "_"
 
@@ -1143,6 +1178,7 @@ Private Function ExtractProcedureHeader( _
 
             Loop
 
+            '# Procedure宣言返却
             ExtractProcedureHeader = Header
 
             Exit Function
@@ -1179,14 +1215,16 @@ Private Function IsOutputNormal( _
     ' 判定対象文字列
     Dim Text As String
 
+    '# 判定対象整形
     Text = Trim$(LineText)
 
+    '# 空行除外
     If Text = "" Then Exit Function
     
-    ' コメントは常に除外
+    '# コメント行除外
     If Left$(Text, 1) = "'" Then Exit Function
     
-    ' 終了構文は常に除外
+    '# 終了構文除外
     If UCase$(Text) = "END SUB" Then Exit Function
 
     If UCase$(Text) = "END FUNCTION" Then Exit Function
@@ -1194,6 +1232,7 @@ Private Function IsOutputNormal( _
     If UCase$(Text) = "END PROPERTY" Then Exit Function
     
     ' 全表示ならここで終了
+    '# CompactMode判定
     If Not gHCPCompactMode Then
     
         IsOutputNormal = True
@@ -1201,6 +1240,7 @@ Private Function IsOutputNormal( _
     
     End If
 
+    '# 宣言文除外
     If Left$(Text, 6) = "Option" Then Exit Function
 
     If Left$(Text, 4) = "Dim " Then Exit Function
@@ -1217,7 +1257,7 @@ Private Function IsOutputNormal( _
     End If
 
     '-------------------------
-    ' 書式・表示系除外
+    '# 書式設定除外
     '-------------------------
     If InStr(Text, ".AutoFit") > 0 Then Exit Function
 
@@ -1225,6 +1265,7 @@ Private Function IsOutputNormal( _
 
     If InStr(Text, ".Font.") > 0 Then Exit Function
 
+    '# 通常ノード出力
     IsOutputNormal = True
 
 End Function
@@ -1252,6 +1293,7 @@ Private Function IsReferenceLine( _
                 ByVal LineText As String) _
                 As Boolean
 
+    '# 問診シート参照判定
     If InStr(LineText, _
              "MonShinSheet_id(") > 0 Then
 
@@ -1260,6 +1302,7 @@ Private Function IsReferenceLine( _
 
     End If
 
+    '# 問診マップ参照判定
     If InStr(LineText, _
              "MonshinMap(") > 0 Then
 
@@ -1301,6 +1344,7 @@ Private Function IsInlineIf( _
 
     LineText = Trim$(LineText)
 
+    '# コメント除外
     PosComment = InStr(LineText, "'")
 
     If PosComment > 0 Then
@@ -1312,8 +1356,10 @@ Private Function IsInlineIf( _
 
     End If
 
+    '# If文判定
     If Left$(LineText, 2) <> "If" Then Exit Function
 
+    '# Then位置取得
     PosThen = InStr( _
                 1, _
                 LineText, _
@@ -1322,6 +1368,7 @@ Private Function IsInlineIf( _
 
     If PosThen = 0 Then Exit Function
 
+    '# インラインIf判定
     If Trim$(Mid$( _
             LineText, _
             PosThen + 5)) <> "" Then
@@ -1370,14 +1417,18 @@ Private Function BuildLogicalLines( _
     ' 現在行文字列
     Dim LineText As String
 
+    '# 論理行一覧初期化
     Set Result = New Collection
 
+    '# ソース行分解
     Lines = Split(CodeText, vbCrLf)
 
+    '# 論理行生成
     For i = LBound(Lines) To UBound(Lines)
 
         LineText = Trim$(Lines(i))
 
+        '# 行継続結合
         If Right$(LineText, 1) = "_" Then
 
             CurrentLine = _
@@ -1391,6 +1442,7 @@ Private Function BuildLogicalLines( _
                 CurrentLine & " " & _
                 LineText
 
+            '# 論理行登録
             Result.Add Trim$(CurrentLine)
 
             CurrentLine = ""
@@ -1405,6 +1457,7 @@ Private Function BuildLogicalLines( _
 
     End If
 
+    '# 論理行一覧返却
     Set BuildLogicalLines = Result
 
 End Function
@@ -1442,6 +1495,7 @@ Public Sub ExportProcNodes( _
 
     On Error Resume Next
 
+    '# ProcNodesシート取得
     Set ws = _
         gContext.ManagementBook.Worksheets( _
             SHEET_PROC_NODES)
@@ -1458,6 +1512,7 @@ Public Sub ExportProcNodes( _
 
         On Error GoTo 0
 
+        '# ProcNodesシート作成
         If ws Is Nothing Then
 
             Set ws = _
@@ -1492,14 +1547,14 @@ Public Sub ExportProcNodes( _
     End If
 
     '------------------------------------
-    ' Clearは使わない
+    '# ProcNodesシート初期化
     '------------------------------------
     ws.Range("A:H").Value = ""
 
     ws.Range("A:H").ClearFormats
 
     '------------------------------------
-    ' Header
+    '# ProcNodesヘッダ出力
     '------------------------------------
     ws.Range("A1:I1").Value = Array( _
         "NodeID", _
@@ -1515,7 +1570,7 @@ Public Sub ExportProcNodes( _
     RowOut = 2
 
     '------------------------------------
-    ' Nodes
+    '# ProcNode一覧出力
     '------------------------------------
     For Each Node In Nodes
 
@@ -1534,7 +1589,7 @@ Public Sub ExportProcNodes( _
     Next Node
 
     '------------------------------------
-    ' Format
+    '# ProcNodesシート体裁設定
     '------------------------------------
     ws.Rows(1).Font.Bold = True
 
@@ -1577,19 +1632,23 @@ Public Function BuildFuncList() _
     ' モジュールソースコード
     Dim CodeText As String
 
+    '# Procedure一覧生成
     Set FuncList = _
         CreateObject("Scripting.Dictionary")
 
+    '# VBAモジュール走査
     For Each VBComp In _
         gContext.TargetBook.VBProject.VBComponents
         
         If VBComp.CodeModule.CountOfLines > 0 Then
 
+            '# モジュールソース取得
             CodeText = _
                 VBComp.CodeModule.Lines( _
                     1, _
                     VBComp.CodeModule.CountOfLines)
 
+            '# Procedure収集
             GetFunctions _
                 CodeText, _
                 VBComp.Name, _
@@ -1599,6 +1658,7 @@ Public Function BuildFuncList() _
 
     Next VBComp
 
+    '# Procedure一覧返却
     Set BuildFuncList = FuncList
 
 End Function
@@ -1634,6 +1694,7 @@ Public Function GetProcedureCode( _
     ' コードモジュール
     Dim CodeMod As Object
 
+    '# モジュール探索
     For Each VBComp In _
         gContext.TargetBook.VBProject.VBComponents
 
@@ -1642,6 +1703,7 @@ Public Function GetProcedureCode( _
                 ModuleName, _
                 vbTextCompare) = 0 Then
 
+            '# コードモジュール取得
             Set CodeMod = _
                 VBComp.CodeModule
 
@@ -1651,6 +1713,7 @@ Public Function GetProcedureCode( _
 
     Next VBComp
 
+    '# モジュール存在確認
     If CodeMod Is Nothing Then
 
         MsgBox _
@@ -1663,6 +1726,7 @@ Public Function GetProcedureCode( _
 
     End If
 
+    '# Procedureソース取得
     GetProcedureCode = _
         CodeMod.Lines( _
             CodeMod.ProcStartLine( _
@@ -1702,9 +1766,11 @@ Private Sub AddProcNode( _
                 ByRef PrevNode As clsProcNode, _
                 ByRef LastNodeID As Long)
 
+    '# 前後リンク設定
     Node.PrevNodeID = LastNodeID
     Node.NextNodeID = 0
 
+    '# 前ノード更新
     If Not PrevNode Is Nothing Then
 
         PrevNode.NextNodeID = _
@@ -1712,8 +1778,10 @@ Private Sub AddProcNode( _
 
     End If
 
+    '# ProcNode登録
     Nodes.Add Node
 
+    '# 管理情報更新
     Set PrevNode = Node
 
     LastNodeID = Node.NodeID
@@ -1762,11 +1830,12 @@ Public Function ExtractCalledProcedureName( _
     ' "("位置
     Dim PosParen As Long
 
+    '# 呼出文整形
     SourceLine = Trim$(SourceLine)
 
     If SourceLine = "" Then Exit Function
 
-    ' 代入文
+    '# 代入文補正
     PosEqual = InStr(SourceLine, "=")
 
     If PosEqual > 0 Then
@@ -1785,7 +1854,7 @@ Public Function ExtractCalledProcedureName( _
         PosSpace = InStr(SourceLine, " ")
         PosParen = InStr(SourceLine, "(")
 
-        ' Sub 呼び出し
+        '# Sub呼出判定
         If PosSpace < PosParen Then
 
             ExtractCalledProcedureName = _
@@ -1799,6 +1868,7 @@ Public Function ExtractCalledProcedureName( _
 
     PosParen = InStr(SourceLine, "(")
 
+    '# Function呼出判定
     If PosParen > 1 Then
 
         ExtractCalledProcedureName = _
@@ -1824,10 +1894,12 @@ Public Function ExtractCalledProcedureName( _
 
 NormalizeName:
 
+    '# モジュール名除去
     If InStrRev( _
             ExtractCalledProcedureName, _
             ".") > 0 Then
 
+        '# Procedure名返却
         ExtractCalledProcedureName = _
             Mid$( _
                 ExtractCalledProcedureName, _

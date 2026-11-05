@@ -35,6 +35,7 @@ Option Explicit
 '
 Private Sub UserForm_Initialize()
 
+    '# 制限値設定読込
     If gMaxNode = 0 Then
 
         txtMaxNode.Text = "1000"
@@ -46,24 +47,30 @@ Private Sub UserForm_Initialize()
 
     End If
 
+    '# 解析対象設定読込
     chkProperty.Value = gProperty
     chkPrivate.Value = gPrivate
     chkPublic.Value = gPublic
 
+    '# モジュール種別設定読込
     chkStdModule.Value = gStdModule
     chkUserForm.Value = gUserForm
     chkClassModule.Value = gClassModule
 
+    '# 除外条件設定読込
     chkIgnoreAPI.Value = gIgnoreAPI
     chkIgnoreExcel.Value = gIgnoreExcel
     chkIgnoreSelf.Value = gIgnoreSelf
     chkSameModuleOnly.Value = gSameModuleOnly
 
+    '# PathChart表示設定読込
     chkSkipCommon.Value = gSkipCommon
     chkShowCount.Value = gShowCount
 
+    '# 出力設定読込
     chkPowerPoint.Value = gPowerPoint
     
+    '# PowerPoint向き設定読込
     Select Case gPptOrientation
 
         Case PPT_ORIENT_PORTRAIT
@@ -82,15 +89,18 @@ Private Sub UserForm_Initialize()
     
     chkPngOutput.Value = gPngOutput
 
+    '# モジュール表示設定読込
     chkShowModule.Value = gShowModule
     chkColorModule.Value = gColorModule
 
+    '# テーマ候補設定
     cmbColorTheme.Clear
 
     cmbColorTheme.AddItem "標準"
     cmbColorTheme.AddItem "明るい"
     cmbColorTheme.AddItem "ダーク"
 
+    '# テーマ設定反映
     If gColorTheme = "" Then
 
         cmbColorTheme.ListIndex = 0
@@ -101,6 +111,7 @@ Private Sub UserForm_Initialize()
 
     End If
 
+    '# 出力方向設定状態反映
     Call chkPowerPoint_Click
     
 End Sub
@@ -126,6 +137,7 @@ End Sub
 '
 Private Sub cmdCancel_Click()
 
+    '# オプション画面終了
     Unload Me
 
 End Sub
@@ -153,38 +165,49 @@ Private Sub cmdOK_Click()
 
     ' 設定値保存
     
+    '# 解析対象設定保存
     gProperty = chkProperty.Value
     gPrivate = chkPrivate.Value
     gPublic = chkPublic.Value
 
+    '# モジュール種別設定保存
     gStdModule = chkStdModule.Value
     gUserForm = chkUserForm.Value
     gClassModule = chkClassModule.Value
 
+    '# 除外条件設定保存
     gIgnoreAPI = chkIgnoreAPI.Value
     gIgnoreExcel = chkIgnoreExcel.Value
     gIgnoreSelf = chkIgnoreSelf.Value
     gSameModuleOnly = chkSameModuleOnly.Value
 
+    '# PathChart表示設定保存
     gSkipCommon = chkSkipCommon.Value
     gShowCount = chkShowCount.Value
 
+    '# 出力設定保存
     gPowerPoint = chkPowerPoint.Value
     
+    '# PowerPoint向き設定保存
     SetOptionValue
     
     gPngOutput = chkPngOutput.Value
 
+    '# モジュール表示設定保存
     gShowModule = chkShowModule.Value
     gColorModule = chkColorModule.Value
 
+    '# テーマ設定保存
     gColorTheme = cmbColorTheme.Value
 
+    '# 制限値設定保存
     gMaxNode = Val(txtMaxNode.Text)
     gMaxEdge = Val(txtMaxEdge.Text)
 
+    '# PathChart設定保存
     SavePathChartConfig
     
+    '# オプション画面終了
     Me.Hide
 
 End Sub
@@ -210,17 +233,22 @@ End Sub
 '
 Private Sub cmdDefault_Click()
 
+    '# PathChart表示設定初期化
     chkSkipCommon.Value = False
     chkShowCount.Value = False
 
+    '# 出力設定初期化
     chkPowerPoint.Value = False
     chkPngOutput.Value = False
 
+    '# モジュール表示設定初期化
     chkShowModule.Value = False
     chkColorModule.Value = False
 
+    '# テーマ設定初期化
     cmbColorTheme.Value = DEFAULT_COLOR_THEME
 
+    '# 制限値初期化
     txtMaxNode.Text = DEFAULT_MAX_NODE
     txtMaxEdge.Text = DEFAULT_MAX_EDGE
 
@@ -247,16 +275,20 @@ End Sub
 '
 Private Sub SetOptionValue()
 
+    '# PowerPoint向き設定
     If optPptAuto.Value Then
 
+        '# 自動向き設定
         gPptOrientation = PPT_ORIENT_AUTO
 
     ElseIf optPptPortrait.Value Then
 
+        '# 縦向き設定
         gPptOrientation = PPT_ORIENT_PORTRAIT
 
     ElseIf optPptLandscape.Value Then
 
+        '# 横向き設定
         gPptOrientation = PPT_ORIENT_LANDSCAPE
 
     End If
@@ -285,12 +317,15 @@ End Sub
 '
 Private Sub chkPowerPoint_Click()
 
+    '# PowerPoint向き選択制御
     optPptAuto.Enabled = _
         chkPowerPoint.Value
 
+    '# 縦向き選択制御
     optPptPortrait.Enabled = _
         chkPowerPoint.Value
 
+    '# 横向き選択制御
     optPptLandscape.Enabled = _
         chkPowerPoint.Value
 

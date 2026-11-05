@@ -34,11 +34,14 @@ Attribute VB_Exposed = False
 '
 Private Sub UserForm_Initialize()
 
+    '# フォーム初期化
     Me.Caption = "関数管理対象選択"
     
+    '# ツール一覧表示設定
     lstTool.ColumnCount = 2
     lstTool.ColumnWidths = "180 pt;0 pt"
 
+    '# ツール一覧読込
     LoadToolList
 
 End Sub
@@ -74,20 +77,26 @@ Private Sub LoadToolList()
     ' 行Index
     Dim r As Long
 
+    '# ToolManagerシート取得
     Set ws = _
         ThisWorkbook.Worksheets(SHEET_TOOL_MANAGER)
 
+    '# Tool一覧最終行取得
     LastRow = _
         ws.Cells(ws.Rows.Count, "A") _
           .End(xlUp).row
 
+    '# ツール一覧初期化
     lstTool.Clear
 
+    '# ツール一覧生成
     For r = 2 To LastRow
 
+        '# ツール名追加
         lstTool.AddItem _
             ws.Cells(r, "B").Value
 
+        '# ToolID保持
         lstTool.List( _
             lstTool.ListCount - 1, 1) = _
             ws.Cells(r, "A").Value
@@ -119,6 +128,7 @@ End Sub
 '
 Private Sub cmdOK_Click()
 
+    '# 対象ツール選択確認
     If lstTool.ListIndex < 0 Then
 
         MsgBox _
@@ -130,27 +140,34 @@ Private Sub cmdOK_Click()
 
     ' 選択ツールIDを取得し
     ' 解析コンテキストを生成する
+    '# 選択ツール取得
     gTargetToolID = _
         CLng(lstTool.List( _
             lstTool.ListIndex, _
             1))
 
+    '# 解析コンテキスト生成
     Set gContext = _
         CreateAnalyzeContext()
     
+    '# 対象ブック確認
     If Not ValidateTargetBook("対象ツール選択") Then
         Exit Sub
     End If
     
+    '# ProcedureRepository初期化解除
     ClearProcedureRepository
     
+    '# ツール選択画面終了
     Unload Me
 
     ' 管理ファイル終了時に
     ' FunctionManagerが終了しないよう
     ' 解析ツールをアクティブ化する
+    '# AnalyzerBookアクティブ化
     ActivateAnalyzerBook
     
+    '# 関数管理画面表示
     frmFunctionManager.Show vbModeless
 
 End Sub
@@ -176,8 +193,10 @@ End Sub
 '
 Private Sub cmdClose_Click()
 
+    '# ツール選択画面終了
     Unload Me
     
+    '# メインメニュー再表示
     frmMainMenu.Show vbModeless
     
 End Sub

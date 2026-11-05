@@ -81,31 +81,39 @@ Public Sub ExportVBABook( _
     ' エクスポートファイル名
     Dim ExportFile As String
 
+    '# Git管理フォルダ取得
     RootPath = GetGitRootPathByToolID(ToolID)
     
+    '# モジュール出力先設定
     ModulesPath = RootPath & "\src\Modules\"
     ClassesPath = RootPath & "\src\Classes\"
     FormsPath = RootPath & "\src\Forms\"
     DocumentsPath = RootPath & "\src\Documents\"
 
+    '# フォルダ操作オブジェクト生成
     Set FSO = CreateObject("Scripting.FileSystemObject")
     
+    '# srcフォルダ存在確認
     If Not FSO.FolderExists(RootPath & "\src") Then
         FSO.CreateFolder RootPath & "\src"
     End If
     
+    '# Modulesフォルダ作成
     If Not FSO.FolderExists(ModulesPath) Then
         FSO.CreateFolder ModulesPath
     End If
 
+    '# Classesフォルダ作成
     If Not FSO.FolderExists(ClassesPath) Then
         FSO.CreateFolder ClassesPath
     End If
 
+    '# Formsフォルダ作成
     If Not FSO.FolderExists(FormsPath) Then
         FSO.CreateFolder FormsPath
     End If
 
+    '# Documentsフォルダ作成
     If Not FSO.FolderExists(DocumentsPath) Then
         FSO.CreateFolder DocumentsPath
     End If
@@ -117,8 +125,10 @@ Public Sub ExportVBABook( _
         Debug.Print "DocumentsPath=" & DocumentsPath
     #End If
 
+    '# VBAコンポーネント出力開始
     For Each VBComp In TargetBook.VBProject.VBComponents
 
+        '# コンポーネント種別毎に出力先決定
         Select Case VBComp.Type
 
             Case VBEXT_CT_STDMODULE
@@ -140,6 +150,7 @@ Public Sub ExportVBABook( _
 
         If ExportFile <> "" Then
 
+            '# 既存ソース削除
             If Dir(ExportFile) <> "" Then
 
                 Kill ExportFile
@@ -153,6 +164,7 @@ Public Sub ExportVBABook( _
                 Debug.Print "Exists=" & (Dir$(Left$(ExportFile, InStrRev(ExportFile, "\") - 1), vbDirectory) <> "")
             #End If
             
+            '# VBAソースエクスポート
             VBComp.Export ExportFile
 
         End If
@@ -187,8 +199,10 @@ Public Function GetGitRootPathByToolID( _
     ' ツール情報
     Dim Tool As clsToolInfo
 
+    '# ツール情報取得
     Set Tool = GetToolInfo(ToolID)
 
+    '# Git管理フォルダ生成
     GetGitRootPathByToolID = _
         Environ$("OneDriveCommercial") & _
         "\ドキュメント\GitHub\" & _
@@ -226,10 +240,12 @@ Public Sub OpenGitPowerShell( _
     ' PowerShell起動コマンド
     Dim Cmd As String
 
+    '# PowerShell起動コマンド生成
     Cmd = _
         "powershell.exe -NoExit -Command " & _
         """Set-Location '" & RootPath & "'"""
 
+    '# GitフォルダでPowerShell起動
     Shell Cmd, vbNormalFocus
 
 End Sub

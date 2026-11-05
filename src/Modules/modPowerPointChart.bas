@@ -103,38 +103,43 @@ Public Sub CreatePowerPointPathChart( _
     ' 出力ファイルパス
     Dim PptFile As String
 
+    '# PathChart出力範囲取得
     Set rng = GetChartRange()
 
+    '# チャートサイズ取得
     ChartWidth = rng.Width
     ChartHeight = rng.Height
     
     '=================================
-    ' グリッド線を一時非表示
+    '# グリッド線一時非表示
     '=================================
     GridLineFlg = ActiveWindow.DisplayGridlines
 
     ActiveWindow.DisplayGridlines = False
 
+    '# PathChart画像取得
     rng.CopyPicture _
         Appearance:=xlScreen, _
         Format:=xlPicture
 
+    '# グリッド線表示復元
     ActiveWindow.DisplayGridlines = _
         GridLineFlg
 
     '=================================
-    ' PowerPoint起動
+    '# PowerPoint起動
     '=================================
     Set pptApp = _
         CreateObject("PowerPoint.Application")
 
     pptApp.Visible = True
 
+    '# プレゼンテーション生成
     Set pptPres = _
         pptApp.Presentations.Add
 
     '=================================
-    ' 用紙向き
+    '# スライド向き設定
     '=================================
     Select Case gPptOrientation
 
@@ -152,6 +157,7 @@ Public Sub CreatePowerPointPathChart( _
 
         Case PPT_ORIENT_AUTO
 
+            '# チャートサイズで向き自動判定
             If ChartHeight > ChartWidth Then
 
                 ' 縦置き
@@ -169,14 +175,14 @@ Public Sub CreatePowerPointPathChart( _
     End Select
 
     '=================================
-    ' スライド追加
+    '# PowerPointスライド追加
     '=================================
     Set pptSlide = _
         pptPres.Slides.Add( _
             PPT_SLIDE_INDEX, _
             PPT_LAYOUT_BLANK)
     '=================================
-    ' タイトル
+    '# スライドタイトル生成
     '=================================
     Set pptTitle = _
         pptSlide.Shapes.AddTextbox( _
@@ -187,11 +193,13 @@ Public Sub CreatePowerPointPathChart( _
             PPT_SIDE_MARGIN, _
             PPT_TITLE_HEIGHT)
 
+    '# スライドタイトル設定
     pptTitle.TextFrame.TextRange.Text = _
         StartProc & _
         " (Level=" & _
         MaxDepth & ")"
     
+    '# タイトル書式設定
     With pptTitle.TextFrame.TextRange
 
         .Font.Size = PPT_TITLE_FONT_SIZE
@@ -201,19 +209,22 @@ Public Sub CreatePowerPointPathChart( _
     End With
 
     '=================================
-    ' パスチャート貼付
+    '# PathChart貼付
     '=================================
     pptSlide.Shapes.Paste
 
+    '# 貼付図形取得
     Set pptShape = _
         pptSlide.Shapes( _
             pptSlide.Shapes.Count)
 
+    '# 縦横比固定
     pptShape.LockAspectRatio = True
     
     '=================================
     ' 幅調整
     '=================================
+    '# スライド幅内へ縮小
     If pptShape.Width > _
         (pptPres.PageSetup.SlideWidth - _
         PPT_SIDE_MARGIN) Then
@@ -227,6 +238,7 @@ Public Sub CreatePowerPointPathChart( _
     '=================================
     ' 高さ調整
     '=================================
+    '# スライド高さ内へ縮小
     If pptShape.Height > _
         (pptPres.PageSetup.SlideHeight - _
         PPT_BOTTOM_MARGIN) Then
@@ -240,15 +252,18 @@ Public Sub CreatePowerPointPathChart( _
     '=================================
     ' 中央配置
     '=================================
+    '# スライド中央配置
     pptShape.Left = _
         (pptPres.PageSetup.SlideWidth - _
          pptShape.Width) / 2
 
+    '# チャート配置位置設定
     pptShape.Top = PPT_CHART_TOP
 
     '=================================
     ' 保存
     '=================================
+    '# PowerPoint出力ファイル生成
     PptFile = _
         GetOutputFolder() & _
         StartProc & _
@@ -256,8 +271,10 @@ Public Sub CreatePowerPointPathChart( _
         gExportTimeStamp & _
         ".pptx"
 
+    '# PowerPoint保存
     pptPres.SaveAs PptFile
 
+    '# PowerPoint出力完了通知
     MsgBox _
         "PowerPoint出力完了" & vbCrLf & _
         PptFile, _
@@ -313,38 +330,43 @@ Public Sub ExportPathChartToPNG( _
     ' 出力PNGファイルパス
     Dim PngFile As String
 
+    '# PathChartシート取得
     Set ws = gContext.ManagementBook.Worksheets(SHEET_PATH_CHART)
 
+    '# PathChart出力範囲取得
     Set rng = GetChartRange()
 
     '=================================
-    ' グリッド線を一時非表示
+    '# グリッド線一時非表示
     '=================================
     GridLineFlg = _
         ActiveWindow.DisplayGridlines
 
     ActiveWindow.DisplayGridlines = False
 
+    '# PathChart画像取得
     rng.CopyPicture _
         Appearance:=xlScreen, _
         Format:=xlPicture
 
+    '# グリッド線表示復元
     ActiveWindow.DisplayGridlines = _
         GridLineFlg
 
     '=================================
-    ' PowerPoint起動
+    '# PowerPoint起動
     '=================================
     Set pptApp = _
         CreateObject("PowerPoint.Application")
 
     pptApp.Visible = True
 
+    '# プレゼンテーション生成
     Set pptPres = _
         pptApp.Presentations.Add
 
     '=================================
-    ' スライド追加
+    '# PowerPointスライド追加
     '=================================
     Set pptSlide = _
         pptPres.Slides.Add( _
@@ -352,10 +374,11 @@ Public Sub ExportPathChartToPNG( _
             PPT_LAYOUT_BLANK)
 
     '=================================
-    ' パスチャート貼付
+    '# PathChart貼付
     '=================================
     pptSlide.Shapes.Paste
 
+    '# 貼付図形取得
     Set pptShape = _
         pptSlide.Shapes( _
             pptSlide.Shapes.Count)
@@ -363,6 +386,7 @@ Public Sub ExportPathChartToPNG( _
     '=================================
     ' 保存
     '=================================
+    '# PNG出力ファイル生成
     PngFile = _
         GetOutputFolder() & _
         StartProc & _
@@ -372,17 +396,22 @@ Public Sub ExportPathChartToPNG( _
     
     On Error Resume Next
 
+    '# PNG保存
     pptShape.Export PngFile, 2
     
+    '# PowerPoint終了
     pptPres.Close
     
+    '# PowerPointアプリ終了
     pptApp.Quit
     
+    '# PowerPointオブジェクト解放
     Set pptShape = Nothing
     Set pptSlide = Nothing
     Set pptPres = Nothing
     Set pptApp = Nothing
 
+    '# PNG保存結果通知
     If Err.Number <> 0 Then
 
         MsgBox _
@@ -430,17 +459,21 @@ Public Function GetOutputFolder() As String
     ' 出力フォルダ
     Dim Folder As String
 
+    '# 出力フォルダ生成
     Folder = _
         Environ$("USERPROFILE") & _
         "\OneDrive - east.ntt.co.jp\" & _
         "ドキュメント\GitHub\SOSDB_Analyzer\"
 
+    '# 出力フォルダ存在確認
     If Dir(Folder, vbDirectory) = "" Then
 
+        '# 出力フォルダ作成
         MkDir Folder
 
     End If
 
+    '# 出力フォルダ返却
     GetOutputFolder = Folder
 
 End Function
@@ -466,6 +499,7 @@ End Function
 '
 Public Function GetTimeStamp() As String
 
+    '# 出力用タイムスタンプ生成
     GetTimeStamp = _
         Format(Now, "yyyymmdd_hhnnss")
 

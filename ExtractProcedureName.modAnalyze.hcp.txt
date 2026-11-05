@@ -1,0 +1,23 @@
+Procedure: modAnalyze.ExtractProcedureName  [ プロシージャ名抽出＜modAnalyze＞ ]
+HCP	Business
+┬
+〇│Public Function ExtractProcedureName(line As String) As String	プロシージャ名抽出＜modAnalyze＞
+┴└┐
+　　□ Dim tmp As String
+　　│#  Procedure宣言文字列正規化
+　　〇 tmp = line
+　　〇 tmp = Replace(tmp, "Public ", "")
+　　〇 tmp = Replace(tmp, "Private ", "")
+　　〇 tmp = Replace(tmp, "Sub ", "")
+　　〇 tmp = Replace(tmp, "Function ", "")
+　　〇 tmp = Replace(tmp, "Property Get ", "")
+　　〇 tmp = Replace(tmp, "Property Let ", "")
+　　〇 tmp = Replace(tmp, "Property Set ", "")
+　　〇 tmp = Replace(tmp, "Friend ", "")
+　　│#  引数部除去
+　　◆┐If InStr(tmp, "(") > 0 Then
+　　│〇 tmp = Left(tmp, InStr(tmp, "(") - 1)
+　　│┴End If
+　　│#  Procedure名返却
+　　〇 ExtractProcedureName = Trim(tmp)
+　　┴End Function

@@ -172,6 +172,7 @@ Public Sub SavePathChartConfig()
     ' PathChart設定シート
     Dim ws As Worksheet
 
+    '# PathChart設定シート取得
     Set ws = _
         ThisWorkbook.Worksheets(SHEET_PATH_CHART_CONFIG)
 
@@ -186,6 +187,7 @@ Public Sub SavePathChartConfig()
     ws.Range(CFG_SHOW_MODULE).Value = gShowModule
     ws.Range(CFG_COLOR_MODULE).Value = gColorModule
 
+    '# 解析対象設定保存
     ws.Range(CFG_PROPERTY).Value = gProperty
     ws.Range(CFG_PRIVATE).Value = gPrivate
     ws.Range(CFG_PUBLIC).Value = gPublic
@@ -194,19 +196,24 @@ Public Sub SavePathChartConfig()
     ws.Range(CFG_USER_FORM).Value = gUserForm
     ws.Range(CFG_CLASS_MODULE).Value = gClassModule
 
+    '# 除外条件設定保存
     ws.Range(CFG_IGNORE_API).Value = gIgnoreAPI
     ws.Range(CFG_IGNORE_EXCEL).Value = gIgnoreExcel
     ws.Range(CFG_IGNORE_SELF).Value = gIgnoreSelf
     ws.Range(CFG_SAME_MODULE_ONLY).Value = gSameModuleOnly
 
+    '# 色設定保存
     ws.Range(CFG_COLOR_THEME).Value = gColorTheme
 
+    '# 制限値保存
     ws.Range(CFG_MAX_NODE).Value = gMaxNode
     ws.Range(CFG_MAX_EDGE).Value = gMaxEdge
 
+    '# 呼出条件設定保存
     ws.Range(CFG_EXTERNAL).Value = gExternal
     ws.Range(CFG_RECURSIVE).Value = gRecursive
 
+    '# 表示設定保存
     ws.Range(CFG_SHOW_JPNAME).Value = gShowJPName
     ws.Range(CFG_SHOW_CATEGORY).Value = gShowCategory
 
@@ -236,15 +243,19 @@ Public Sub LoadPathChartConfig()
     ' PathChart設定シート
     Dim ws As Worksheet
 
+    '# PathChart設定シート取得
     Set ws = _
         ThisWorkbook.Worksheets(SHEET_PATH_CHART_CONFIG)
 
+    '# 出力設定読込
     gSkipCommon = ws.Range(CFG_SKIP_COMMON).Value
     gShowCount = ws.Range(CFG_SHOW_COUNT).Value
 
+    '# PowerPoint設定読込
     gPowerPoint = ws.Range(CFG_POWERPOINT).Value
     gPptOrientation = Trim$(ws.Range(CFG_PPT_ORIENTATION).Value)
     
+    '# PowerPoint向き既定値設定
     If gPptOrientation = "" Then
     
         gPptOrientation = PPT_ORIENT_AUTO
@@ -257,6 +268,7 @@ Public Sub LoadPathChartConfig()
     gShowModule = ws.Range(CFG_SHOW_MODULE).Value
     gColorModule = ws.Range(CFG_COLOR_MODULE).Value
 
+    '# 解析対象設定読込
     gProperty = ws.Range(CFG_PROPERTY).Value
     gPrivate = ws.Range(CFG_PRIVATE).Value
     gPublic = ws.Range(CFG_PUBLIC).Value
@@ -265,20 +277,25 @@ Public Sub LoadPathChartConfig()
     gUserForm = ws.Range(CFG_USER_FORM).Value
     gClassModule = ws.Range(CFG_CLASS_MODULE).Value
 
+    '# 除外条件設定読込
     gIgnoreAPI = ws.Range(CFG_IGNORE_API).Value
     gIgnoreExcel = ws.Range(CFG_IGNORE_EXCEL).Value
     gIgnoreSelf = ws.Range(CFG_IGNORE_SELF).Value
     gSameModuleOnly = ws.Range(CFG_SAME_MODULE_ONLY).Value
 
+    '# 色設定読込
     gColorTheme = ws.Range(CFG_COLOR_THEME).Value
 
+    '# 制限値読込
     gMaxNode = Val(ws.Range(CFG_MAX_NODE).Value)
     gMaxEdge = Val(ws.Range(CFG_MAX_EDGE).Value)
 
+    '# 外部呼出設定読込
     gExternal = ws.Range(CFG_EXTERNAL).Value
 
     ' 旧バージョン設定シート対策
     ' 未設定時は既定値(True)
+    '# 外部呼出設定既定値補正
     If Trim$(ws.Range(CFG_EXTERNAL).Value & "") = "" Then
 
         gExternal = True
@@ -289,20 +306,24 @@ Public Sub LoadPathChartConfig()
 
     ' 旧バージョン設定シート対策
     ' 未設定時は既定値(True)
+    '# 再帰呼出設定既定値補正
     If Trim$(ws.Range(CFG_RECURSIVE).Value & "") = "" Then
 
         gRecursive = True
 
     End If
 
+    '# 表示設定読込
     gShowJPName = ws.Range(CFG_SHOW_JPNAME).Value
     gShowCategory = ws.Range(CFG_SHOW_CATEGORY).Value
 
     ' 初回起動対策
     ' Load時に未設定なら既定値。
+    '# 制限値既定値補正
     If gMaxNode = 0 Then gMaxNode = DEFAULT_MAX_NODE
     If gMaxEdge = 0 Then gMaxEdge = DEFAULT_MAX_EDGE
 
+    '# 色設定既定値補正
     If gColorTheme = "" Then
 
         gColorTheme = DEFAULT_COLOR_THEME
@@ -339,9 +360,11 @@ Public Sub SaveDefaultMaxDepth( _
     ' PathChart設定シート
     Dim ws As Worksheet
 
+    '# PathChart設定シート取得
     Set ws = _
         ThisWorkbook.Worksheets(SHEET_PATH_CHART_CONFIG)
 
+    '# 既定探索深度保存
     ws.Range(CFG_MAX_DEPTH).Value = MaxDepth
 
 End Sub
@@ -369,10 +392,13 @@ Public Function GetDefaultMaxDepth() As Long
     ' PathChart設定シート
     Dim ws As Worksheet
 
+    '# PathChart設定シート取得
     Set ws = ThisWorkbook.Worksheets(SHEET_PATH_CHART_CONFIG)
 
+    '# 既定探索深度取得
     GetDefaultMaxDepth = Val(ws.Range(CFG_MAX_DEPTH).Value)
 
+    '# 未設定時既定値設定
     If GetDefaultMaxDepth <= 0 Then
 
         GetDefaultMaxDepth = DEFAULT_MAX_DEPTH
@@ -406,9 +432,11 @@ Public Sub SaveDefaultStartProcedure( _
     ' PathChart設定シート
     Dim ws As Worksheet
 
+    '# PathChart設定シート取得
     Set ws = _
         ThisWorkbook.Worksheets(SHEET_PATH_CHART_CONFIG)
 
+    '# 開始Procedure保存
     ws.Range(CFG_START_PROC).Value = StartProc
 
 End Sub
@@ -437,8 +465,10 @@ Public Function GetDefaultStartProcedure() As String
     ' PathChart設定シート
     Dim ws As Worksheet
 
+    '# PathChart設定シート取得
     Set ws = ThisWorkbook.Worksheets(SHEET_PATH_CHART_CONFIG)
 
+    '# 開始Procedure取得
     GetDefaultStartProcedure = _
         Trim$(ws.Range(CFG_START_PROC).Value)
 

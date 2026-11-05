@@ -1,0 +1,12 @@
+Procedure: modAnalyze.GetUsageStatus  [ 使用状況判定＜modAnalyze＞ ]
+HCP	Business
+┬
+〇│Private Function GetUsageStatus(ProcName As String, usage As Long) As String	使用状況判定＜modAnalyze＞
+┴└┐
+　　│#  イベントProcedure判定
+　　◆┐If IsEventProcedure(ProcName) Then
+　　│〇 GetUsageStatus = STATUS_EVENT
+　　├┐ELSE
+　　│〇 GetUsageStatus = STATUS_USED
+　　│┴End If
+　　┴End Function

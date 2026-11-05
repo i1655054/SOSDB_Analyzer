@@ -69,16 +69,20 @@ Public Sub ExportPathChartToText( _
                 ByVal StartProc As String, _
                 ByVal MaxDepth As Long)
 
+    '# TreeNode一覧初期化
     Set gTreeNodes = New Collection
 
+    '# ルートノード生成
     AddRootNode StartProc
 
+    '# ツリー構造生成
     BuildTreeText _
             StartProc, _
             "", _
             1, _
             MaxDepth
 
+    '# Treeシート出力
     OutputTreeNodeList
 
 End Sub
@@ -113,12 +117,14 @@ Private Sub AddRootNode( _
     ' ルートTreeNode
     Dim Node As clsTreeNode
 
+    '# ルートTreeNode生成
     Set Node = CreateTreeNode( _
                     StartProc, _
                     "", _
                     0, _
                     StartProc)
 
+    '# モジュール名表示設定
     If Trim$(Node.ModuleName) <> "" Then
 
         If gShowModule Then
@@ -133,6 +139,7 @@ Private Sub AddRootNode( _
 
     End If
     
+    '# 日本語表示設定
     If Trim$(Node.JPName) <> "" Then
 
         Node.JPLine = _
@@ -141,6 +148,7 @@ Private Sub AddRootNode( _
 
     End If
 
+    '# ルートノード登録
     gTreeNodes.Add Node
 
 End Sub
@@ -227,6 +235,7 @@ Private Sub BuildTreeText( _
     ' 子ノード存在フラグ
     Dim HasChildren As Boolean
 
+    '# 循環参照判定パス生成
     If PathText = "" Then
 
         PathText = _
@@ -234,6 +243,7 @@ Private Sub BuildTreeText( _
 
     End If
 
+    '# 最大深度判定
     If MaxDepth > 0 Then
 
         If Level > MaxDepth Then
@@ -242,18 +252,21 @@ Private Sub BuildTreeText( _
 
     End If
 
+    '# 子ノード取得
     Set Children = GetChildrenList(ParentProc)
 
+    '# 子ノード数取得
     ChildCount = Children.Count
 
     If ChildCount = 0 Then Exit Sub
 
+    '# 子ノード走査
     For i = 1 To ChildCount
 
         ChildProc = CStr(Children(i))
 
         '============================
-        ' 循環参照防止
+        '# 循環参照防止
         '============================
         If InStr( _
                 1, _
@@ -265,10 +278,11 @@ Private Sub BuildTreeText( _
 
         End If
 
+        '# 最終子ノード判定
         IsLastChild = (i = ChildCount)
 
         '---------------------------
-        ' 英語Tree行生成
+        '# 英語Tree行生成
         '---------------------------
         If IsLastChild Then
 
@@ -298,6 +312,7 @@ Private Sub BuildTreeText( _
 
         End If
 
+        '# TreeNode生成
         Set Node = _
             CreateTreeNode( _
                 ChildProc, _
@@ -305,6 +320,7 @@ Private Sub BuildTreeText( _
                 Level, _
                 TreeText)
 
+        '# モジュール名表示設定
         If Len(Node.ModuleName) > 0 Then
 
             If gShowModule Then
@@ -319,12 +335,12 @@ Private Sub BuildTreeText( _
 
         End If
 
-        ' 子ノード有無判定
+        '# 子ノード有無判定
         HasChildren = _
             (GetChildrenList(ChildProc).Count > 0)
 
         '---------------------------
-        ' 日本語Tree行生成
+        '# 日本語Tree行生成
         '---------------------------
         If IsLastChild Then
             JPParent = TREE_LAST_LEVEL
@@ -338,6 +354,7 @@ Private Sub BuildTreeText( _
             JPChild = TREE_SPACE
         End If
 
+        '# 日本語Tree文字列設定
         JPText = _
             Prefix & _
             JPParent & _
@@ -347,8 +364,10 @@ Private Sub BuildTreeText( _
 
         Node.JPLine = JPText
 
+        '# TreeNode登録
         gTreeNodes.Add Node
 
+        '# 子ノード再帰展開
         BuildTreeText _
             ChildProc, _
             NextPrefix, _
@@ -407,12 +426,14 @@ Public Sub OutputTreeNodeList()
 
     On Error Resume Next
 
+    '# Treeシート取得
     Set ws = _
         gContext.ManagementBook.Worksheets( _
             SHEET_PATH_CHART_TREE)
 
     On Error GoTo 0
 
+    '# Treeシート作成
     If ws Is Nothing Then
 
         Set ws = _
@@ -424,10 +445,11 @@ Public Sub OutputTreeNodeList()
 
     End If
 
+    '# Treeシート初期化
     ws.Cells.Clear
 
     '------------------------------------
-    ' ヘッダ
+    '# Treeヘッダ出力
     '------------------------------------
     ws.Cells(1, 1).Value = "Tree"
     ws.Cells(1, 2).Value = "Level"
@@ -440,12 +462,12 @@ Public Sub OutputTreeNodeList()
     RowNo = 2
 
     '------------------------------------
-    ' データ出力
+    '# TreeNode一覧出力
     '------------------------------------
     For Each Node In gTreeNodes
 
         '---------------------------
-        ' 英語行
+        '# 英語Tree行出力
         '---------------------------
         ws.Cells(RowNo, 1).Value = _
             Node.TreeText
@@ -471,7 +493,7 @@ Public Sub OutputTreeNodeList()
         RowNo = RowNo + 1
 
         '---------------------------
-        ' 日本語行
+        '# 日本語Tree行出力
         '---------------------------
         If Trim$(Node.JPLine) <> "" Then
 
@@ -488,7 +510,7 @@ Public Sub OutputTreeNodeList()
     Next Node
 
     '------------------------------------
-    ' 体裁
+    '# Treeシート体裁設定
     '------------------------------------
     ws.Rows(1).Font.Bold = True
 
@@ -500,7 +522,7 @@ Public Sub OutputTreeNodeList()
         TREE_FONT_NAME
 
     '------------------------------------
-    ' オートフィルタ
+    '# オートフィルタ範囲取得
     '------------------------------------
     LastRow = ws.Cells( _
                 ws.Rows.Count, _
@@ -510,6 +532,7 @@ Public Sub OutputTreeNodeList()
                 1, _
                 ws.Columns.Count).End(xlToLeft).Column
 
+    '# オートフィルタ設定
     ws.Range( _
         ws.Cells(1, 1), _
         ws.Cells(LastRow, LastCol)).AutoFilter
