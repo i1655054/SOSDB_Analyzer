@@ -3208,7 +3208,7 @@ End Sub
 ' Collection内の全ノード情報を
 ' イミディエイトへ出力する
 '
-Private Sub DumpNodes( _
+Public Sub DumpNodes( _
                 ByVal Title As String, _
                 ByVal Nodes As Collection)
 
@@ -3240,7 +3240,7 @@ End Sub
 ' 指定NodeID範囲のみ
 ' イミディエイトへ出力する
 '
-Private Sub DumpNodeRange( _
+Public Sub DumpNodeRange( _
                 ByVal Title As String, _
                 ByVal Nodes As Collection, _
                 ByVal StartID As Long, _
