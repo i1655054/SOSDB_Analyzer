@@ -1,0 +1,129 @@
+Procedure: modHCPAnalyzer.ConvertProcToHCP  [ HCP変換＜modHCPAnalyzer＞ ]
+HCP	Business
+┬
+〇│Public Function ConvertProcToHCP(  ByVal ProcNodes As Collection)  As Collection	HCP変換＜modHCPAnalyzer＞
+┴└┐
+　　◎ Trace "HCP", "ConvertProcToHCP Start"	トレース出力＜modDebug＞
+　　□ Dim HCPNodes As Collection
+　　□ Dim MergeStack As Collection
+　　□ Dim ProcNode As clsProcNode
+　　□ Dim HCPNode As clsHCPNode
+　　□ Dim LastTagNode As clsHCPNode
+　　□ Dim LastText As String
+　　□ Dim IDMap As Object
+　　□ Dim NewID As Long
+　　◎ Trace "HCP", "CreateHCPNodes"	トレース出力＜modDebug＞
+　　│#  HCP変換管理初期化
+　　〇 Set HCPNodes = New Collection
+　　〇 Set MergeStack = New Collection
+　　│#  ProcNode-HCPNode変換表作成
+　　〇 Set IDMap =  CreateObject("Scripting.Dictionary")
+　　〇 NewID = 1
+　　│#  ProcNode走査開始
+　　＠┐For Each ProcNode In ProcNodes
+　　│◎ Trace "PROC",  ProcNode.NodeType &  ":" &  ProcNode.SourceLine	トレース出力＜modDebug＞
+　　││#  制御構造終了処理
+　　│◆┐Select Case ProcNode.NodeType
+　　│││Case NODE_ENDIF,  NODE_ENDSELECT,  NODE_NEXT,  NODE_LOOP,  NODE_ENDWITH,  NODE_WEND,  NODE_COMPILE_ENDIF
+　　││◎ PopMergeStack  MergeStack,  HCPNodes,  NewID,  ProcNode.SourceLine,  ProcNode.NodeType	マージスタック取得＜modHCPAnalyzer＞
+　　││→ GoTo ContinueLoop
+　　│┴End Select
+　　││#  HCPNode生成
+　　│〇 Set HCPNode = New clsHCPNode
+　　│〇 HCPNode.NodeID = NewID
+　　│〇 IDMap.Add  CStr(ProcNode.NodeID),  NewID
+　　│〇 NewID = NewID + 1
+　　││#  ProcNode属性引継ぎ
+　　│〇 HCPNode.ParentID =  ProcNode.ParentID
+　　│〇 HCPNode.PrevNodeID =  ProcNode.PrevNodeID
+　　│〇 HCPNode.NextNodeID =  ProcNode.NextNodeID
+　　│〇 HCPNode.Level =  ProcNode.Level
+　　│〇 HCPNode.NodeType =  ProcNode.NodeType
+　　│〇 HCPNode.BranchType =  ProcNode.BranchType
+　　│〇 HCPNode.SourceText =  ProcNode.NodeText
+　　│〇 HCPNode.SourceLine =  ProcNode.SourceLine
+　　││#  コメント情報引継ぎ
+　　│〇 HCPNode.CommentText =  ProcNode.CommentText
+　　││#  ELSEノード変換
+　　│◆┐If ProcNode.NodeType = NODE_ELSE Then
+　　││〇 HCPNode.Text =  "FALSE"
+　　││〇 HCPNode.NodeType =  NODE_FALSE
+　　│├┐ELSE
+　　││〇 HCPNode.Text =  ProcNode.NodeText
+　　│││#  CALLノード業務説明取得
+　　││◎ HCPNode.BusinessText =  GetBusinessText(ProcNode)	業務説明取得＜modHCPAnalyzer＞
+　　││┴End If
+　　││#  Debug.Print除外
+　　│◆┐If gHCPCompactMode Then
+　　││◆┐If IsDebugPrint(  HCPNode.Text) Then
+　　│││→ GoTo ContinueLoop
+　　│││┴End If
+　　││┴End If
+　　││#  重複CALL除外
+　　│◆┐If gHCPCompactMode Then
+　　││◆┐If HCPNode.NodeType = NODE_CALL Then
+　　│││◆┐If HCPNode.Text = LastText Then
+　　││││→ GoTo ContinueLoop
+　　││││┴End If
+　　│││┴End If
+　　││┴End If
+　　│◆┐If gHCPCompactMode Then
+　　│││#  Tag取得処理集約
+　　││◆┐If HCPNode.Text =  "Procedure情報取得" Then
+　　│││◆┐If Not LastTagNode Is Nothing Then
+　　││││◆┐If LastTagNode.ParentID =  HCPNode.ParentID Then
+　　│││││→ GoTo ContinueLoop
+　　│││││┴End If
+　　││││┴End If
+　　│││〇 Set LastTagNode = HCPNode
+　　││├┐ELSE
+　　│││〇 Set LastTagNode = Nothing
+　　│││┴End If
+　　││┴End If
+　　││#  HCPNode登録
+　　│〇 HCPNodes.Add HCPNode
+　　││#  制御構造開始登録
+　　│◆┐If IsMergeNode(HCPNode.NodeType) Then
+　　││◎ PushMergeStack  MergeStack,  HCPNode.NodeType,  HCPNode.NodeID	マージスタック登録＜modHCPAnalyzer＞
+　　││┴End If
+　　││#  TRUEノード生成
+　　│◆┐If HCPNode.NodeType = NODE_IF  Or HCPNode.NodeType = NODE_ELSEIF Then
+　　││◎ AddTrueNode  HCPNodes,  NewID,  HCPNode.NodeID	TRUEノード追加＜modHCPAnalyzer＞
+　　││┴End If
+　　│〇 LastText = HCPNode.Text
+▼ ContinueLoop:
+　　│┴Next ProcNode
+　　│#  制御構造整合性確認
+　　◆┐If MergeStack.Count <> 0 Then
+　　│□ Dim i As Long
+　　│◎ Trace "ERROR",  "Stack Remains Count=" &  MergeStack.Count	トレース出力＜modDebug＞
+　　│＠┐For i = 1 To MergeStack.Count
+　　││◎ Trace "ERROR",  "Remain Stack[" & i & "]=" &  MergeStack(i)	トレース出力＜modDebug＞
+　　││┴Next i
+　　│┴End If
+　　◎ Trace "HCP", "RebuildParentID"	トレース出力＜modDebug＞
+　　│#  ParentID再構築
+　　◎ RebuildParentID  HCPNodes,  IDMap	親子関係再構築＜modHCPAnalyzer＞
+　　◎ Trace "HCP", "RebuildLinks"	トレース出力＜modDebug＞
+　　│#  ノードリンク再構築
+　　◎ RebuildLinks  HCPNodes	ノードリンク再構築＜modHCPAnalyzer＞
+　　◎ Trace "HCP", "FixTrueBranch"	トレース出力＜modDebug＞
+　　│#  TRUE枝階層補正
+　　◎ FixTrueBranch  HCPNodes	TRUE枝補正＜modHCPAnalyzer＞
+　　│#  gDevMode 時 HCPNode構造ダンプ
+　　◆┐If gDevMode Then
+　　│◎ DumpHCPNodeRange  "After FixTrueBranch",  HCPNodes,  1,  DEBUG_NODE_RANGE
+　　│┴End If
+　　◎ Trace "HCP", "FixFalseBranch"	トレース出力＜modDebug＞
+　　│#  FALSE枝階層補正
+　　◎ FixFalseBranch  HCPNodes	FALSE枝補正＜modHCPAnalyzer＞
+　　│#  gDevMode 時 HCPNode構造ダンプ
+　　◆┐If gDevMode Then
+　　│◎ DumpHCPNodeRange  "After FixFalseBranch",  HCPNodes,  1,  DEBUG_NODE_RANGE
+　　│┴End If
+　　◎ Trace "HCP", "RebuildHCPLevel"	トレース出力＜modDebug＞
+　　│#  HCPレベル再計算
+　　◎ RebuildHCPLevel  HCPNodes	レベル再計算＜modHCPAnalyzer＞
+　　◎ Trace "HCP",  "ConvertProcToHCP End Nodes=" &  HCPNodes.Count &  " Stack=" &  MergeStack.Count	トレース出力＜modDebug＞
+　　〇 Set ConvertProcToHCP =  HCPNodes
+　　┴End Function

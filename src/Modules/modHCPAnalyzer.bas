@@ -13,6 +13,240 @@ Private Const HCP_COL_WIDTH As Double = 120
 ' 業務説明列幅
 Private Const BUSINESS_COL_WIDTH As Double = 40
 
+
+'--------------------------------------------------
+' デバッグ支援
+'--------------------------------------------------
+'
+' @JPName
+' デバッグシート作成
+'
+Public Sub CreateDebugSheet()
+
+    Dim ws As Worksheet
+
+    On Error Resume Next
+
+    Set ws = _
+        gContext.ManagementBook.Worksheets( _
+            SHEET_DEBUG_NODES)
+
+    On Error GoTo 0
+
+    If ws Is Nothing Then
+
+        Set ws = _
+            gContext.ManagementBook.Worksheets.Add
+
+        ws.Name = _
+            SHEET_DEBUG_NODES
+
+    End If
+    
+    '# デバッグシート初期化
+    ws.Cells.Clear
+    
+    '# ヘッダ出力
+    ws.Range("A1:H1").Value = Array( _
+        "Section", _
+        "NodeID", _
+        "ParentID", _
+        "Level", _
+        "BranchType", _
+        "NodeType", _
+        "Text", _
+        "SourceLine")
+
+    '# ヘッダ強調
+    ws.Rows(1).Font.Bold = True
+
+    '# 列幅自動調整
+    ws.Columns("A:H").AutoFit
+
+End Sub
+
+'
+' @JPName
+' DBG_NODES出力行取得
+'
+' @Summary
+' DBG_NODESシートの次出力行を返却する
+'
+Private Function GetDebugRow() As Long
+
+    Dim ws As Worksheet
+
+    Set ws = _
+        gContext.ManagementBook.Worksheets( _
+            SHEET_DEBUG_NODES)
+
+    GetDebugRow = _
+        ws.Cells( _
+            ws.Rows.Count, _
+            1).End(xlUp).row + 1
+
+End Function
+
+'
+' @JPName
+' ProcNode一覧ダンプ
+'
+' @Summary
+' ProcNode一覧をDBG_NODESシートへ出力する
+'
+Public Sub DumpProcNodes( _
+                ByVal Title As String, _
+                ByVal Nodes As Collection)
+
+    Dim ws As Worksheet
+    Dim RowOut As Long
+    Dim Node As clsProcNode
+
+    Set ws = _
+        gContext.ManagementBook.Worksheets( _
+            SHEET_DEBUG_NODES)
+
+    RowOut = GetDebugRow()
+
+    For Each Node In Nodes
+
+        ws.Cells(RowOut, 1).Value = Title
+        ws.Cells(RowOut, 2).Value = Node.NodeID
+        ws.Cells(RowOut, 3).Value = Node.ParentID
+        ws.Cells(RowOut, 4).Value = Node.Level
+        ws.Cells(RowOut, 5).Value = Node.BranchType
+        ws.Cells(RowOut, 6).Value = Node.NodeType
+        ws.Cells(RowOut, 7).Value = Node.NodeText
+        ws.Cells(RowOut, 8).Value = Node.SourceLine
+
+        RowOut = RowOut + 1
+
+    Next Node
+
+End Sub
+
+Public Sub DumpHCPNodes( _
+                ByVal Title As String, _
+                ByVal Nodes As Collection)
+
+    Dim ws As Worksheet
+    Dim RowOut As Long
+    Dim Node As clsHCPNode
+
+    Set ws = _
+        gContext.ManagementBook.Worksheets( _
+            SHEET_DEBUG_NODES)
+
+    RowOut = GetDebugRow()
+    
+    For Each Node In Nodes
+
+        ws.Cells(RowOut, 1).Value = Title
+        ws.Cells(RowOut, 2).Value = Node.NodeID
+        ws.Cells(RowOut, 3).Value = Node.ParentID
+        ws.Cells(RowOut, 4).Value = Node.Level
+        ws.Cells(RowOut, 5).Value = Node.BranchType
+        ws.Cells(RowOut, 6).Value = Node.NodeType
+        ws.Cells(RowOut, 7).Value = Node.Text
+        ws.Cells(RowOut, 8).Value = Node.SourceLine
+
+        RowOut = RowOut + 1
+
+    Next Node
+
+End Sub
+
+'
+' @JPName
+' ProcNode範囲ダンプ
+'
+' @Summary
+' 指定NodeID範囲をDBG_NODESシートへ出力する
+'
+Public Sub DumpProcNodeRange( _
+                ByVal Title As String, _
+                ByVal Nodes As Collection, _
+                ByVal StartID As Long, _
+                ByVal EndID As Long)
+
+    Dim ws As Worksheet
+    Dim RowOut As Long
+    Dim Node As clsProcNode
+
+    Set ws = _
+        gContext.ManagementBook.Worksheets( _
+            SHEET_DEBUG_NODES)
+
+    RowOut = GetDebugRow()
+    
+    For Each Node In Nodes
+
+        If Node.NodeID >= StartID _
+        And Node.NodeID <= EndID Then
+
+            ws.Cells(RowOut, 1).Value = Title
+            ws.Cells(RowOut, 2).Value = Node.NodeID
+            ws.Cells(RowOut, 3).Value = Node.ParentID
+            ws.Cells(RowOut, 4).Value = Node.Level
+            ws.Cells(RowOut, 5).Value = Node.BranchType
+            ws.Cells(RowOut, 6).Value = Node.NodeType
+            ws.Cells(RowOut, 7).Value = Node.NodeText
+            ws.Cells(RowOut, 8).Value = Node.SourceLine
+
+            RowOut = RowOut + 1
+
+        End If
+
+    Next Node
+
+End Sub
+
+
+'
+' @JPName
+' HCPNode範囲ダンプ
+'
+' @Summary
+' 指定NodeID範囲をDBG_NODESシートへ出力する
+'
+Public Sub DumpHCPNodeRange( _
+                ByVal Title As String, _
+                ByVal Nodes As Collection, _
+                ByVal StartID As Long, _
+                ByVal EndID As Long)
+
+    Dim ws As Worksheet
+    Dim RowOut As Long
+    Dim Node As clsHCPNode
+
+    Set ws = _
+        gContext.ManagementBook.Worksheets( _
+            SHEET_DEBUG_NODES)
+
+    RowOut = GetDebugRow()
+    
+    For Each Node In Nodes
+
+        If Node.NodeID >= StartID _
+        And Node.NodeID <= EndID Then
+
+            ws.Cells(RowOut, 1).Value = Title
+            ws.Cells(RowOut, 2).Value = Node.NodeID
+            ws.Cells(RowOut, 3).Value = Node.ParentID
+            ws.Cells(RowOut, 4).Value = Node.Level
+            ws.Cells(RowOut, 5).Value = Node.BranchType
+            ws.Cells(RowOut, 6).Value = Node.NodeType
+            ws.Cells(RowOut, 7).Value = Node.Text
+            ws.Cells(RowOut, 8).Value = Node.SourceLine
+
+            RowOut = RowOut + 1
+
+        End If
+
+    Next Node
+
+End Sub
+
 ' @JPName
 ' HCP生成
 '
@@ -50,6 +284,20 @@ Public Sub CreateHCP( _
 
     ' Procedure一覧
     Dim FuncList As Object
+    
+    '# 開発モード確認
+    If gDevMode Then
+
+        ' デバッグシート作成
+        CreateDebugSheet
+
+    Else
+
+        ' デバッグシート削除
+        DeleteSheetIfExists _
+            SHEET_DEBUG_NODES
+
+    End If
     
     Trace "HCP", _
         ModuleName & "." & ProcName
@@ -102,8 +350,8 @@ Public Sub CreateHCP( _
     Set HCPNodes = ConvertProcToHCP( _
                         ProcNodes)
 
-    '# デバッグ情報出力
-    If DEV_MODE Then
+    '# 開発デバッグ情報出力
+    If gDevMode Then
 
         ExportProcNodes ProcNodes
 
@@ -125,6 +373,13 @@ Public Sub CreateHCP( _
     ExportHCPTextFileFromSheet _
         ModuleName, _
         ProcName
+    
+    If gDevMode Then
+
+        gContext.ManagementBook.Worksheets( _
+            SHEET_DEBUG_NODES).Columns.AutoFit
+
+    End If
     
     Application.ScreenUpdating = True
     
@@ -451,11 +706,11 @@ ContinueLoop:
         HCPNodes
 
     '---------------------------------------
-    '# DEV_MODE時 ProcNode構造ダンプ
+    '# gDevMode 時 HCPNode構造ダンプ
     '---------------------------------------
-    If DEV_MODE Then
+    If gDevMode Then
 
-        DumpNodeRange _
+        DumpHCPNodeRange _
             "After FixTrueBranch", _
             HCPNodes, _
             1, _
@@ -470,11 +725,11 @@ ContinueLoop:
         HCPNodes
 
     '---------------------------------------
-    '# DEV_MODE時 ProcNode構造ダンプ
+    '# gDevMode 時 HCPNode構造ダンプ
     '---------------------------------------
-    If DEV_MODE Then
+    If gDevMode Then
 
-        DumpNodeRange _
+        DumpHCPNodeRange _
             "After FixFalseBranch", _
             HCPNodes, _
             1, _
@@ -490,18 +745,7 @@ ContinueLoop:
     '# HCPレベル再計算
     RebuildHCPLevel _
         HCPNodes
-
-    '---------------------------------------
-    '# DEV_MODE時 ProcNode構造ダンプ
-    '---------------------------------------
-    If DEV_MODE Then
-
-        DumpNodes _
-            "ConvertProcToHCP End", _
-            HCPNodes
-
-    End If
-    
+   
     Trace "HCP", _
         "ConvertProcToHCP End Nodes=" & _
         HCPNodes.Count & _
@@ -1759,17 +2003,6 @@ Public Sub ExportHCPText( _
         ws.Name = SHEET_HCP_CHART
 
     End If
-
-    '---------------------------------------
-    '# DEV_MODE時 ProcNode構造ダンプ
-    '---------------------------------------
-    If DEV_MODE Then
-
-        DumpNodes _
-            "ExportHCPText Input", _
-            HCPNodes
-
-    End If
     
     StartText = ProcName
 
@@ -1843,14 +2076,14 @@ Public Sub ExportHCPText( _
     ws.Activate
     
     ws.Range("B1").Select
-
+    
     With ActiveWindow
-
+        
         .FreezePanes = False
-
+        
         .SplitRow = 0
         .SplitColumn = 1
-
+    
     End With
     
     ActiveWindow.Zoom = 85
@@ -3199,77 +3432,3 @@ Public Sub DeleteSheetIfExists( _
     Application.DisplayAlerts = True
 
 End Sub
-
-'
-' @JPName
-' ノード一覧ダンプ
-'
-' @Summary
-' Collection内の全ノード情報を
-' イミディエイトへ出力する
-'
-Public Sub DumpNodes( _
-                ByVal Title As String, _
-                ByVal Nodes As Collection)
-
-    Dim Node As Object
-
-    Debug.Print String$(80, "=")
-    Debug.Print Title
-    Debug.Print String$(80, "=")
-
-    For Each Node In Nodes
-
-        Debug.Print _
-            Right$("000" & Node.NodeID, 3), _
-            "P=" & Node.ParentID, _
-            "L=" & Node.Level, _
-            "B=" & Node.BranchType, _
-            "[" & Node.NodeType & "]", _
-            Node.Text
-
-    Next Node
-
-End Sub
-
-'
-' @JPName
-' ノード範囲ダンプ
-'
-' @Summary
-' 指定NodeID範囲のみ
-' イミディエイトへ出力する
-'
-Public Sub DumpNodeRange( _
-                ByVal Title As String, _
-                ByVal Nodes As Collection, _
-                ByVal StartID As Long, _
-                ByVal EndID As Long)
-
-    Dim Node As Object
-
-    Debug.Print String$(80, "=")
-    Debug.Print Title
-    Debug.Print String$(80, "=")
-
-    For Each Node In Nodes
-
-        If Node.NodeID >= StartID _
-        And Node.NodeID <= EndID Then
-
-            Debug.Print _
-                Right$("000" & Node.NodeID, 3), _
-                "P=" & Node.ParentID, _
-                "L=" & Node.Level, _
-                "B=" & Node.BranchType, _
-                "[" & Node.NodeType & "]", _
-                Node.Text
-
-        End If
-
-    Next Node
-
-End Sub
-
-
-

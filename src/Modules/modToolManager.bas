@@ -5,15 +5,17 @@ Option Explicit
 ' 開発者モード
 ' True : デバッグ機能有効
 ' False: 本番モード
-'==================================================
-Public Const DEV_MODE As Boolean = True
+'Public Const DEV_MODE As Boolean = True
 'Public Const DEV_MODE As Boolean = False
 
-'==================================================
-' 開発者モード
+Public gDevMode As Boolean
+
 ' ノード範囲
-'==================================================
 Public Const DEBUG_NODE_RANGE As Long = 50
+
+' デバッグノード出力シート
+Public Const SHEET_DEBUG_NODES As String = "DBG_NODES"
+'==================================================
 
 '==================================================
 ' HCP表示方式

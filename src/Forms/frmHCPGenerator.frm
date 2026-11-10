@@ -418,6 +418,10 @@ Private Sub cmdGenerate_Click()
     
     ' 対象プロシージャ名
     Dim ProcName As String
+    
+    ' 開発モード
+    gDevMode = _
+        chkDevMode.Value
 
     '# モジュール選択確認
     If lstModule.ListIndex < 0 Then

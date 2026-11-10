@@ -19,7 +19,7 @@ Public Sub Trace( _
                 ByVal Category As String, _
                 ByVal Message As String)
     
-    If Not DEV_MODE Then Exit Sub
+    If Not gDevMode Then Exit Sub
 
     Debug.Print _
         Format$(Now, "hh:nn:ss") & _

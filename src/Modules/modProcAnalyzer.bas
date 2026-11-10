@@ -1531,11 +1531,11 @@ Public Sub ExportProcNodes( _
     On Error GoTo 0
 
     '---------------------------------------
-    '# DEV_MODE時 ProcNode構造ダンプ
+    '# gDevMode 時 ProcNode構造ダンプ
     '---------------------------------------
-    If DEV_MODE Then
+    If gDevMode Then
 
-        DumpNodes _
+        DumpProcNodes _
             "AnalyzeProcedure Result", _
             Nodes
 
