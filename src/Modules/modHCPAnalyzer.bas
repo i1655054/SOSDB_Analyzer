@@ -386,7 +386,8 @@ Public Function ConvertProcToHCP( _
         End If
 
         '# TRUEノード生成
-        If HCPNode.NodeType = NODE_IF Then
+        If HCPNode.NodeType = NODE_IF _
+        Or HCPNode.NodeType = NODE_ELSEIF Then
 
             AddTrueNode _
                 HCPNodes, _
@@ -449,11 +450,37 @@ ContinueLoop:
     FixTrueBranch _
         HCPNodes
 
+    '---------------------------------------
+    '# DEV_MODE時 ProcNode構造ダンプ
+    '---------------------------------------
+    If DEV_MODE Then
+
+        DumpNodeRange _
+            "After FixTrueBranch", _
+            HCPNodes, _
+            1, _
+            DEBUG_NODE_RANGE
+
+    End If
+
     Trace "HCP", "FixFalseBranch"
 
     '# FALSE枝階層補正
     FixFalseBranch _
         HCPNodes
+
+    '---------------------------------------
+    '# DEV_MODE時 ProcNode構造ダンプ
+    '---------------------------------------
+    If DEV_MODE Then
+
+        DumpNodeRange _
+            "After FixFalseBranch", _
+            HCPNodes, _
+            1, _
+            DEBUG_NODE_RANGE
+
+    End If
 
     '--------------------------------
     ' Level再計算
@@ -464,6 +491,17 @@ ContinueLoop:
     RebuildHCPLevel _
         HCPNodes
 
+    '---------------------------------------
+    '# DEV_MODE時 ProcNode構造ダンプ
+    '---------------------------------------
+    If DEV_MODE Then
+
+        DumpNodes _
+            "ConvertProcToHCP End", _
+            HCPNodes
+
+    End If
+    
     Trace "HCP", _
         "ConvertProcToHCP End Nodes=" & _
         HCPNodes.Count & _
@@ -854,7 +892,7 @@ Private Sub AddMergeNode( _
     HCPNode.NodeType = NODE_MERGE
 
     HCPNode.Text = Text
-
+    
     '# MERGEノード登録
     HCPNodes.Add HCPNode
 
@@ -1160,11 +1198,25 @@ Private Sub FixTrueBranch( _
             For j = i + 1 To HCPNodes.Count
 
                 If HCPNodes(j).NodeType = NODE_TRUE Then
+                
                     GoTo ContinueJ
+                
+                End If
+
+                If HCPNodes(j).NodeType = NODE_ELSEIF Then
+
+                    HCPNodes(j).ParentID = IfID
+
+                    HCPNodes(j).BranchType = BRANCH_NONE
+                    
+                    Exit For
+
                 End If
 
                 If HCPNodes(j).NodeType = NODE_FALSE Then
+                
                     Exit For
+                
                 End If
                 
 
@@ -1239,7 +1291,7 @@ Private Sub FixFalseBranch( _
     For i = 1 To HCPNodes.Count
 
         Set Node = HCPNodes(i)
-
+        
         '# FALSEノード検出
         If Node.NodeType = NODE_FALSE Then
 
@@ -1248,15 +1300,17 @@ Private Sub FixFalseBranch( _
         '# FALSE配下親補正
         ElseIf FalseNodeID <> 0 Then
 
-            If Node.NodeType = NODE_MERGE Then
+            If Node.NodeType = NODE_ELSEIF Then
 
                 FalseNodeID = 0
 
-            ElseIf Node.BranchType = _
-                    BRANCH_FALSE Then
+            ElseIf Node.NodeType = NODE_MERGE Then
 
-                Node.ParentID = _
-                    FalseNodeID
+                FalseNodeID = 0
+                
+            ElseIf Node.BranchType = BRANCH_FALSE Then
+
+                Node.ParentID = FalseNodeID
 
             End If
 
@@ -1663,6 +1717,8 @@ Public Sub ExportHCPText( _
                 ByVal ModuleName As String, _
                 ByVal ProcName As String)
 
+
+
     ' 出力先シート
     Dim ws As Worksheet
     
@@ -1704,6 +1760,17 @@ Public Sub ExportHCPText( _
 
     End If
 
+    '---------------------------------------
+    '# DEV_MODE時 ProcNode構造ダンプ
+    '---------------------------------------
+    If DEV_MODE Then
+
+        DumpNodes _
+            "ExportHCPText Input", _
+            HCPNodes
+
+    End If
+    
     StartText = ProcName
 
     '# 開始ノード検索
@@ -1828,7 +1895,7 @@ Private Sub RenderNode( _
     For Each Node In HCPNodes
 
         If Node.ParentID = ParentID Then
-
+        
             '# ノード種別毎に描画
             Select Case Node.NodeType
 
@@ -1855,76 +1922,14 @@ Private Sub RenderNode( _
 
                     RowOut = RowOut + 1
 
-                Case NODE_IF
-
-                    RenderIfBlock _
-                        HCPNodes, _
-                        Node, _
-                        Prefix, _
-                        ws, _
-                        RowOut
-
-                Case NODE_FOR
-
-                    RenderForBlock _
-                        HCPNodes, _
-                        Node, _
-                        Prefix, _
-                        ws, _
-                        RowOut
-
-                Case NODE_SELECT
-
-                    RenderSelectBlock _
-                        HCPNodes, _
-                        Node, _
-                        Prefix, _
-                        ws, _
-                        RowOut
-
-                Case NODE_DO
-
-                    RenderDoBlock _
-                        HCPNodes, _
-                        Node, _
-                        Prefix, _
-                        ws, _
-                        RowOut
-
-                Case NODE_WITH
-
-                    RenderWithBlock _
-                        HCPNodes, _
-                        Node, _
-                        Prefix, _
-                        ws, _
-                        RowOut
-
-                Case NODE_WHILE
-
-                    RenderWhileBlock _
-                        HCPNodes, _
-                        Node, _
-                        Prefix, _
-                        ws, _
-                        RowOut
-
-                Case NODE_COMPILE_IF
-
-                    RenderCompileBlock _
-                        HCPNodes, _
-                        Node, _
-                        Prefix, _
-                        ws, _
-                        RowOut
-
                 Case NODE_MERGE
 
                     ' 描画しない
 
                 Case Else
                     
-                    OutputHCPNode _
+                    RenderControlNode _
+                        HCPNodes, _
                         Node, _
                         Prefix, _
                         ws, _
@@ -1968,54 +1973,75 @@ Private Sub RenderIfBlock( _
                 ByVal Prefix As String, _
                 ByVal ws As Worksheet, _
                 ByRef RowOut As Long)
-
+    
     ' IF配下ノード
     Dim Node As clsHCPNode
 
     ' TRUEノード
     Dim TrueNode As clsHCPNode
-    
+
     ' FALSEノード
     Dim FalseNode As clsHCPNode
-    
+
+    ' ELSEIFノード
+    Dim ElseIfNode As clsHCPNode
+
     ' MERGEノード
     Dim MergeNode As clsHCPNode
 
     '-----------------------------
-    ' IF
+    '# IF見出し
     '-----------------------------
     OutputComment _
         IfNode, _
         Prefix, _
         ws, _
         RowOut
-    
+
     '# IF条件出力
-    ws.Cells(RowOut, 1).Value = _
-        Prefix & _
-        "◆┐" & _
-        GetDisplayText(IfNode, Prefix)
-    
+    If IfNode.NodeType = NODE_ELSEIF Then
+
+        ws.Cells(RowOut, 1).Value = _
+            Prefix & _
+            "├┐" & _
+            GetDisplayText(IfNode, Prefix)
+
+    Else
+
+        ws.Cells(RowOut, 1).Value = _
+            Prefix & _
+            "◆┐" & _
+            GetDisplayText(IfNode, Prefix)
+
+    End If
+
     ws.Cells(RowOut, 1).WrapText = True
 
     RowOut = RowOut + 1
 
     '-----------------------------
-    '# TRUE/FALSE/MERGE検索
+    '# 配下ノード検索
     '-----------------------------
     For Each Node In HCPNodes
 
         If Node.ParentID = IfNode.NodeID Then
-
+        
             Select Case Node.NodeType
 
                 Case NODE_TRUE
+
                     Set TrueNode = Node
 
                 Case NODE_FALSE
+
                     Set FalseNode = Node
 
+                Case NODE_ELSEIF
+
+                    Set ElseIfNode = Node
+
                 Case NODE_MERGE
+
                     Set MergeNode = Node
 
             End Select
@@ -2025,11 +2051,10 @@ Private Sub RenderIfBlock( _
     Next Node
 
     '-----------------------------
-    ' THEN
+    '# TRUE枝描画
     '-----------------------------
     If Not TrueNode Is Nothing Then
 
-        '# TRUEブランチ描画
         RenderNode _
             HCPNodes, _
             TrueNode.NodeID, _
@@ -2050,38 +2075,13 @@ Private Sub RenderIfBlock( _
 
                 Case NODE_TRUE
                 Case NODE_FALSE
+                Case NODE_ELSEIF
                 Case NODE_MERGE
-
-                Case NODE_IF
-
-                    RenderIfBlock _
-                        HCPNodes, _
-                        Node, _
-                        Prefix & "│", _
-                        ws, _
-                        RowOut
-
-                Case NODE_FOR
-
-                    RenderForBlock _
-                        HCPNodes, _
-                        Node, _
-                        Prefix & "│", _
-                        ws, _
-                        RowOut
-
-                Case NODE_SELECT
-
-                    RenderSelectBlock _
-                        HCPNodes, _
-                        Node, _
-                        Prefix & "│", _
-                        ws, _
-                        RowOut
 
                 Case Else
 
-                    OutputHCPNode _
+                    RenderControlNode _
+                        HCPNodes, _
                         Node, _
                         Prefix & "│", _
                         ws, _
@@ -2094,19 +2094,31 @@ Private Sub RenderIfBlock( _
     Next Node
 
     '-----------------------------
-    ' ELSE
+    '# ELSEIF描画
+    '-----------------------------
+    If Not ElseIfNode Is Nothing Then
+
+        RenderIfBlock _
+            HCPNodes, _
+            ElseIfNode, _
+            Prefix, _
+            ws, _
+            RowOut
+
+    End If
+
+    '-----------------------------
+    '# FALSE枝描画
     '-----------------------------
     If Not FalseNode Is Nothing Then
 
-        'ELSE見出し
         ws.Cells(RowOut, 1).Value = _
             Prefix & "├┐ELSE"
-        
+
         ws.Cells(RowOut, 1).WrapText = True
 
         RowOut = RowOut + 1
 
-        '# FALSEブランチ描画
         RenderNode _
             HCPNodes, _
             FalseNode.NodeID, _
@@ -2119,16 +2131,21 @@ Private Sub RenderIfBlock( _
     '-----------------------------
     '# End If描画
     '-----------------------------
-    If Not MergeNode Is Nothing Then
+    If IfNode.NodeType = NODE_IF Then
 
-        ' ELSE終端兼 End If
-        ws.Cells(RowOut, 1).Value = _
-            Prefix & "│┴" & _
-            GetDisplayText(MergeNode, Prefix)
-        
-        ws.Cells(RowOut, 1).WrapText = True
+        If Not MergeNode Is Nothing Then
 
-        RowOut = RowOut + 1
+            ws.Cells(RowOut, 1).Value = _
+                Prefix & _
+                "│┴End If"
+                '"│┴" & _
+                'GetDisplayText(MergeNode, Prefix)
+
+            ws.Cells(RowOut, 1).WrapText = True
+
+            RowOut = RowOut + 1
+
+        End If
 
     End If
 
@@ -2196,36 +2213,10 @@ Private Sub RenderForBlock( _
 
                 Set MergeNode = Node
 
-            ElseIf Node.NodeType = NODE_IF Then
-
-                RenderIfBlock _
-                    HCPNodes, _
-                    Node, _
-                    Prefix & "│", _
-                    ws, _
-                    RowOut
-
-            ElseIf Node.NodeType = NODE_FOR Then
-
-                RenderForBlock _
-                    HCPNodes, _
-                    Node, _
-                    Prefix & "│", _
-                    ws, _
-                    RowOut
-
-            ElseIf Node.NodeType = NODE_SELECT Then
-
-                RenderSelectBlock _
-                    HCPNodes, _
-                    Node, _
-                    Prefix & "│", _
-                    ws, _
-                    RowOut
-
             Else
 
-                OutputHCPNode _
+                RenderControlNode _
+                    HCPNodes, _
                     Node, _
                     Prefix & "│", _
                     ws, _
@@ -2389,9 +2380,9 @@ Private Sub RenderSelectBlock( _
     '# End Select描画
     '-----------------------------
     If Not MergeNode Is Nothing Then
-
+    
         ws.Cells(RowOut, 1).Value = _
-            Prefix & "│┴" & _
+            Prefix & "┴" & _
             GetDisplayText(MergeNode, Prefix)
         
         ws.Cells(RowOut, 1).WrapText = True
@@ -2520,7 +2511,7 @@ Private Sub RenderWithBlock( _
                 ByVal Prefix As String, _
                 ByVal ws As Worksheet, _
                 ByRef RowOut As Long)
-
+    
     ' WITH配下ノード
     Dim Node As clsHCPNode
     
@@ -2547,7 +2538,7 @@ Private Sub RenderWithBlock( _
     For Each Node In HCPNodes
 
         If Node.ParentID = WithNode.NodeID Then
-
+        
             If Node.NodeType = NODE_MERGE Then
 
                 Set EndNode = Node
@@ -2571,7 +2562,7 @@ Private Sub RenderWithBlock( _
 
         ws.Cells(RowOut, 1).Value = _
             Prefix & "│┴" & _
-                EndNode.Text
+                GetDisplayText(EndNode, Prefix)
         
         RowOut = RowOut + 1
 
@@ -2659,7 +2650,7 @@ Private Sub RenderWhileBlock( _
 
         ws.Cells(RowOut, 1).Value = _
             Prefix & "│┴" & _
-                EndNode.Text
+                GetDisplayText(EndNode, Prefix)
 
         RowOut = RowOut + 1
 
@@ -2754,6 +2745,165 @@ Private Sub RenderCompileBlock( _
 
 End Sub
 
+' @JPName
+' 制御ノード描画
+'
+' @Category
+' HCP
+'
+' @Input
+' HCPNodes(Collection)
+' Node(clsHCPNode)
+' Prefix(String)
+' ws(Worksheet)
+' RowOut(Long)
+'
+' @Output
+' RowOut(Long)
+'
+' @Summary
+' 制御構造ノードを種別に応じて
+' 適切な描画ルーチンへ振り分ける
+'
+' @Remarks
+' IF、FOR、DO、WITH、WHILE、
+' SELECT、条件コンパイルなどの
+' 制御構造を判定し
+' 専用描画処理へ委譲する
+' 通常ノードはOutputHCPNodeへ
+' 出力を委譲する
+'
+Private Sub RenderControlNode( _
+                ByVal HCPNodes As Collection, _
+                ByVal Node As clsHCPNode, _
+                ByVal Prefix As String, _
+                ByVal ws As Worksheet, _
+                ByRef RowOut As Long)
+
+    '# HCP描画ルーティング
+    Select Case Node.NodeType
+
+        Case NODE_IF
+
+            '# IFブロック描画
+            RenderIfBlock _
+                HCPNodes, _
+                Node, _
+                Prefix, _
+                ws, _
+                RowOut
+
+        Case NODE_ELSEIF
+
+            RenderIfBlock _
+                HCPNodes, _
+                Node, _
+                Prefix, _
+                ws, _
+                RowOut
+        
+        Case NODE_FOR
+
+            '# FORブロック描画
+            RenderForBlock _
+                HCPNodes, _
+                Node, _
+                Prefix, _
+                ws, _
+                RowOut
+
+        Case NODE_DO
+
+            '# DOブロック描画
+            RenderDoBlock _
+                HCPNodes, _
+                Node, _
+                Prefix, _
+                ws, _
+                RowOut
+
+        Case NODE_WITH
+
+            '# WITHブロック描画
+            RenderWithBlock _
+                HCPNodes, _
+                Node, _
+                Prefix, _
+                ws, _
+                RowOut
+
+        Case NODE_WHILE
+
+            '# WHILEブロック描画
+            RenderWhileBlock _
+                HCPNodes, _
+                Node, _
+                Prefix, _
+                ws, _
+                RowOut
+
+        Case NODE_SELECT
+
+            '# SELECTブロック描画
+            RenderSelectBlock _
+                HCPNodes, _
+                Node, _
+                Prefix, _
+                ws, _
+                RowOut
+
+        Case NODE_COMPILE_IF
+
+            '# 条件コンパイルブロック描画
+            RenderCompileBlock _
+                HCPNodes, _
+                Node, _
+                Prefix, _
+                ws, _
+                RowOut
+
+        Case Else
+
+            '# 通常ノード描画
+            OutputHCPNode _
+                Node, _
+                Prefix, _
+                ws, _
+                RowOut
+
+    End Select
+
+End Sub
+
+' @JPName
+' HCPコメント出力
+'
+' @Category
+' HCP
+'
+' @Input
+' Node(clsHCPNode)
+' Prefix(String)
+' ws(Worksheet)
+' RowOut(Long)
+'
+' @Output
+' RowOut(Long)
+'
+' @Summary
+' ノードコメントを
+' HCPチャートへ出力する
+'
+' @Remarks
+' CommentTextを改行単位で分割し
+' 「│#」形式のコメントとして
+' HCPチャートへ出力する
+'
+' 出力例
+' │# ProcListシート準備
+' │# ProcListヘッダ出力
+' │# コメントタグからJPName取得
+'
 Private Sub OutputComment( _
                 ByVal Node As clsHCPNode, _
                 ByVal Prefix As String, _
@@ -3049,4 +3199,77 @@ Public Sub DeleteSheetIfExists( _
     Application.DisplayAlerts = True
 
 End Sub
+
+'
+' @JPName
+' ノード一覧ダンプ
+'
+' @Summary
+' Collection内の全ノード情報を
+' イミディエイトへ出力する
+'
+Private Sub DumpNodes( _
+                ByVal Title As String, _
+                ByVal Nodes As Collection)
+
+    Dim Node As Object
+
+    Debug.Print String$(80, "=")
+    Debug.Print Title
+    Debug.Print String$(80, "=")
+
+    For Each Node In Nodes
+
+        Debug.Print _
+            Right$("000" & Node.NodeID, 3), _
+            "P=" & Node.ParentID, _
+            "L=" & Node.Level, _
+            "B=" & Node.BranchType, _
+            "[" & Node.NodeType & "]", _
+            Node.Text
+
+    Next Node
+
+End Sub
+
+'
+' @JPName
+' ノード範囲ダンプ
+'
+' @Summary
+' 指定NodeID範囲のみ
+' イミディエイトへ出力する
+'
+Private Sub DumpNodeRange( _
+                ByVal Title As String, _
+                ByVal Nodes As Collection, _
+                ByVal StartID As Long, _
+                ByVal EndID As Long)
+
+    Dim Node As Object
+
+    Debug.Print String$(80, "=")
+    Debug.Print Title
+    Debug.Print String$(80, "=")
+
+    For Each Node In Nodes
+
+        If Node.NodeID >= StartID _
+        And Node.NodeID <= EndID Then
+
+            Debug.Print _
+                Right$("000" & Node.NodeID, 3), _
+                "P=" & Node.ParentID, _
+                "L=" & Node.Level, _
+                "B=" & Node.BranchType, _
+                "[" & Node.NodeType & "]", _
+                Node.Text
+
+        End If
+
+    Next Node
+
+End Sub
+
+
 

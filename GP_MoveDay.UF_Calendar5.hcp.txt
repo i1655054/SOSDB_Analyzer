@@ -1,0 +1,29 @@
+Procedure: UF_Calendar5.GP_MoveDay  [ 日付移動＜UF_Calendar5＞ ]
+HCP	Business
+┬
+〇│Private Sub GP_MoveDay(lngMove As Long)	日付移動＜UF_Calendar5＞
+┴└┐
+　　□ Dim lngPos As Long                                              ' テーブル位置INDEX
+　　□ Dim dteDate As Date                                             ' 日付Work
+　　│#  年月選択非表示
+　　◎ Call GP_EraseYearMonth	年月選択非表示＜UF_Calendar5＞
+　　│#  移動先算出
+　　〇 lngPos = g_CurPos + lngMove                                 ' 移動後位置
+　　〇 dteDate = g_FormDate1 + lngMove                             ' 移動後日付
+　　│#  月変更判定
+　　◆┐If ((lngPos < 0) Or (lngPos > 41)) Then
+　　│〇 g_FormDate1 = dteDate
+　　││#  カレンダー再生成
+　　│◎ Call GP_MakeCalendar	カレンダー生成＜UF_Calendar5＞
+　　│→ Exit Sub
+　　│┴End If
+　　│#  旧選択解除
+　　◎ Call GP_SetForeColor(g_CurPos, dteDate)	カレンダー表示色設定＜UF_Calendar5＞
+　　│#  選択日更新
+　　〇 g_FormDate1 = dteDate
+　　〇 g_CurPos = lngPos
+　　│#  新選択設定
+　　◎ Call GP_SetForeColor(g_CurPos, g_FormDate1)	カレンダー表示色設定＜UF_Calendar5＞
+　　│#  ガイド更新
+　　〇 LBL_GUIDE.Caption = g_tblDateLabel(g_CurPos).StsGuide   ' ガイド表示
+　　┴End Sub

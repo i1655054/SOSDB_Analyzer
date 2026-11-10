@@ -1,0 +1,16 @@
+Procedure: UF_Calendar5.CBO_MONTH_Change  [ カレンダー月変更＜UF_Calendar5＞ ]
+HCP	Business
+┬
+〇│Private Sub CBO_MONTH_Change()	カレンダー月変更＜UF_Calendar5＞
+┴└┐
+　　□ Dim intMonth As Integer
+　　│#  月変更処理
+　　◆→ If g_swBatch Then Exit Sub
+　　〇 intMonth = CInt(CBO_MONTH.text)
+　　│#  表示年月更新
+　　〇 g_FormDate1 = DateSerial(g_intCurYear, intMonth, 1)
+　　│#  年月選択非表示
+　　◎ Call GP_EraseYearMonth	年月選択非表示＜UF_Calendar5＞
+　　│#  カレンダー再生成
+　　◎ Call GP_MakeCalendar	カレンダー生成＜UF_Calendar5＞
+　　┴End Sub

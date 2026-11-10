@@ -10,6 +10,12 @@ Public Const DEV_MODE As Boolean = True
 'Public Const DEV_MODE As Boolean = False
 
 '==================================================
+' 開発者モード
+' ノード範囲
+'==================================================
+Public Const DEBUG_NODE_RANGE As Long = 50
+
+'==================================================
 ' HCP表示方式
 '==================================================
 Public gHCPCompactMode As Boolean

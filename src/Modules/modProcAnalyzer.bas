@@ -25,8 +25,11 @@ Public Const NODE_CALL As String = "CALL"
 ' If開始ノード
 Public Const NODE_IF As String = "IF"
 
-' Else / ElseIfノード
+' Elseノード
 Public Const NODE_ELSE As String = "ELSE"
+
+' ElseIfノード
+Public Const NODE_ELSEIF As String = "ELSEIF"
 
 ' End Ifノード
 Public Const NODE_ENDIF As String = "ENDIF"
@@ -267,7 +270,7 @@ Private Function GetNodeType( _
 
     ElseIf StartsWithKeyword(LineText, "ElseIf") Then
 
-        GetNodeType = NODE_ELSE
+        GetNodeType = NODE_ELSEIF
 
     ElseIf StrComp(LineText, _
                    "Else", _
@@ -776,6 +779,30 @@ Public Function AnalyzeProcedure( _
         End If
 
         '--------------------------
+        '# ELSEIF分岐切替
+        '--------------------------
+        If NodeType = NODE_ELSEIF Then
+
+            If ParentStack.Count > 0 Then
+
+                ParentStack.Remove _
+                    ParentStack.Count
+
+            End If
+
+            If Level > 0 Then
+
+                Level = Level - 1
+
+            End If
+
+            OutputLevel = Level
+
+            CurrentBranch = BRANCH_FALSE
+
+        End If
+
+        '--------------------------
         '# CASE切替処理
         '--------------------------
         If NodeType = NODE_CASE Then
@@ -841,6 +868,16 @@ Public Function AnalyzeProcedure( _
 
                     CurrentBranch = BRANCH_TRUE
 
+                Case NODE_ELSEIF
+        
+                    ParentStack.Add NodeID
+
+                    BranchStack.Add CurrentBranch
+
+                    Level = Level + 1
+
+                    CurrentBranch = BRANCH_TRUE
+    
                 Case NODE_FOR
 
                     ParentStack.Add NodeID
@@ -856,8 +893,8 @@ Public Function AnalyzeProcedure( _
                 Case NODE_WITH
 
                     ParentStack.Add NodeID
-
-                   Level = Level + 1
+        
+                    Level = Level + 1
 
                 Case NODE_WHILE
 
@@ -990,7 +1027,7 @@ Public Function AnalyzeProcedure( _
 
             Node.ParentID = _
                 GetCurrentParentID(ParentStack)
-
+            
             Node.Level = Level
 
             Node.BranchType = CurrentBranch
@@ -1256,15 +1293,6 @@ Private Function IsOutputNormal( _
         Exit Function
     End If
 
-    '-------------------------
-    '# 書式設定除外
-    '-------------------------
-    If InStr(Text, ".AutoFit") > 0 Then Exit Function
-
-    If InStr(Text, ".AutoFilter") > 0 Then Exit Function
-
-    If InStr(Text, ".Font.") > 0 Then Exit Function
-
     '# 通常ノード出力
     IsOutputNormal = True
 
@@ -1502,6 +1530,17 @@ Public Sub ExportProcNodes( _
 
     On Error GoTo 0
 
+    '---------------------------------------
+    '# DEV_MODE時 ProcNode構造ダンプ
+    '---------------------------------------
+    If DEV_MODE Then
+
+        DumpNodes _
+            "AnalyzeProcedure Result", _
+            Nodes
+
+    End If
+    
     If gContext Is Nothing Then
 
         On Error Resume Next
