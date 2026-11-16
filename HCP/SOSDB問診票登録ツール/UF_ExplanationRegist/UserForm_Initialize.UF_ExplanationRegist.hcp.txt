@@ -1,0 +1,30 @@
+Procedure: UF_ExplanationRegist.UserForm_Initialize  [ 説明入力フォーム初期化＜UF_ExplanationRegist＞ ]
+HCP	Business
+┬
+〇│Private Sub UserForm_Initialize()	説明入力フォーム初期化＜UF_ExplanationRegist＞
+┴└┐
+　　│#  入力欄初期化
+　　＠┐With txtアラーム
+　　│〇 .IMEMode = fmIMEModeOn
+　　│〇 .ScrollBars = fmScrollBarsBoth
+　　│┴End With
+　　＠┐With txt発生状況
+　　│〇 .IMEMode = fmIMEModeOn
+　　│〇 .ScrollBars = fmScrollBarsBoth
+　　│┴End With
+　　＠┐With txt対応状況
+　　│〇 .IMEMode = fmIMEModeOn
+　　│〇 .ScrollBars = fmScrollBarsBoth
+　　│┴End With
+　　＠┐With txt作業
+　　│〇 .IMEMode = fmIMEModeOn
+　　│〇 .ScrollBars = fmScrollBarsBoth
+　　│┴End With
+　　＠┐With txtデータ
+　　│〇 .IMEMode = fmIMEModeOn
+　　│〇 .ScrollBars = fmScrollBarsBoth
+　　│┴End With
+　　│#  右クリック機能初期化
+　　〇 Static dcp As New CRightClick
+　　◎ dcp.Initialize Me	右クリック機能初期化＜CRightClick＞
+　　┴End Sub

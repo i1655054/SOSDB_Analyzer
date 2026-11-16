@@ -1,0 +1,27 @@
+Procedure: UF_InfoWebDisplay.PollFontSize_Worker  [ フォント同期＜UF_InfoWebDisplay＞ ]
+HCP	Business
+┬
+〇│Public Sub PollFontSize_Worker()	フォント同期＜UF_InfoWebDisplay＞
+┴└┐
+　　☆ On Error GoTo ExitHere
+　　□ Dim doc As Object, el As Object, V As Variant, newPt As Long
+　　〇 Set doc = WebBrowser1.document
+　　◆┐If Not doc Is Nothing Then
+　　││#  HTML文字サイズ取得
+　　│〇 Set el = doc.getElementById("fsValue")
+　　│◆┐If Not el Is Nothing Then
+　　││〇 V = el.Value
+　　││◆┐If IsNumeric(V) Then
+　　│││〇 newPt = CLng(V)
+　　││││#  フォントサイズ変更判定
+　　│││◆┐If newPt <> FontSize Then
+　　│││││#  フォーム表示同期
+　　││││〇 FontSize = newPt
+　　││││◆ If SpinButton1.Value <> newPt Then SpinButton1.Value = newPt
+　　││││〇 Label2.Caption = CStr(newPt)
+　　││││┴End If
+　　│││┴End If
+　　││┴End If
+　　│┴End If
+▼ ExitHere:
+　　┴End Sub

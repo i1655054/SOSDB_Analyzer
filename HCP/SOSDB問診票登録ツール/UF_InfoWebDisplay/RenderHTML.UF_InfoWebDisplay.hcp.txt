@@ -1,0 +1,64 @@
+Procedure: UF_InfoWebDisplay.RenderHTML  [ HTML表示＜UF_InfoWebDisplay＞ ]
+HCP	Business
+┬
+〇│Public Sub RenderHTML()	HTML表示＜UF_InfoWebDisplay＞
+┴└┐
+　　│#  初期文字サイズ取得
+　　□ Dim initPt As Long: initPt = FontSize
+　　□ Dim html As String
+　　│#  HTML生成開始
+　　〇 html = "<!doctype html><html>" & vbLf
+　　〇 html = html & "<head>" & vbLf
+　　〇 html = html & "<meta http='X-UA-Compatible' content='IE=edge'>" & vbLf
+　　〇 html = html & "<style id='appStyle'></style>" & vbLf
+　　│#  JavaScript生成
+　　〇 html = html & "<script>" & vbLf
+　　〇 html = html & "(function(){" & vbLf
+　　〇 html = html & "  var sizePt=" & CStr(initPt) & ";" & vbLf
+　　〇 html = html & "  function getLimit(id,def){ var el=document.getElementById(id); var v=el?parseInt(el.value,10):NaN; return isNaN(v)?def:v; }" & vbLf
+　　〇 html = html & "  function clamp(v){ var minPt=getLimit('fsMin',8), maxPt=getLimit('fsMax',48); if(v<minPt)v=minPt; if(v>maxPt)v=maxPt; return v; }" & vbLf
+　　〇 html = html & "  function apply(){ var c = document.getElementById('content'); if (c) c.style.fontSize = sizePt + 'pt'; var el = document.getElementById('fsValue'); if (el) el.value = sizePt; }" & vbLf
+　　〇 html = html & "  // Ctrl+ホイール" & vbLf
+　　〇 html = html & "  window.setSize=function(pt){ var n=parseInt(pt,10); if(!isNaN(n)){ var c=clamp(n); if(c!==sizePt){ sizePt=c; apply(); } } };" & vbLf
+　　〇 html = html & "  window.addEventListener('keydown', function(ev){ if (ev.ctrlKey && ev.key === '0') { sizePt = 12; apply(); ev.preventDefault(); }});" & vbLf
+　　〇 html = html & "  window.addEventListener('wheel',function(ev){" & vbLf
+　　〇 html = html & "    if(ev.ctrlKey){ ev.preventDefault(); ev.returnValue=false;" & vbLf
+　　〇 html = html & "      var step=(ev.deltaY<0)?+1:-1; var c=clamp(sizePt+step); if(c!==sizePt){ sizePt=c; apply(); }" & vbLf
+　　〇 html = html & "    }" & vbLf
+　　〇 html = html & "  },{passive:false});" & vbLf
+　　〇 html = html & "  // Ctrl + [+] / [-]" & vbLf
+　　〇 html = html & "  window.addEventListener('keydown',function(ev){" & vbLf
+　　〇 html = html & "    if(ev.ctrlKey){" & vbLf
+　　〇 html = html & "      if(ev.key==='+'||ev.key==='='){ var c=clamp(sizePt+1); if(c!==sizePt){ sizePt=c; apply(); } ev.preventDefault(); }" & vbLf
+　　〇 html = html & "      if(ev.key==='-'||ev.key==='_'){ var c=clamp(sizePt-1); if(c!==sizePt){ sizePt=c; apply(); } ev.preventDefault(); }" & vbLf
+　　〇 html = html & "    }" & vbLf
+　　〇 html = html & "  });" & vbLf
+　　〇 html = html & "  window.addEventListener('load',apply);" & vbLf
+　　〇 html = html & "})();" & vbLf
+　　〇 html = html & "</script>" & vbLf
+　　〇 html = html & "</head>" & vbLf
+　　〇 html = html & "<body>" & vbLf
+　　〇 html = html & "<input id='fsMin' type='hidden' value='" & CStr(FONT_MIN_PT) & "' />" & vbLf
+　　〇 html = html & "<input id='fsMax' type='hidden' value='" & CStr(FONT_MAX_PT) & "' />" & vbLf
+　　〇 html = html & "<input id='fsValue' type='hidden' value='" & CStr(initPt) & "' />" & vbLf
+　　│#  本文生成
+　　〇 html = html & "<div id='content'>"
+　　◎ html = html & ConvertNewLinesToHTML(bodyText)	改行HTML変換＜UF_InfoWebDisplay＞
+　　〇 html = html & "</div>"
+　　〇 html = html & "</body></html>"
+　　│#  WebBrowser初期化
+　　◆┐If WebBrowser1.document Is Nothing Then
+　　│〇 WebBrowser1.navigate "about:blank"
+　　│＠┐Do While WebBrowser1.readyState <> 4
+　　││〇 DoEvents
+　　││┴Loop
+　　│┴End If
+　　│#  HTML描画
+　　＠┐With WebBrowser1.document
+　　│〇 .Open
+　　│〇 .Write html
+　　│〇 .Close
+　　│┴End With
+　　│#  CSS適用
+　　◎ ApplyCss FontSize	CSS適用＜UF_InfoWebDisplay＞
+　　┴End Sub

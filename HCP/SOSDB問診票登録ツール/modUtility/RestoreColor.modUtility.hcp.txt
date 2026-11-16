@@ -1,0 +1,9 @@
+Procedure: modUtility.RestoreColor  [ セル色復元＜modUtility＞ ]
+HCP	Business
+┬
+〇│Public Sub RestoreColor(rngName As String)	セル色復元＜modUtility＞
+┴└┐
+　　│#  セル色復元
+　　◎ Range(rngName).Interior.color = GetDefaultColor(rngName)	標準背景色取得＜modUtility＞
+　　│	内部呼出:Range
+　　┴End Sub

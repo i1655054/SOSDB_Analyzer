@@ -1,0 +1,13 @@
+Procedure: UF_SearchResults.ListBox6_Change  [ 一覧選択同期題名＜UF_SearchResults＞ ]
+HCP	Business
+┬
+〇│Private Sub ListBox6_Change()	一覧選択同期題名＜UF_SearchResults＞
+┴└┐
+　　│#  行選択同期
+　　〇 ListBox1.ListIndex = ListBox6.ListIndex
+　　〇 ListBox2.ListIndex = ListBox6.ListIndex
+　　〇 ListBox3.ListIndex = ListBox6.ListIndex
+　　〇 ListBox4.ListIndex = ListBox6.ListIndex
+　　〇 ListBox5.ListIndex = ListBox6.ListIndex
+　　〇 ListBox7.ListIndex = ListBox6.ListIndex
+　　┴End Sub

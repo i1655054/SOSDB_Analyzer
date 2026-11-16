@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift_jis">
+<title>IssueInfo</title>
+<style>
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.5;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+colgroup col:nth-of-type(1) {}
+colgroup col:nth-of-type(2) {}
+.resize {position: relative;}
+.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+</style>
+</head>
+<body>
+<p><a href="../_INDEX.html">← Tool Index</a></p>
+<h1>IssueInfo</h1>
+<p>Procedure Count : 9</p>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Status</th><th>Updated</th></tr>
+<tr><td><a href="Clear.IssueInfo.hcp.html">Clear</a></td><td>Issue情報初期化</td><td>[OK]</td><td>2026/11/13 17:23:54</td></tr>
+<tr><td><a href="IsDifferent.IssueInfo.hcp.html">IsDifferent</a></td><td>差分有無判定</td><td>[OK]</td><td>2026/11/13 17:23:58</td></tr>
+<tr><td><a href="GetDiffFlags.IssueInfo.hcp.html">GetDiffFlags</a></td><td>差分フラグ取得</td><td>[OK]</td><td>2026/11/13 17:24:02</td></tr>
+<tr><td><a href="CopyFrom.IssueInfo.hcp.html">CopyFrom</a></td><td>Issue情報コピー</td><td>[OK]</td><td>2026/11/13 17:24:06</td></tr>
+<tr><td><a href="Clone.IssueInfo.hcp.html">Clone</a></td><td>Issue情報複製</td><td>[OK]</td><td>2026/11/13 17:24:09</td></tr>
+<tr><td><a href="MergeFromKeep.IssueInfo.hcp.html">MergeFromKeep</a></td><td>Redmine情報優先マージ</td><td>[OK]</td><td>2026/11/13 17:24:12</td></tr>
+<tr><td><a href="MergeFromMonshin.IssueInfo.hcp.html">MergeFromMonshin</a></td><td>問診票情報優先マージ</td><td>[OK]</td><td>2026/11/13 17:24:15</td></tr>
+<tr><td><a href="HasValue.IssueInfo.hcp.html">HasValue</a></td><td>有効値判定</td><td>[OK]</td><td>2026/11/13 17:24:18</td></tr>
+<tr><td><a href="DebugPrint.IssueInfo.hcp.html">DebugPrint</a></td><td>Issue情報出力</td><td>[OK]</td><td>2026/11/13 17:24:23</td></tr>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function (eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function (e) {
+const styleTh = window.getComputedStyle(eleTh);
+const paddingLeft = parseFloat(styleTh.paddingLeft);
+const paddingRight = parseFloat(styleTh.paddingRight);
+const borderLeft = parseFloat(styleTh.borderLeftWidth);
+const borderRight = parseFloat(styleTh.borderRightWidth);
+startX = e.pageX;
+startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e) {
+const newWidth = startWidth + (e.pageX - startX);
+eleTh.style.width = newWidth + 'px';
+}
+function onMouseUp() {
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
+}
+});
+</script>
+</body>
+</html>

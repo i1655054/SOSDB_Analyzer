@@ -70,3 +70,5 @@ Public SourceLine As String
 ' HCP出力用コメント
 Public CommentText As String
 
+' 内部呼出一覧
+Public InternalCalls As String

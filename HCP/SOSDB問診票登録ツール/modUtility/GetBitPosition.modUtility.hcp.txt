@@ -1,0 +1,18 @@
+Procedure: modUtility.GetBitPosition  [ ビット位置取得＜modUtility＞ ]
+HCP	Business
+┬
+〇│Public Function GetBitPosition(flag As Long) As Long	ビット位置取得＜modUtility＞
+┴└┐
+　　□ Dim i As Long
+　　│#  ビット位置検索
+　　＠┐For i = 0 To 31
+　　││#  一致確認
+　　│◆┐If flag = 2 ^ i Then
+　　│││#  ビット位置返却
+　　││〇 GetBitPosition = i
+　　││→ Exit Function
+　　││┴End If
+　　│┴Next
+　　│#  未検出
+　　〇 GetBitPosition = -1
+　　┴End Function

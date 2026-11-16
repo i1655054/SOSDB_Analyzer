@@ -1,0 +1,12 @@
+Procedure: modAboutCalendar2.FP_SumEigyoNissu  [ 営業日数集計＜modAboutCalendar2＞ ]
+HCP	Business
+┬
+〇│Public Function FPSumEigyoNissu(ByVal dteDateF As Date,  ByVal dteDateT As Date,  ByRef lngCntEigyo As Long,  Optional ByRef lngCntReki As Long = 0,  Optional ByVal blnOmitCheck As Boolean = False) As Boolean	営業日数集計＜modAboutCalendar2＞
+┴└┐
+　　◆┐If Not FP_InitAboutCalendar(blnOmitCheck) Then
+　　│〇 FP_SumEigyoNissu = False
+　　│→ Exit Function
+　　│┴End If
+　　◎ Call g_clsAboutCalendar.SumEigyoNissu(dteDateF, dteDateT, lngCntEigyo, lngCntReki)	営業日数集計＜clsAboutCalendar2＞
+　　〇 FP_SumEigyoNissu = True
+　　┴End Function

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift_jis">
+<title>BuildRequesterNum</title>
+<style>
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+colgroup col:nth-of-type(1) {}
+colgroup col:nth-of-type(2) {}
+.resize {position: relative;}
+.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+</style>
+</head>
+<body>
+<h1>BuildRequesterNum</h1>
+<p>Module : modMonshinCore</p>
+<p><a href="./_INDEX.html">← Module Index</a></p>
+<table>
+<colgroup><col/><col/></colgroup>
+<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<tbody>
+<tr><td>Procedure: modMonshinCore.BuildRequesterNum  [ 依頼元管理番号生成＜modMonshinCore＞ ]</td><td></td></tr>
+<tr><td>HCP</td><td>Business</td></tr>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Private Function BuildRequesterNum(ByRef info As MonshinInfoType) As String</td><td>依頼元管理番号生成＜modMonshinCore＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　□ Dim baseNum As String</td><td></td></tr>
+<tr><td>　　□ Dim result As String</td><td></td></tr>
+<tr><td>　　│#  ベース番号決定</td><td></td></tr>
+<tr><td>　　〇 baseNum = info.RequesterNum   ' ← MAPでB4から取っている前提</td><td></td></tr>
+<tr><td>　　◆┐If baseNum = "" Then</td><td></td></tr>
+<tr><td>　　││#  フォールバック番号判定</td><td></td></tr>
+<tr><td>　　│◆┐Select Case info.sheetType</td><td></td></tr>
+<tr><td>　　││├┐Case Monshin_2010, Monshin_Other</td><td></td></tr>
+<tr><td>　　│││〇 baseNum = info.unKanNum</td><td></td></tr>
+<tr><td>　　││├┐Case Else</td><td></td></tr>
+<tr><td>　　│││〇 baseNum = info.faultRepNum</td><td></td></tr>
+<tr><td>　　││┴End Select</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　│#  管理番号文字列生成</td><td></td></tr>
+<tr><td>　　〇 result = "問診票管理番号=" &amp; baseNum</td><td></td></tr>
+<tr><td>　　│#  フォーマット別追加情報生成</td><td></td></tr>
+<tr><td>　　◆┐Select Case info.sheetType</td><td></td></tr>
+<tr><td>　　│├┐Case Monshin_2010, Monshin_Other</td><td></td></tr>
+<tr><td>　　││◆┐If info.unKanNum &lt;&gt; "" Then</td><td></td></tr>
+<tr><td>　　│││〇 result = result &amp; " / 運管管理番号=" &amp; info.unKanNum</td><td></td></tr>
+<tr><td>　　│││┴End If</td><td></td></tr>
+<tr><td>　　│├┐Case Else</td><td></td></tr>
+<tr><td>　　││◆┐If info.faultRepNum &lt;&gt; "" Then</td><td></td></tr>
+<tr><td>　　│││〇 result = result &amp; " / 故障票番号=" &amp; info.faultRepNum</td><td></td></tr>
+<tr><td>　　│││┴End If</td><td></td></tr>
+<tr><td>　　│┴End Select</td><td></td></tr>
+<tr><td>　　│#  依頼元管理番号返却</td><td></td></tr>
+<tr><td>　　〇 BuildRequesterNum = result</td><td></td></tr>
+<tr><td>　　┴End Function</td><td></td></tr>
+</tbody>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function (eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function (e) {
+const styleTh = window.getComputedStyle(eleTh);
+const paddingLeft = parseFloat(styleTh.paddingLeft);
+const paddingRight = parseFloat(styleTh.paddingRight);
+const borderLeft = parseFloat(styleTh.borderLeftWidth);
+const borderRight = parseFloat(styleTh.borderRightWidth);
+startX = e.pageX;
+startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e) {
+const newWidth = startWidth + (e.pageX - startX);
+eleTh.style.width = newWidth + 'px';
+}
+function onMouseUp() {
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
+}
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+Procedure: UF_Calendar5.GP_EraseMonth  [ 月選択非表示＜UF_Calendar5＞ ]
+HCP	Business
+┬
+〇│Private Sub GP_EraseMonth()	月選択非表示＜UF_Calendar5＞
+┴└┐
+　　│#  月コンボ非表示
+　　◆┐If g_VisibleMonth Then
+　　│〇 CBO_MONTH.Visible = False
+　　│〇 g_VisibleMonth = False
+　　│┴End If
+　　┴End Sub

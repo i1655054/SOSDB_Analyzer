@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift_jis">
+<title>ExecuteRedmineRequest</title>
+<style>
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+colgroup col:nth-of-type(1) {}
+colgroup col:nth-of-type(2) {}
+.resize {position: relative;}
+.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+</style>
+</head>
+<body>
+<h1>ExecuteRedmineRequest</h1>
+<p>Module : XmlLoader</p>
+<p><a href="./_INDEX.html">← Module Index</a></p>
+<table>
+<colgroup><col/><col/></colgroup>
+<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<tbody>
+<tr><td>Procedure: XmlLoader.ExecuteRedmineRequest  [ Redmine通信実行＜XmlLoader＞ ]</td><td></td></tr>
+<tr><td>HCP</td><td>Business</td></tr>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Private Function ExecuteRedmineRequest(  ByVal method As String,  ByVal url As String,  ByVal body As String,  ByVal IssueId As String,  ByVal TroubleNum As String,  ByVal MonFolder As String) As Variant</td><td>Redmine通信実行＜XmlLoader＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　□ Dim xmlHttp As Object</td><td></td></tr>
+<tr><td>　　□ Dim id As String</td><td></td></tr>
+<tr><td>　　□ Dim writeFileName As String</td><td></td></tr>
+<tr><td>　　│#  リトライ回数初期化</td><td></td></tr>
+<tr><td>　　□ Dim retryCount As Integer</td><td></td></tr>
+<tr><td>　　□ Dim maxRetry As Integer</td><td></td></tr>
+<tr><td>　　〇 maxRetry = 3</td><td></td></tr>
+<tr><td>▼ RetryStart:</td><td></td></tr>
+<tr><td>　　│#  エラーハンドラ設定</td><td></td></tr>
+<tr><td>　　☆ On Error GoTo ErrHandler</td><td></td></tr>
+<tr><td>　　│#  デバッグ情報出力</td><td></td></tr>
+<tr><td>　　◆┐If glbdbgflg Then</td><td></td></tr>
+<tr><td>　　│〇 Debug.Print "==== START ===="</td><td></td></tr>
+<tr><td>　　│〇 Debug.Print "METHOD:", method</td><td></td></tr>
+<tr><td>　　│〇 Debug.Print "URL:", url</td><td></td></tr>
+<tr><td>　　│〇 Debug.Print "ISSUEID:", IssueId</td><td></td></tr>
+<tr><td>　　│〇 Debug.Print "TROUBLE:", TroubleNum</td><td></td></tr>
+<tr><td>　　│〇 Debug.Print "MonFolder:", MonFolder</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　│#  XML内容確認</td><td></td></tr>
+<tr><td>　　◆┐If Trim(body) = "" Then</td><td></td></tr>
+<tr><td>　　│◆ If glbdbgflg Then Debug.Print "ERROR: BODY EMPTY"</td><td></td></tr>
+<tr><td>　　│〇 ExecuteRedmineRequest = Array("", "")</td><td></td></tr>
+<tr><td>　　│→ Exit Function</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　│#  HTTPオブジェクト生成</td><td></td></tr>
+<tr><td>　　〇 Set xmlHttp = CreateObject("MSXML2.ServerXMLHTTP.6.0")</td><td></td></tr>
+<tr><td>　　│#  タイムアウト設定</td><td></td></tr>
+<tr><td>　　〇 xmlHttp.setTimeouts 5000, 5000, 5000, 5000</td><td></td></tr>
+<tr><td>　　│#  Redmine接続開始</td><td></td></tr>
+<tr><td>　　〇 xmlHttp.Open method, url, False</td><td></td></tr>
+<tr><td>　　│#  HTTPヘッダ設定</td><td></td></tr>
+<tr><td>　　〇 xmlHttp.setRequestHeader "Content-Type", "application/xml"</td><td></td></tr>
+<tr><td>　　〇 xmlHttp.setRequestHeader "Accept", "application/xml"</td><td></td></tr>
+<tr><td>　　│#  XML送信</td><td></td></tr>
+<tr><td>　　◆ If glbdbgflg Then Debug.Print "SENDING..."</td><td></td></tr>
+<tr><td>　　〇 xmlHttp.send body</td><td></td></tr>
+<tr><td>　　│#  応答確認</td><td></td></tr>
+<tr><td>　　◆┐If glbdbgflg Then</td><td></td></tr>
+<tr><td>　　│〇 Debug.Print "STATUS:", xmlHttp.Status</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　│#  新規登録処理</td><td></td></tr>
+<tr><td>　　◆┐If method = "POST" Then</td><td></td></tr>
+<tr><td>　　││#  登録成功確認</td><td></td></tr>
+<tr><td>　　│◆┐If xmlHttp.Status = 201 Then</td><td></td></tr>
+<tr><td>　　││□ Dim doc As Object</td><td></td></tr>
+<tr><td>　　│││#  応答XML解析</td><td></td></tr>
+<tr><td>　　││〇 Set doc = CreateObject("MSXML2.DOMDocument")</td><td></td></tr>
+<tr><td>　　│││#  XML解析確認</td><td></td></tr>
+<tr><td>　　││◆┐If Not doc.LoadXML(xmlHttp.responseText) Then</td><td></td></tr>
+<tr><td>　　│││◆ If glbdbgflg Then Debug.Print "XML PARSE ERROR"</td><td></td></tr>
+<tr><td>　　│││〇 ExecuteRedmineRequest = Array("", "")</td><td></td></tr>
+<tr><td>　　│││→ Exit Function</td><td></td></tr>
+<tr><td>　　│││┴End If</td><td></td></tr>
+<tr><td>　　│││#  IssueID取得</td><td></td></tr>
+<tr><td>　　││〇 id = Trim(doc.SelectSingleNode("issue/id").text)</td><td></td></tr>
+<tr><td>　　│││#  登録完了表示</td><td></td></tr>
+<tr><td>　　││＠┐With UF_RedminDbRegist</td><td></td></tr>
+<tr><td>　　│││〇 .TextBox2.text = id</td><td></td></tr>
+<tr><td>　　│││〇 .TextBox5.Visible = False</td><td></td></tr>
+<tr><td>　　│││＠┐With .TextBox6</td><td></td></tr>
+<tr><td>　　││││〇 .Visible = True</td><td></td></tr>
+<tr><td>　　││││〇 .text = " 登録完了 "</td><td></td></tr>
+<tr><td>　　││││〇 .Left = 115</td><td></td></tr>
+<tr><td>　　││││〇 .ForeColor = RGB(0, 0, 255)</td><td></td></tr>
+<tr><td>　　││││〇 .BackColor = &amp;H8000000B</td><td></td></tr>
+<tr><td>　　││││〇 .BorderColor = &amp;H8000000B</td><td></td></tr>
+<tr><td>　　││││┴End With</td><td></td></tr>
+<tr><td>　　│││〇 .CommandButton1.Visible = False</td><td></td></tr>
+<tr><td>　　│││〇 .CommandButton2.Caption = "閉じる"</td><td></td></tr>
+<tr><td>　　│││〇 .Repaint</td><td></td></tr>
+<tr><td>　　│││┴End With</td><td></td></tr>
+<tr><td>　　│├┐ELSE</td><td></td></tr>
+<tr><td>　　││◆ If glbdbgflg Then Debug.Print "POST ERROR:", xmlHttp.Status</td><td></td></tr>
+<tr><td>　　││〇 ExecuteRedmineRequest = Array("", "")</td><td></td></tr>
+<tr><td>　　││→ Exit Function</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td>　　├┐ELSE</td><td></td></tr>
+<tr><td>　　││#  更新成功確認</td><td></td></tr>
+<tr><td>　　│◆┐If xmlHttp.Status = 200 Or  xmlHttp.Status = 204 Or  xmlHttp.Status = 1223 Then</td><td></td></tr>
+<tr><td>　　│││#  IssueID設定</td><td></td></tr>
+<tr><td>　　││〇 id = IssueId</td><td></td></tr>
+<tr><td>　　││◆ If glbdbgflg Then Debug.Print "PUT SUCCESS:", id</td><td></td></tr>
+<tr><td>　　│││#  更新完了表示</td><td></td></tr>
+<tr><td>　　││＠┐With UF_RedminDbRegist</td><td></td></tr>
+<tr><td>　　│││〇 .TextBox5.Visible = False</td><td></td></tr>
+<tr><td>　　│││＠┐With .TextBox6</td><td></td></tr>
+<tr><td>　　││││〇 .Visible = True</td><td></td></tr>
+<tr><td>　　││││〇 .text = " 更新完了 "</td><td></td></tr>
+<tr><td>　　││││〇 .Left = 115</td><td></td></tr>
+<tr><td>　　││││〇 .ForeColor = RGB(0, 0, 255)</td><td></td></tr>
+<tr><td>　　││││〇 .BackColor = &amp;H8000000B</td><td></td></tr>
+<tr><td>　　││││〇 .BorderColor = &amp;H8000000B</td><td></td></tr>
+<tr><td>　　││││┴End With</td><td></td></tr>
+<tr><td>　　│││〇 .CommandButton1.Visible = False</td><td></td></tr>
+<tr><td>　　│││〇 .CommandButton2.Caption = "閉じる"</td><td></td></tr>
+<tr><td>　　│││〇 .Repaint</td><td></td></tr>
+<tr><td>　　│││┴End With</td><td></td></tr>
+<tr><td>　　│├┐ELSE</td><td></td></tr>
+<tr><td>　　││◆ If glbdbgflg Then Debug.Print "PUT ERROR:", xmlHttp.Status</td><td></td></tr>
+<tr><td>　　││〇 ExecuteRedmineRequest = Array("", "")</td><td></td></tr>
+<tr><td>　　││→ Exit Function</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　│#  更新XML保存</td><td></td></tr>
+<tr><td>　　◎ writeFileName = AutomaticTextOutput(  body,  id &amp; "_" &amp; TroubleNum,  MonFolder)</td><td>XMLファイル出力＜modFileUtility＞</td></tr>
+<tr><td>　　◆┐If glbdbgflg Then</td><td></td></tr>
+<tr><td>　　│〇 Debug.Print "FILE:", writeFileName</td><td></td></tr>
+<tr><td>　　│〇 Debug.Print "==== END ===="</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　│#  実行結果返却</td><td></td></tr>
+<tr><td>　　〇 ExecuteRedmineRequest = Array(id, writeFileName)</td><td></td></tr>
+<tr><td>　　→ Exit Function</td><td></td></tr>
+<tr><td>▼ ErrHandler:</td><td></td></tr>
+<tr><td>　　◆ If glbdbgflg Then Debug.Print "EXCEPTION:", Err.Number, Err.Description</td><td></td></tr>
+<tr><td>　　│#  通信エラー確認</td><td></td></tr>
+<tr><td>　　◆┐If Err.Number = -2147483638 Then</td><td></td></tr>
+<tr><td>　　││#  リトライ回数更新</td><td></td></tr>
+<tr><td>　　│〇 retryCount = retryCount + 1</td><td></td></tr>
+<tr><td>　　││#  リトライ回数表示</td><td></td></tr>
+<tr><td>　　│〇 UF_RedminDbRegist.TextBox6.text = retryCount &amp; " / " &amp; maxRetry</td><td></td></tr>
+<tr><td>　　│〇 UF_RedminDbRegist.Repaint</td><td></td></tr>
+<tr><td>　　││#  リトライ判定</td><td></td></tr>
+<tr><td>　　│◆┐If retryCount &lt; maxRetry Then</td><td></td></tr>
+<tr><td>　　││◆ If glbdbgflg Then Debug.Print "RETRYING... (" &amp; retryCount &amp; "/" &amp; maxRetry &amp; ")"</td><td></td></tr>
+<tr><td>　　││◎ Err.Clear</td><td>Issue情報初期化＜IssueInfo＞</td></tr>
+<tr><td>　　│││#  リトライ待機</td><td></td></tr>
+<tr><td>　　││□ Dim t As Double</td><td></td></tr>
+<tr><td>　　││〇 t = Timer + 1</td><td></td></tr>
+<tr><td>　　││＠┐Do While Timer &lt; t</td><td></td></tr>
+<tr><td>　　│││〇 DoEvents</td><td></td></tr>
+<tr><td>　　│││┴Loop</td><td></td></tr>
+<tr><td>　　│││#  通信再実行</td><td></td></tr>
+<tr><td>　　││→ GoTo RetryStart</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　│#  異常終了</td><td></td></tr>
+<tr><td>　　〇 ExecuteRedmineRequest = Array("", "")</td><td></td></tr>
+<tr><td>　　┴End Function</td><td></td></tr>
+</tbody>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function (eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function (e) {
+const styleTh = window.getComputedStyle(eleTh);
+const paddingLeft = parseFloat(styleTh.paddingLeft);
+const paddingRight = parseFloat(styleTh.paddingRight);
+const borderLeft = parseFloat(styleTh.borderLeftWidth);
+const borderRight = parseFloat(styleTh.borderRightWidth);
+startX = e.pageX;
+startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e) {
+const newWidth = startWidth + (e.pageX - startX);
+eleTh.style.width = newWidth + 'px';
+}
+function onMouseUp() {
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
+}
+});
+</script>
+</body>
+</html>

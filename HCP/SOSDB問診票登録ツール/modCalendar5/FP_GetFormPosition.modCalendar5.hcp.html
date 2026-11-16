@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift_jis">
+<title>FP_GetFormPosition</title>
+<style>
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+colgroup col:nth-of-type(1) {}
+colgroup col:nth-of-type(2) {}
+.resize {position: relative;}
+.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+</style>
+</head>
+<body>
+<h1>FP_GetFormPosition</h1>
+<p>Module : modCalendar5</p>
+<p><a href="./_INDEX.html">← Module Index</a></p>
+<table>
+<colgroup><col/><col/></colgroup>
+<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<tbody>
+<tr><td>Procedure: modCalendar5.FP_GetFormPosition  [ フォーム表示位置算出＜modCalendar5＞ ]</td><td></td></tr>
+<tr><td>HCP</td><td>Business</td></tr>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Private Function FPGetFormPosition(ByRef objRange As Range,  ByVal lngFormWidth As Long,  ByVal lngFormHeight As Long,  ByRef lngFormLeft As Long,  ByRef lngFormTop As Long) As Boolean</td><td>フォーム表示位置算出＜modCalendar5＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　□ Dim objTarget As Range                                          ' 対象セル(先頭セル)</td><td></td></tr>
+<tr><td>　　□ Dim objAW As Window                                             ' ActiveWindow</td><td></td></tr>
+<tr><td>　　□ Dim lngPaneIx As Long                                           ' PaneIndex(0～4)</td><td></td></tr>
+<tr><td>　　□ Dim lngIx As Long                                               ' ループ用INDEX(Work)</td><td></td></tr>
+<tr><td>　　□ Dim lngR1C1Left As Long                                         ' 起点セル左端位置</td><td></td></tr>
+<tr><td>　　□ Dim lngR1C1Top As Long                                          ' 起点セル上端位置</td><td></td></tr>
+<tr><td>　　□ Dim lngTargetLeft As Long                                       ' 対象セル左端位置</td><td></td></tr>
+<tr><td>　　□ Dim lngTargetTop As Long                                        ' 対象セル上端位置</td><td></td></tr>
+<tr><td>　　□ Dim lngScreenRight As Long                                      ' スクリーン右端位置</td><td></td></tr>
+<tr><td>　　□ Dim lngScreenBottom As Long                                     ' スクリーン下端位置</td><td></td></tr>
+<tr><td>　　□ Dim lngDPIX As Long                                             ' Dots Per Inch(水平)</td><td></td></tr>
+<tr><td>　　□ Dim lngDPIY As Long                                             ' Dots Per Inch(垂直)</td><td></td></tr>
+<tr><td>　　□ Dim lngPPI As Long                                              ' Pixels Per Inch</td><td></td></tr>
+<tr><td>　　〇 FP_GetFormPosition = False</td><td></td></tr>
+<tr><td>　　〇 lngFormLeft = 0</td><td></td></tr>
+<tr><td>　　〇 lngFormTop = 0</td><td></td></tr>
+<tr><td>　　〇 lngPaneIx = 0</td><td></td></tr>
+<tr><td>　　〇 Set objTarget = objRange.Cells(1).MergeArea</td><td></td></tr>
+<tr><td>　　〇 Set objAW = ActiveWindow</td><td></td></tr>
+<tr><td>　　◆┐If Not objAW.FreezePanes And Not objAW.Split Then</td><td></td></tr>
+<tr><td>　　│◆→ If Intersect(objAW.VisibleRange, objTarget) Is Nothing Then Exit Function</td><td></td></tr>
+<tr><td>　　│〇 Else            ' 分割あり</td><td></td></tr>
+<tr><td>　　│◆┐If objAW.FreezePanes Then</td><td></td></tr>
+<tr><td>　　││＠┐For lngIx = 1 To objAW.Panes.count</td><td></td></tr>
+<tr><td>　　│││◆┐If Not Intersect(objAW.Panes(lngIx).VisibleRange, objTarget) Is Nothing Then</td><td></td></tr>
+<tr><td>　　││││〇 lngPaneIx = lngIx</td><td></td></tr>
+<tr><td>　　││││→ Exit For</td><td></td></tr>
+<tr><td>　　││││┴End If</td><td></td></tr>
+<tr><td>　　│││┴Next lngIx</td><td></td></tr>
+<tr><td>　　││◆→ If lngPaneIx = 0 Then Exit Function</td><td></td></tr>
+<tr><td>　　│├┐ELSE</td><td></td></tr>
+<tr><td>　　││◆┐If Not Intersect(objAW.ActivePane.VisibleRange, objTarget) Is Nothing Then</td><td></td></tr>
+<tr><td>　　│││〇 lngPaneIx = objAW.ActivePane.index</td><td></td></tr>
+<tr><td>　　││├┐ELSE</td><td></td></tr>
+<tr><td>　　│││→ Exit Function</td><td></td></tr>
+<tr><td>　　│││┴End If</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　〇 lngDPIX = FP_GetDPIX</td><td></td></tr>
+<tr><td>　　〇 lngDPIY = FP_GetDPIY</td><td></td></tr>
+<tr><td>　　〇 lngPPI = FP_GetPPI</td><td></td></tr>
+<tr><td>　　◆┐If lngPaneIx = 0 Then</td><td></td></tr>
+<tr><td>　　│〇 lngR1C1Left = objAW.PointsToScreenPixelsX(0)</td><td></td></tr>
+<tr><td>　　│〇 lngR1C1Top = objAW.PointsToScreenPixelsY(0)</td><td></td></tr>
+<tr><td>　　├┐ELSE</td><td></td></tr>
+<tr><td>　　│〇 lngR1C1Left = objAW.Panes(lngPaneIx).PointsToScreenPixelsX(0)</td><td></td></tr>
+<tr><td>　　│〇 lngR1C1Top = objAW.Panes(lngPaneIx).PointsToScreenPixelsY(0)</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　〇 lngTargetLeft = ((objTarget.Left * (lngDPIX / lngPPI)) * (objAW.Zoom / 100)) + lngR1C1Left</td><td></td></tr>
+<tr><td>　　〇 lngTargetTop = (((objTarget.Top + objTarget.Height) * (lngDPIY / lngPPI)) * (objAW.Zoom / 100)) + lngR1C1Top</td><td></td></tr>
+<tr><td>　　〇 lngFormLeft = lngTargetLeft * (lngPPI / lngDPIX)</td><td></td></tr>
+<tr><td>　　〇 lngFormTop = lngTargetTop * (lngPPI / lngDPIY)</td><td></td></tr>
+<tr><td>　　◎ Call GP_GetScreenPos(0, 0, lngScreenRight, lngScreenBottom)</td><td>画面有効領域取得＜modCalendar5＞</td></tr>
+<tr><td>　　◆┐If (lngFormLeft + lngFormWidth) * (lngDPIX / lngPPI) &gt; lngScreenRight Then</td><td></td></tr>
+<tr><td>　　│〇 lngFormLeft = lngScreenRight * (lngPPI / lngDPIX) - lngFormWidth + 3</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　◆┐If (lngFormTop + lngFormHeight) * (lngDPIY / lngPPI) &gt; lngScreenBottom Then</td><td></td></tr>
+<tr><td>　　│〇 lngFormTop = lngFormTop - (objRange.Height + lngFormHeight)</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　〇 FP_GetFormPosition = True</td><td></td></tr>
+<tr><td>　　┴End Function</td><td></td></tr>
+</tbody>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function (eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function (e) {
+const styleTh = window.getComputedStyle(eleTh);
+const paddingLeft = parseFloat(styleTh.paddingLeft);
+const paddingRight = parseFloat(styleTh.paddingRight);
+const borderLeft = parseFloat(styleTh.borderLeftWidth);
+const borderRight = parseFloat(styleTh.borderRightWidth);
+startX = e.pageX;
+startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e) {
+const newWidth = startWidth + (e.pageX - startX);
+eleTh.style.width = newWidth + 'px';
+}
+function onMouseUp() {
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
+}
+});
+</script>
+</body>
+</html>

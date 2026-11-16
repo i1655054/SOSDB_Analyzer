@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift_jis">
+<title>Clear</title>
+<style>
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+colgroup col:nth-of-type(1) {}
+colgroup col:nth-of-type(2) {}
+.resize {position: relative;}
+.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+</style>
+</head>
+<body>
+<h1>Clear</h1>
+<p>Module : IssueInfo</p>
+<p><a href="./_INDEX.html">← Module Index</a></p>
+<table>
+<colgroup><col/><col/></colgroup>
+<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<tbody>
+<tr><td>Procedure: IssueInfo.Clear  [ Issue情報初期化＜IssueInfo＞ ]</td><td></td></tr>
+<tr><td>HCP</td><td>Business</td></tr>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Public Sub Clear()</td><td>Issue情報初期化＜IssueInfo＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　│#  基本項目初期化</td><td></td></tr>
+<tr><td>　　〇 IssueId = ""</td><td></td></tr>
+<tr><td>　　〇 Subject = ""</td><td></td></tr>
+<tr><td>　　〇 Description = ""</td><td></td></tr>
+<tr><td>　　〇 Status = ""</td><td></td></tr>
+<tr><td>　　〇 Priority = ""</td><td></td></tr>
+<tr><td>　　〇 AuthorName = ""</td><td></td></tr>
+<tr><td>　　〇 AssignedTo = ""</td><td></td></tr>
+<tr><td>　　〇 targetVersion = ""</td><td></td></tr>
+<tr><td>　　│#  カスタムフィールド初期化</td><td></td></tr>
+<tr><td>　　〇 OccurrenceDateTime = ""</td><td></td></tr>
+<tr><td>　　〇 HostName = ""</td><td></td></tr>
+<tr><td>　　〇 ProblemBuilding = ""</td><td></td></tr>
+<tr><td>　　〇 Phenomenon = ""</td><td></td></tr>
+<tr><td>　　〇 CauseDetail = ""</td><td></td></tr>
+<tr><td>　　〇 Mondainum_Pro = ""</td><td></td></tr>
+<tr><td>　　〇 Remarks = ""</td><td></td></tr>
+<tr><td>　　〇 Esukare_Date = ""</td><td></td></tr>
+<tr><td>　　〇 Close_Date = ""</td><td></td></tr>
+<tr><td>　　〇 Requester_Pro = ""</td><td></td></tr>
+<tr><td>　　〇 ServiceImpact = ""</td><td></td></tr>
+<tr><td>　　〇 TroubleNum = ""</td><td></td></tr>
+<tr><td>　　〇 Equipment = ""</td><td></td></tr>
+<tr><td>　　〇 Countermeasure = ""</td><td></td></tr>
+<tr><td>　　〇 RequesterNum = ""</td><td></td></tr>
+<tr><td>　　〇 ProductTantou = ""</td><td></td></tr>
+<tr><td>　　〇 KihensinName_Date = ""</td><td></td></tr>
+<tr><td>　　〇 Key_Word = ""</td><td></td></tr>
+<tr><td>　　〇 EqProduct = ""</td><td></td></tr>
+<tr><td>　　│#  管理情報初期化</td><td></td></tr>
+<tr><td>　　〇 MonFolder = ""</td><td></td></tr>
+<tr><td>　　┴End Sub</td><td></td></tr>
+</tbody>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function (eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function (e) {
+const styleTh = window.getComputedStyle(eleTh);
+const paddingLeft = parseFloat(styleTh.paddingLeft);
+const paddingRight = parseFloat(styleTh.paddingRight);
+const borderLeft = parseFloat(styleTh.borderLeftWidth);
+const borderRight = parseFloat(styleTh.borderRightWidth);
+startX = e.pageX;
+startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e) {
+const newWidth = startWidth + (e.pageX - startX);
+eleTh.style.width = newWidth + 'px';
+}
+function onMouseUp() {
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
+}
+});
+</script>
+</body>
+</html>

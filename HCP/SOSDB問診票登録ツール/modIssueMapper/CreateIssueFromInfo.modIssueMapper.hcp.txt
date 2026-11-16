@@ -1,0 +1,40 @@
+Procedure: modIssueMapper.CreateIssueFromInfo  [ 問診情報からIssue生成＜modIssueMapper＞ ]
+HCP	Business
+┬
+〇│Public Function CreateIssueFromInfo(  ByRef info As MonshinInfoType) As IssueInfo	問診情報からIssue生成＜modIssueMapper＞
+┴└┐
+　　□ Dim issue As IssueInfo
+　　〇 Set issue = New IssueInfo
+　　＠┐With issue
+　　││#  基本情報設定
+　　│〇 .AuthorName = info.Author_Name
+　　│〇 .AssignedTo = info.Assigned_To
+　　│〇 .targetVersion = info.Target_Ver
+　　│〇 .Subject = info.TitleLine
+　　│〇 .Description = info.Description
+　　││#  問診情報設定
+　　│〇 .Requester_Pro = info.Request_Client
+　　│◎ .OccurrenceDateTime = FormatOccurrence(info.occurrenceDate, info.occurrenceTime)	発生日時整形＜modUtility＞
+　　│〇 .RequesterNum = info.RequesterNum
+　　│〇 .Phenomenon = info.Phenomenon
+　　│〇 .Equipment = info.Equipment
+　　│〇 .CauseDetail = info.CauseDetail
+　　│〇 .Countermeasure = info.Countermeasure
+　　│〇 .ServiceImpact = info.ServiceImpact
+　　││#  管理情報設定
+　　│〇 .ProductTantou = info.ProductTantou
+　　│〇 .KihensinName_Date = info.KihensinName_Date
+　　│〇 .TroubleNum = info.TroubleNum
+　　│〇 .Esukare_Date = info.Esukare_Date
+　　│〇 .Close_Date = info.Close_Date
+　　││#  拡張情報設定
+　　│〇 .Remarks = info.Remarks
+　　│〇 .Key_Word = info.Key_Word
+　　│〇 .EqProduct = info.EqProduct
+　　│〇 .Mondainum_Pro = info.Mondainum_Pro
+　　│〇 .ProblemBuilding = info.ProblemBuilding
+　　│〇 .HostName = info.HostName
+　　│┴End With
+　　│#  Issue返却
+　　〇 Set CreateIssueFromInfo = issue
+　　┴End Function

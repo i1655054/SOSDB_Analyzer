@@ -1,0 +1,7 @@
+Procedure: modCalendar5.FP_GetDPIX  [ 水平DPI取得＜modCalendar5＞ ]
+HCP	Business
+┬
+〇│Private Function FP_GetDPIX() As Long	水平DPI取得＜modCalendar5＞
+┴└┐
+　　◎ FP_GetDPIX = FP_GetDPI(LOGPIXELSX)	DPI取得＜modCalendar5＞
+　　┴End Function

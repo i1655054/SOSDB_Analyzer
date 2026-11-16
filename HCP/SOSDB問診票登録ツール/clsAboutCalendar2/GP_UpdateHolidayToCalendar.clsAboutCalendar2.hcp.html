@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift_jis">
+<title>GP_UpdateHolidayToCalendar</title>
+<style>
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+colgroup col:nth-of-type(1) {}
+colgroup col:nth-of-type(2) {}
+.resize {position: relative;}
+.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+</style>
+</head>
+<body>
+<h1>GP_UpdateHolidayToCalendar</h1>
+<p>Module : clsAboutCalendar2</p>
+<p><a href="./_INDEX.html">← Module Index</a></p>
+<table>
+<colgroup><col/><col/></colgroup>
+<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<tbody>
+<tr><td>Procedure: clsAboutCalendar2.GP_UpdateHolidayToCalendar  [ 祝日反映処理＜clsAboutCalendar2＞ ]</td><td></td></tr>
+<tr><td>HCP</td><td>Business</td></tr>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Private Sub GPUpdateHolidayToCalendar(ByVal lngY As Long,  ByVal lngM As Long,  ByVal lngCalStrIx As Long,  ByRef lngFuriDIxMax As Long,  ByRef tblFuriDIx() As gtypFuriDIx,  ByRef tblCalendar() As g_typAboutCalendar2)</td><td>祝日反映処理＜clsAboutCalendar2＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　□ Dim lngIxS_Str As Long                                          ' 祝日テーブル当月開始位置</td><td></td></tr>
+<tr><td>　　□ Dim lngIxS_End As Long                                          ' 祝日テーブル当月終了位置</td><td></td></tr>
+<tr><td>　　□ Dim lngIxSyuku As Long                                          ' 祝日テーブルテーブルINDEX</td><td></td></tr>
+<tr><td>　　│#  当月祝日範囲取得</td><td></td></tr>
+<tr><td>　　〇 lngIxS_Str = g_tblParamMMPos(lngM).StrIx</td><td></td></tr>
+<tr><td>　　〇 lngIxS_End = g_tblParamMMPos(lngM).EndIx</td><td></td></tr>
+<tr><td>　　│#  祝日パラメータ走査</td><td></td></tr>
+<tr><td>　　＠┐For lngIxSyuku = lngIxS_Str To lngIxS_End</td><td></td></tr>
+<tr><td>　　│＠┐With g_tblParamater(lngIxSyuku)</td><td></td></tr>
+<tr><td>　　│││#  有効年判定</td><td></td></tr>
+<tr><td>　　││◆┐If ((.StrYear &lt;= lngY) And (.EndYear &gt;= lngY)) Then</td><td></td></tr>
+<tr><td>　　││││#  処理区分判定</td><td></td></tr>
+<tr><td>　　│││◆┐Select Case .SyoriKbn</td><td></td></tr>
+<tr><td>　　││││├┐Case 0                          ' 固定日</td><td></td></tr>
+<tr><td>　　│││││◎ Call GP_UpdateHolidaySUB1(.Hiduke,  .SyukuNm,  1,  .FurikaeKbn,  lngCalStrIx,  lngIxSyuku,  lngFuriDIxMax,  tblFuriDIx,  tblCalendar)</td><td>固定日祝日設定＜clsAboutCalendar2＞</td></tr>
+<tr><td>　　││││├┐Case 1                          ' HappyMonday</td><td></td></tr>
+<tr><td>　　│││││◎ Call GP_UpdateHolidaySUB2(.HmSyusu,  .HmYobi,  .SyukuNm,  1,  .FurikaeKbn,  lngCalStrIx,  lngIxSyuku,  lngFuriDIxMax,  tblFuriDIx,  tblCalendar)</td><td>HappyMonday祝日設定＜clsAboutCalendar2＞</td></tr>
+<tr><td>　　││││├┐Case 2                          ' 固定日(会社休日)</td><td></td></tr>
+<tr><td>　　│││││◎ Call GP_UpdateHolidaySUB1(.Hiduke,  .SyukuNm,  3,  .FurikaeKbn,  lngCalStrIx,  lngIxSyuku,  lngFuriDIxMax,  tblFuriDIx,  tblCalendar)</td><td>固定日祝日設定＜clsAboutCalendar2＞</td></tr>
+<tr><td>　　││││├┐Case 9                          ' 特殊処理</td><td></td></tr>
+<tr><td>　　│││││◆┐If lngM = 3 Then</td><td></td></tr>
+<tr><td>　　││││││◎ Call GP_GetSyunbun(lngY,  lngCalStrIx,  lngIxSyuku,  lngFuriDIxMax,  tblFuriDIx,  tblCalendar)</td><td>春分の日算出＜clsAboutCalendar2＞</td></tr>
+<tr><td>　　│││││├┐ElseIf lngM = 9 Then</td><td></td></tr>
+<tr><td>　　││││││◎ Call GP_GetSyuubun(lngY,  lngCalStrIx,  lngIxSyuku,  lngFuriDIxMax,  tblFuriDIx,  tblCalendar)</td><td>秋分の日算出＜clsAboutCalendar2＞</td></tr>
+<tr><td>　　││││││〇 Else ' 他月は無視</td><td></td></tr>
+<tr><td>　　││││││┴End If</td><td></td></tr>
+<tr><td>　　││││┴End Select</td><td></td></tr>
+<tr><td>　　│││┴End If</td><td></td></tr>
+<tr><td>　　││┴End With</td><td></td></tr>
+<tr><td>　　│┴Next lngIxSyuku</td><td></td></tr>
+<tr><td>　　┴End Sub</td><td></td></tr>
+</tbody>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function (eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function (e) {
+const styleTh = window.getComputedStyle(eleTh);
+const paddingLeft = parseFloat(styleTh.paddingLeft);
+const paddingRight = parseFloat(styleTh.paddingRight);
+const borderLeft = parseFloat(styleTh.borderLeftWidth);
+const borderRight = parseFloat(styleTh.borderRightWidth);
+startX = e.pageX;
+startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e) {
+const newWidth = startWidth + (e.pageX - startX);
+eleTh.style.width = newWidth + 'px';
+}
+function onMouseUp() {
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
+}
+});
+</script>
+</body>
+</html>

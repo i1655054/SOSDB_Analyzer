@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift_jis">
+<title>PollFontSize_Worker</title>
+<style>
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+colgroup col:nth-of-type(1) {}
+colgroup col:nth-of-type(2) {}
+.resize {position: relative;}
+.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+</style>
+</head>
+<body>
+<h1>PollFontSize_Worker</h1>
+<p>Module : UF_InfoWebDisplay</p>
+<p><a href="./_INDEX.html">← Module Index</a></p>
+<table>
+<colgroup><col/><col/></colgroup>
+<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<tbody>
+<tr><td>Procedure: UF_InfoWebDisplay.PollFontSize_Worker  [ フォント同期＜UF_InfoWebDisplay＞ ]</td><td></td></tr>
+<tr><td>HCP</td><td>Business</td></tr>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Public Sub PollFontSize_Worker()</td><td>フォント同期＜UF_InfoWebDisplay＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　☆ On Error GoTo ExitHere</td><td></td></tr>
+<tr><td>　　□ Dim doc As Object, el As Object, V As Variant, newPt As Long</td><td></td></tr>
+<tr><td>　　〇 Set doc = WebBrowser1.document</td><td></td></tr>
+<tr><td>　　◆┐If Not doc Is Nothing Then</td><td></td></tr>
+<tr><td>　　││#  HTML文字サイズ取得</td><td></td></tr>
+<tr><td>　　│〇 Set el = doc.getElementById("fsValue")</td><td></td></tr>
+<tr><td>　　│◆┐If Not el Is Nothing Then</td><td></td></tr>
+<tr><td>　　││〇 V = el.Value</td><td></td></tr>
+<tr><td>　　││◆┐If IsNumeric(V) Then</td><td></td></tr>
+<tr><td>　　│││〇 newPt = CLng(V)</td><td></td></tr>
+<tr><td>　　││││#  フォントサイズ変更判定</td><td></td></tr>
+<tr><td>　　│││◆┐If newPt &lt;&gt; FontSize Then</td><td></td></tr>
+<tr><td>　　│││││#  フォーム表示同期</td><td></td></tr>
+<tr><td>　　││││〇 FontSize = newPt</td><td></td></tr>
+<tr><td>　　││││◆ If SpinButton1.Value &lt;&gt; newPt Then SpinButton1.Value = newPt</td><td></td></tr>
+<tr><td>　　││││〇 Label2.Caption = CStr(newPt)</td><td></td></tr>
+<tr><td>　　││││┴End If</td><td></td></tr>
+<tr><td>　　│││┴End If</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>▼ ExitHere:</td><td></td></tr>
+<tr><td>　　┴End Sub</td><td></td></tr>
+</tbody>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function (eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function (e) {
+const styleTh = window.getComputedStyle(eleTh);
+const paddingLeft = parseFloat(styleTh.paddingLeft);
+const paddingRight = parseFloat(styleTh.paddingRight);
+const borderLeft = parseFloat(styleTh.borderLeftWidth);
+const borderRight = parseFloat(styleTh.borderRightWidth);
+startX = e.pageX;
+startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e) {
+const newWidth = startWidth + (e.pageX - startX);
+eleTh.style.width = newWidth + 'px';
+}
+function onMouseUp() {
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
+}
+});
+</script>
+</body>
+</html>

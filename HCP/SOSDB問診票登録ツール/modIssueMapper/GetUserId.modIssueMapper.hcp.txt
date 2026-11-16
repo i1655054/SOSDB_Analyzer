@@ -1,0 +1,26 @@
+Procedure: modIssueMapper.GetUserId  [ ユーザーID取得＜modIssueMapper＞ ]
+HCP	Business
+┬
+〇│Public Function GetUserId(  ByVal userName As String) As Long	ユーザーID取得＜modIssueMapper＞
+┴└┐
+　　│#  Sysdataシート取得
+　　□ Dim sht As Worksheet
+　　〇 Set sht = ThisWorkbook.Sheets(SheetName_Sysdata)
+　　□ Dim i As Long
+　　│#  マスタ検索
+　　＠┐For i = 2 To sht.Cells(sht.Rows.count, Nameid_Col).End(xlUp).row
+　　│□ Dim id As Variant
+　　│□ Dim name As String
+　　││#  マスタ情報取得
+　　│〇 id = sht.Cells(i, Nameid_Col).Value
+　　│〇 name = Trim(sht.Cells(i, Nameid_Col + 1).Value)
+　　││#  一致判定
+　　│◆┐If name = userName Then
+　　│││#  取得値返却
+　　││〇 GetUserId = id
+　　││→ Exit Function
+　　││┴End If
+　　│┴Next i
+　　│#  未検出時初期値返却
+　　〇 GetUserId = 0
+　　┴End Function

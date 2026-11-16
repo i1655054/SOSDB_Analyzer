@@ -1,0 +1,10 @@
+Procedure: Sheet1.Cause_Button_Set  [ 原因ボタン強調表示＜Sheet1＞ ]
+HCP	Business
+┬
+〇│Public Sub Cause_Button_Set()	原因ボタン強調表示＜Sheet1＞
+┴└┐
+　　＠┐With CauseButton
+　　│〇 .BackColor = &HFFC0C0
+　　│〇 .ForeColor = &HFF0000
+　　│┴End With
+　　┴End Sub

@@ -1,0 +1,37 @@
+Procedure: IssueInfo.Clear  [ Issue情報初期化＜IssueInfo＞ ]
+HCP	Business
+┬
+〇│Public Sub Clear()	Issue情報初期化＜IssueInfo＞
+┴└┐
+　　│#  基本項目初期化
+　　〇 IssueId = ""
+　　〇 Subject = ""
+　　〇 Description = ""
+　　〇 Status = ""
+　　〇 Priority = ""
+　　〇 AuthorName = ""
+　　〇 AssignedTo = ""
+　　〇 targetVersion = ""
+　　│#  カスタムフィールド初期化
+　　〇 OccurrenceDateTime = ""
+　　〇 HostName = ""
+　　〇 ProblemBuilding = ""
+　　〇 Phenomenon = ""
+　　〇 CauseDetail = ""
+　　〇 Mondainum_Pro = ""
+　　〇 Remarks = ""
+　　〇 Esukare_Date = ""
+　　〇 Close_Date = ""
+　　〇 Requester_Pro = ""
+　　〇 ServiceImpact = ""
+　　〇 TroubleNum = ""
+　　〇 Equipment = ""
+　　〇 Countermeasure = ""
+　　〇 RequesterNum = ""
+　　〇 ProductTantou = ""
+　　〇 KihensinName_Date = ""
+　　〇 Key_Word = ""
+　　〇 EqProduct = ""
+　　│#  管理情報初期化
+　　〇 MonFolder = ""
+　　┴End Sub

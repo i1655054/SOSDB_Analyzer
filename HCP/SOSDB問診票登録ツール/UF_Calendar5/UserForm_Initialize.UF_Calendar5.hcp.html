@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift_jis">
+<title>UserForm_Initialize</title>
+<style>
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+colgroup col:nth-of-type(1) {}
+colgroup col:nth-of-type(2) {}
+.resize {position: relative;}
+.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+</style>
+</head>
+<body>
+<h1>UserForm_Initialize</h1>
+<p>Module : UF_Calendar5</p>
+<p><a href="./_INDEX.html">← Module Index</a></p>
+<table>
+<colgroup><col/><col/></colgroup>
+<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<tbody>
+<tr><td>Procedure: UF_Calendar5.UserForm_Initialize  [ カレンダー初期化＜UF_Calendar5＞ ]</td><td></td></tr>
+<tr><td>HCP</td><td>Business</td></tr>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Private Sub UserForm_Initialize()</td><td>カレンダー初期化＜UF_Calendar5＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　□ Dim lngIx As Long                                               ' テーブルINDEX</td><td></td></tr>
+<tr><td>　　□ Dim lngIx2 As Long                                              ' テーブルINDEX</td><td></td></tr>
+<tr><td>　　□ Dim lngIxC As Long                                              ' カレンダーテーブルINDEX</td><td></td></tr>
+<tr><td>　　□ Dim dteDate As Date                                             ' 日付WORK</td><td></td></tr>
+<tr><td>　　□ Dim tblTodayNm As Variant                                       ' 昨日､今日､明日の名称</td><td></td></tr>
+<tr><td>　　□ Dim tblCalendar() As g_typAboutCalendar2                        ' カレンダーテーブル</td><td></td></tr>
+<tr><td>　　│#  日付ラベル初期化</td><td></td></tr>
+<tr><td>　　＠┐For lngIx = 0 To 44</td><td></td></tr>
+<tr><td>　　│◎ Call g_tblDateLabel(lngIx).NewClass(Me.Controls("LBL_" &amp; Format((lngIx + 1), "00")), lngIx)</td><td></td></tr>
+<tr><td>　　││</td><td>内部呼出:g_tblDateLabel, Controls, Format</td></tr>
+<tr><td>　　│┴Next lngIx</td><td></td></tr>
+<tr><td>　　│#  固定ラベル初期化</td><td></td></tr>
+<tr><td>　　◎ Call g_tblFixLabel(0).NewClass(LBL_SUN, cnsDefaultGuide)        ' 日</td><td></td></tr>
+<tr><td>　　│</td><td>内部呼出:g_tblFixLabel</td></tr>
+<tr><td>　　◎ Call g_tblFixLabel(1).NewClass(LBL_MON, cnsDefaultGuide)        ' 月</td><td></td></tr>
+<tr><td>　　│</td><td>内部呼出:g_tblFixLabel</td></tr>
+<tr><td>　　◎ Call g_tblFixLabel(2).NewClass(LBL_TUE, cnsDefaultGuide)        ' 火</td><td></td></tr>
+<tr><td>　　│</td><td>内部呼出:g_tblFixLabel</td></tr>
+<tr><td>　　◎ Call g_tblFixLabel(3).NewClass(LBL_WED, cnsDefaultGuide)        ' 水</td><td></td></tr>
+<tr><td>　　│</td><td>内部呼出:g_tblFixLabel</td></tr>
+<tr><td>　　◎ Call g_tblFixLabel(4).NewClass(LBL_THU, cnsDefaultGuide)        ' 木</td><td></td></tr>
+<tr><td>　　│</td><td>内部呼出:g_tblFixLabel</td></tr>
+<tr><td>　　◎ Call g_tblFixLabel(5).NewClass(LBL_FRI, cnsDefaultGuide)        ' 金</td><td></td></tr>
+<tr><td>　　│</td><td>内部呼出:g_tblFixLabel</td></tr>
+<tr><td>　　◎ Call g_tblFixLabel(6).NewClass(LBL_SAT, cnsDefaultGuide)        ' 土</td><td></td></tr>
+<tr><td>　　│</td><td>内部呼出:g_tblFixLabel</td></tr>
+<tr><td>　　◎ Call g_tblFixLabel(7).NewClass(LBL_PREV, "前月に戻ります(PageUp)") ' ←</td><td></td></tr>
+<tr><td>　　│</td><td>内部呼出:g_tblFixLabel</td></tr>
+<tr><td>　　◎ Call g_tblFixLabel(8).NewClass(LBL_NEXT, "翌月に進みます(PageDown)") ' →</td><td></td></tr>
+<tr><td>　　│</td><td>内部呼出:g_tblFixLabel</td></tr>
+<tr><td>　　◎ Call g_tblFixLabel(9).NewClass(LBL_YM, "年か月を選択します。")  ' 年月</td><td></td></tr>
+<tr><td>　　│</td><td>内部呼出:g_tblFixLabel</td></tr>
+<tr><td>　　◎ Call g_tblFixLabel(10).NewClass(LBL_YEAR, "年が選択できます。") ' 年</td><td></td></tr>
+<tr><td>　　│</td><td>内部呼出:g_tblFixLabel</td></tr>
+<tr><td>　　◎ Call g_tblFixLabel(11).NewClass(LBL_MONTH, "月が選択できます。") ' 月</td><td></td></tr>
+<tr><td>　　│</td><td>内部呼出:g_tblFixLabel</td></tr>
+<tr><td>　　│#  曜日配置設定</td><td></td></tr>
+<tr><td>　　◆┐If g_cnsStartYobi = 2 Then</td><td></td></tr>
+<tr><td>　　│〇 LBL_MON.Left = 3</td><td></td></tr>
+<tr><td>　　│〇 LBL_MON.Width = 16.75</td><td></td></tr>
+<tr><td>　　│〇 LBL_TUE.Left = 20.5</td><td></td></tr>
+<tr><td>　　│〇 LBL_WED.Left = 38</td><td></td></tr>
+<tr><td>　　│〇 LBL_WED.Width = 17</td><td></td></tr>
+<tr><td>　　│〇 LBL_THU.Left = 55.5</td><td></td></tr>
+<tr><td>　　│〇 LBL_THU.Width = 16.75</td><td></td></tr>
+<tr><td>　　│〇 LBL_FRI.Left = 73</td><td></td></tr>
+<tr><td>　　│〇 LBL_SAT.Left = 90.5</td><td></td></tr>
+<tr><td>　　│〇 LBL_SUN.Left = 108</td><td></td></tr>
+<tr><td>　　│〇 LBL_SUN.Width = 17</td><td></td></tr>
+<tr><td>　　├┐ELSE</td><td></td></tr>
+<tr><td>　　│〇 LBL_SUN.Left = 3</td><td></td></tr>
+<tr><td>　　│〇 LBL_SUN.Width = 16.75</td><td></td></tr>
+<tr><td>　　│〇 LBL_MON.Left = 20.5</td><td></td></tr>
+<tr><td>　　│〇 LBL_TUE.Left = 38</td><td></td></tr>
+<tr><td>　　│〇 LBL_TUE.Width = 17</td><td></td></tr>
+<tr><td>　　│〇 LBL_WED.Left = 55.5</td><td></td></tr>
+<tr><td>　　│〇 LBL_WED.Width = 16.75</td><td></td></tr>
+<tr><td>　　│〇 LBL_THU.Left = 73</td><td></td></tr>
+<tr><td>　　│〇 LBL_FRI.Left = 90.5</td><td></td></tr>
+<tr><td>　　│〇 LBL_SAT.Left = 108</td><td></td></tr>
+<tr><td>　　│〇 LBL_SAT.Width = 17</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　│#  曜日テーブル生成</td><td></td></tr>
+<tr><td>　　〇 g_tblYobi = Array(<br>　　│ "(日)", "(月)", "(火)", "(水)", "(木)", "(金)", "(土)")</td><td></td></tr>
+<tr><td>　　│#  昨日今日明日情報生成</td><td></td></tr>
+<tr><td>　　〇 dteDate = Date              ' 今日</td><td></td></tr>
+<tr><td>　　◆→ If Not modAboutCalendar2.FP_GetCalendarTable3(Year(dteDate),  Month(dteDate),  tblCalendar) Then Exit Sub</td><td></td></tr>
+<tr><td>　　〇 dteDate = dteDate - 1</td><td></td></tr>
+<tr><td>　　〇 lngIxC = 0</td><td></td></tr>
+<tr><td>　　＠┐Do While lngIxC &lt;= UBound(tblCalendar)</td><td></td></tr>
+<tr><td>　　│◆→ If tblCalendar(lngIxC).Hiduke = dteDate Then Exit Do</td><td></td></tr>
+<tr><td>　　│〇 lngIxC = lngIxC + 1</td><td></td></tr>
+<tr><td>　　│┴Loop</td><td></td></tr>
+<tr><td>　　〇 tblTodayNm = Array("[昨日]", "[今日]", "[明日]")</td><td></td></tr>
+<tr><td>　　〇 lngIx2 = 0</td><td></td></tr>
+<tr><td>　　＠┐For lngIx = 42 To 44</td><td></td></tr>
+<tr><td>　　│〇 dteDate = tblCalendar(lngIxC).Hiduke</td><td></td></tr>
+<tr><td>　　│＠┐With g_tblDateLabel(lngIx)</td><td></td></tr>
+<tr><td>　　││〇 .Hiduke = dteDate</td><td></td></tr>
+<tr><td>　　││〇 .Yobi = tblCalendar(lngIxC).Yobi</td><td></td></tr>
+<tr><td>　　││〇 .Syuku = tblCalendar(lngIxC).Syuku</td><td></td></tr>
+<tr><td>　　││〇 .StsGuide = tblTodayNm(lngIx2) &amp; Format(dteDate, g_cnsDateFormat) &amp; g_tblYobi(.Yobi)</td><td></td></tr>
+<tr><td>　　││◆┐If .Syuku &lt;&gt; 0 Then</td><td></td></tr>
+<tr><td>　　│││〇 .StsGuide = .StsGuide &amp; " " &amp; tblCalendar(lngIxC).SyukuNm</td><td></td></tr>
+<tr><td>　　│││┴End If</td><td></td></tr>
+<tr><td>　　││┴End With</td><td></td></tr>
+<tr><td>　　│〇 lngIxC = lngIxC + 1</td><td></td></tr>
+<tr><td>　　│〇 lngIx2 = lngIx2 + 1</td><td></td></tr>
+<tr><td>　　│┴Next lngIx</td><td></td></tr>
+<tr><td>　　┴End Sub</td><td></td></tr>
+</tbody>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function (eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function (e) {
+const styleTh = window.getComputedStyle(eleTh);
+const paddingLeft = parseFloat(styleTh.paddingLeft);
+const paddingRight = parseFloat(styleTh.paddingRight);
+const borderLeft = parseFloat(styleTh.borderLeftWidth);
+const borderRight = parseFloat(styleTh.borderRightWidth);
+startX = e.pageX;
+startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e) {
+const newWidth = startWidth + (e.pageX - startX);
+eleTh.style.width = newWidth + 'px';
+}
+function onMouseUp() {
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
+}
+});
+</script>
+</body>
+</html>

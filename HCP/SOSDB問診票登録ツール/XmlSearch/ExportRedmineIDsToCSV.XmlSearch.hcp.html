@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift_jis">
+<title>ExportRedmineIDsToCSV</title>
+<style>
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+colgroup col:nth-of-type(1) {}
+colgroup col:nth-of-type(2) {}
+.resize {position: relative;}
+.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+</style>
+</head>
+<body>
+<h1>ExportRedmineIDsToCSV</h1>
+<p>Module : XmlSearch</p>
+<p><a href="./_INDEX.html">← Module Index</a></p>
+<table>
+<colgroup><col/><col/></colgroup>
+<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<tbody>
+<tr><td>Procedure: XmlSearch.ExportRedmineIDsToCSV  [ 検索結果CSV生成＜XmlSearch＞ ]</td><td></td></tr>
+<tr><td>HCP</td><td>Business</td></tr>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Private Function ExportRedmineIDsToCSV(ByVal SearchKey As String, ByVal baseUrl As String, ByVal apiKey As String)</td><td>検索結果CSV生成＜XmlSearch＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　□ Dim http As XMLHTTP60, http2 As XMLHTTP60</td><td></td></tr>
+<tr><td>　　□ Dim xmlDoc As DOMDocument60, xmlDoc2 As DOMDocument60</td><td></td></tr>
+<tr><td>　　□ Dim xmlNode As Object</td><td></td></tr>
+<tr><td>　　□ Dim statusCode As Integer</td><td></td></tr>
+<tr><td>　　□ Dim statusCode2 As Integer</td><td></td></tr>
+<tr><td>　　□ Dim csvContent As String, csvfilepath As String</td><td></td></tr>
+<tr><td>　　□ Dim offset As Long, limit As Long, hasMoreData As Boolean</td><td></td></tr>
+<tr><td>　　□ Dim Status As String, Subject As String, TroubleNum As String, RequesterNum As String</td><td></td></tr>
+<tr><td>　　□ Dim MyFolder As String, WorkFolder As String: WorkFolder = "WorkRedmine"</td><td></td></tr>
+<tr><td>　　□ Dim totalCountUrl As String, totalCount As Long, i As Integer: i = 0</td><td></td></tr>
+<tr><td>　　☆ On Error GoTo ErrorHandler</td><td></td></tr>
+<tr><td>　　│#  通信オブジェクト生成</td><td></td></tr>
+<tr><td>　　〇 Set http = New XMLHTTP60</td><td></td></tr>
+<tr><td>　　〇 Set xmlDoc = New DOMDocument60</td><td></td></tr>
+<tr><td>　　〇 Set http2 = New XMLHTTP60</td><td></td></tr>
+<tr><td>　　〇 Set xmlDoc2 = New DOMDocument60</td><td></td></tr>
+<tr><td>　　│#  初期値設定</td><td></td></tr>
+<tr><td>　　〇 limit = 100</td><td></td></tr>
+<tr><td>　　〇 offset = 0</td><td></td></tr>
+<tr><td>　　〇 hasMoreData = True</td><td></td></tr>
+<tr><td>　　│#  CSVヘッダ生成</td><td></td></tr>
+<tr><td>　　〇 csvContent = "No,ID,TroubleNum,status,RequesterNum,subject,URL" &amp; vbCrLf ' CSVヘッダー</td><td></td></tr>
+<tr><td>　　│#  CSV保存先生成</td><td></td></tr>
+<tr><td>　　〇 MyFolder = GetDocumentFolderPath</td><td></td></tr>
+<tr><td>　　◆ If Dir(MyFolder &amp; "\" &amp; WorkFolder, vbDirectory) = "" Then MkDir MyFolder &amp; "\" &amp; WorkFolder</td><td></td></tr>
+<tr><td>　　〇 csvfilepath = MyFolder &amp; "\" &amp; WorkFolder &amp; "\Redmine_IDs.csv"</td><td></td></tr>
+<tr><td>　　│#  検索件数取得</td><td></td></tr>
+<tr><td>　　〇 totalCountUrl = baseUrl &amp; "&amp;limit=1"</td><td></td></tr>
+<tr><td>　　◎ totalCount = DbtotalCount(totalCountUrl, apiKey)</td><td>検索件数取得＜XmlSearch＞</td></tr>
+<tr><td>　　│#  画面更新停止</td><td></td></tr>
+<tr><td>　　〇 Application.ScreenUpdating = False</td><td></td></tr>
+<tr><td>　　│#  検索結果取得ループ</td><td></td></tr>
+<tr><td>　　＠┐Do While hasMoreData</td><td></td></tr>
+<tr><td>　　│□ Dim requestUrl As String</td><td></td></tr>
+<tr><td>　　││#  検索URL生成</td><td></td></tr>
+<tr><td>　　│〇 requestUrl = baseUrl &amp; "&amp;key=" &amp; apiKey &amp; "&amp;offset=" &amp; offset &amp; "&amp;limit=" &amp; limit</td><td></td></tr>
+<tr><td>　　││#  検索実行</td><td></td></tr>
+<tr><td>　　│〇 http.Open "GET", requestUrl, False</td><td></td></tr>
+<tr><td>　　│〇 http.send</td><td></td></tr>
+<tr><td>　　││#  レスポンス確認</td><td></td></tr>
+<tr><td>　　│〇 statusCode = http.Status</td><td></td></tr>
+<tr><td>　　│◆ If statusCode = 1223 Then statusCode = 204</td><td></td></tr>
+<tr><td>　　│◆┐If statusCode = 200 Then</td><td></td></tr>
+<tr><td>　　│││#  XML解析</td><td></td></tr>
+<tr><td>　　││〇 xmlDoc.LoadXML http.responseText</td><td></td></tr>
+<tr><td>　　│││#  検索結果処理</td><td></td></tr>
+<tr><td>　　││＠┐For Each xmlNode In xmlDoc.SelectNodes("//result")</td><td></td></tr>
+<tr><td>　　│││□ Dim id As String, url As String, xmlurl As String</td><td></td></tr>
+<tr><td>　　││││#  IssueID取得</td><td></td></tr>
+<tr><td>　　│││〇 id = xmlNode.SelectSingleNode("id").text</td><td></td></tr>
+<tr><td>　　││││#  Issue詳細URL取得</td><td></td></tr>
+<tr><td>　　│││〇 url = xmlNode.SelectSingleNode("url").text</td><td></td></tr>
+<tr><td>　　│││〇 xmlurl = url &amp; ".xml"</td><td></td></tr>
+<tr><td>　　││││#  Issue詳細取得</td><td></td></tr>
+<tr><td>　　│││〇 http2.Open "GET", xmlurl, False</td><td></td></tr>
+<tr><td>　　│││〇 http2.setRequestHeader "X-Redmine-API-Key", apiKey</td><td></td></tr>
+<tr><td>　　│││〇 http2.send</td><td></td></tr>
+<tr><td>　　│││〇 statusCode2 = http2.Status</td><td></td></tr>
+<tr><td>　　││││#  詳細取得結果確認</td><td></td></tr>
+<tr><td>　　│││◆ If statusCode2 = 1223 Then statusCode2 = 204</td><td></td></tr>
+<tr><td>　　│││◆┐If statusCode2 = 200 Or statusCode2 = 204 Then</td><td></td></tr>
+<tr><td>　　│││││#  詳細XML解析</td><td></td></tr>
+<tr><td>　　││││〇 xmlDoc2.LoadXML http2.responseText</td><td></td></tr>
+<tr><td>　　│││││#  一覧表示情報取得</td><td></td></tr>
+<tr><td>　　││││〇 Status = ""</td><td></td></tr>
+<tr><td>　　││││〇 Status = xmlDoc2.getElementsByTagName("status").Item(0).Attributes.getNamedItem("name").text</td><td></td></tr>
+<tr><td>　　││││◎ Subject = NormalizeListDisplayText(xmlDoc2.getElementsByTagName("subject").Item(0).text)</td><td>一覧表示文字列整形＜XmlSearch＞</td></tr>
+<tr><td>　　│││││</td><td>内部呼出:getElementsByTagName, Item</td></tr>
+<tr><td>　　││││〇 TroubleNum = xmlDoc2.SelectSingleNode("//custom_field[@id='68']").text</td><td></td></tr>
+<tr><td>　　││││◎ RequesterNum = NormalizeListDisplayText(xmlDoc2.SelectSingleNode("//custom_field[@id='228']").text)</td><td>一覧表示文字列整形＜XmlSearch＞</td></tr>
+<tr><td>　　│││││</td><td>内部呼出:SelectSingleNode</td></tr>
+<tr><td>　　││││〇 RequesterNum = Left(RequesterNum &amp; Space(52), 52)</td><td></td></tr>
+<tr><td>　　│││├┐ELSE</td><td></td></tr>
+<tr><td>　　│││││#  詳細取得失敗</td><td></td></tr>
+<tr><td>　　││││〇 MsgBox "詳細取得失敗: " &amp; statusCode2, vbCritical</td><td></td></tr>
+<tr><td>　　││││→ GoTo CleanUp</td><td></td></tr>
+<tr><td>　　││││┴End If</td><td></td></tr>
+<tr><td>　　││││#  CSV行追加</td><td></td></tr>
+<tr><td>　　│││〇 csvContent = csvContent &amp; id &amp; "," &amp; TroubleNum &amp; "," &amp; Status &amp; "," &amp; RequesterNum &amp; "," &amp; url &amp; "," &amp; Subject &amp; vbCrLf</td><td></td></tr>
+<tr><td>　　││││#  進捗表示更新</td><td></td></tr>
+<tr><td>　　│││〇 i = i + 1</td><td></td></tr>
+<tr><td>　　│││〇 UF_Search.lbl状況.Caption = "状況：" &amp; Format(i, "###") &amp; " / " &amp; Format(totalCount, "###")</td><td></td></tr>
+<tr><td>　　│││〇 UF_Search.lbl進捗率.Caption = Round((i) / totalCount * 100)</td><td></td></tr>
+<tr><td>　　│││〇 UF_Search.Repaint</td><td></td></tr>
+<tr><td>　　│││┴Next xmlNode</td><td></td></tr>
+<tr><td>　　│││#  次ページ有無確認</td><td></td></tr>
+<tr><td>　　││◆┐If xmlDoc.SelectNodes("//result").Length &lt; limit Then</td><td></td></tr>
+<tr><td>　　│││〇 hasMoreData = False</td><td></td></tr>
+<tr><td>　　││├┐ELSE</td><td></td></tr>
+<tr><td>　　││││#  次ページへ移動</td><td></td></tr>
+<tr><td>　　│││〇 offset = offset + limit</td><td></td></tr>
+<tr><td>　　│││┴End If</td><td></td></tr>
+<tr><td>　　│├┐ELSE</td><td></td></tr>
+<tr><td>　　│││#  検索失敗</td><td></td></tr>
+<tr><td>　　││〇 MsgBox "エラー: " &amp; http.Status &amp; " - " &amp; http.statusText</td><td></td></tr>
+<tr><td>　　││→ Exit Function</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td>　　│┴Loop</td><td></td></tr>
+<tr><td>　　│#  画面更新再開</td><td></td></tr>
+<tr><td>　　〇 Application.ScreenUpdating = True</td><td></td></tr>
+<tr><td>　　│#  CSV保存</td><td></td></tr>
+<tr><td>　　□ Dim fileNum As Integer</td><td></td></tr>
+<tr><td>　　〇 fileNum = FreeFile</td><td></td></tr>
+<tr><td>　　〇 Open csvfilepath For Output As #fileNum</td><td></td></tr>
+<tr><td>　　〇 Print #fileNum, csvContent</td><td></td></tr>
+<tr><td>　　〇 Close #fileNum</td><td></td></tr>
+<tr><td>　　│#  検索フォーム終了</td><td></td></tr>
+<tr><td>　　〇 Unload UF_Search</td><td></td></tr>
+<tr><td>　　│#  検索結果表示</td><td></td></tr>
+<tr><td>　　◎ Call UF_SearchResults.loadcsv(SearchKey, csvfilepath)</td><td>検索結果読込＜UF_SearchResults＞</td></tr>
+<tr><td>　　→ Exit Function</td><td></td></tr>
+<tr><td>▼ CleanUp:</td><td></td></tr>
+<tr><td>　　│#  画面更新再開</td><td></td></tr>
+<tr><td>　　〇 Application.ScreenUpdating = True</td><td></td></tr>
+<tr><td>　　│#  オブジェクト解放</td><td></td></tr>
+<tr><td>　　◎ Call ReleaseHttpObjects(http, xmlDoc)</td><td>通信オブジェクト解放＜XmlSearch＞</td></tr>
+<tr><td>　　◎ Call ReleaseHttpObjects(http2, xmlDoc2)</td><td>通信オブジェクト解放＜XmlSearch＞</td></tr>
+<tr><td>　　→ Exit Function</td><td></td></tr>
+<tr><td>▼ ErrorHandler:</td><td></td></tr>
+<tr><td>　　〇 MsgBox "エラー: " &amp; Err.Description, vbCritical</td><td></td></tr>
+<tr><td>　　☆ Resume CleanUp</td><td></td></tr>
+<tr><td>　　┴End Function</td><td></td></tr>
+</tbody>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function (eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function (e) {
+const styleTh = window.getComputedStyle(eleTh);
+const paddingLeft = parseFloat(styleTh.paddingLeft);
+const paddingRight = parseFloat(styleTh.paddingRight);
+const borderLeft = parseFloat(styleTh.borderLeftWidth);
+const borderRight = parseFloat(styleTh.borderRightWidth);
+startX = e.pageX;
+startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e) {
+const newWidth = startWidth + (e.pageX - startX);
+eleTh.style.width = newWidth + 'px';
+}
+function onMouseUp() {
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
+}
+});
+</script>
+</body>
+</html>

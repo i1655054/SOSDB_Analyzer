@@ -1,0 +1,8 @@
+Procedure: UF_SearchResults.ListBox1_MouseDown  [ No列コピー＜UF_SearchResults＞ ]
+HCP	Business
+┬
+〇│Private Sub ListBox1_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)	No列コピー＜UF_SearchResults＞
+┴└┐
+　　│#  右クリックコピー処理
+　　◎ HandleListBoxRightClick ListBox1, Button	右クリックコピー処理＜UF_SearchResults＞
+　　┴End Sub

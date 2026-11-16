@@ -1,0 +1,35 @@
+Procedure: XmlSearch.URLEncode_UTF8  [ UTF8URLエンコード＜XmlSearch＞ ]
+HCP	Business
+┬
+〇│Private Function URLEncode_UTF8(str As String) As String	UTF8URLエンコード＜XmlSearch＞
+┴└┐
+　　□ Dim utf8Bytes() As Byte
+　　□ Dim size As Long
+　　□ Dim i As Long
+　　□ Dim ret As String
+　　□ Dim b As Byte
+　　│#  UTF8サイズ取得
+　　〇 size = WideCharToMultiByte(65001, 0, StrPtr(str), Len(str), 0, 0, 0, 0)
+　　│#  サイズ確認
+　　◆┐If size = 0 Then
+　　│〇 URLEncode_UTF8 = ""
+　　│→ Exit Function
+　　│┴End If
+　　│#  UTF8変換
+　　〇 ReDim utf8Bytes(0 To size - 1)
+　　〇 WideCharToMultiByte 65001, 0, StrPtr(str), Len(str), VarPtr(utf8Bytes(0)), size, 0, 0
+　　│#  URLエンコード変換
+　　＠┐For i = 0 To size - 1
+　　│〇 b = utf8Bytes(i)
+　　│◆┐Select Case b
+　　││├┐Case 48 To 57, 65 To 90, 97 To 122 ' 0-9, A-Z, a-z はそのまま
+　　│││〇 ret = ret & Chr(b)
+　　││├┐Case 32
+　　│││〇 ret = ret & "+"
+　　││├┐Case Else
+　　│││〇 ret = ret & "%" & Right("0" & Hex(b), 2)
+　　││┴End Select
+　　│┴Next i
+　　│#  URLエンコード文字列返却
+　　〇 URLEncode_UTF8 = ret
+　　┴End Function

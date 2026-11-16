@@ -1,0 +1,46 @@
+Procedure: modMonshinMap.InitMonshinMap  [ 問診票マッピング初期化＜modMonshinMap＞ ]
+HCP	Business
+┬
+〇│Public Sub InitMonshinMap()	問診票マッピング初期化＜modMonshinMap＞
+┴└┐
+　　│#  マッピング辞書生成
+　　〇 Set MonshinMap = CreateObject("Scripting.Dictionary")
+　　│#  管理番号マッピング登録
+　　◎ AddMapItem "MonShinNum",  "B4", "B4", "B4", "B4", "B4"	マッピング項目登録＜modMonshinMap＞
+　　◎ AddMapItem "FaultRepNum",  "", "C4", "C4", "C4", ""	マッピング項目登録＜modMonshinMap＞
+　　◎ AddMapItem "UnKanNum",  "C4", "", "", "", "C4"	マッピング項目登録＜modMonshinMap＞
+　　│#  題名事象マッピング登録
+　　◎ AddMapItem "TitleLine",  "D4", "D4", "D4", "D4", "D4"	マッピング項目登録＜modMonshinMap＞
+　　◎ AddMapItem "Phenomenon",  "D4", "D4", "D4", "D4", "D4"	マッピング項目登録＜modMonshinMap＞
+　　│#  依頼元情報マッピング登録
+　　◎ AddMapItem "Request_Client",  "I4", "I4", "I4", "I4", "I4"	マッピング項目登録＜modMonshinMap＞
+　　│#  発生日時環境情報マッピング登録
+　　◎ AddMapItem "OccurrenceDate",  "C7", "B7", "B7", "B7", "C7"	マッピング項目登録＜modMonshinMap＞
+　　◎ AddMapItem "OccurrenceTime",  "D7", "C7", "C7", "C7", "D7"	マッピング項目登録＜modMonshinMap＞
+　　◎ AddMapItem "ProblemBuilding",  "E7", "D7", "D7", "D7", "E7"	マッピング項目登録＜modMonshinMap＞
+　　◎ AddMapItem "Equipment",  "G7", "F7", "F7", "F7", "G7"	マッピング項目登録＜modMonshinMap＞
+　　◎ AddMapItem "HostName",  "H7", "G7", "G7", "G7", "H7"	マッピング項目登録＜modMonshinMap＞
+　　◎ AddMapItem "FileVer",  "K7", "H7", "H7", "H7", "K7"	マッピング項目登録＜modMonshinMap＞
+　　│#  アラーム状況マッピング登録
+　　◎ AddMapItem "AlarmInfo",  "F10", "E10", "E10", "E10", "F10"	マッピング項目登録＜modMonshinMap＞
+　　◎ AddMapItem "OccurrenceStatus",  "B12", "B12", "B12", "B12", "B12"	マッピング項目登録＜modMonshinMap＞
+　　◎ AddMapItem "ResponseStatus",  "F12", "F12", "F12", "F12", "F12"	マッピング項目登録＜modMonshinMap＞
+　　│#  問合せ内容マッピング登録
+　　◎ AddMapItem "Req0", "G4", "G4", "G4", "G4", "G4"	マッピング項目登録＜modMonshinMap＞
+　　◎ AddMapItem "Req1", "", "B10", "B10", "B10", ""	マッピング項目登録＜modMonshinMap＞
+　　◎ AddMapItem "Req2", "", "D10", "D10", "D10", ""	マッピング項目登録＜modMonshinMap＞
+　　◎ AddMapItem "Req3", "", "E10", "E10", "E10", ""	マッピング項目登録＜modMonshinMap＞
+　　◎ AddMapItem "Req4", "B12", "B12", "B12", "B12", "B12"	マッピング項目登録＜modMonshinMap＞
+　　◎ AddMapItem "Req5", "", "F12", "F12", "F12", ""	マッピング項目登録＜modMonshinMap＞
+　　◎ AddMapItem "Req6", "", "B14", "B14", "B14", ""	マッピング項目登録＜modMonshinMap＞
+　　◎ AddMapItem "Req7", "B15", "B17", "B17", "B17", "B15"	マッピング項目登録＜modMonshinMap＞
+　　│#  収集データマッピング登録
+　　◎ AddMapItem "CollectedData",  "B15", "B17", "B17", "B17", "B15"	マッピング項目登録＜modMonshinMap＞
+　　│#  原因対処マッピング登録
+　　◎ AddMapItem "CauseDetail",  "", "C21", "C21", "C21", ""	マッピング項目登録＜modMonshinMap＞
+　　◎ AddMapItem "Countermeasure",  "", "C23", "C23", "C23", ""	マッピング項目登録＜modMonshinMap＞
+　　│#  回答情報マッピング登録
+　　◎ AddMapItem "AnswerDate",  "B17", "B19", "B19", "B19", "B17"	マッピング項目登録＜modMonshinMap＞
+　　◎ AddMapItem "AnswerPerson",  "D17", "D19", "D19", "D19", "D17"	マッピング項目登録＜modMonshinMap＞
+　　◎ AddMapItem "AnswerInfo",  "B19",  "B21+C21+B22+C22+B23+C23+B24+C24+B25+C25+B26+C26+B27+C27",  "B21+C21+B22+C22+B23+C23+B24+C24+B25+C25+B26+C26+B27+C27",  "B21+C21+B22+C22+B23+C23+B24+C24+B25+C25+B26+C26+B27+C27",  "B19"	マッピング項目登録＜modMonshinMap＞
+　　┴End Sub

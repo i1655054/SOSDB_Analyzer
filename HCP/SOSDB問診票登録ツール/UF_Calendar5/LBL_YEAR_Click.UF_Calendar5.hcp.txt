@@ -1,0 +1,30 @@
+Procedure: UF_Calendar5.LBL_YEAR_Click  [ 年選択表示＜UF_Calendar5＞ ]
+HCP	Business
+┬
+〇│Private Sub LBL_YEAR_Click()	年選択表示＜UF_Calendar5＞
+┴└┐
+　　□ Dim intYear As Integer, intYearSTR As Integer, intYearEND As Integer
+　　□ Dim IX As Long, CUR As Long
+　　│#  月選択非表示
+　　◎ Call GP_EraseMonth	月選択非表示＜UF_Calendar5＞
+　　〇 g_swBatch = True
+　　│#  年選択一覧生成
+　　＠┐With CBO_YEAR
+　　│◎ .Clear	Issue情報初期化＜IssueInfo＞
+　　│〇 intYearSTR = g_intCurYear - 10
+　　│◆ If intYearSTR < g_cnsYearFrom Then intYearSTR = g_cnsYearFrom
+　　│〇 intYearEND = g_intCurYear + 10
+　　│〇 intYear = Year(Date) + g_cnsYearToAdd
+　　│◆ If intYearEND > intYear Then intYearEND = intYear
+　　│＠┐For intYear = intYearSTR To intYearEND
+　　││〇 .AddItem CStr(intYear)
+　　││◆ If intYear = g_intCurYear Then CUR = IX
+　　││〇 IX = IX + 1
+　　││┴Next intYear
+　　│〇 .ListIndex = CUR
+　　│〇 .Visible = True
+　　││#  年選択表示
+　　│〇 g_VisibleYear = True
+　　│┴End With
+　　〇 g_swBatch = False
+　　┴End Sub

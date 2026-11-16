@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift_jis">
+<title>MergeFromKeep</title>
+<style>
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+colgroup col:nth-of-type(1) {}
+colgroup col:nth-of-type(2) {}
+.resize {position: relative;}
+.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+</style>
+</head>
+<body>
+<h1>MergeFromKeep</h1>
+<p>Module : IssueInfo</p>
+<p><a href="./_INDEX.html">← Module Index</a></p>
+<table>
+<colgroup><col/><col/></colgroup>
+<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<tbody>
+<tr><td>Procedure: IssueInfo.MergeFromKeep  [ Redmine情報優先マージ＜IssueInfo＞ ]</td><td></td></tr>
+<tr><td>HCP</td><td>Business</td></tr>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Public Sub MergeFromKeep(ByVal src As IssueInfo)</td><td>Redmine情報優先マージ＜IssueInfo＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　│#  Redmine情報優先マージ</td><td></td></tr>
+<tr><td>　　◆ If HasValue(src.Status) Then Me.Status = CStr(src.Status)</td><td></td></tr>
+<tr><td>　　◆ If HasValue(src.Priority) Then Me.Priority = CStr(src.Priority)</td><td></td></tr>
+<tr><td>　　◆ If HasValue(src.Description) Then Me.Description = CStr(src.Description)</td><td></td></tr>
+<tr><td>　　◆ If HasValue(src.ProblemBuilding) Then Me.ProblemBuilding = CStr(src.ProblemBuilding)</td><td></td></tr>
+<tr><td>　　◆ If HasValue(src.HostName) Then Me.HostName = CStr(src.HostName)</td><td></td></tr>
+<tr><td>　　◆ If HasValue(src.Phenomenon) Then Me.Phenomenon = CStr(src.Phenomenon)</td><td></td></tr>
+<tr><td>　　◆ If HasValue(src.CauseDetail) Then Me.CauseDetail = CStr(src.CauseDetail)</td><td></td></tr>
+<tr><td>　　◆ If HasValue(src.Mondainum_Pro) Then Me.Mondainum_Pro = CStr(src.Mondainum_Pro)</td><td></td></tr>
+<tr><td>　　◆ If HasValue(src.Remarks) Then Me.Remarks = CStr(src.Remarks)</td><td></td></tr>
+<tr><td>　　◆ If HasValue(src.ServiceImpact) Then Me.ServiceImpact = CStr(src.ServiceImpact)</td><td></td></tr>
+<tr><td>　　◆ If HasValue(src.Equipment) Then Me.Equipment = CStr(src.Equipment)</td><td></td></tr>
+<tr><td>　　◆ If HasValue(src.Countermeasure) Then Me.Countermeasure = CStr(src.Countermeasure)</td><td></td></tr>
+<tr><td>　　◆ If HasValue(src.RequesterNum) Then Me.RequesterNum = CStr(src.RequesterNum)</td><td></td></tr>
+<tr><td>　　◆ If HasValue(src.Key_Word) Then Me.Key_Word = CStr(src.Key_Word)</td><td></td></tr>
+<tr><td>　　│#  数値項目マージ</td><td></td></tr>
+<tr><td>　　◆┐If IsNumeric(src.IssueId) Then</td><td></td></tr>
+<tr><td>　　│〇 Me.IssueId = CLng(src.IssueId)</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　│#  日付項目マージ</td><td></td></tr>
+<tr><td>　　◆┐If IsDate(src.OccurrenceDateTime) Then</td><td></td></tr>
+<tr><td>　　│〇 Me.OccurrenceDateTime = CDate(src.OccurrenceDateTime)</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　◆┐If IsDate(src.Esukare_Date) Then</td><td></td></tr>
+<tr><td>　　│〇 Me.Esukare_Date = CDate(src.Esukare_Date)</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　◆┐If IsDate(src.Close_Date) Then</td><td></td></tr>
+<tr><td>　　│〇 Me.Close_Date = CDate(src.Close_Date)</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　◆┐If IsDate(src.KihensinName_Date) Then</td><td></td></tr>
+<tr><td>　　│〇 Me.KihensinName_Date = CDate(src.KihensinName_Date)</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　┴End Sub</td><td></td></tr>
+</tbody>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function (eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function (e) {
+const styleTh = window.getComputedStyle(eleTh);
+const paddingLeft = parseFloat(styleTh.paddingLeft);
+const paddingRight = parseFloat(styleTh.paddingRight);
+const borderLeft = parseFloat(styleTh.borderLeftWidth);
+const borderRight = parseFloat(styleTh.borderRightWidth);
+startX = e.pageX;
+startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e) {
+const newWidth = startWidth + (e.pageX - startX);
+eleTh.style.width = newWidth + 'px';
+}
+function onMouseUp() {
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
+}
+});
+</script>
+</body>
+</html>

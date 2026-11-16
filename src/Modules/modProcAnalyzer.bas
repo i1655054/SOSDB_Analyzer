@@ -336,7 +336,7 @@ Private Function GetNodeType( _
 
         GetNodeType = NODE_GOTO
 
-    ElseIf Right$(LineText, 1) = ":" Then
+    ElseIf right$(LineText, 1) = ":" Then
 
         GetNodeType = NODE_LABEL
 
@@ -507,6 +507,7 @@ End Function
 ' STARTノードおよびENDノードを生成する
 ' 制御構造を解析してProcNode一覧を作成する
 '
+'
 Public Function AnalyzeProcedure( _
                 ByVal CodeText As String, _
                 ByVal ModuleName As String, _
@@ -516,7 +517,7 @@ Public Function AnalyzeProcedure( _
 
     ' ProcNode一覧
     Dim Nodes As Collection
-    
+
     ' 現在処理中ノード
     Dim Node As clsProcNode
 
@@ -525,7 +526,7 @@ Public Function AnalyzeProcedure( _
 
     ' 論理行一覧
     Dim LogicalLines As Collection
-    
+
     ' 処理対象論理行
     Dim LineText As Variant
 
@@ -534,7 +535,7 @@ Public Function AnalyzeProcedure( _
 
     ' 採番用ノードID
     Dim NodeID As Long
-    
+
     ' 最終追加ノードID
     Dim LastNodeID As Long
 
@@ -543,10 +544,10 @@ Public Function AnalyzeProcedure( _
 
     ' コンパイル条件階層
     Dim CompileLevel As Long
-    
+
     ' 制御構造階層
     Dim Level As Long
-    
+
     ' 出力時階層
     Dim OutputLevel As Long
 
@@ -558,21 +559,24 @@ Public Function AnalyzeProcedure( _
 
     ' 呼出関数一覧
     Dim CallNames As Collection
-    
+
     ' 呼出関数名
     Dim CallName As Variant
 
     ' Select Case 現在CaseノードID
     Dim CurrentCaseID As Long
-    
+
     ' 分岐状態スタック
     Dim BranchStack As Collection
-    
+
     ' Procedure宣言部
     Dim ProcHeader As String
-    
+
     ' HCPコメント保持
     Dim PendingComment As String
+
+    ' 内部呼出一覧保持
+    Dim InternalCalls As String
 
     '# ProcNode管理初期化
     Set Nodes = New Collection
@@ -581,7 +585,7 @@ Public Function AnalyzeProcedure( _
 
     '# 解析状態初期化
     CompileLevel = 0
-    
+
     NodeID = 1
     Level = 0
     CurrentCaseID = 0
@@ -591,7 +595,7 @@ Public Function AnalyzeProcedure( _
     '# Procedure宣言取得
     ProcHeader = _
         ExtractProcedureHeader(CodeText)
-    
+
     '--------------------------
     '# STARTノード生成
     '--------------------------
@@ -624,11 +628,12 @@ Public Function AnalyzeProcedure( _
 
     '# 論理行解析開始
     For Each LineText In LogicalLines
-    
+
         '# HCPコメント取得
         If Left$(Trim$(CStr(LineText)), 2) = "'#" Then
 
             If PendingComment <> "" Then
+        
                 PendingComment = _
                     PendingComment & vbCrLf & _
                     Mid$(Trim$(CStr(LineText)), 3)
@@ -702,6 +707,17 @@ Public Function AnalyzeProcedure( _
                 CStr(LineText), _
                 FuncList)
 
+        InternalCalls = ""
+
+        If CallNames.Count > 0 Then
+
+            '# 内部呼出一覧取得
+            InternalCalls = _
+                GetInternalCallList( _
+                    CStr(LineText), _
+                    CStr(CallNames(1)))
+        End If
+
         OutputLevel = Level
 
         '--------------------------
@@ -749,16 +765,16 @@ Public Function AnalyzeProcedure( _
             End If
 
             If BranchStack.Count > 0 Then
-            
+
                 CurrentBranch = _
                     BranchStack(BranchStack.Count)
-                
+
                 BranchStack.Remove _
                     BranchStack.Count
             Else
-                
+
                 CurrentBranch = BRANCH_NONE
-            
+
             End If
 
         End If
@@ -818,7 +834,7 @@ Public Function AnalyzeProcedure( _
             End If
 
         End If
-        
+
         '--------------------------
         '# 制御構造ノード生成
         '--------------------------
@@ -844,6 +860,7 @@ Public Function AnalyzeProcedure( _
                 Trim$(CStr(LineText))
 
             Node.CommentText = PendingComment
+            
             PendingComment = ""
 
             Node.LineNo = i
@@ -861,7 +878,7 @@ Public Function AnalyzeProcedure( _
                 Case NODE_IF
 
                     ParentStack.Add NodeID
-                    
+
                     BranchStack.Add CurrentBranch
 
                     Level = Level + 1
@@ -869,7 +886,7 @@ Public Function AnalyzeProcedure( _
                     CurrentBranch = BRANCH_TRUE
 
                 Case NODE_ELSEIF
-        
+
                     ParentStack.Add NodeID
 
                     BranchStack.Add CurrentBranch
@@ -877,7 +894,7 @@ Public Function AnalyzeProcedure( _
                     Level = Level + 1
 
                     CurrentBranch = BRANCH_TRUE
-    
+
                 Case NODE_FOR
 
                     ParentStack.Add NodeID
@@ -893,7 +910,7 @@ Public Function AnalyzeProcedure( _
                 Case NODE_WITH
 
                     ParentStack.Add NodeID
-        
+
                     Level = Level + 1
 
                 Case NODE_WHILE
@@ -922,7 +939,7 @@ Public Function AnalyzeProcedure( _
 
                     Node.NodeText = _
                         Trim$(CStr(LineText))
-                
+
                 Case Else
 
             End Select
@@ -934,45 +951,50 @@ Public Function AnalyzeProcedure( _
         '--------------------------
         ElseIf CallNames.Count > 0 Then
 
-            For Each CallName In CallNames
+            Set Node = New clsProcNode
 
-                Set Node = New clsProcNode
-    
-                Node.NodeID = NodeID
-                Node.ParentID = _
-                    GetCurrentParentID(ParentStack)
+            Node.NodeID = NodeID
 
-                Node.Level = Level
+            Node.ParentID = _
+                GetCurrentParentID(ParentStack)
 
-                Node.BranchType = CurrentBranch
-                Node.ProcName = ProcName
-                Node.ModuleName = ModuleName
-                Node.NodeType = NODE_CALL
+            Node.Level = Level
 
-                Node.NodeText = _
-                    Trim$(CStr(LineText))
+            Node.BranchType = CurrentBranch
 
-                Node.SourceLine = _
-                    Trim$(CStr(LineText))
+            Node.ProcName = ProcName
 
-                Node.CommentText = PendingComment
-                PendingComment = ""
+            Node.ModuleName = ModuleName
 
-                Node.CallName = _
-                    CStr(CallName)
+            Node.NodeType = NODE_CALL
 
-                Node.LineNo = i
+            Node.NodeText = _
+                Trim$(CStr(LineText))
 
-                '# CALLノード追加
-                AddProcNode _
-                    Nodes, _
-                    Node, _
-                    PrevNode, _
-                    LastNodeID
+            Node.SourceLine = _
+                Trim$(CStr(LineText))
 
-                NodeID = NodeID + 1
+            Node.CommentText = PendingComment
 
-            Next CallName
+            PendingComment = ""
+
+            Node.LineNo = i
+
+            ' 主呼出
+            Node.CallName = _
+                CStr(CallNames(1))
+
+            ' 内部呼出
+            Node.InternalCalls = _
+                InternalCalls
+
+            AddProcNode _
+                Nodes, _
+                Node, _
+                PrevNode, _
+                LastNodeID
+
+            NodeID = NodeID + 1
 
         '--------------------------
         '# REFERENCEノード生成
@@ -992,7 +1014,7 @@ Public Function AnalyzeProcedure( _
             Node.BranchType = CurrentBranch
 
             Node.ProcName = ProcName
-            
+
             Node.ModuleName = ModuleName
 
             Node.NodeType = NODE_REFERENCE
@@ -1014,7 +1036,7 @@ Public Function AnalyzeProcedure( _
                 LastNodeID
 
             NodeID = NodeID + 1
-    
+
         '--------------------------
         '# NORMALノード生成
         '--------------------------
@@ -1027,13 +1049,13 @@ Public Function AnalyzeProcedure( _
 
             Node.ParentID = _
                 GetCurrentParentID(ParentStack)
-            
+
             Node.Level = Level
 
             Node.BranchType = CurrentBranch
 
             Node.ProcName = ProcName
-            
+
             Node.ModuleName = ModuleName
 
             Node.NodeType = NODE_NORMAL
@@ -1045,6 +1067,7 @@ Public Function AnalyzeProcedure( _
                 Trim$(CStr(LineText))
 
             Node.CommentText = PendingComment
+            
             PendingComment = ""
 
             Node.LineNo = i
@@ -1204,7 +1227,7 @@ Private Function ExtractProcedureHeader( _
 
             '# 行継続結合
             Do While _
-                Right$(Trim$(Lines(i)), 1) = "_"
+                right$(Trim$(Lines(i)), 1) = "_"
 
                 i = i + 1
 
@@ -1457,7 +1480,7 @@ Private Function BuildLogicalLines( _
         LineText = Trim$(Lines(i))
 
         '# 行継続結合
-        If Right$(LineText, 1) = "_" Then
+        If right$(LineText, 1) = "_" Then
 
             CurrentLine = _
                 CurrentLine & " " & _
@@ -1950,4 +1973,93 @@ NormalizeName:
 
 End Function
 
+'
+' @JPName
+' 内部呼出一覧作成
+'
+Private Function BuildInternalCallList( _
+                ByVal CallNames As Collection) _
+                As String
+
+    Dim Result As String
+    Dim i As Long
+
+    If CallNames.Count <= 1 Then
+        Exit Function
+    End If
+
+    For i = 2 To CallNames.Count
+
+        If Result <> "" Then
+            Result = Result & ", "
+        End If
+
+        Result = Result & _
+            CStr(CallNames(i))
+
+    Next i
+
+    BuildInternalCallList = Result
+
+End Function
+
+'
+' @JPName
+' 内部呼出一覧取得
+'
+Private Function GetInternalCallList( _
+                ByVal SourceLine As String, _
+                ByVal MainCall As String) _
+                As String
+
+    Dim RE As Object
+    Dim Matches As Object
+    Dim Match As Object
+
+    Dim Result As String
+
+    Set RE = _
+        CreateObject("VBScript.RegExp")
+
+    RE.Global = True
+    RE.IgnoreCase = True
+
+    '# 関数呼出抽出
+    RE.Pattern = _
+        "([A-Za-z_][A-Za-z0-9_]*)\s*\("
+
+    Set Matches = _
+        RE.Execute(SourceLine)
+
+    For Each Match In Matches
+
+        Dim FuncName As String
+
+        FuncName = _
+            Match.SubMatches(0)
+
+        '# 主CALL除外
+        If StrComp( _
+                FuncName, _
+                MainCall, _
+                vbTextCompare) <> 0 Then
+
+            If Result <> "" Then
+
+                Result = _
+                    Result & ", "
+
+            End If
+
+            Result = _
+                Result & FuncName
+
+        End If
+
+    Next Match
+
+    GetInternalCallList = _
+        Result
+
+End Function
 

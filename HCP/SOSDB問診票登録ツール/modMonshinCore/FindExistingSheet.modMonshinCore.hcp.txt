@@ -1,0 +1,25 @@
+Procedure: modMonshinCore.FindExistingSheet  [ 存在シート検索＜modMonshinCore＞ ]
+HCP	Business
+┬
+〇│Function FindExistingSheet(sheetNames() As String, wb As Workbook) As String	存在シート検索＜modMonshinCore＞
+┴└┐
+　　□ Dim i As Long
+　　□ Dim ws As Worksheet
+　　☆ On Error Resume Next
+　　│#  シート検索開始
+　　＠┐For i = LBound(sheetNames) To UBound(sheetNames)
+　　││#  シート取得
+　　│〇 Set ws = wb.Sheets(sheetNames(i))
+　　││#  シート存在確認
+　　│◆┐If Not ws Is Nothing Then
+　　│││#  シート名返却
+　　││〇 FindExistingSheet = sheetNames(i)
+　　││→ Exit Function
+　　││┴End If
+　　││#  ワークシート初期化
+　　│〇 Set ws = Nothing
+　　│┴Next i
+　　☆ On Error GoTo 0
+　　│#  未検出返却
+　　〇 FindExistingSheet = "NotFound"
+　　┴End Sub

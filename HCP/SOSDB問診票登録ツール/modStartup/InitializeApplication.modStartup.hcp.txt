@@ -1,0 +1,20 @@
+Procedure: modStartup.InitializeApplication  [ アプリケーション初期化＜modStartup＞ ]
+HCP	Business
+┬
+〇│Public Sub InitializeApplication()	アプリケーション初期化＜modStartup＞
+┴└┐
+　　│#  Excel画面サイズ初期化
+　　＠┐With Application
+　　│〇 .WindowState = xlNormal
+　　│〇 .Width = 574.5
+　　│〇 .Height = 458.25
+　　│┴End With
+　　│#  問診票マッピング初期化
+　　◎ modMonshinMap.InitMonshinCommon	問診票共通初期化＜modMonshinMap＞
+　　│#  ワーク情報削除
+　　〇 Application.DisplayAlerts = False
+　　◎ Work情報削除	ワーク情報削除＜modUtility＞
+　　〇 Application.DisplayAlerts = True
+　　│#  UI初期化
+　　〇 Sheet1.CheckBox1.Value = True
+　　┴End Sub

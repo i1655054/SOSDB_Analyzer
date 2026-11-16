@@ -1,0 +1,40 @@
+Procedure: modIssueMapper.DebugPrintIssue  [ Issue情報デバッグ出力＜modIssueMapper＞ ]
+HCP	Business
+┬
+〇│Public Sub DebugPrintIssue(  ByVal issue As IssueInfo)	Issue情報デバッグ出力＜modIssueMapper＞
+┴└┐
+　　◆┐If issue Is Nothing Then
+　　│〇 Debug.Print "Issue = Nothing"
+　　│→ Exit Sub
+　　│┴End If
+　　〇 Debug.Print "===== IssueInfo ====="
+　　〇 Debug.Print "[基本]"
+　　〇 Debug.Print "IssueId:", issue.IssueId
+　　〇 Debug.Print "[担当]"
+　　〇 Debug.Print "AssignedTo:", issue.AssignedTo
+　　〇 Debug.Print "Status:", issue.Status
+　　〇 Debug.Print "Priority:", issue.Priority
+　　〇 Debug.Print "TargetVersion:", issue.targetVersion
+　　〇 Debug.Print "[問診]"
+　　〇 Debug.Print "Cause:", issue.CauseDetail
+　　〇 Debug.Print "Countermeasure:", issue.Countermeasure
+　　〇 Debug.Print "ServiceImpact:", issue.ServiceImpact
+　　〇 Debug.Print "[管理]"
+　　〇 Debug.Print "TroubleNum:", issue.TroubleNum
+　　〇 Debug.Print "RequesterNum:", issue.RequesterNum
+　　〇 Debug.Print "Requester_Pro:", issue.Requester_Pro
+　　〇 Debug.Print "[その他]"
+　　〇 Debug.Print "ProductTantou:", issue.ProductTantou
+　　〇 Debug.Print "Kihensin:", issue.KihensinName_Date
+　　〇 Debug.Print "Keyword:", issue.Key_Word
+　　〇 Debug.Print "EqProduct:", issue.EqProduct
+　　〇 Debug.Print "[環境]"
+　　〇 Debug.Print "Building:", issue.ProblemBuilding
+　　〇 Debug.Print "Host:", issue.HostName
+　　〇 Debug.Print "Equipment:", issue.Equipment
+　　〇 Debug.Print "[日付]"
+　　〇 Debug.Print "Occurrence:", issue.OccurrenceDateTime
+　　〇 Debug.Print "Esukare:", issue.Esukare_Date
+　　〇 Debug.Print "Close:", issue.Close_Date
+　　〇 Debug.Print "====================="
+　　┴End Sub

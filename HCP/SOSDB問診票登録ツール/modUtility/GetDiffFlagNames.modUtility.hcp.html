@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift_jis">
+<title>GetDiffFlagNames</title>
+<style>
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+colgroup col:nth-of-type(1) {}
+colgroup col:nth-of-type(2) {}
+.resize {position: relative;}
+.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+</style>
+</head>
+<body>
+<h1>GetDiffFlagNames</h1>
+<p>Module : modUtility</p>
+<p><a href="./_INDEX.html">← Module Index</a></p>
+<table>
+<colgroup><col/><col/></colgroup>
+<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<tbody>
+<tr><td>Procedure: modUtility.GetDiffFlagNames  [ 差分名称取得＜modUtility＞ ]</td><td></td></tr>
+<tr><td>HCP</td><td>Business</td></tr>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Public Function GetDiffFlagNames(ByVal diffFlags As Long) As String</td><td>差分名称取得＜modUtility＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　□ Dim result As String</td><td></td></tr>
+<tr><td>　　│#  基本項目差分判定</td><td></td></tr>
+<tr><td>　　◆ If (diffFlags And flg_Subject_Name) &lt;&gt; 0 Then  result = result &amp; j_Subject_Name &amp; FormatFlag(flg_Subject_Name) &amp; vbCrLf</td><td></td></tr>
+<tr><td>　　◆ If (diffFlags And flg_Description) &lt;&gt; 0 Then  result = result &amp; j_Description &amp; FormatFlag(flg_Description) &amp; vbCrLf</td><td></td></tr>
+<tr><td>　　◆ If (diffFlags And flg_Status_Name) &lt;&gt; 0 Then  result = result &amp; j_Status_Name &amp; FormatFlag(flg_Status_Name) &amp; vbCrLf</td><td></td></tr>
+<tr><td>　　◆ If (diffFlags And flg_Priority_Name) &lt;&gt; 0 Then  result = result &amp; j_Priority_Name &amp; FormatFlag(flg_Priority_Name) &amp; vbCrLf</td><td></td></tr>
+<tr><td>　　◆ If (diffFlags And flg_Author_Name) &lt;&gt; 0 Then  result = result &amp; j_Author_name &amp; FormatFlag(flg_Author_Name) &amp; vbCrLf</td><td></td></tr>
+<tr><td>　　◆ If (diffFlags And flg_Assigned_to_Name) &lt;&gt; 0 Then  result = result &amp; j_Assigned_to_Name &amp; FormatFlag(flg_Assigned_to_Name) &amp; vbCrLf</td><td></td></tr>
+<tr><td>　　◆ If (diffFlags And flg_Target_Version) &lt;&gt; 0 Then  result = result &amp; j_Target_Version &amp; FormatFlag(flg_Target_Version) &amp; vbCrLf</td><td></td></tr>
+<tr><td>　　│#  カスタム項目差分判定</td><td></td></tr>
+<tr><td>　　◆ If (diffFlags And flg_OccurrenceDateTime) &lt;&gt; 0 Then  result = result &amp; j_OccurrenceDateTime &amp; FormatFlag(flg_OccurrenceDateTime) &amp; vbCrLf</td><td></td></tr>
+<tr><td>　　◆ If (diffFlags And flg_ProblemBuilding) &lt;&gt; 0 Then  result = result &amp; j_ProblemBuilding &amp; FormatFlag(flg_ProblemBuilding) &amp; vbCrLf</td><td></td></tr>
+<tr><td>　　◆ If (diffFlags And flg_HostName) &lt;&gt; 0 Then  result = result &amp; j_HostName &amp; FormatFlag(flg_HostName) &amp; vbCrLf</td><td></td></tr>
+<tr><td>　　◆ If (diffFlags And flg_Phenomenon) &lt;&gt; 0 Then  result = result &amp; j_Phenomenon &amp; FormatFlag(flg_Phenomenon) &amp; vbCrLf</td><td></td></tr>
+<tr><td>　　◆ If (diffFlags And flg_Cause) &lt;&gt; 0 Then  result = result &amp; j_Cause &amp; FormatFlag(flg_Cause) &amp; vbCrLf</td><td></td></tr>
+<tr><td>　　◆ If (diffFlags And flg_Mondainum_Pro) &lt;&gt; 0 Then  result = result &amp; j_Mondainum_Pro &amp; FormatFlag(flg_Mondainum_Pro) &amp; vbCrLf</td><td></td></tr>
+<tr><td>　　◆ If (diffFlags And flg_Remarks) &lt;&gt; 0 Then  result = result &amp; j_Remarks &amp; FormatFlag(flg_Remarks) &amp; vbCrLf</td><td></td></tr>
+<tr><td>　　◆ If (diffFlags And flg_Esukare_Date) &lt;&gt; 0 Then  result = result &amp; j_Esukare_Date &amp; FormatFlag(flg_Esukare_Date) &amp; vbCrLf</td><td></td></tr>
+<tr><td>　　◆ If (diffFlags And flg_Close_Date) &lt;&gt; 0 Then  result = result &amp; j_Close_Date &amp; FormatFlag(flg_Close_Date) &amp; vbCrLf</td><td></td></tr>
+<tr><td>　　◆ If (diffFlags And flg_Requester_Pro) &lt;&gt; 0 Then  result = result &amp; j_Requester_Pro &amp; FormatFlag(flg_Requester_Pro) &amp; vbCrLf</td><td></td></tr>
+<tr><td>　　◆ If (diffFlags And flg_ServiceImpact) &lt;&gt; 0 Then  result = result &amp; j_ServiceImpact &amp; FormatFlag(flg_ServiceImpact) &amp; vbCrLf</td><td></td></tr>
+<tr><td>　　◆ If (diffFlags And flg_TroubleNum) &lt;&gt; 0 Then  result = result &amp; j_TroubleNum &amp; FormatFlag(flg_TroubleNum) &amp; vbCrLf</td><td></td></tr>
+<tr><td>　　◆ If (diffFlags And flg_Equipment) &lt;&gt; 0 Then  result = result &amp; j_Equipment &amp; FormatFlag(flg_Equipment) &amp; vbCrLf</td><td></td></tr>
+<tr><td>　　◆ If (diffFlags And flg_Cope) &lt;&gt; 0 Then  result = result &amp; j_Cope &amp; FormatFlag(flg_Cope) &amp; vbCrLf</td><td></td></tr>
+<tr><td>　　◆ If (diffFlags And flg_RequesterNum) &lt;&gt; 0 Then  result = result &amp; j_RequesterNum &amp; FormatFlag(flg_RequesterNum) &amp; vbCrLf</td><td></td></tr>
+<tr><td>　　◆ If (diffFlags And flg_ProductTantou) &lt;&gt; 0 Then  result = result &amp; j_ProductTantou &amp; FormatFlag(flg_ProductTantou) &amp; vbCrLf</td><td></td></tr>
+<tr><td>　　◆ If (diffFlags And flg_KihensinName_Date) &lt;&gt; 0 Then  result = result &amp; j_KihensinName_Date &amp; FormatFlag(flg_KihensinName_Date) &amp; vbCrLf</td><td></td></tr>
+<tr><td>　　◆ If (diffFlags And flg_Key_Word) &lt;&gt; 0 Then  result = result &amp; j_Key_Word &amp; FormatFlag(flg_Key_Word) &amp; vbCrLf</td><td></td></tr>
+<tr><td>　　◆ If (diffFlags And flg_EqProduct) &lt;&gt; 0 Then  result = result &amp; j_EqProduct &amp; FormatFlag(flg_EqProduct) &amp; vbCrLf</td><td></td></tr>
+<tr><td>　　│#  末尾改行削除</td><td></td></tr>
+<tr><td>　　◆┐If Len(result) &gt; 0 Then</td><td></td></tr>
+<tr><td>　　│〇 result = Left(result, Len(result) - 2)</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　│#  差分名称返却</td><td></td></tr>
+<tr><td>　　〇 GetDiffFlagNames = result</td><td></td></tr>
+<tr><td>　　┴End Function</td><td></td></tr>
+</tbody>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function (eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function (e) {
+const styleTh = window.getComputedStyle(eleTh);
+const paddingLeft = parseFloat(styleTh.paddingLeft);
+const paddingRight = parseFloat(styleTh.paddingRight);
+const borderLeft = parseFloat(styleTh.borderLeftWidth);
+const borderRight = parseFloat(styleTh.borderRightWidth);
+startX = e.pageX;
+startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e) {
+const newWidth = startWidth + (e.pageX - startX);
+eleTh.style.width = newWidth + 'px';
+}
+function onMouseUp() {
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
+}
+});
+</script>
+</body>
+</html>

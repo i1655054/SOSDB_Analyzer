@@ -1,0 +1,7 @@
+Procedure: UF_Calendar5.UserForm_Deactivate  [ カレンダーフォーム非表示＜UF_Calendar5＞ ]
+HCP	Business
+┬
+〇│Private Sub UserForm_Deactivate()	カレンダーフォーム非表示＜UF_Calendar5＞
+┴└┐
+　　〇 Me.Hide
+　　┴End Sub

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift_jis">
+<title>clsAboutCalendar2</title>
+<style>
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.5;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+colgroup col:nth-of-type(1) {}
+colgroup col:nth-of-type(2) {}
+.resize {position: relative;}
+.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+</style>
+</head>
+<body>
+<p><a href="../_INDEX.html">← Tool Index</a></p>
+<h1>clsAboutCalendar2</h1>
+<p>Procedure Count : 19</p>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Status</th><th>Updated</th></tr>
+<tr><td><a href="MakeHoliParamater.clsAboutCalendar2.hcp.html">MakeHoliParamater</a></td><td>祝日パラメータ作成</td><td>[OK]</td><td>2026/11/13 17:11:49</td></tr>
+<tr><td><a href="GetCalendarTable1.clsAboutCalendar2.hcp.html">GetCalendarTable1</a></td><td>単月カレンダーテーブル生成</td><td>[OK]</td><td>2026/11/13 17:11:52</td></tr>
+<tr><td><a href="GetCalendarTable3.clsAboutCalendar2.hcp.html">GetCalendarTable3</a></td><td>三か月カレンダーテーブル生成</td><td>[OK]</td><td>2026/11/13 17:11:55</td></tr>
+<tr><td><a href="SumEigyoNissu.clsAboutCalendar2.hcp.html">SumEigyoNissu</a></td><td>営業日数集計</td><td>[OK]</td><td>2026/11/13 17:11:58</td></tr>
+<tr><td><a href="SumEigyoBi.clsAboutCalendar2.hcp.html">SumEigyoBi</a></td><td>営業日加算日付計算</td><td>[OK]</td><td>2026/11/13 17:12:03</td></tr>
+<tr><td><a href="FP_CheckSyukuParameter.clsAboutCalendar2.hcp.html">FP_CheckSyukuParameter</a></td><td>祝日パラメータ検証</td><td>[OK]</td><td>2026/11/13 17:12:06</td></tr>
+<tr><td><a href="GP_GetCalendarSub.clsAboutCalendar2.hcp.html">GP_GetCalendarSub</a></td><td>単月カレンダー生成内部処理</td><td>[OK]</td><td>2026/11/13 17:12:10</td></tr>
+<tr><td><a href="GP_MakeCalendarTable.clsAboutCalendar2.hcp.html">GP_MakeCalendarTable</a></td><td>日付テーブル生成</td><td>[OK]</td><td>2026/11/13 17:12:14</td></tr>
+<tr><td><a href="GP_UpdateHolidayToCalendar.clsAboutCalendar2.hcp.html">GP_UpdateHolidayToCalendar</a></td><td>祝日反映処理</td><td>[OK]</td><td>2026/11/13 17:12:18</td></tr>
+<tr><td><a href="GP_UpdateHolidaySUB1.clsAboutCalendar2.hcp.html">GP_UpdateHolidaySUB1</a></td><td>固定日祝日設定</td><td>[OK]</td><td>2026/11/13 17:12:22</td></tr>
+<tr><td><a href="GP_UpdateHolidaySUB2.clsAboutCalendar2.hcp.html">GP_UpdateHolidaySUB2</a></td><td>HappyMonday祝日設定</td><td>[OK]</td><td>2026/11/13 17:12:25</td></tr>
+<tr><td><a href="GP_GetSyunbun.clsAboutCalendar2.hcp.html">GP_GetSyunbun</a></td><td>春分の日算出</td><td>[OK]</td><td>2026/11/13 17:12:29</td></tr>
+<tr><td><a href="GP_GetSyuubun.clsAboutCalendar2.hcp.html">GP_GetSyuubun</a></td><td>秋分の日算出</td><td>[OK]</td><td>2026/11/13 17:12:33</td></tr>
+<tr><td><a href="GP_UpdateFuriKokuminKyu.clsAboutCalendar2.hcp.html">GP_UpdateFuriKokuminKyu</a></td><td>振替休日国民の休日設定</td><td>[OK]</td><td>2026/11/13 17:12:36</td></tr>
+<tr><td><a href="FP_GetHoliParameter.clsAboutCalendar2.hcp.html">FP_GetHoliParameter</a></td><td>祝日パラメータ読込</td><td>[OK]</td><td>2026/11/13 17:12:41</td></tr>
+<tr><td><a href="GP_CheckSyukuParameterSUB.clsAboutCalendar2.hcp.html">GP_CheckSyukuParameterSUB</a></td><td>祝日パラメータ行検証</td><td>[OK]</td><td>2026/11/13 17:12:46</td></tr>
+<tr><td><a href="FP_GetNumber.clsAboutCalendar2.hcp.html">FP_GetNumber</a></td><td>数値取得</td><td>[OK]</td><td>2026/11/13 17:12:49</td></tr>
+<tr><td><a href="FP_CheckNumber.clsAboutCalendar2.hcp.html">FP_CheckNumber</a></td><td>数値妥当性確認</td><td>[OK]</td><td>2026/11/13 17:12:52</td></tr>
+<tr><td><a href="GP_AppendMessage.clsAboutCalendar2.hcp.html">GP_AppendMessage</a></td><td>メッセージ追加</td><td>[OK]</td><td>2026/11/13 17:12:56</td></tr>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function (eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function (e) {
+const styleTh = window.getComputedStyle(eleTh);
+const paddingLeft = parseFloat(styleTh.paddingLeft);
+const paddingRight = parseFloat(styleTh.paddingRight);
+const borderLeft = parseFloat(styleTh.borderLeftWidth);
+const borderRight = parseFloat(styleTh.borderRightWidth);
+startX = e.pageX;
+startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e) {
+const newWidth = startWidth + (e.pageX - startX);
+eleTh.style.width = newWidth + 'px';
+}
+function onMouseUp() {
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
+}
+});
+</script>
+</body>
+</html>

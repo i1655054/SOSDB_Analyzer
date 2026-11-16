@@ -1,0 +1,41 @@
+Procedure: modUtility.GetDiffFlagNames  [ 差分名称取得＜modUtility＞ ]
+HCP	Business
+┬
+〇│Public Function GetDiffFlagNames(ByVal diffFlags As Long) As String	差分名称取得＜modUtility＞
+┴└┐
+　　□ Dim result As String
+　　│#  基本項目差分判定
+　　◆ If (diffFlags And flg_Subject_Name) <> 0 Then  result = result & j_Subject_Name & FormatFlag(flg_Subject_Name) & vbCrLf
+　　◆ If (diffFlags And flg_Description) <> 0 Then  result = result & j_Description & FormatFlag(flg_Description) & vbCrLf
+　　◆ If (diffFlags And flg_Status_Name) <> 0 Then  result = result & j_Status_Name & FormatFlag(flg_Status_Name) & vbCrLf
+　　◆ If (diffFlags And flg_Priority_Name) <> 0 Then  result = result & j_Priority_Name & FormatFlag(flg_Priority_Name) & vbCrLf
+　　◆ If (diffFlags And flg_Author_Name) <> 0 Then  result = result & j_Author_name & FormatFlag(flg_Author_Name) & vbCrLf
+　　◆ If (diffFlags And flg_Assigned_to_Name) <> 0 Then  result = result & j_Assigned_to_Name & FormatFlag(flg_Assigned_to_Name) & vbCrLf
+　　◆ If (diffFlags And flg_Target_Version) <> 0 Then  result = result & j_Target_Version & FormatFlag(flg_Target_Version) & vbCrLf
+　　│#  カスタム項目差分判定
+　　◆ If (diffFlags And flg_OccurrenceDateTime) <> 0 Then  result = result & j_OccurrenceDateTime & FormatFlag(flg_OccurrenceDateTime) & vbCrLf
+　　◆ If (diffFlags And flg_ProblemBuilding) <> 0 Then  result = result & j_ProblemBuilding & FormatFlag(flg_ProblemBuilding) & vbCrLf
+　　◆ If (diffFlags And flg_HostName) <> 0 Then  result = result & j_HostName & FormatFlag(flg_HostName) & vbCrLf
+　　◆ If (diffFlags And flg_Phenomenon) <> 0 Then  result = result & j_Phenomenon & FormatFlag(flg_Phenomenon) & vbCrLf
+　　◆ If (diffFlags And flg_Cause) <> 0 Then  result = result & j_Cause & FormatFlag(flg_Cause) & vbCrLf
+　　◆ If (diffFlags And flg_Mondainum_Pro) <> 0 Then  result = result & j_Mondainum_Pro & FormatFlag(flg_Mondainum_Pro) & vbCrLf
+　　◆ If (diffFlags And flg_Remarks) <> 0 Then  result = result & j_Remarks & FormatFlag(flg_Remarks) & vbCrLf
+　　◆ If (diffFlags And flg_Esukare_Date) <> 0 Then  result = result & j_Esukare_Date & FormatFlag(flg_Esukare_Date) & vbCrLf
+　　◆ If (diffFlags And flg_Close_Date) <> 0 Then  result = result & j_Close_Date & FormatFlag(flg_Close_Date) & vbCrLf
+　　◆ If (diffFlags And flg_Requester_Pro) <> 0 Then  result = result & j_Requester_Pro & FormatFlag(flg_Requester_Pro) & vbCrLf
+　　◆ If (diffFlags And flg_ServiceImpact) <> 0 Then  result = result & j_ServiceImpact & FormatFlag(flg_ServiceImpact) & vbCrLf
+　　◆ If (diffFlags And flg_TroubleNum) <> 0 Then  result = result & j_TroubleNum & FormatFlag(flg_TroubleNum) & vbCrLf
+　　◆ If (diffFlags And flg_Equipment) <> 0 Then  result = result & j_Equipment & FormatFlag(flg_Equipment) & vbCrLf
+　　◆ If (diffFlags And flg_Cope) <> 0 Then  result = result & j_Cope & FormatFlag(flg_Cope) & vbCrLf
+　　◆ If (diffFlags And flg_RequesterNum) <> 0 Then  result = result & j_RequesterNum & FormatFlag(flg_RequesterNum) & vbCrLf
+　　◆ If (diffFlags And flg_ProductTantou) <> 0 Then  result = result & j_ProductTantou & FormatFlag(flg_ProductTantou) & vbCrLf
+　　◆ If (diffFlags And flg_KihensinName_Date) <> 0 Then  result = result & j_KihensinName_Date & FormatFlag(flg_KihensinName_Date) & vbCrLf
+　　◆ If (diffFlags And flg_Key_Word) <> 0 Then  result = result & j_Key_Word & FormatFlag(flg_Key_Word) & vbCrLf
+　　◆ If (diffFlags And flg_EqProduct) <> 0 Then  result = result & j_EqProduct & FormatFlag(flg_EqProduct) & vbCrLf
+　　│#  末尾改行削除
+　　◆┐If Len(result) > 0 Then
+　　│〇 result = Left(result, Len(result) - 2)
+　　│┴End If
+　　│#  差分名称返却
+　　〇 GetDiffFlagNames = result
+　　┴End Function

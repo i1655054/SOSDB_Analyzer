@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift_jis">
+<title>MakeSearchUrl</title>
+<style>
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+colgroup col:nth-of-type(1) {}
+colgroup col:nth-of-type(2) {}
+.resize {position: relative;}
+.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+</style>
+</head>
+<body>
+<h1>MakeSearchUrl</h1>
+<p>Module : XmlSearch</p>
+<p><a href="./_INDEX.html">← Module Index</a></p>
+<table>
+<colgroup><col/><col/></colgroup>
+<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<tbody>
+<tr><td>Procedure: XmlSearch.MakeSearchUrl  [ 検索URL生成＜XmlSearch＞ ]</td><td></td></tr>
+<tr><td>HCP</td><td>Business</td></tr>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Private Function MakeSearchUrl(ByVal SearchKey As String) As String</td><td>検索URL生成＜XmlSearch＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　□ Dim api As String</td><td></td></tr>
+<tr><td>　　□ Dim apiKey As String</td><td></td></tr>
+<tr><td>　　□ Dim url As String</td><td></td></tr>
+<tr><td>　　□ Dim SearchKey_Utf8 As String</td><td></td></tr>
+<tr><td>　　□ Dim RedmineDB As String</td><td></td></tr>
+<tr><td>　　│#  検索文字列UTF8変換</td><td></td></tr>
+<tr><td>　　◎ SearchKey_Utf8 = URLEncode_UTF8(SearchKey)</td><td>UTF8URLエンコード＜XmlSearch＞</td></tr>
+<tr><td>　　│#  Redmine接続先取得</td><td></td></tr>
+<tr><td>　　◎ RedmineDB = GetServerURL(Range(RedmineDbSev_RANG).Value)</td><td>RedmineサーバURL取得＜modIssueMapper＞</td></tr>
+<tr><td>　　│</td><td>内部呼出:Range</td></tr>
+<tr><td>　　│#  検索APIURL生成</td><td></td></tr>
+<tr><td>　　〇 api = RedmineDB &amp; "redmine/projects/trabas_ngn/"</td><td></td></tr>
+<tr><td>　　│#  検索URL返却</td><td></td></tr>
+<tr><td>　　〇 MakeSearchUrl = api &amp; "search.xml?utf8=%E2%9C%93&amp;q=" &amp; SearchKey_Utf8</td><td></td></tr>
+<tr><td>　　┴End Function</td><td></td></tr>
+</tbody>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function (eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function (e) {
+const styleTh = window.getComputedStyle(eleTh);
+const paddingLeft = parseFloat(styleTh.paddingLeft);
+const paddingRight = parseFloat(styleTh.paddingRight);
+const borderLeft = parseFloat(styleTh.borderLeftWidth);
+const borderRight = parseFloat(styleTh.borderRightWidth);
+startX = e.pageX;
+startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e) {
+const newWidth = startWidth + (e.pageX - startX);
+eleTh.style.width = newWidth + 'px';
+}
+function onMouseUp() {
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
+}
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+Procedure: UF_NewInfoRegist.cmb年度_Change  [ 年度変更処理＜UF_NewInfoRegist＞ ]
+HCP	Business
+┬
+〇│Private Sub cmb年度_Change()	年度変更処理＜UF_NewInfoRegist＞
+┴└┐
+　　□ Dim Rng As Range
+　　□ Dim LookupValue As String
+　　□ Dim result As Variant
+　　□ Dim NameValue As Variant
+　　□ Dim DefName As String
+　　□ Dim sht As Worksheet
+　　〇 DefName = "年度"
+　　〇 Set sht = ThisWorkbook.Sheets(SheetName_Main) ' 対象のシート名を指定
+　　☆ On Error Resume Next
+　　〇 Set Rng = ThisWorkbook.Names(DefName).RefersToRange
+　　☆ On Error GoTo 0
+　　〇 NameValue = Rng.Value
+　　│#  年度選択値取得
+　　〇 LookupValue = cmb年度.Value
+　　│#  対象年度設定
+　　〇 sht.Range(TARGET_VER_RANG) = LookupValue
+　　☆ On Error Resume Next
+　　│#  年度コード取得
+　　〇 result = Application.WorksheetFunction.VLookup(LookupValue, NameValue, 2, False)
+　　☆ On Error GoTo 0
+　　│#  管理番号年度設定
+　　◆┐If Not IsError(result) Then
+　　│〇 txt管理番号_年度.Value = result
+　　├┐ELSE
+　　│〇 txt管理番号_年度 = ""
+　　│┴End If
+　　┴End Sub

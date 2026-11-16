@@ -1,0 +1,23 @@
+Procedure: UF_InfoWebDisplay.ToggleEditMode  [ 編集モード切替処理＜UF_InfoWebDisplay＞ ]
+HCP	Business
+┬
+〇│Private Sub ToggleEditMode(ByVal enable As Boolean)	編集モード切替処理＜UF_InfoWebDisplay＞
+┴└┐
+　　☆ On Error Resume Next
+　　□ Dim doc As Object, el As Object
+　　〇 Set doc = WebBrowser1.document
+　　◆→ If doc Is Nothing Then Exit Sub
+　　│#  HTML要素取得
+　　〇 Set el = doc.getElementById("content")
+　　◆→ If el Is Nothing Then Exit Sub
+　　│#  編集状態設定
+　　〇 el.contentEditable = IIf(enable, "true", "false")
+　　│#  編集表示切替
+　　◆┐If enable Then
+　　││#  編集モード表示
+　　│〇 doc.parentWindow.execScript  "var s=document.getElementById('appStyle');" &  "s.innerHTML += '#content{outline:1px dashed #5aa!important; caret-color:auto;}';",  "JavaScript"
+　　├┐ELSE
+　　││#  表示モード復元
+　　│〇 doc.parentWindow.execScript  "var s=document.getElementById('appStyle');" &  "s.innerHTML = s.innerHTML.replace(/#content\{[^}]*outline:[^}]*\}/,'');",  "JavaScript"
+　　│┴End If
+　　┴End Sub

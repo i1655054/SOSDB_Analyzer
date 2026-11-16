@@ -1,0 +1,12 @@
+Procedure: modAboutCalendar2.FP_GetCalendarTable3  [ 三か月カレンダーテーブル取得＜modAboutCalendar2＞ ]
+HCP	Business
+┬
+〇│Public Function FPGetCalendarTable3(ByVal lngYear As Long,  ByVal lngMonth As Long,  ByRef tblCalendar() As gtypAboutCalendar2,  Optional ByRef lngCurrStartIx As Long = -1,  Optional ByRef lngCurrEndIx As Long = -1,  Optional ByVal blnOmitCheck As Boolean = False) As Boolean	三か月カレンダーテーブル取得＜modAboutCalendar2＞
+┴└┐
+　　◆┐If Not FP_InitAboutCalendar(blnOmitCheck) Then
+　　│〇 FP_GetCalendarTable3 = False
+　　│→ Exit Function
+　　│┴End If
+　　◎ Call g_clsAboutCalendar.GetCalendarTable3(lngYear,  lngMonth,  tblCalendar,  lngCurrStartIx,  lngCurrEndIx)	三か月カレンダーテーブル生成＜clsAboutCalendar2＞
+　　〇 FP_GetCalendarTable3 = True
+　　┴End Function

@@ -1,0 +1,66 @@
+Procedure: clsAboutCalendar2.FP_CheckSyukuParameter  [ 祝日パラメータ検証＜clsAboutCalendar2＞ ]
+HCP	Business
+┬
+〇│Friend Function FPCheckSyukuParameter(ByRef objParaSheet As Worksheet,  Optional ByRef lngParaRowMax As Long = 0) As Boolean	祝日パラメータ検証＜clsAboutCalendar2＞
+┴└┐
+　　□ Dim lngRow As Long                                              ' 行INDEX
+　　□ Dim lngRow2 As Long                                             ' 行INDEX
+　　□ Dim lngCurrEnd As Long                                          ' 当回終了年
+　　□ Dim lngNextStr As Long                                          ' 次回開始年
+　　□ Dim lngPrevM As Long                                            ' 直前行の月
+　　□ Dim strMSG As String                                            ' エラーメッセージ
+　　〇 FP_CheckSyukuParameter = False
+　　〇 lngRow = 3                                                  ' データ先頭行
+　　│#  パラメータシート準備
+　　＠┐With objParaSheet
+　　││#  保護解除
+　　│〇 .Unprotect
+　　││#  フィルタ解除
+　　│◆ If .FilterMode Then .ShowAllData
+　　││#  最終行取得
+　　│〇 lngParaRowMax = .Range("$A$" & .Rows.count).End(xlUp).row
+　　││#  登録内容確認
+　　│◆┐If lngParaRowMax < 3 Then
+　　│││#  エラー表示
+　　││〇 strMSG = "「" & g_cnsParaSheet & "」シートに有効内容が登録されていません。"
+　　││〇 MsgBox strMSG, vbCritical, g_cnsTitle
+　　││→ Exit Function
+　　││┴End If
+　　││#  行単位検証
+　　│＠┐Do While lngRow <= lngParaRowMax
+　　││◎ Call GP_CheckSyukuParameterSUB(objParaSheet, lngRow, lngPrevM, strMSG)	祝日パラメータ行検証＜clsAboutCalendar2＞
+　　││〇 lngRow = lngRow + 1
+　　││┴Loop
+　　││#  検証結果確認
+　　│◆┐If strMSG <> "" Then
+　　││〇 MsgBox strMSG, vbCritical, g_cnsTitle
+　　││→ Exit Function
+　　││┴End If
+　　│〇 lngRow = 3                                              ' データ先頭行
+　　││#  有効期間重複確認
+　　│＠┐Do While lngRow <= lngParaRowMax
+　　││〇 lngRow2 = lngRow + 1
+　　││◆┐If .Cells(lngRow2, 1).Value = .Cells(lngRow, 1).Value Then
+　　│││◆┐If (((.Cells(lngRow2, 2).Value = 0) Or (.Cells(lngRow2, 2).Value = 2)) And  ((.Cells(lngRow, 2).Value = 0) Or (.Cells(lngRow, 2).Value = 2)) And  (.Cells(lngRow2, 3).Value = .Cells(lngRow, 3).Value)) Then
+　　││││〇 lngCurrEnd = .Cells(lngRow, 9).Value
+　　││││〇 lngNextStr = .Cells(lngRow2, 8).Value
+　　││││◆┐If lngNextStr <= lngCurrEnd Then
+　　│││││□ Dim strTemp As String                       ' テキストWORK
+　　│││││〇 strTemp = CStr(lngRow2) & "行目："
+　　│││││〇 strTemp = strTemp & "「有効年期間」が前行と重複しています。"
+　　│││││◎ Call GP_AppendMessage(strTemp, strMSG)	メッセージ追加＜clsAboutCalendar2＞
+　　│││││┴End If
+　　││││┴End If
+　　│││┴End If
+　　││〇 lngRow = lngRow + 1
+　　││┴Loop
+　　││#  保護再設定
+　　│〇 .Protect UserInterfaceOnly:=True
+　　│┴End With
+　　│#  検証結果返却
+　　◆┐If strMSG <> "" Then
+　　│〇 MsgBox strMSG, vbCritical, g_cnsTitle
+　　├┐ELSE
+　　│〇 FP_CheckSyukuParameter = True
+　　│┴End If
+　　┴End Function

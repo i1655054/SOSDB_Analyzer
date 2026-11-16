@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift_jis">
+<title>GetXmlData</title>
+<style>
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+colgroup col:nth-of-type(1) {}
+colgroup col:nth-of-type(2) {}
+.resize {position: relative;}
+.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+</style>
+</head>
+<body>
+<h1>GetXmlData</h1>
+<p>Module : XmlLoader</p>
+<p><a href="./_INDEX.html">← Module Index</a></p>
+<table>
+<colgroup><col/><col/></colgroup>
+<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<tbody>
+<tr><td>Procedure: XmlLoader.GetXmlData  [ XML取得＜XmlLoader＞ ]</td><td></td></tr>
+<tr><td>HCP</td><td>Business</td></tr>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Public Function GetXmlData(  url As String) As Object</td><td>XML取得＜XmlLoader＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　│#  XMLドキュメント生成</td><td></td></tr>
+<tr><td>　　□ Dim dom As Object</td><td></td></tr>
+<tr><td>　　〇 Set dom = CreateObject("MSXML2.DOMDocument")</td><td></td></tr>
+<tr><td>　　│#  同期モード設定</td><td></td></tr>
+<tr><td>　　〇 dom.async = False</td><td></td></tr>
+<tr><td>　　│#  XML読込</td><td></td></tr>
+<tr><td>　　◆┐If Not (dom.Load(url)) Then</td><td></td></tr>
+<tr><td>　　││#  XML読込エラー情報生成</td><td></td></tr>
+<tr><td>　　│□ Dim text As String</td><td></td></tr>
+<tr><td>　　│＠┐With dom.parseError</td><td></td></tr>
+<tr><td>　　││〇 text = "XML ドキュメントの読み込みに失敗しました。" &amp; vbCrLf &amp;  "次のエラーが原因です :" &amp; vbCrLf &amp;  vbCrLf &amp;  "エラー番号 # : " &amp; .ErrorCode &amp; vbCrLf &amp;  "エラー原因 # : " &amp; .reason &amp; vbCrLf &amp;  "行 # : " &amp; .line &amp; vbCrLf &amp;  "行位置 : " &amp; .linepos &amp; vbCrLf &amp;  "ファイル内の位置 : " &amp; .filepos &amp; vbCrLf &amp;  "ソーステキスト : " &amp; .srcText &amp; vbCrLf &amp;  "ドキュメントURL : " &amp; .url</td><td></td></tr>
+<tr><td>　　││┴End With</td><td></td></tr>
+<tr><td>　　││#  エラーメッセージ表示</td><td></td></tr>
+<tr><td>　　│〇 MsgBox text, vbExclamation</td><td></td></tr>
+<tr><td>　　││#  強制終了</td><td></td></tr>
+<tr><td>　　│〇 End</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　│#  XMLノード返却</td><td></td></tr>
+<tr><td>　　〇 Set GetXmlData = dom.ChildNodes.Item(1)</td><td></td></tr>
+<tr><td>　　┴End Function</td><td></td></tr>
+</tbody>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function (eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function (e) {
+const styleTh = window.getComputedStyle(eleTh);
+const paddingLeft = parseFloat(styleTh.paddingLeft);
+const paddingRight = parseFloat(styleTh.paddingRight);
+const borderLeft = parseFloat(styleTh.borderLeftWidth);
+const borderRight = parseFloat(styleTh.borderRightWidth);
+startX = e.pageX;
+startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e) {
+const newWidth = startWidth + (e.pageX - startX);
+eleTh.style.width = newWidth + 'px';
+}
+function onMouseUp() {
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
+}
+});
+</script>
+</body>
+</html>

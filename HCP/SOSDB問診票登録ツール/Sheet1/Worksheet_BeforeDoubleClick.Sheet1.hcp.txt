@@ -1,0 +1,31 @@
+Procedure: Sheet1.Worksheet_BeforeDoubleClick  [ セルダブルクリック処理＜Sheet1＞ ]
+HCP	Business
+┬
+〇│Private Sub WorksheetBeforeDoubleClick(  ByVal Target As Range, Cancel As Boolean)	セルダブルクリック処理＜Sheet1＞
+┴└┐
+　　◆┐If Not Intersect(Target, Range(g_cnsDateCellAdress)) Is Nothing Then
+　　│◎ Call modCalendar5.ShowCalendarFromRange2(Target)	セル日付選択＜modCalendar5＞
+　　│〇 Cancel = True
+　　│→ Exit Sub
+　　│┴End If
+　　◆┐If Not Intersect(Target, Range(PROBLEM_YMDHM_RANG)) Is Nothing Then
+　　│〇 MsgBox CStr(Range(PROBLEM_YMDHM_RANG).Value),  vbInformation,  "問題発生日時"
+　　│〇 Cancel = True
+　　│→ Exit Sub
+　　│┴End If
+　　◆┐If Not Intersect(Target, Range(PROBLEM_BUILDING_RANG)) Is Nothing Then
+　　│〇 MsgBox CStr(Range(PROBLEM_BUILDING_RANG).Value),  vbInformation,  "問題発生ビル"
+　　│〇 Cancel = True
+　　│→ Exit Sub
+　　│┴End If
+　　◆┐If Not Intersect(Target, Range(HOST_NAME_RANG)) Is Nothing Then
+　　│〇 MsgBox CStr(Range(HOST_NAME_RANG).Value),  vbInformation,  "ホスト名"
+　　│〇 Cancel = True
+　　│→ Exit Sub
+　　│┴End If
+　　◆┐If Not Intersect(Target, Range(PROBLEM_EQUIPMENT_RANG)) Is Nothing Then
+　　│〇 MsgBox CStr(Range(PROBLEM_EQUIPMENT_RANG).Value),  vbInformation,  "問題発生装置"
+　　│〇 Cancel = True
+　　│→ Exit Sub
+　　│┴End If
+　　┴End Sub

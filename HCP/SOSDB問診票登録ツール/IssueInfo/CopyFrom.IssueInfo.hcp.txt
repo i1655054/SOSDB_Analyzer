@@ -1,0 +1,36 @@
+Procedure: IssueInfo.CopyFrom  [ Issue情報コピー＜IssueInfo＞ ]
+HCP	Business
+┬
+〇│Public Sub CopyFrom(ByVal src As IssueInfo)	Issue情報コピー＜IssueInfo＞
+┴└┐
+　　│#  基本項目コピー
+　　〇 Me.IssueId = src.IssueId
+　　〇 Me.Subject = src.Subject
+　　〇 Me.Description = src.Description
+　　〇 Me.Status = src.Status
+　　〇 Me.Key_Word = src.Key_Word
+　　〇 Me.Priority = src.Priority
+　　〇 Me.AuthorName = src.AuthorName
+　　〇 Me.AssignedTo = src.AssignedTo
+　　〇 Me.targetVersion = src.targetVersion
+　　│#  カスタムフィールドコピー
+　　〇 Me.OccurrenceDateTime = src.OccurrenceDateTime
+　　〇 Me.ProblemBuilding = src.ProblemBuilding
+　　〇 Me.HostName = src.HostName
+　　〇 Me.Phenomenon = src.Phenomenon
+　　〇 Me.CauseDetail = src.CauseDetail
+　　〇 Me.Mondainum_Pro = src.Mondainum_Pro
+　　〇 Me.Remarks = src.Remarks
+　　〇 Me.Esukare_Date = src.Esukare_Date
+　　〇 Me.Close_Date = src.Close_Date
+　　〇 Me.Requester_Pro = src.Requester_Pro
+　　〇 Me.ServiceImpact = src.ServiceImpact
+　　〇 Me.TroubleNum = src.TroubleNum
+　　〇 Me.Equipment = src.Equipment
+　　〇 Me.Countermeasure = src.Countermeasure
+　　〇 Me.RequesterNum = src.RequesterNum
+　　〇 Me.ProductTantou = src.ProductTantou
+　　〇 Me.KihensinName_Date = src.KihensinName_Date
+　　〇 Me.Key_Word = src.Key_Word
+　　〇 Me.EqProduct = src.EqProduct
+　　┴End Sub

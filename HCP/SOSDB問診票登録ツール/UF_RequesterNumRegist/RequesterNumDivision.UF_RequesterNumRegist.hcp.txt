@@ -1,0 +1,37 @@
+Procedure: UF_RequesterNumRegist.RequesterNumDivision  [ 依頼元管理番号解析＜UF_RequesterNumRegist＞ ]
+HCP	Business
+┬
+〇│Private Sub RequesterNumDivision()	依頼元管理番号解析＜UF_RequesterNumRegist＞
+┴└┐
+　　□ Dim RequesterNum As String
+　　□ Dim MonShinNum As String
+　　□ Dim faultRepNum As String
+　　□ Dim tmp As Variant
+　　□ Dim position As Long
+　　│#  依頼元管理番号取得
+　　◆┐If Not TargetIssue Is Nothing Then
+　　│〇 RequesterNum = TargetIssue.RequesterNum
+　　├┐ELSE
+　　│〇 RequesterNum = ""
+　　│┴End If
+　　│#  管理番号有無判定
+　　◆┐If (RequesterNum <> "") Then
+　　││#  管理番号分割
+　　│〇 tmp = Split(Trim(RequesterNum), "/")
+　　│〇 MonShinNum = Trim(tmp(0))
+　　│〇 faultRepNum = Trim(tmp(1))
+　　││#  問診票管理番号取得
+　　│〇 position = InStr(1, tmp(0), "=")
+　　│〇 MonShinNum = Mid(tmp(0), position + 1)
+　　││#  故障票番号取得
+　　│〇 position = InStr(1, tmp(1), "=")
+　　│〇 faultRepNum = Mid(tmp(1), position + 1)
+　　├┐ELSE
+　　││#  初期値設定
+　　│〇 MonShinNum = ""
+　　│〇 faultRepNum = ""
+　　│┴End If
+　　│#  画面反映
+　　〇 TextBox1.text = MonShinNum
+　　〇 TextBox2.text = faultRepNum
+　　┴End Sub

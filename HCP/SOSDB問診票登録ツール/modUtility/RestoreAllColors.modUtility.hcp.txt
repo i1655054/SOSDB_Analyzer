@@ -1,0 +1,28 @@
+Procedure: modUtility.RestoreAllColors  [ 全セル色復元＜modUtility＞ ]
+HCP	Business
+┬
+〇│Public Sub RestoreAllColors()	全セル色復元＜modUtility＞
+┴└┐
+　　│#  管理対象セル色復元
+　　◎ Call RestoreColor(TARGET_VER_RANG)	セル色復元＜modUtility＞
+　　◎ Call RestoreColor(TANTOU_NAME_RANG)	セル色復元＜modUtility＞
+　　◎ Call RestoreColor(TANTOU_RANG)	セル色復元＜modUtility＞
+　　◎ Call RestoreColor(DB_ID_RANG)	セル色復元＜modUtility＞
+　　◎ Call RestoreColor(DB_STATUS_RANG)	セル色復元＜modUtility＞
+　　◎ Call RestoreColor(TORBLE_NUM_RANG)	セル色復元＜modUtility＞
+　　◎ Call RestoreColor(PRIORITY_RANG)	セル色復元＜modUtility＞
+　　◎ Call RestoreColor(EQID_RANG)	セル色復元＜modUtility＞
+　　◎ Call RestoreColor(EQ_PRODUCT_RANG)	セル色復元＜modUtility＞
+　　◎ Call RestoreColor(PRODUCT_TANTOU_RANG)	セル色復元＜modUtility＞
+　　◎ Call RestoreColor(ESCALE_DAY_RANG)	セル色復元＜modUtility＞
+　　◎ Call RestoreColor(CLOSE_DAY_RANG)	セル色復元＜modUtility＞
+　　◎ Call RestoreColor(MONDAINUM_RANG)	セル色復元＜modUtility＞
+　　◎ Call RestoreColor(MONDAIPRO_RANG)	セル色復元＜modUtility＞
+　　◎ Call RestoreColor(KIHENSIN_RANG)	セル色復元＜modUtility＞
+　　◎ Call RestoreColor(KIKAKU_DAY_RANG)	セル色復元＜modUtility＞
+　　◎ Call RestoreColor(SERVICE_IMPACT_RANG)	セル色復元＜modUtility＞
+　　◎ Call RestoreColor(PROBLEM_YMDHM_RANG)	セル色復元＜modUtility＞
+　　◎ Call RestoreColor(PROBLEM_BUILDING_RANG)	セル色復元＜modUtility＞
+　　◎ Call RestoreColor(HOST_NAME_RANG)	セル色復元＜modUtility＞
+　　◎ Call RestoreColor(PROBLEM_EQUIPMENT_RANG)	セル色復元＜modUtility＞
+　　┴End Sub

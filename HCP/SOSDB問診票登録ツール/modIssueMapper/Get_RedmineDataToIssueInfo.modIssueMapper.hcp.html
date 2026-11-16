@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift_jis">
+<title>Get_RedmineDataToIssueInfo</title>
+<style>
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+colgroup col:nth-of-type(1) {}
+colgroup col:nth-of-type(2) {}
+.resize {position: relative;}
+.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+</style>
+</head>
+<body>
+<h1>Get_RedmineDataToIssueInfo</h1>
+<p>Module : modIssueMapper</p>
+<p><a href="./_INDEX.html">← Module Index</a></p>
+<table>
+<colgroup><col/><col/></colgroup>
+<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<tbody>
+<tr><td>Procedure: modIssueMapper.Get_RedmineDataToIssueInfo  [ Redmine情報取得＜modIssueMapper＞ ]</td><td></td></tr>
+<tr><td>HCP</td><td>Business</td></tr>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Public Function GetRedmineDataToIssueInfo(  ByVal AuthorName As String,  ByVal bugId As String) As IssueInfo</td><td>Redmine情報取得＜modIssueMapper＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　│#  Issueオブジェクト生成</td><td></td></tr>
+<tr><td>　　□ Dim issue As IssueInfo</td><td></td></tr>
+<tr><td>　　〇 Set issue = New IssueInfo</td><td></td></tr>
+<tr><td>　　□ Dim xmlIssue As Object</td><td></td></tr>
+<tr><td>　　□ Dim node As Object</td><td></td></tr>
+<tr><td>　　□ Dim cf As Object</td><td></td></tr>
+<tr><td>　　│#  Redmine接続情報取得</td><td></td></tr>
+<tr><td>　　□ Dim RedmineDB As String</td><td></td></tr>
+<tr><td>　　◎ RedmineDB = GetServerURL(Range(RedmineDbSev_RANG).Value)</td><td>RedmineサーバURL取得＜modIssueMapper＞</td></tr>
+<tr><td>　　│</td><td>内部呼出:Range</td></tr>
+<tr><td>　　│#  APIパス生成</td><td></td></tr>
+<tr><td>　　□ Dim apiKey As String</td><td></td></tr>
+<tr><td>　　◎ apiKey = GetApiKey(Author_Name)</td><td>APIキー取得＜modIssueMapper＞</td></tr>
+<tr><td>　　◆ If apiKey = "" Then apiKey = Read_API_Key</td><td></td></tr>
+<tr><td>　　□ Dim api As String</td><td></td></tr>
+<tr><td>　　〇 api = RedmineDB &amp; "redmine/issues/"</td><td></td></tr>
+<tr><td>　　│#  XML取得</td><td></td></tr>
+<tr><td>　　◎ Set xmlIssue = GetXmlData(api &amp; bugId &amp; ".xml?key=" &amp; apiKey)</td><td>XML取得＜XmlLoader＞</td></tr>
+<tr><td>　　│#  XML取得結果確認</td><td></td></tr>
+<tr><td>　　◆┐If xmlIssue Is Nothing Then</td><td></td></tr>
+<tr><td>　　│〇 Debug.Print "XML取得失敗: " &amp; bugId</td><td></td></tr>
+<tr><td>　　││#  空Issue返却</td><td></td></tr>
+<tr><td>　　│〇 Set Get_RedmineDataToIssueInfo = issue</td><td></td></tr>
+<tr><td>　　│→ Exit Function</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　│#  基本情報取得</td><td></td></tr>
+<tr><td>　　〇 Set node = xmlIssue.SelectSingleNode("subject")</td><td></td></tr>
+<tr><td>　　◆ If Not node Is Nothing Then issue.Subject = node.text</td><td></td></tr>
+<tr><td>　　〇 Set node = xmlIssue.SelectSingleNode("description")</td><td></td></tr>
+<tr><td>　　◆ If Not node Is Nothing Then issue.Description = node.text</td><td></td></tr>
+<tr><td>　　〇 Set node = xmlIssue.SelectSingleNode("status")</td><td></td></tr>
+<tr><td>　　◆ If Not node Is Nothing Then issue.Status = node.getAttribute("name")</td><td></td></tr>
+<tr><td>　　〇 Set node = xmlIssue.SelectSingleNode("priority")</td><td></td></tr>
+<tr><td>　　◆ If Not node Is Nothing Then issue.Priority = node.getAttribute("name")</td><td></td></tr>
+<tr><td>　　〇 issue.AuthorName = Author_Name</td><td></td></tr>
+<tr><td>　　〇 Set node = xmlIssue.SelectSingleNode("assigned_to")</td><td></td></tr>
+<tr><td>　　◆ If Not node Is Nothing Then issue.AssignedTo = node.getAttribute("name")</td><td></td></tr>
+<tr><td>　　〇 Set node = xmlIssue.SelectSingleNode("fixed_version")</td><td></td></tr>
+<tr><td>　　◆ If Not node Is Nothing Then issue.targetVersion = node.getAttribute("name")</td><td></td></tr>
+<tr><td>　　│#  IssueID設定</td><td></td></tr>
+<tr><td>　　〇 issue.IssueId = bugId</td><td></td></tr>
+<tr><td>　　│#  カスタムフィールド取得</td><td></td></tr>
+<tr><td>　　＠┐For Each cf In xmlIssue.getElementsByTagName("custom_field")</td><td></td></tr>
+<tr><td>　　││#  フィールド種別判定</td><td></td></tr>
+<tr><td>　　│◆┐Select Case cf.getAttribute("name")</td><td></td></tr>
+<tr><td>　　││├┐Case "発生時間": issue.OccurrenceDateTime = cf.text</td><td></td></tr>
+<tr><td>　　││├┐Case "ビル(収容局)": issue.ProblemBuilding = cf.text</td><td></td></tr>
+<tr><td>　　││├┐Case "ホスト名": issue.HostName = cf.text</td><td></td></tr>
+<tr><td>　　││├┐Case "事象詳細": issue.Phenomenon = cf.text</td><td></td></tr>
+<tr><td>　　││├┐Case "詳細原因": issue.CauseDetail = cf.text</td><td></td></tr>
+<tr><td>　　││├┐Case "問処番号": issue.Mondainum_Pro = cf.text</td><td></td></tr>
+<tr><td>　　││├┐Case "備考": issue.Remarks = cf.text</td><td></td></tr>
+<tr><td>　　││├┐Case "発生日(トラバス)": issue.Esukare_Date = cf.text</td><td></td></tr>
+<tr><td>　　││├┐Case "完了日(トラバス)": issue.Close_Date = cf.text</td><td></td></tr>
+<tr><td>　　││├┐Case "問合せ者": issue.Requester_Pro = cf.text</td><td></td></tr>
+<tr><td>　　││├┐Case "サービス影響": issue.ServiceImpact = cf.text</td><td></td></tr>
+<tr><td>　　││├┐Case "管理番号": issue.TroubleNum = cf.text</td><td></td></tr>
+<tr><td>　　││├┐Case "対象装置": issue.Equipment = cf.text</td><td></td></tr>
+<tr><td>　　││├┐Case "対処内容": issue.Countermeasure = cf.text</td><td></td></tr>
+<tr><td>　　││├┐Case "依頼元管理番号": issue.RequesterNum = cf.text</td><td></td></tr>
+<tr><td>　　││├┐Case "プロダクト担当者": issue.ProductTantou = cf.text</td><td></td></tr>
+<tr><td>　　││├┐Case "規変審名/開催日": issue.KihensinName_Date = cf.text</td><td></td></tr>
+<tr><td>　　││├┐Case "キーワード": issue.Key_Word = cf.text</td><td></td></tr>
+<tr><td>　　││├┐Case "プロダクト装置／サービス": issue.EqProduct = cf.text</td><td></td></tr>
+<tr><td>　　││┴End Select</td><td></td></tr>
+<tr><td>　　│┴Next</td><td></td></tr>
+<tr><td>　　│#  Issue返却</td><td></td></tr>
+<tr><td>　　〇 Set Get_RedmineDataToIssueInfo = issue</td><td></td></tr>
+<tr><td>　　┴End Function</td><td></td></tr>
+</tbody>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function (eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function (e) {
+const styleTh = window.getComputedStyle(eleTh);
+const paddingLeft = parseFloat(styleTh.paddingLeft);
+const paddingRight = parseFloat(styleTh.paddingRight);
+const borderLeft = parseFloat(styleTh.borderLeftWidth);
+const borderRight = parseFloat(styleTh.borderRightWidth);
+startX = e.pageX;
+startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e) {
+const newWidth = startWidth + (e.pageX - startX);
+eleTh.style.width = newWidth + 'px';
+}
+function onMouseUp() {
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
+}
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+Procedure: ThisWorkbook.Workbook_BeforeClose  [ ブック終了処理＜ThisWorkbook＞ ]
+HCP	Business
+┬
+〇│Private Sub Workbook_BeforeClose(Cancel As Boolean)	ブック終了処理＜ThisWorkbook＞
+┴└┐
+　　〇 Application.DisplayAlerts = False ' 保存確認のダイアログを非表示
+　　〇 ThisWorkbook.Close SaveChanges:=False ' 保存せずに閉じる
+　　〇 Application.DisplayAlerts = True ' ダイアログ表示を元に戻す
+　　┴End Sub

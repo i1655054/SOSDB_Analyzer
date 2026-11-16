@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift_jis">
+<title>ApplyCss</title>
+<style>
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+colgroup col:nth-of-type(1) {}
+colgroup col:nth-of-type(2) {}
+.resize {position: relative;}
+.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+</style>
+</head>
+<body>
+<h1>ApplyCss</h1>
+<p>Module : UF_InfoWebDisplay</p>
+<p><a href="./_INDEX.html">← Module Index</a></p>
+<table>
+<colgroup><col/><col/></colgroup>
+<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<tbody>
+<tr><td>Procedure: UF_InfoWebDisplay.ApplyCss  [ CSS適用＜UF_InfoWebDisplay＞ ]</td><td></td></tr>
+<tr><td>HCP</td><td>Business</td></tr>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Public Sub ApplyCss(ByVal SizePt As Long)</td><td>CSS適用＜UF_InfoWebDisplay＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　☆ On Error Resume Next</td><td></td></tr>
+<tr><td>　　□ Dim doc As Object, head As Object, styleEl As Object, css As String</td><td></td></tr>
+<tr><td>　　│#  HTMLドキュメント取得</td><td></td></tr>
+<tr><td>　　〇 Set doc = WebBrowser1.document</td><td></td></tr>
+<tr><td>　　◆→ If doc Is Nothing Then Exit Sub</td><td></td></tr>
+<tr><td>　　〇 Set head = doc.getElementsByTagName("head")(0)</td><td></td></tr>
+<tr><td>　　◆→ If head Is Nothing Then Exit Sub</td><td></td></tr>
+<tr><td>　　│#  スタイル要素取得</td><td></td></tr>
+<tr><td>　　〇 Set styleEl = doc.getElementById("appStyle")</td><td></td></tr>
+<tr><td>　　◆┐If styleEl Is Nothing Then</td><td></td></tr>
+<tr><td>　　│〇 Set styleEl = doc.createElement("style")</td><td></td></tr>
+<tr><td>　　│〇 styleEl.id = "appStyle"</td><td></td></tr>
+<tr><td>　　│〇 head.appendChild styleEl</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　□ Dim ws As String, ww As String</td><td></td></tr>
+<tr><td>　　□ Dim bodyOx As String, contentExtra As String</td><td></td></tr>
+<tr><td>　　│#  表示モード判定</td><td></td></tr>
+<tr><td>　　◆┐If IsScrollEnabled Then</td><td></td></tr>
+<tr><td>　　││#  折返し表示設定</td><td></td></tr>
+<tr><td>　　│〇 ws = "normal"                    ' 折り返す</td><td></td></tr>
+<tr><td>　　│〇 ww = "word-wrap: break-word;"    ' 長い単語も折る</td><td></td></tr>
+<tr><td>　　│〇 bodyOx = "hidden"                ' 横バーは隠す</td><td></td></tr>
+<tr><td>　　│〇 contentExtra = "display:block;"  ' ふつうのブロックでOK</td><td></td></tr>
+<tr><td>　　├┐ELSE</td><td></td></tr>
+<tr><td>　　││#  横スクロール表示設定</td><td></td></tr>
+<tr><td>　　│〇 ws = "pre"                       ' 折り返さない（&lt;br&gt;以外は改行しない）</td><td></td></tr>
+<tr><td>　　│〇 ww = ""                          ' 折り返し指定なし</td><td></td></tr>
+<tr><td>　　│〇 bodyOx = "auto"                  ' ★ ここを auto（必要時にバー）や scroll（常時バー）に</td><td></td></tr>
+<tr><td>　　│〇 contentExtra = "display:inline-block;"</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　│#  CSS生成</td><td></td></tr>
+<tr><td>　　〇 css =  "html,body{margin:0;padding:0;width:100%;}" &amp;  "input[type=hidden]{display:none!important;}" &amp;  "body{overflow-x:" &amp; bodyOx &amp; ";}" &amp;  "#content{" &amp;  " font-family:'MS Gothic','ＭＳ ゴシック',monospace;" &amp;  " font-size:" &amp; CStr(SizePt) &amp; "pt;" &amp;  " line-height:1.0;" &amp;  " white-space:" &amp; ws &amp; ";" &amp;  " " &amp; ww &amp;  " margin:0;padding:0;" &amp;  " " &amp; contentExtra &amp;  "}" &amp;  ".hdr1{" &amp;  " color:#0000FF;" &amp;  " font-weight:bold;" &amp;  "}" &amp;  ".hdr2{" &amp;  " color:#008000;" &amp;  " font-weight:bold;" &amp;  "}" &amp;  ".hdr3{" &amp;  " color:#CC0000;" &amp;  " font-weight:bold;" &amp;  "}"</td><td></td></tr>
+<tr><td>　　│#  CSS反映</td><td></td></tr>
+<tr><td>　　〇 styleEl.innerHTML = css</td><td></td></tr>
+<tr><td>　　┴End Sub</td><td></td></tr>
+</tbody>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function (eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function (e) {
+const styleTh = window.getComputedStyle(eleTh);
+const paddingLeft = parseFloat(styleTh.paddingLeft);
+const paddingRight = parseFloat(styleTh.paddingRight);
+const borderLeft = parseFloat(styleTh.borderLeftWidth);
+const borderRight = parseFloat(styleTh.borderRightWidth);
+startX = e.pageX;
+startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e) {
+const newWidth = startWidth + (e.pageX - startX);
+eleTh.style.width = newWidth + 'px';
+}
+function onMouseUp() {
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
+}
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift_jis">
+<title>modCalendar5</title>
+<style>
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.5;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+colgroup col:nth-of-type(1) {}
+colgroup col:nth-of-type(2) {}
+.resize {position: relative;}
+.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+</style>
+</head>
+<body>
+<p><a href="../_INDEX.html">← Tool Index</a></p>
+<h1>modCalendar5</h1>
+<p>Procedure Count : 8</p>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Status</th><th>Updated</th></tr>
+<tr><td><a href="ShowCalendarFromTextBox2.modCalendar5.hcp.html">ShowCalendarFromTextBox2</a></td><td>テキストボックス日付選択</td><td>[OK]</td><td>2026/11/13 17:11:25</td></tr>
+<tr><td><a href="ShowCalendarFromRange2.modCalendar5.hcp.html">ShowCalendarFromRange2</a></td><td>セル日付選択</td><td>[OK]</td><td>2026/11/13 17:11:28</td></tr>
+<tr><td><a href="FP_GetFormPosition.modCalendar5.hcp.html">FP_GetFormPosition</a></td><td>フォーム表示位置算出</td><td>[OK]</td><td>2026/11/13 17:11:34</td></tr>
+<tr><td><a href="FP_GetPPI.modCalendar5.hcp.html">FP_GetPPI</a></td><td>PPI取得</td><td>[OK]</td><td>2026/11/13 17:11:36</td></tr>
+<tr><td><a href="FP_GetDPIX.modCalendar5.hcp.html">FP_GetDPIX</a></td><td>水平DPI取得</td><td>[OK]</td><td>2026/11/13 17:11:39</td></tr>
+<tr><td><a href="FP_GetDPIY.modCalendar5.hcp.html">FP_GetDPIY</a></td><td>垂直DPI取得</td><td>[OK]</td><td>2026/11/13 17:11:42</td></tr>
+<tr><td><a href="FP_GetDPI.modCalendar5.hcp.html">FP_GetDPI</a></td><td>DPI取得</td><td>[OK]</td><td>2026/11/13 17:11:44</td></tr>
+<tr><td><a href="GP_GetScreenPos.modCalendar5.hcp.html">GP_GetScreenPos</a></td><td>画面有効領域取得</td><td>[OK]</td><td>2026/11/13 17:11:47</td></tr>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function (eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function (e) {
+const styleTh = window.getComputedStyle(eleTh);
+const paddingLeft = parseFloat(styleTh.paddingLeft);
+const paddingRight = parseFloat(styleTh.paddingRight);
+const borderLeft = parseFloat(styleTh.borderLeftWidth);
+const borderRight = parseFloat(styleTh.borderRightWidth);
+startX = e.pageX;
+startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e) {
+const newWidth = startWidth + (e.pageX - startX);
+eleTh.style.width = newWidth + 'px';
+}
+function onMouseUp() {
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
+}
+});
+</script>
+</body>
+</html>

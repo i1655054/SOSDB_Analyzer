@@ -1,0 +1,52 @@
+Procedure: modUtility.Clear_InputCellDat  [ 入力セル初期化＜modUtility＞ ]
+HCP	Business
+┬
+〇│Public Function Clear_InputCellDat(allflg As Boolean)	入力セル初期化＜modUtility＞
+┴└┐
+　　│#  メインシート取得
+　　□ Dim sht As Worksheet
+　　〇 Set sht = ThisWorkbook.Worksheets(SheetName_Main)
+　　│#  作業ファイル削除
+　　□ Dim MyFolder As String
+　　〇 MyFolder = GetDocumentFolderPath
+　　◎ Call DeleteFilesInFolder(MyFolder, g_WorkFolder)	SendBodyファイル削除＜modFileUtility＞
+　　│#  トラブル番号初期化
+　　◆ If allflg = True Then sht.Range(TORBLE_NUM_RANG) = ""
+　　│#  優先度リスト初期化
+　　＠┐With sht.Range(PRIORITY_RANG).Validation
+　　│〇 .Delete
+　　│〇 .Add Type:=xlValidateList, Formula1:="=優先度"
+　　│┴End With
+　　│#  基本情報初期化
+　　〇 sht.Range(DB_ID_RANG) = ""                         ' 0.issue idの位置
+　　〇 sht.Range(DB_STATUS_RANG) = ""                     ' 3.status name:ステータスの位置
+　　〇 sht.Range(PRIORITY_RANG) = ""                      ' 4.priority name:優先度
+　　〇 sht.Range(PROBLEM_EQUIPMENT_RANG) = ""             '20.対象装置（カスタムフィールド名）
+　　〇 sht.Range(EQID_RANG) = ""                          '装置種別
+　　│#  管理情報初期化
+　　〇 sht.Range(EQ_PRODUCT_RANG) = ""                    '26.プロダクト装置／サービス（カスタムフィールド名）
+　　〇 sht.Range(PRODUCT_TANTOU_RANG) = ""                '23.プロダクト担当者（カスタムフィールド名）
+　　〇 sht.Range(ESCALE_DAY_RANG) = ""                    '15.発生日(トラバス)（カスタムフィールド名）
+　　〇 sht.Range(CLOSE_DAY_RANG) = ""                     '16.完了日(トラバス)（カスタムフィールド名）
+　　│#  問処情報初期化
+　　〇 sht.Range(MONDAINUM_RANG) = ""                     '13.問処番号（カスタムフィールド名）
+　　〇 sht.Range(MONDAIPRO_RANG) = ""                     '17.問合せ者（カスタムフィールド名）
+　　│#  規変審情報初期化
+　　〇 sht.Range(KIHENSIN_RANG) = ""                      '24.規変審名/開催日（カスタムフィールド名）
+　　〇 sht.Range(KIKAKU_DAY_RANG) = ""
+　　│#  サービス影響初期化
+　　〇 sht.Range(SERVICE_IMPACT_RANG) = ""                '18.サービス影響（カスタムフィールド名）
+　　│#  発生環境情報初期化
+　　〇 sht.Range(PROBLEM_YMDHM_RANG) = ""                 ' 8.発生時間（カスタムフィールド名）
+　　〇 sht.Range(PROBLEM_BUILDING_RANG) = ""              ' 9.ビル(収容局)（カスタムフィールド名）
+　　〇 sht.Range(HOST_NAME_RANG) = ""                     '10.ホスト名（カスタムフィールド名）
+　　│#  詳細表示ボタン解除
+　　◎ Call Sheet1.Cause_Button_Release	原因ボタン解除＜Sheet1＞
+　　◎ Call Sheet1.Cope_Button_Release	対処内容ボタン解除＜Sheet1＞
+　　◎ Call Sheet1.Remarks_Button_Release	備考ボタン解除＜Sheet1＞
+　　◎ Call Sheet1.Phenomenon_Button_Release	事象名ボタン解除＜Sheet1＞
+　　◎ Call Sheet1.RequesterNum_Button_Release	依頼元管理番号ボタン解除＜Sheet1＞
+　　◎ Call Sheet1.RequesterPro_Button_Release	依頼者ボタン解除＜Sheet1＞
+　　◎ Call Sheet1.KeyWord_Button_Release	キーワードボタン解除＜Sheet1＞
+　　◎ Call Sheet1.Description_Button_Release	説明ボタン解除＜Sheet1＞
+　　┴End Function

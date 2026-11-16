@@ -1,0 +1,36 @@
+Procedure: modMonshinCore.GetValueByAddress  [ セル値取得＜modMonshinCore＞ ]
+HCP	Business
+┬
+〇│Private Function GetValueByAddress(  ByVal xlBook As Object,  ByVal wsName As String,  ByVal addr As String  ) As String	セル値取得＜modMonshinCore＞
+┴└┐
+　　□ Dim ws As Worksheet
+　　□ Dim parts() As String
+　　□ Dim i As Long
+　　□ Dim result As String
+　　□ Dim cellValue As String
+　　☆ On Error GoTo ErrHandler
+　　│#  ワークシート取得
+　　〇 Set ws = xlBook.Worksheets(wsName)
+　　│#  複数セル指定判定
+　　◆┐If InStr(addr, "+") > 0 Then
+　　│〇 parts = Split(addr, "+")
+　　││#  セル値連結
+　　│＠┐For i = LBound(parts) To UBound(parts)
+　　│││#  セル値取得
+　　││〇 cellValue = Trim(CStr(ws.Range(parts(i)).Value))
+　　│││#  取得値追加
+　　││◆┐If cellValue <> "" Then
+　　│││〇 result = result & cellValue & vbCrLf
+　　│││┴End If
+　　││┴Next
+　　├┐ELSE
+　　││#  単一セル値取得
+　　│〇 result = Trim(CStr(ws.Range(addr).Value))
+　　│┴End If
+　　│#  取得結果返却
+　　〇 GetValueByAddress = Trim(result)
+　　→ Exit Function
+▼ ErrHandler:
+　　│#  取得失敗
+　　〇 GetValueByAddress = ""
+　　┴End Function

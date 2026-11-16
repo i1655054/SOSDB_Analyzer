@@ -1,0 +1,13 @@
+Procedure: modFileUtility.GetDocumentFolderPath  [ ドキュメントフォルダ取得＜modFileUtility＞ ]
+HCP	Business
+┬
+〇│Public Function GetDocumentFolderPath() As String	ドキュメントフォルダ取得＜modFileUtility＞
+┴└┐
+　　□ Dim WSH As Object
+　　│#  WSH生成
+　　〇 Set WSH = CreateObject("WScript.Shell")
+　　│#  マイドキュメント取得
+　　〇 GetDocumentFolderPath = WSH.SpecialFolders("MyDocuments")
+　　│#  オブジェクト解放
+　　〇 Set WSH = Nothing
+　　┴End Function

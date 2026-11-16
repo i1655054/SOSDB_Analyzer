@@ -1,0 +1,74 @@
+Procedure: modIssueMapper.Get_RedmineDataToIssueInfo  [ Redmine情報取得＜modIssueMapper＞ ]
+HCP	Business
+┬
+〇│Public Function GetRedmineDataToIssueInfo(  ByVal AuthorName As String,  ByVal bugId As String) As IssueInfo	Redmine情報取得＜modIssueMapper＞
+┴└┐
+　　│#  Issueオブジェクト生成
+　　□ Dim issue As IssueInfo
+　　〇 Set issue = New IssueInfo
+　　□ Dim xmlIssue As Object
+　　□ Dim node As Object
+　　□ Dim cf As Object
+　　│#  Redmine接続情報取得
+　　□ Dim RedmineDB As String
+　　◎ RedmineDB = GetServerURL(Range(RedmineDbSev_RANG).Value)	RedmineサーバURL取得＜modIssueMapper＞
+　　│	内部呼出:Range
+　　│#  APIパス生成
+　　□ Dim apiKey As String
+　　◎ apiKey = GetApiKey(Author_Name)	APIキー取得＜modIssueMapper＞
+　　◆ If apiKey = "" Then apiKey = Read_API_Key
+　　□ Dim api As String
+　　〇 api = RedmineDB & "redmine/issues/"
+　　│#  XML取得
+　　◎ Set xmlIssue = GetXmlData(api & bugId & ".xml?key=" & apiKey)	XML取得＜XmlLoader＞
+　　│#  XML取得結果確認
+　　◆┐If xmlIssue Is Nothing Then
+　　│〇 Debug.Print "XML取得失敗: " & bugId
+　　││#  空Issue返却
+　　│〇 Set Get_RedmineDataToIssueInfo = issue
+　　│→ Exit Function
+　　│┴End If
+　　│#  基本情報取得
+　　〇 Set node = xmlIssue.SelectSingleNode("subject")
+　　◆ If Not node Is Nothing Then issue.Subject = node.text
+　　〇 Set node = xmlIssue.SelectSingleNode("description")
+　　◆ If Not node Is Nothing Then issue.Description = node.text
+　　〇 Set node = xmlIssue.SelectSingleNode("status")
+　　◆ If Not node Is Nothing Then issue.Status = node.getAttribute("name")
+　　〇 Set node = xmlIssue.SelectSingleNode("priority")
+　　◆ If Not node Is Nothing Then issue.Priority = node.getAttribute("name")
+　　〇 issue.AuthorName = Author_Name
+　　〇 Set node = xmlIssue.SelectSingleNode("assigned_to")
+　　◆ If Not node Is Nothing Then issue.AssignedTo = node.getAttribute("name")
+　　〇 Set node = xmlIssue.SelectSingleNode("fixed_version")
+　　◆ If Not node Is Nothing Then issue.targetVersion = node.getAttribute("name")
+　　│#  IssueID設定
+　　〇 issue.IssueId = bugId
+　　│#  カスタムフィールド取得
+　　＠┐For Each cf In xmlIssue.getElementsByTagName("custom_field")
+　　││#  フィールド種別判定
+　　│◆┐Select Case cf.getAttribute("name")
+　　││├┐Case "発生時間": issue.OccurrenceDateTime = cf.text
+　　││├┐Case "ビル(収容局)": issue.ProblemBuilding = cf.text
+　　││├┐Case "ホスト名": issue.HostName = cf.text
+　　││├┐Case "事象詳細": issue.Phenomenon = cf.text
+　　││├┐Case "詳細原因": issue.CauseDetail = cf.text
+　　││├┐Case "問処番号": issue.Mondainum_Pro = cf.text
+　　││├┐Case "備考": issue.Remarks = cf.text
+　　││├┐Case "発生日(トラバス)": issue.Esukare_Date = cf.text
+　　││├┐Case "完了日(トラバス)": issue.Close_Date = cf.text
+　　││├┐Case "問合せ者": issue.Requester_Pro = cf.text
+　　││├┐Case "サービス影響": issue.ServiceImpact = cf.text
+　　││├┐Case "管理番号": issue.TroubleNum = cf.text
+　　││├┐Case "対象装置": issue.Equipment = cf.text
+　　││├┐Case "対処内容": issue.Countermeasure = cf.text
+　　││├┐Case "依頼元管理番号": issue.RequesterNum = cf.text
+　　││├┐Case "プロダクト担当者": issue.ProductTantou = cf.text
+　　││├┐Case "規変審名/開催日": issue.KihensinName_Date = cf.text
+　　││├┐Case "キーワード": issue.Key_Word = cf.text
+　　││├┐Case "プロダクト装置／サービス": issue.EqProduct = cf.text
+　　││┴End Select
+　　│┴Next
+　　│#  Issue返却
+　　〇 Set Get_RedmineDataToIssueInfo = issue
+　　┴End Function

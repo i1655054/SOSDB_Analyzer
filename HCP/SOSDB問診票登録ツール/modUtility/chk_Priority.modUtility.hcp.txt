@@ -1,0 +1,8 @@
+Procedure: modUtility.chk_Priority  [ 優先度確認＜modUtility＞ ]
+HCP	Business
+┬
+〇│Function chk_Priority(ByVal issue As IssueInfo) As Boolean	優先度確認＜modUtility＞
+┴└┐
+　　│#  優先度入力確認
+　　◎ chk_Priority = ValidateAndHighlight(  issue.Priority,  PRIORITY_RANG,  COLOR_REQUIRED) ' 赤系	入力確認強調表示＜modUtility＞
+　　┴End Sub

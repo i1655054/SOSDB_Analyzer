@@ -1,0 +1,49 @@
+Procedure: modIssueService.UpdateExistingIssue  [ Issue更新登録＜modIssueService＞ ]
+HCP	Business
+┬
+〇│Private Sub UpdateExistingIssue(  ByVal issue As IssueInfo)	Issue更新登録＜modIssueService＞
+┴└┐
+　　│#  変数初期化
+　　□ Dim flags As Long
+　　□ Dim xml As String
+　　□ Dim xmlPath As String
+　　□ Dim result As Variant
+　　│#  キーワード情報出力
+　　〇 Debug.Print "===== UpdateExistingIssue ====="
+　　〇 Debug.Print "Issue KeyWord   =[" & issue.Key_Word & "]"
+　　〇 Debug.Print "Current KeyWord =[" & g_CurrentIssue.Key_Word & "]"
+　　〇 Debug.Print "Original KeyWord=[" & g_OriginalIssue.Key_Word & "]"
+　　│#  差分判定
+　　◎ flags = GetUpdateCheckResult(issue, g_OriginalIssue)	更新差分判定＜modIssueMapper＞
+　　│#  差分情報出力
+　　◆┐If glbdbgflg Then
+　　│〇 Debug.Print "差分フラグ:", flags
+　　│◎ Debug.Print "ビット位置:", GetSetBitPositions(flags)	設定ビット位置取得＜modMonshinCore＞
+　　│〇 Debug.Print "変更項目:"
+　　│◎ Debug.Print GetDiffFlagNames(flags)	差分名称取得＜modUtility＞
+　　│┴End If
+　　│#  更新有無判定
+　　◆┐If flags = 0 Then
+　　│〇 MsgBox "更新なし"
+　　│→ Exit Sub
+　　│┴End If
+　　│#  MonFolder存在確認
+　　◆→ If Not EnsureMonFolder(issue) Then Exit Sub
+　　│#  更新XML生成
+　　◎ xml = CreateUpdateXmlFromIssue(issue, g_OriginalIssue, flags)	更新登録XML生成＜modRegister＞
+　　│#  XMLファイル出力
+　　◎ xmlPath = AutomaticTextOutput(xml, issue.IssueId, "")	XMLファイル出力＜modFileUtility＞
+　　│#  Redmine更新実行
+　　◎ result = XmlLoader.SendXmlData(xmlPath, issue)	更新送信＜XmlLoader＞
+　　│#  一時XML削除
+　　◎ DeleteFileSafe (xmlPath)	安全ファイル削除＜modUtility＞
+　　│#  更新結果確認
+　　◆┐If result(0) <> "" Then
+　　││#  OriginalIssue更新
+　　│◎ Call InitializeOriginalIssue	OriginalIssue初期化＜modIssueService＞
+　　│◎ g_OriginalIssue.CopyFrom issue	Issue情報コピー＜IssueInfo＞
+　　├┐ELSE
+　　││#  更新失敗終了
+　　│→ Exit Sub
+　　│┴End If
+　　┴End Sub

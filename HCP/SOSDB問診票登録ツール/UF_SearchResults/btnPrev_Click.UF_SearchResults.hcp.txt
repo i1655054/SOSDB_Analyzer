@@ -1,0 +1,13 @@
+Procedure: UF_SearchResults.btnPrev_Click  [ 前ページ表示＜UF_SearchResults＞ ]
+HCP	Business
+┬
+〇│Private Sub btnPrev_Click()	前ページ表示＜UF_SearchResults＞
+┴└┐
+　　│#  前ページ有無確認
+　　◆┐If currentPage > 0 Then
+　　││#  前ページ移動
+　　│〇 currentPage = currentPage - 1
+　　││#  ページ表示
+　　│◎ ShowPage currentPage	検索結果ページ表示＜UF_SearchResults＞
+　　│┴End If
+　　┴End Sub

@@ -1,0 +1,10 @@
+Procedure: clsUF_Cal5Label2.NewClass  [ 固定ラベル初期化＜clsUF_Cal5Label2＞ ]
+HCP	Business
+┬
+〇│Public Sub NewClass(ByVal objLabel As MSForms.Label, ByVal strGuide As String)	固定ラベル初期化＜clsUF_Cal5Label2＞
+┴└┐
+　　│#  固定ラベル関連付け
+　　〇 Set Label = objLabel
+　　│#  ガイドメッセージ設定
+　　〇 g_strGuide = strGuide
+　　┴End Sub

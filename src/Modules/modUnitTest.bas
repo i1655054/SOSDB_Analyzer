@@ -1,6 +1,19 @@
 Attribute VB_Name = "modUnitTest"
 Option Explicit
 
+Public Sub RefreshHCPIndexes()
+
+    Trace "INDEX", _
+        "Manual Refresh"
+
+    RebuildAllIndexes
+
+    MsgBox _
+        "INDEX更新完了", _
+        vbInformation
+
+End Sub
+
 '==================================================
 ' テスト支援
 '==================================================

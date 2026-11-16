@@ -1,0 +1,16 @@
+Procedure: UF_NewInfoRegist.Clear_chk  [ 入力エラー表示解除＜UF_NewInfoRegist＞ ]
+HCP	Business
+┬
+〇│Private Function Clear_chk() As Boolean	入力エラー表示解除＜UF_NewInfoRegist＞
+┴└┐
+　　│#  エラー表示解除
+　　〇 Me.txt管理番号_子番号.BackColor = &H80000005
+　　〇 Me.cmb優先度.BackColor = &H80000005
+　　〇 Me.cmb装置プロダクト.BackColor = &H80000005
+　　〇 Me.txtプロダクト担当者.BackColor = &H80000005
+　　〇 Me.txt発生日.BackColor = &H80000005
+　　〇 Me.txt事象名.BackColor = &H80000005
+　　〇 Me.txt依頼元管理番号.BackColor = &H80000005
+　　〇 Me.txt依頼者.BackColor = &H80000005
+　　〇 Me.txt説明.BackColor = &H80000005
+　　┴End Function

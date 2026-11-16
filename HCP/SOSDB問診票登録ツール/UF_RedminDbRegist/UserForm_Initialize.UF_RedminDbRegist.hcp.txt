@@ -1,0 +1,8 @@
+Procedure: UF_RedminDbRegist.UserForm_Initialize  [ 登録確認フォーム初期化＜UF_RedminDbRegist＞ ]
+HCP	Business
+┬
+〇│Private Sub UserForm_Initialize()	登録確認フォーム初期化＜UF_RedminDbRegist＞
+┴└┐
+　　│#  初期値設定
+　　〇 vYesNo = vbNo
+　　┴End Sub

@@ -1,0 +1,10 @@
+Procedure: modIssueService.InitializeOriginalIssue  [ OriginalIssue初期化＜modIssueService＞ ]
+HCP	Business
+┬
+〇│Sub InitializeOriginalIssue()	OriginalIssue初期化＜modIssueService＞
+┴└┐
+　　│#  OriginalIssue生成
+　　◆┐If g_OriginalIssue Is Nothing Then
+　　│〇 Set g_OriginalIssue = New IssueInfo
+　　│┴End If
+　　┴End Sub

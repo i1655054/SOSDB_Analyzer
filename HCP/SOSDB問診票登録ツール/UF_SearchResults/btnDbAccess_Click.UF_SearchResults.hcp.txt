@@ -1,0 +1,38 @@
+Procedure: UF_SearchResults.btnDbAccess_Click  [ Redmine画面表示＜UF_SearchResults＞ ]
+HCP	Business
+┬
+〇│Private Sub btnDbAccess_Click()	Redmine画面表示＜UF_SearchResults＞
+┴└┐
+　　□ Dim selectedValue As String
+　　□ Dim selectedValue2 As String
+　　□ Dim Author_Name As String
+　　□ Dim apiKey As String
+　　□ Dim url As String
+　　□ Dim result As VbMsgBoxResult
+　　＠┐With Me.ListBox3
+　　││#  選択状態確認
+　　│◆┐If .ListIndex <> -1 Then ' 何か選択されているかチェック
+　　│││#  選択値取得
+　　││〇 selectedValue = .List(.ListIndex) ' 選択行の値を取得
+　　││〇 selectedValue2 = Me.ListBox7.List(.ListIndex) ' 選択行の値を取得
+　　│││#  ユーザー確認
+　　││〇 result = MsgBox("選択された値は「" & selectedValue & "」です。", vbYesNo + vbQuestion, "DBアクセス確認")
+　　│││#  実行判定
+　　││◆┐If result = vbYes Then
+　　││││#  APIキー取得
+　　│││◎ apiKey = GetApiKey(Author_Name)	APIキー取得＜modIssueMapper＞
+　　││││#  APIキー補完
+　　│││◆┐If (apiKey = "") Then
+　　││││〇 apiKey = Read_API_Key
+　　││││┴End If
+　　││││#  RedmineURL生成
+　　│││〇 url = selectedValue2 & "?key=" & apiKey
+　　││││#  Redmine画面表示
+　　│││〇 ThisWorkbook.FollowHyperlink Address:=url
+　　│││┴End If
+　　│├┐ELSE
+　　│││#  未選択警告
+　　││〇 MsgBox "アイテムが選択されていません。"
+　　││┴End If
+　　│┴End With
+　　┴End Sub

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift_jis">
+<title>GP_MakeCalendarTable</title>
+<style>
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+colgroup col:nth-of-type(1) {}
+colgroup col:nth-of-type(2) {}
+.resize {position: relative;}
+.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+</style>
+</head>
+<body>
+<h1>GP_MakeCalendarTable</h1>
+<p>Module : clsAboutCalendar2</p>
+<p><a href="./_INDEX.html">← Module Index</a></p>
+<table>
+<colgroup><col/><col/></colgroup>
+<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<tbody>
+<tr><td>Procedure: clsAboutCalendar2.GP_MakeCalendarTable  [ 日付テーブル生成＜clsAboutCalendar2＞ ]</td><td></td></tr>
+<tr><td>HCP</td><td>Business</td></tr>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Private Sub GPMakeCalendarTable(ByVal lngY As Long,  ByVal lngM As Long,  ByRef lngCalIxMax As Long,  ByRef tblCalendar() As g_typAboutCalendar2)</td><td>日付テーブル生成＜clsAboutCalendar2＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　□ Dim dteStrDate As Date                                          ' 月初日</td><td></td></tr>
+<tr><td>　　□ Dim dteEndDate As Date                                          ' 月末日</td><td></td></tr>
+<tr><td>　　□ Dim dteDate As Date                                             ' 作業日付</td><td></td></tr>
+<tr><td>　　□ Dim lngSyusu As Long                                            ' 週数(1始まり､日曜日発見で1加算)</td><td></td></tr>
+<tr><td>　　□ Dim lngHmSyusu As Long                                          ' HM週数(0始まり､月曜日発見で1加算)</td><td></td></tr>
+<tr><td>　　□ Dim lngCalIxMax2 As Long                                        '</td><td></td></tr>
+<tr><td>　　│#  月初月末算出</td><td></td></tr>
+<tr><td>　　〇 dteStrDate = DateSerial(lngY, lngM, 1)</td><td></td></tr>
+<tr><td>　　〇 dteEndDate = DateSerial(lngY, lngM + 1, 0)</td><td></td></tr>
+<tr><td>　　〇 lngCalIxMax2 = lngCalIxMax + Day(dteEndDate)</td><td></td></tr>
+<tr><td>　　│#  テーブル領域確保</td><td></td></tr>
+<tr><td>　　〇 ReDim Preserve tblCalendar(lngCalIxMax2)</td><td></td></tr>
+<tr><td>　　〇 dteDate = dteStrDate</td><td></td></tr>
+<tr><td>　　│#  週数初期化</td><td></td></tr>
+<tr><td>　　◆┐If Weekday(dteStrDate, vbSunday) = vbSunday Then</td><td></td></tr>
+<tr><td>　　│〇 lngSyusu = 0</td><td></td></tr>
+<tr><td>　　├┐ELSE</td><td></td></tr>
+<tr><td>　　│〇 lngSyusu = 1</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　│#  日付テーブル生成</td><td></td></tr>
+<tr><td>　　＠┐Do While dteDate &lt;= dteEndDate</td><td></td></tr>
+<tr><td>　　│〇 lngCalIxMax = lngCalIxMax + 1</td><td></td></tr>
+<tr><td>　　│＠┐With tblCalendar(lngCalIxMax)</td><td></td></tr>
+<tr><td>　　│││#  日付情報設定</td><td></td></tr>
+<tr><td>　　││〇 .Hiduke = dteDate</td><td></td></tr>
+<tr><td>　　│││#  曜日設定</td><td></td></tr>
+<tr><td>　　││〇 .Yobi = Weekday(dteDate, vbSunday) - 1      ' ←日曜日=0とする値(VBAのWeekdayは1になる)</td><td></td></tr>
+<tr><td>　　│││#  週数設定</td><td></td></tr>
+<tr><td>　　││◆ If .Yobi = 0 Then lngSyusu = lngSyusu + 1</td><td></td></tr>
+<tr><td>　　│││#  HappyMonday週数設定</td><td></td></tr>
+<tr><td>　　││◆ If .Yobi = 1 Then lngHmSyusu = lngHmSyusu + 1</td><td></td></tr>
+<tr><td>　　││〇 .Syusu = lngSyusu</td><td></td></tr>
+<tr><td>　　││〇 .HmSyusu = lngHmSyusu</td><td></td></tr>
+<tr><td>　　││┴End With</td><td></td></tr>
+<tr><td>　　││#  次日設定</td><td></td></tr>
+<tr><td>　　│〇 dteDate = dteDate + 1</td><td></td></tr>
+<tr><td>　　│┴Loop</td><td></td></tr>
+<tr><td>　　┴End Sub</td><td></td></tr>
+</tbody>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function (eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function (e) {
+const styleTh = window.getComputedStyle(eleTh);
+const paddingLeft = parseFloat(styleTh.paddingLeft);
+const paddingRight = parseFloat(styleTh.paddingRight);
+const borderLeft = parseFloat(styleTh.borderLeftWidth);
+const borderRight = parseFloat(styleTh.borderRightWidth);
+startX = e.pageX;
+startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e) {
+const newWidth = startWidth + (e.pageX - startX);
+eleTh.style.width = newWidth + 'px';
+}
+function onMouseUp() {
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
+}
+});
+</script>
+</body>
+</html>

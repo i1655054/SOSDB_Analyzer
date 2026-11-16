@@ -1,0 +1,44 @@
+Procedure: UF_SearchResults.ShowPage  [ 検索結果ページ表示＜UF_SearchResults＞ ]
+HCP	Business
+┬
+〇│Sub ShowPage(page As Long)	検索結果ページ表示＜UF_SearchResults＞
+┴└┐
+　　□ Dim i As Long, startIdx As Long, endIdx As Long
+　　□ Dim totalPages As Long
+　　│#  一覧初期化
+　　◎ ListBox1.Clear	Issue情報初期化＜IssueInfo＞
+　　◎ ListBox2.Clear	Issue情報初期化＜IssueInfo＞
+　　◎ ListBox3.Clear	Issue情報初期化＜IssueInfo＞
+　　◎ ListBox4.Clear	Issue情報初期化＜IssueInfo＞
+　　◎ ListBox5.Clear	Issue情報初期化＜IssueInfo＞
+　　◎ ListBox6.Clear	Issue情報初期化＜IssueInfo＞
+　　◎ ListBox7.Clear	Issue情報初期化＜IssueInfo＞
+　　│#  表示範囲算出
+　　〇 startIdx = page * pageSize + 1
+　　〇 endIdx = startIdx + pageSize - 1
+　　│#  表示範囲補正
+　　◆ If endIdx > UBound(csvData) Then endIdx = UBound(csvData)
+　　│#  一覧表示
+　　＠┐For i = startIdx To endIdx
+　　│〇 ListBox1.AddItem Format(i, "000")
+　　│〇 ListBox2.AddItem csvData(i)(0)
+　　│〇 ListBox3.AddItem csvData(i)(1)
+　　│〇 ListBox4.AddItem csvData(i)(2)
+　　│〇 ListBox5.AddItem csvData(i)(3)
+　　│〇 ListBox6.AddItem csvData(i)(5)
+　　│〇 ListBox7.AddItem csvData(i)(4)
+　　│┴Next i
+　　│#  操作ボタン表示
+　　〇 btnSelect.Visible = True
+　　〇 btnDbAccess.Visible = True
+　　│#  件数表示
+　　〇 Label件数.Caption = "検索結果： " & UBound(csvData) & " 件数"
+　　│#  ページ情報表示
+　　〇 totalPages = Int((UBound(csvData) - 1) / pageSize) + 1
+　　〇 LabelPage.Caption = "ページ " & (page + 1) & " / " & totalPages
+　　│#  ページ切替可否判定
+　　◆┐If totalPages > 1 Then
+　　│〇 btnNext.Visible = True
+　　│〇 btnPrev.Visible = True
+　　│┴End If
+　　┴End Sub

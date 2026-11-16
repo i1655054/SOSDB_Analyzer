@@ -1,0 +1,9 @@
+Procedure: Sheet1.DB情報取得_Click  [ Redmine情報取得＜Sheet1＞ ]
+HCP	Business
+┬
+〇│Private Sub DB情報取得_Click()	Redmine情報取得＜Sheet1＞
+┴└┐
+　　◆→ If modUtility.IsSearchResultActive Then Exit Sub
+　　◆→ If Not PrepareIssueFor("SEARCH") Then Exit Sub
+　　◎ Call LoadRedmineIssue	Redmine情報読込＜modMonshinCore＞
+　　┴End Sub

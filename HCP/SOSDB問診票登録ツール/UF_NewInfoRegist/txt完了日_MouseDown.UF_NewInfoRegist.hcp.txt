@@ -1,0 +1,8 @@
+Procedure: UF_NewInfoRegist.txt完了日_MouseDown  [ 完了日カレンダー表示＜UF_NewInfoRegist＞ ]
+HCP	Business
+┬
+〇│Private Sub txt完了日_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)	完了日カレンダー表示＜UF_NewInfoRegist＞
+┴└┐
+　　│#  完了日カレンダー表示
+　　◎ Call ShowCalendarFromTextBox2(Me.txt完了日)	テキストボックス日付選択＜modCalendar5＞
+　　┴End Sub

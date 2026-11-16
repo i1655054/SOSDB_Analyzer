@@ -1,0 +1,13 @@
+Procedure: UF_InfoWebDisplay.ConvertNewLinesToHTML  [ 改行HTML変換＜UF_InfoWebDisplay＞ ]
+HCP	Business
+┬
+〇│Function ConvertNewLinesToHTML(ByVal inputText As String) As String	改行HTML変換＜UF_InfoWebDisplay＞
+┴└┐
+　　□ Dim convertedText As String
+　　│#  改行コード変換
+　　〇 convertedText = Replace(inputText, vbCrLf, "<br>")
+　　〇 convertedText = Replace(convertedText, vbCr, "<br>")
+　　〇 convertedText = Replace(convertedText, vbLf, "<br>")
+　　│#  HTML文字列返却
+　　〇 ConvertNewLinesToHTML = convertedText
+　　┴End Sub

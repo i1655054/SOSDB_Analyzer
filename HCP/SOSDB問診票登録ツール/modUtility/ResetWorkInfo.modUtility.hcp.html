@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift_jis">
+<title>ResetWorkInfo</title>
+<style>
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+colgroup col:nth-of-type(1) {}
+colgroup col:nth-of-type(2) {}
+.resize {position: relative;}
+.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+</style>
+</head>
+<body>
+<h1>ResetWorkInfo</h1>
+<p>Module : modUtility</p>
+<p><a href="./_INDEX.html">← Module Index</a></p>
+<table>
+<colgroup><col/><col/></colgroup>
+<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<tbody>
+<tr><td>Procedure: modUtility.ResetWorkInfo  [ 作業情報リセット＜modUtility＞ ]</td><td></td></tr>
+<tr><td>HCP</td><td>Business</td></tr>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Public Sub ResetWorkInfo()</td><td>作業情報リセット＜modUtility＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　☆ On Error Resume Next</td><td></td></tr>
+<tr><td>　　│#  情報表示フォーム終了</td><td></td></tr>
+<tr><td>　　〇 Unload UF_InfoWebDisplay</td><td></td></tr>
+<tr><td>　　☆ On Error GoTo 0</td><td></td></tr>
+<tr><td>　　│#  入力情報初期化</td><td></td></tr>
+<tr><td>　　◎ Call Clear_InputCellDat(False)</td><td>入力セル初期化＜modUtility＞</td></tr>
+<tr><td>　　│#  セル色初期化</td><td></td></tr>
+<tr><td>　　◎ Call RestoreAllColors</td><td>全セル色復元＜modUtility＞</td></tr>
+<tr><td>　　│#  Issue情報初期化</td><td></td></tr>
+<tr><td>　　〇 Set g_CurrentIssue = Nothing</td><td></td></tr>
+<tr><td>　　〇 Set g_OriginalIssue = Nothing</td><td></td></tr>
+<tr><td>　　〇 DoEvents</td><td></td></tr>
+<tr><td>　　│#  検索画面状態確認</td><td></td></tr>
+<tr><td>　　◆┐If UF_SearchResults.Visible = False  And Sheet1.DB検索.Caption &lt;&gt; "検索" Then</td><td></td></tr>
+<tr><td>　　││#  検索フォーム終了</td><td></td></tr>
+<tr><td>　　│〇 Unload UF_SearchResults</td><td></td></tr>
+<tr><td>　　││#  検索ボタン状態復元</td><td></td></tr>
+<tr><td>　　│〇 Sheet1.DB検索.Caption = "検索"</td><td></td></tr>
+<tr><td>　　│〇 Sheet1.DB検索.BackColor = &amp;H8000000F</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　│#  チェックボックス初期化</td><td></td></tr>
+<tr><td>　　◎ Call Sheet1.ResetCheckBox</td><td>問診票チェック初期化＜Sheet1＞</td></tr>
+<tr><td>　　│#  ワーク情報削除</td><td></td></tr>
+<tr><td>　　◎ Call Work情報削除</td><td>ワーク情報削除＜modUtility＞</td></tr>
+<tr><td>　　┴End Sub</td><td></td></tr>
+</tbody>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function (eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function (e) {
+const styleTh = window.getComputedStyle(eleTh);
+const paddingLeft = parseFloat(styleTh.paddingLeft);
+const paddingRight = parseFloat(styleTh.paddingRight);
+const borderLeft = parseFloat(styleTh.borderLeftWidth);
+const borderRight = parseFloat(styleTh.borderRightWidth);
+startX = e.pageX;
+startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e) {
+const newWidth = startWidth + (e.pageX - startX);
+eleTh.style.width = newWidth + 'px';
+}
+function onMouseUp() {
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
+}
+});
+</script>
+</body>
+</html>

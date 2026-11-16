@@ -1,0 +1,21 @@
+Procedure: modUtility.ConfirmBeforeRegister  [ 登録前確認＜modUtility＞ ]
+HCP	Business
+┬
+〇│Public Function ConfirmBeforeRegister(issue As IssueInfo) As Boolean	登録前確認＜modUtility＞
+┴└┐
+　　│#  プロダクト担当者確認
+　　◆┐If Trim(issue.ProductTantou) = "" Then
+　　││#  確認済判定
+　　│◆┐If Not issue.IsProductPersonConfirmed Then
+　　│││#  継続確認
+　　││◆┐If MsgBox("プロダクト担当者が未設定です。" & vbCrLf &  "後で設定してもよろしいですか？",  vbYesNo + vbQuestion) = vbNo Then
+　　│││〇 ConfirmBeforeRegister = False
+　　│││→ Exit Function
+　　│││┴End If
+　　│││#  確認済設定
+　　││〇 issue.IsProductPersonConfirmed = True
+　　││┴End If
+　　│┴End If
+　　│#  登録許可
+　　〇 ConfirmBeforeRegister = True
+　　┴End Function

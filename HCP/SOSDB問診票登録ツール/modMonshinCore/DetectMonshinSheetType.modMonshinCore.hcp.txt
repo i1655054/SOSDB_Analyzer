@@ -1,0 +1,25 @@
+Procedure: modMonshinCore.DetectMonshinSheetType  [ 問診票形式判定＜modMonshinCore＞ ]
+HCP	Business
+┬
+〇│Public Function DetectMonshinSheetType(  ByVal xlBook As Object  ) As enMonshinSheetType	問診票形式判定＜modMonshinCore＞
+┴└┐
+　　□ Dim i As Long
+　　□ Dim ws As Object
+　　│#  判定結果初期化
+　　〇 DetectMonshinSheetType = Monshin_NotFound
+　　│#  シート探索
+　　＠┐For i = LBound(modMonshinMap.MonShinSheet_id) To UBound(modMonshinMap.MonShinSheet_id)
+　　│☆ On Error Resume Next
+　　││#  シート取得
+　　│◇ Set ws = xlBook.Worksheets(modMonshinMap.MonShinSheet_id(i))
+　　│☆ On Error GoTo 0
+　　││#  存在確認
+　　│◆┐If Not ws Is Nothing Then
+　　│││#  問診票形式返却
+　　││〇 DetectMonshinSheetType = i
+　　││→ Exit Function
+　　││┴End If
+　　││#  ワークシート初期化
+　　│〇 Set ws = Nothing
+　　│┴Next i
+　　┴End Function

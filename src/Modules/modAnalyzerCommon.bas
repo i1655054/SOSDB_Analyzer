@@ -715,7 +715,7 @@ Public Function IsFunctionCall( _
     ' CreatePathChart_V3 _
     '------------------------------------
     '# çsåpë±åƒèoîªíË
-    If Right$(Trim$(LineText), 1) = "_" Then
+    If right$(Trim$(LineText), 1) = "_" Then
     
         Dim WorkText As String
         

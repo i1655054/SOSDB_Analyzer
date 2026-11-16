@@ -1,0 +1,15 @@
+Procedure: clsAboutCalendar2.FP_GetNumber  [ 数値取得＜clsAboutCalendar2＞ ]
+HCP	Business
+┬
+〇│Private Function FP_GetNumber(ByRef objRange As Range) As Long	数値取得＜clsAboutCalendar2＞
+┴└┐
+　　□ Dim strText1 As String                                          ' 文字列WORK
+　　□ Dim strText2 As String                                          ' 文字列WORK
+　　│#  セル値取得
+　　〇 strText1 = objRange.Value
+　　│#  空文字補完
+　　〇 strText2 = Trim(strText1)
+　　◆ If strText2 = "" Then strText2 = "0"
+　　│#  数値変換
+　　〇 FP_GetNumber = CLng(strText2)
+　　┴End Function

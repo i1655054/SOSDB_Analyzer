@@ -1,0 +1,24 @@
+Procedure: UF_SearchResults.UserForm_Initialize  [ 検索結果フォーム初期化＜UF_SearchResults＞ ]
+HCP	Business
+┬
+〇│Private Sub UserForm_Initialize()	検索結果フォーム初期化＜UF_SearchResults＞
+┴└┐
+　　│#  ページサイズ初期化
+　　〇 pageSize = 20
+　　│#  一覧表示初期化
+　　〇 ListBox1.BorderStyle = fmBorderStyleNone
+　　〇 ListBox2.BorderStyle = fmBorderStyleNone
+　　〇 ListBox3.BorderStyle = fmBorderStyleNone
+　　〇 ListBox4.BorderStyle = fmBorderStyleNone
+　　〇 ListBox5.BorderStyle = fmBorderStyleNone
+　　〇 ListBox6.BorderStyle = fmBorderStyleNone
+　　〇 ListBox7.Visible = False
+　　│#  ボタン初期状態設定
+　　〇 btnNext.Visible = False
+　　〇 btnPrev.Visible = False
+　　〇 btnSelect.Visible = False
+　　〇 btnDbAccess.Visible = False
+　　│#  列幅設定
+　　〇 Me.ListBox5.ColumnWidths = "250" ' 列幅を200ポイントに設定
+　　〇 Me.ListBox6.ColumnWidths = "1200" ' 列幅を200ポイントに設定
+　　┴End Sub

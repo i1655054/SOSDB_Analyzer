@@ -1,0 +1,35 @@
+Procedure: IssueInfo.IsDifferent  [ 差分有無判定＜IssueInfo＞ ]
+HCP	Business
+┬
+〇│Public Function IsDifferent(other As IssueInfo) As Boolean	差分有無判定＜IssueInfo＞
+┴└┐
+　　│#  基本項目差分判定
+　　◆→ If Me.Subject <> other.Subject Then IsDifferent = True: Exit Function
+　　◆→ If Me.Description <> other.Description Then IsDifferent = True: Exit Function
+　　◆→ If Me.Status <> other.Status Then IsDifferent = True: Exit Function
+　　◆→ If Me.Priority <> other.Priority Then IsDifferent = True: Exit Function
+　　◆→ If Me.AssignedTo <> other.AssignedTo Then IsDifferent = True: Exit Function
+　　◆→ If Me.targetVersion <> other.targetVersion Then IsDifferent = True: Exit Function
+　　│#  カスタムフィールド差分判定
+　　◆→ If Me.OccurrenceDateTime <> other.OccurrenceDateTime Then IsDifferent = True: Exit Function
+　　◆→ If Me.HostName <> other.HostName Then IsDifferent = True: Exit Function
+　　◆→ If Me.ProblemBuilding <> other.ProblemBuilding Then IsDifferent = True: Exit Function
+　　◆→ If Me.Phenomenon <> other.Phenomenon Then IsDifferent = True: Exit Function
+　　◆→ If Me.CauseDetail <> other.CauseDetail Then IsDifferent = True: Exit Function
+　　◆→ If Me.Mondainum_Pro <> other.Mondainum_Pro Then IsDifferent = True: Exit Function
+　　◆→ If Me.Remarks <> other.Remarks Then IsDifferent = True: Exit Function
+　　◆→ If Me.Esukare_Date <> other.Esukare_Date Then IsDifferent = True: Exit Function
+　　◆→ If Me.Close_Date <> other.Close_Date Then IsDifferent = True: Exit Function
+　　◆→ If Me.Requester_Pro <> other.Requester_Pro Then IsDifferent = True: Exit Function
+　　◆→ If Me.ServiceImpact <> other.ServiceImpact Then IsDifferent = True: Exit Function
+　　◆→ If Me.TroubleNum <> other.TroubleNum Then IsDifferent = True: Exit Function
+　　◆→ If Me.Equipment <> other.Equipment Then IsDifferent = True: Exit Function
+　　◆→ If Me.Countermeasure <> other.Countermeasure Then IsDifferent = True: Exit Function
+　　◆→ If Me.RequesterNum <> other.RequesterNum Then IsDifferent = True: Exit Function
+　　◆→ If Me.ProductTantou <> other.ProductTantou Then IsDifferent = True: Exit Function
+　　◆→ If Me.KihensinName_Date <> other.KihensinName_Date Then IsDifferent = True: Exit Function
+　　◆→ If Me.Key_Word <> other.Key_Word Then IsDifferent = True: Exit Function
+　　◆→ If Me.EqProduct <> other.EqProduct Then IsDifferent = True: Exit Function
+　　│#  差分なし
+　　〇 IsDifferent = False
+　　┴End Function

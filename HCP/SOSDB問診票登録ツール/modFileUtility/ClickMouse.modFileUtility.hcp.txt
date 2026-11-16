@@ -1,0 +1,16 @@
+Procedure: modFileUtility.ClickMouse  [ マウスクリック実行＜modFileUtility＞ ]
+HCP	Business
+┬
+〇│Public Function ClickMouse()	マウスクリック実行＜modFileUtility＞
+┴└┐
+　　〇 Debug.Print "ClickMouse : Skip"
+　　│#  仮停止中
+　　→ Exit Function
+　　□ Dim C As POINTAPI
+　　│#  カーソル位置取得
+　　〇 GetCursorPos C
+　　〇 SetCursorPos C.X, C.Y  'X=100,Y=200の地点にカーソルを移動
+　　│#  現在位置クリック
+　　〇 mouse_event &H2, 0, 0, 0, 0  'マウス左ボタンを押す
+　　〇 mouse_event &H4, 0, 0, 0, 0  'マウス左ボタンを離す
+　　┴End Function

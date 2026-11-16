@@ -1,0 +1,10 @@
+Procedure: frmProcessing.UpdateMessage  [ メッセージ更新＜frmProcessing＞ ]
+HCP	Business
+┬
+〇│Public Sub UpdateMessage(ByVal msg As String)	メッセージ更新＜frmProcessing＞
+┴└┐
+　　│#  メッセージ表示更新
+　　〇 lblMessage.Caption = msg
+　　│#  画面再描画
+　　〇 DoEvents ' UI更新を即時反映
+　　┴End Sub

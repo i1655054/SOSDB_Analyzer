@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift_jis">
+<title>Clear_InputCellDat</title>
+<style>
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+colgroup col:nth-of-type(1) {}
+colgroup col:nth-of-type(2) {}
+.resize {position: relative;}
+.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+</style>
+</head>
+<body>
+<h1>Clear_InputCellDat</h1>
+<p>Module : modUtility</p>
+<p><a href="./_INDEX.html">← Module Index</a></p>
+<table>
+<colgroup><col/><col/></colgroup>
+<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<tbody>
+<tr><td>Procedure: modUtility.Clear_InputCellDat  [ 入力セル初期化＜modUtility＞ ]</td><td></td></tr>
+<tr><td>HCP</td><td>Business</td></tr>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Public Function Clear_InputCellDat(allflg As Boolean)</td><td>入力セル初期化＜modUtility＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　│#  メインシート取得</td><td></td></tr>
+<tr><td>　　□ Dim sht As Worksheet</td><td></td></tr>
+<tr><td>　　〇 Set sht = ThisWorkbook.Worksheets(SheetName_Main)</td><td></td></tr>
+<tr><td>　　│#  作業ファイル削除</td><td></td></tr>
+<tr><td>　　□ Dim MyFolder As String</td><td></td></tr>
+<tr><td>　　〇 MyFolder = GetDocumentFolderPath</td><td></td></tr>
+<tr><td>　　◎ Call DeleteFilesInFolder(MyFolder, g_WorkFolder)</td><td>SendBodyファイル削除＜modFileUtility＞</td></tr>
+<tr><td>　　│#  トラブル番号初期化</td><td></td></tr>
+<tr><td>　　◆ If allflg = True Then sht.Range(TORBLE_NUM_RANG) = ""</td><td></td></tr>
+<tr><td>　　│#  優先度リスト初期化</td><td></td></tr>
+<tr><td>　　＠┐With sht.Range(PRIORITY_RANG).Validation</td><td></td></tr>
+<tr><td>　　│〇 .Delete</td><td></td></tr>
+<tr><td>　　│〇 .Add Type:=xlValidateList, Formula1:="=優先度"</td><td></td></tr>
+<tr><td>　　│┴End With</td><td></td></tr>
+<tr><td>　　│#  基本情報初期化</td><td></td></tr>
+<tr><td>　　〇 sht.Range(DB_ID_RANG) = ""                         ' 0.issue idの位置</td><td></td></tr>
+<tr><td>　　〇 sht.Range(DB_STATUS_RANG) = ""                     ' 3.status name:ステータスの位置</td><td></td></tr>
+<tr><td>　　〇 sht.Range(PRIORITY_RANG) = ""                      ' 4.priority name:優先度</td><td></td></tr>
+<tr><td>　　〇 sht.Range(PROBLEM_EQUIPMENT_RANG) = ""             '20.対象装置（カスタムフィールド名）</td><td></td></tr>
+<tr><td>　　〇 sht.Range(EQID_RANG) = ""                          '装置種別</td><td></td></tr>
+<tr><td>　　│#  管理情報初期化</td><td></td></tr>
+<tr><td>　　〇 sht.Range(EQ_PRODUCT_RANG) = ""                    '26.プロダクト装置／サービス（カスタムフィールド名）</td><td></td></tr>
+<tr><td>　　〇 sht.Range(PRODUCT_TANTOU_RANG) = ""                '23.プロダクト担当者（カスタムフィールド名）</td><td></td></tr>
+<tr><td>　　〇 sht.Range(ESCALE_DAY_RANG) = ""                    '15.発生日(トラバス)（カスタムフィールド名）</td><td></td></tr>
+<tr><td>　　〇 sht.Range(CLOSE_DAY_RANG) = ""                     '16.完了日(トラバス)（カスタムフィールド名）</td><td></td></tr>
+<tr><td>　　│#  問処情報初期化</td><td></td></tr>
+<tr><td>　　〇 sht.Range(MONDAINUM_RANG) = ""                     '13.問処番号（カスタムフィールド名）</td><td></td></tr>
+<tr><td>　　〇 sht.Range(MONDAIPRO_RANG) = ""                     '17.問合せ者（カスタムフィールド名）</td><td></td></tr>
+<tr><td>　　│#  規変審情報初期化</td><td></td></tr>
+<tr><td>　　〇 sht.Range(KIHENSIN_RANG) = ""                      '24.規変審名/開催日（カスタムフィールド名）</td><td></td></tr>
+<tr><td>　　〇 sht.Range(KIKAKU_DAY_RANG) = ""</td><td></td></tr>
+<tr><td>　　│#  サービス影響初期化</td><td></td></tr>
+<tr><td>　　〇 sht.Range(SERVICE_IMPACT_RANG) = ""                '18.サービス影響（カスタムフィールド名）</td><td></td></tr>
+<tr><td>　　│#  発生環境情報初期化</td><td></td></tr>
+<tr><td>　　〇 sht.Range(PROBLEM_YMDHM_RANG) = ""                 ' 8.発生時間（カスタムフィールド名）</td><td></td></tr>
+<tr><td>　　〇 sht.Range(PROBLEM_BUILDING_RANG) = ""              ' 9.ビル(収容局)（カスタムフィールド名）</td><td></td></tr>
+<tr><td>　　〇 sht.Range(HOST_NAME_RANG) = ""                     '10.ホスト名（カスタムフィールド名）</td><td></td></tr>
+<tr><td>　　│#  詳細表示ボタン解除</td><td></td></tr>
+<tr><td>　　◎ Call Sheet1.Cause_Button_Release</td><td>原因ボタン解除＜Sheet1＞</td></tr>
+<tr><td>　　◎ Call Sheet1.Cope_Button_Release</td><td>対処内容ボタン解除＜Sheet1＞</td></tr>
+<tr><td>　　◎ Call Sheet1.Remarks_Button_Release</td><td>備考ボタン解除＜Sheet1＞</td></tr>
+<tr><td>　　◎ Call Sheet1.Phenomenon_Button_Release</td><td>事象名ボタン解除＜Sheet1＞</td></tr>
+<tr><td>　　◎ Call Sheet1.RequesterNum_Button_Release</td><td>依頼元管理番号ボタン解除＜Sheet1＞</td></tr>
+<tr><td>　　◎ Call Sheet1.RequesterPro_Button_Release</td><td>依頼者ボタン解除＜Sheet1＞</td></tr>
+<tr><td>　　◎ Call Sheet1.KeyWord_Button_Release</td><td>キーワードボタン解除＜Sheet1＞</td></tr>
+<tr><td>　　◎ Call Sheet1.Description_Button_Release</td><td>説明ボタン解除＜Sheet1＞</td></tr>
+<tr><td>　　┴End Function</td><td></td></tr>
+</tbody>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function (eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function (e) {
+const styleTh = window.getComputedStyle(eleTh);
+const paddingLeft = parseFloat(styleTh.paddingLeft);
+const paddingRight = parseFloat(styleTh.paddingRight);
+const borderLeft = parseFloat(styleTh.borderLeftWidth);
+const borderRight = parseFloat(styleTh.borderRightWidth);
+startX = e.pageX;
+startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e) {
+const newWidth = startWidth + (e.pageX - startX);
+eleTh.style.width = newWidth + 'px';
+}
+function onMouseUp() {
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
+}
+});
+</script>
+</body>
+</html>

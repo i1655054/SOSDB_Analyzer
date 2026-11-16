@@ -1,0 +1,8 @@
+Procedure: clsAboutCalendar2.MakeHoliParamater  [ 祝日パラメータ作成＜clsAboutCalendar2＞ ]
+HCP	Business
+┬
+〇│Friend Function MakeHoliParamater(ByVal blnOmitCheck As Boolean) As Boolean	祝日パラメータ作成＜clsAboutCalendar2＞
+┴└┐
+　　│#  祝日パラメータ読込
+　　◎ MakeHoliParamater = FP_GetHoliParameter(blnOmitCheck)	祝日パラメータ読込＜clsAboutCalendar2＞
+　　┴End Function

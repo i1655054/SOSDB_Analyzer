@@ -1,0 +1,12 @@
+Procedure: XmlSearch.ReleaseHttpObjects  [ 通信オブジェクト解放＜XmlSearch＞ ]
+HCP	Business
+┬
+〇│Private Sub ReleaseHttpObjects(ByRef http As Object, ByRef xmlDoc As Object, Optional ByRef rootNode As Object)	通信オブジェクト解放＜XmlSearch＞
+┴└┐
+　　│#  HTTPオブジェクト解放
+　　◆ If Not http Is Nothing Then Set http = Nothing
+　　│#  XMLオブジェクト解放
+　　◆ If Not xmlDoc Is Nothing Then Set xmlDoc = Nothing
+　　│#  XMLノード解放
+　　◆ If Not rootNode Is Nothing Then Set rootNode = Nothing
+　　┴End Sub

@@ -1,0 +1,10 @@
+Procedure: clsAboutCalendar2.GetCalendarTable1  [ 単月カレンダーテーブル生成＜clsAboutCalendar2＞ ]
+HCP	Business
+┬
+〇│Friend Sub GetCalendarTable1(ByVal lngY As Long,  ByVal lngM As Long,  ByRef tblCalendar() As g_typAboutCalendar2)	単月カレンダーテーブル生成＜clsAboutCalendar2＞
+┴└┐
+　　│#  カレンダーテーブル初期化
+　　〇 ReDim tblCalendar(0)
+　　│#  単月カレンダー生成
+　　◎ Call GP_GetCalendarSub(lngY, lngM, -1, tblCalendar)	単月カレンダー生成内部処理＜clsAboutCalendar2＞
+　　┴End Sub

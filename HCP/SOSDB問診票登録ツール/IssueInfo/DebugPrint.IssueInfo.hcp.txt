@@ -1,0 +1,40 @@
+Procedure: IssueInfo.DebugPrint  [ Issue情報出力＜IssueInfo＞ ]
+HCP	Business
+┬
+〇│Public Sub DebugPrint()	Issue情報出力＜IssueInfo＞
+┴└┐
+　　│#  基本項目出力
+　　〇 Debug.Print "IssueId: " & IssueId
+　　〇 Debug.Print "Subject: " & Subject
+　　〇 Debug.Print "AuthorName: " & AuthorName
+　　〇 Debug.Print "AssignedTo: " & AssignedTo
+　　〇 Debug.Print "Status: " & Status
+　　〇 Debug.Print "Priority: " & Priority
+　　〇 Debug.Print "TargetVersion: " & targetVersion
+　　│#  事象情報出力
+　　〇 Debug.Print "Phenomenon: " & Phenomenon
+　　〇 Debug.Print "CauseDetail: " & CauseDetail
+　　〇 Debug.Print "Countermeasure: " & Countermeasure
+　　〇 Debug.Print "ServiceImpact: " & ServiceImpact
+　　│#  管理情報出力
+　　〇 Debug.Print "TroubleNum: " & TroubleNum
+　　〇 Debug.Print "RequesterNum: " & RequesterNum
+　　〇 Debug.Print "Requester_Pro: " & Requester_Pro
+　　│#  プロダクト情報出力
+　　〇 Debug.Print "ProductTantou: " & ProductTantou
+　　〇 Debug.Print "KihensinName_Date: " & KihensinName_Date
+　　〇 Debug.Print "Key_Word: " & Key_Word
+　　〇 Debug.Print "EqProduct: " & EqProduct
+　　│#  設備情報出力
+　　〇 Debug.Print "ProblemBuilding: " & ProblemBuilding
+　　〇 Debug.Print "HostName: " & HostName
+　　〇 Debug.Print "Equipment: " & Equipment
+　　│#  日時情報出力
+　　〇 Debug.Print "OccurrenceDateTime: " & OccurrenceDateTime
+　　〇 Debug.Print "Esukare_Date: " & Esukare_Date
+　　〇 Debug.Print "Close_Date: " & Close_Date
+　　│#  その他情報出力
+　　〇 Debug.Print "Mondainum_Pro: " & Mondainum_Pro
+　　〇 Debug.Print "Remarks: " & Remarks
+　　〇 Debug.Print "MonFolder: " & MonFolder
+　　┴End Sub

@@ -1,0 +1,30 @@
+Procedure: modUtility.Clear_WorkFile  [ ワークファイル削除＜modUtility＞ ]
+HCP	Business
+┬
+〇│Public Sub Clear_WorkFile()	ワークファイル削除＜modUtility＞
+┴└┐
+　　□ Dim sht As Worksheet
+　　〇 Set sht = ThisWorkbook.Worksheets(SheetName_Main)
+　　□ Dim MyFolder As String
+　　□ Dim WorkFolder As String: WorkFolder = "WorkRedmine"
+　　│#  ドキュメントフォルダ取得
+　　〇 MyFolder = GetDocumentFolderPath
+　　□ Dim filePath As String
+　　│#  検索結果ファイル削除
+　　〇 filePath = MyFolder & "\" & WorkFolder & "\Redmine_IDs.csv"
+　　◎ DeleteFileSafe filePath	安全ファイル削除＜modUtility＞
+　　□ Dim targets As Variant
+　　〇 targets = Array(MONFOLDER_RANG)
+　　□ Dim i As Long
+　　□ Dim Rng As Range
+　　│#  ワークファイル削除
+　　＠┐For i = LBound(targets) To UBound(targets)
+　　│〇 Set Rng = sht.Range(targets(i))
+　　││#  ファイルパス取得
+　　│〇 filePath = Trim(Rng.Value)
+　　││#  ファイル削除
+　　│◎ DeleteFileSafe filePath	安全ファイル削除＜modUtility＞
+　　││#  セル初期化
+　　│◎ ClearRangeValue Rng	セル内容初期化＜modUtility＞
+　　│┴Next
+　　┴End Sub

@@ -1,0 +1,8 @@
+Procedure: UF_NewInfoRegist.CommandButton3_Click  [ 説明入力支援起動＜UF_NewInfoRegist＞ ]
+HCP	Business
+┬
+〇│Private Sub CommandButton3_Click()	説明入力支援起動＜UF_NewInfoRegist＞
+┴└┐
+　　│#  説明入力支援起動
+　　〇 UF_ExplanationRegist.Show
+　　┴End Sub

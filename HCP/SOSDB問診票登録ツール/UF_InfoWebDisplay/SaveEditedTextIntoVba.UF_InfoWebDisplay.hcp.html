@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift_jis">
+<title>SaveEditedTextIntoVba</title>
+<style>
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+colgroup col:nth-of-type(1) {}
+colgroup col:nth-of-type(2) {}
+.resize {position: relative;}
+.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+</style>
+</head>
+<body>
+<h1>SaveEditedTextIntoVba</h1>
+<p>Module : UF_InfoWebDisplay</p>
+<p><a href="./_INDEX.html">← Module Index</a></p>
+<table>
+<colgroup><col/><col/></colgroup>
+<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<tbody>
+<tr><td>Procedure: UF_InfoWebDisplay.SaveEditedTextIntoVba  [ 編集内容保存＜UF_InfoWebDisplay＞ ]</td><td></td></tr>
+<tr><td>HCP</td><td>Business</td></tr>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Private Sub SaveEditedTextIntoVba()</td><td>編集内容保存＜UF_InfoWebDisplay＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　☆ On Error Resume Next</td><td></td></tr>
+<tr><td>　　□ Dim doc As Object, el As Object, text As String</td><td></td></tr>
+<tr><td>　　〇 Set doc = WebBrowser1.document</td><td></td></tr>
+<tr><td>　　◆→ If doc Is Nothing Then Exit Sub</td><td></td></tr>
+<tr><td>　　〇 Set el = doc.getElementById("content")</td><td></td></tr>
+<tr><td>　　◆→ If el Is Nothing Then Exit Sub</td><td></td></tr>
+<tr><td>　　│#  HTML本文取得</td><td></td></tr>
+<tr><td>　　〇 text = el.innerText</td><td></td></tr>
+<tr><td>　　│#  Issue情報反映</td><td></td></tr>
+<tr><td>　　◆┐If Not g_CurrentIssue Is Nothing Then</td><td></td></tr>
+<tr><td>　　│〇 g_CurrentIssue.Key_Word = text</td><td></td></tr>
+<tr><td>　　│◎ Call Button_Set_Check(g_CurrentIssue)</td><td>詳細表示ボタン制御＜modUtility＞</td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　│#  表示本文更新</td><td></td></tr>
+<tr><td>　　〇 bodyText = text</td><td></td></tr>
+<tr><td>　　│#  HTML再生成</td><td></td></tr>
+<tr><td>　　◎ BuildHTMLContent bodyText</td><td>HTML本文生成＜UF_InfoWebDisplay＞</td></tr>
+<tr><td>　　│#  画面再表示</td><td></td></tr>
+<tr><td>　　◎ RenderHTML  ' ← head に appStyle → ApplyCss で仕上げ（現行構成）[1](https://b0aa600df9934664bf4b-my.sharepoint.com/personal/masaharu_itou_ab_east_ntt_co_jp/Documents/Microsoft%20Copilot%20Chat%20%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB/UF_InfoWebDisplay.frm.txt)</td><td>HTML表示＜UF_InfoWebDisplay＞</td></tr>
+<tr><td>　　┴End Sub</td><td></td></tr>
+</tbody>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function (eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function (e) {
+const styleTh = window.getComputedStyle(eleTh);
+const paddingLeft = parseFloat(styleTh.paddingLeft);
+const paddingRight = parseFloat(styleTh.paddingRight);
+const borderLeft = parseFloat(styleTh.borderLeftWidth);
+const borderRight = parseFloat(styleTh.borderRightWidth);
+startX = e.pageX;
+startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e) {
+const newWidth = startWidth + (e.pageX - startX);
+eleTh.style.width = newWidth + 'px';
+}
+function onMouseUp() {
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
+}
+});
+</script>
+</body>
+</html>

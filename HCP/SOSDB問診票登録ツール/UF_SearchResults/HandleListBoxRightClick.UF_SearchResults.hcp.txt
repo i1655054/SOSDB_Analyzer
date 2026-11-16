@@ -1,0 +1,27 @@
+Procedure: UF_SearchResults.HandleListBoxRightClick  [ 右クリックコピー処理＜UF_SearchResults＞ ]
+HCP	Business
+┬
+〇│Private Sub HandleListBoxRightClick(lb As MSForms.ListBox, ByVal Button As Integer)	右クリックコピー処理＜UF_SearchResults＞
+┴└┐
+　　│#  右クリック判定
+　　◆┐If Button = 2 Then ' 右クリック
+　　│□ Dim i As Integer
+　　│□ Dim result As String
+　　││#  選択文字列収集
+　　│＠┐For i = 0 To lb.ListCount - 1
+　　││◆┐If lb.Selected(i) Then
+　　│││〇 result = result & lb.List(i) & vbCrLf
+　　│││┴End If
+　　││┴Next i
+　　││#  選択有無確認
+　　│◆┐If result <> "" Then
+　　│││#  クリップボードコピー
+　　││◎ Call CopyTextToClipboard(result)	クリップボードコピー＜UF_SearchResults＞
+　　│││#  完了通知
+　　││〇 MsgBox "クリップボードにコピーしました。", vbInformation
+　　│├┐ELSE
+　　│││#  未選択警告
+　　││〇 MsgBox "選択項目がありません。", vbExclamation
+　　││┴End If
+　　│┴End If
+　　┴End Sub

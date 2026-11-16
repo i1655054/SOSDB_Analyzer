@@ -1,0 +1,11 @@
+Procedure: UF_SearchResults.btnClose_Click  [ 検索結果終了＜UF_SearchResults＞ ]
+HCP	Business
+┬
+〇│Private Sub btnClose_Click()	検索結果終了＜UF_SearchResults＞
+┴└┐
+　　│#  検索状態解除
+　　〇 Sheet1.DB検索.Caption = "検索"
+　　〇 Sheet1.DB検索.BackColor = &H8000000F
+　　│#  フォーム終了
+　　〇 Unload Me
+　　┴End Sub

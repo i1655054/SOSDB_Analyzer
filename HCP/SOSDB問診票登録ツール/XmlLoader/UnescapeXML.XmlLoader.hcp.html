@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift_jis">
+<title>UnescapeXML</title>
+<style>
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+colgroup col:nth-of-type(1) {}
+colgroup col:nth-of-type(2) {}
+.resize {position: relative;}
+.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+</style>
+</head>
+<body>
+<h1>UnescapeXML</h1>
+<p>Module : XmlLoader</p>
+<p><a href="./_INDEX.html">← Module Index</a></p>
+<table>
+<colgroup><col/><col/></colgroup>
+<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<tbody>
+<tr><td>Procedure: XmlLoader.UnescapeXML  [ XMLデコード＜XmlLoader＞ ]</td><td></td></tr>
+<tr><td>HCP</td><td>Business</td></tr>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Public Function UnescapeXML(ByVal str As String) As String</td><td>XMLデコード＜XmlLoader＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　│#  空文字確認</td><td></td></tr>
+<tr><td>　　◆┐If str = "" Then</td><td></td></tr>
+<tr><td>　　│〇 UnescapeXML = ""</td><td></td></tr>
+<tr><td>　　│→ Exit Function</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　│#  XML特殊文字復元</td><td></td></tr>
+<tr><td>　　〇 str = Replace(str, "&amp;apos;", "'")</td><td></td></tr>
+<tr><td>　　〇 str = Replace(str, "&amp;quot;", """")</td><td></td></tr>
+<tr><td>　　〇 str = Replace(str, "&amp;gt;", "&gt;")</td><td></td></tr>
+<tr><td>　　〇 str = Replace(str, "&amp;lt;", "&lt;")</td><td></td></tr>
+<tr><td>　　〇 str = Replace(str, "&amp;amp;", "&amp;")</td><td></td></tr>
+<tr><td>　　│#  復元結果返却</td><td></td></tr>
+<tr><td>　　〇 UnescapeXML = str</td><td></td></tr>
+<tr><td>　　┴End Function</td><td></td></tr>
+</tbody>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function (eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function (e) {
+const styleTh = window.getComputedStyle(eleTh);
+const paddingLeft = parseFloat(styleTh.paddingLeft);
+const paddingRight = parseFloat(styleTh.paddingRight);
+const borderLeft = parseFloat(styleTh.borderLeftWidth);
+const borderRight = parseFloat(styleTh.borderRightWidth);
+startX = e.pageX;
+startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e) {
+const newWidth = startWidth + (e.pageX - startX);
+eleTh.style.width = newWidth + 'px';
+}
+function onMouseUp() {
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
+}
+});
+</script>
+</body>
+</html>

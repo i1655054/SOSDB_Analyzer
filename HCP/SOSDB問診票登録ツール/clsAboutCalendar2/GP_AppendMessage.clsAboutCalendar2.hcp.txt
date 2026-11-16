@@ -1,0 +1,10 @@
+Procedure: clsAboutCalendar2.GP_AppendMessage  [ メッセージ追加＜clsAboutCalendar2＞ ]
+HCP	Business
+┬
+〇│Private Sub GP_AppendMessage(ByVal strAddMSG As String, ByRef strMSG As String)	メッセージ追加＜clsAboutCalendar2＞
+┴└┐
+　　│#  改行付加
+　　◆ If strMSG <> "" Then strMSG = strMSG & vbCrLf
+　　│#  メッセージ追加
+　　〇 strMSG = strMSG & strAddMSG
+　　┴End Sub

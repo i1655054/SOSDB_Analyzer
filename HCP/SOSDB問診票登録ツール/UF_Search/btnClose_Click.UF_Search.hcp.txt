@@ -1,0 +1,8 @@
+Procedure: UF_Search.btnClose_Click  [ 検索フォーム終了＜UF_Search＞ ]
+HCP	Business
+┬
+〇│Private Sub btnClose_Click()	検索フォーム終了＜UF_Search＞
+┴└┐
+　　│#  検索フォーム終了
+　　〇 Unload Me ' ユーザーフォームを閉じる
+　　┴End Sub

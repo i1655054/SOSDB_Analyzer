@@ -1,0 +1,14 @@
+Procedure: modUtility.ClearMultiLineAlerts  [ 複数行注意表示解除＜modUtility＞ ]
+HCP	Business
+┬
+〇│Public Sub ClearMultiLineAlerts()	複数行注意表示解除＜modUtility＞
+┴└┐
+　　│#  発生時間注意表示解除
+　　◎ Call ReleaseMultiLineAlert(PROBLEM_YMDHM_RANG)	複数行注意表示解除個別＜modUtility＞
+　　│#  ビル注意表示解除
+　　◎ Call ReleaseMultiLineAlert(PROBLEM_BUILDING_RANG)	複数行注意表示解除個別＜modUtility＞
+　　│#  ホスト名注意表示解除
+　　◎ Call ReleaseMultiLineAlert(HOST_NAME_RANG)	複数行注意表示解除個別＜modUtility＞
+　　│#  対象装置注意表示解除
+　　◎ Call ReleaseMultiLineAlert(PROBLEM_EQUIPMENT_RANG)	複数行注意表示解除個別＜modUtility＞
+　　┴End Sub

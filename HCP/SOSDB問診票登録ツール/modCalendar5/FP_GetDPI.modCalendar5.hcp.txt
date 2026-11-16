@@ -1,0 +1,9 @@
+Procedure: modCalendar5.FP_GetDPI  [ DPI取得＜modCalendar5＞ ]
+HCP	Business
+┬
+〇│Private Function FP_GetDPI(ByVal nFlag As Long) As Long	DPI取得＜modCalendar5＞
+┴└┐
+　　〇 lngHdc = GetDC(Application.hWnd)
+　　〇 FP_GetDPI = GetDeviceCaps(lngHdc, nFlag)
+　　〇 Call ReleaseDC(&H0, lngHdc)
+　　┴End Function

@@ -1,0 +1,25 @@
+Procedure: modFileUtility.GP_SetRootPathName  [ 初期フォルダ設定＜modFileUtility＞ ]
+HCP	Business
+┬
+〇│Private Sub GPSetRootPathName(ByRef strInitialFileName As String,  ByRef strPrevDir As String,  ByRef strRootPath As String,  ByRef strDefaultRootPath As String,  ByVal swFixRootPath As Integer)	初期フォルダ設定＜modFileUtility＞
+┴└┐
+　　│#  ルートフォルダ補完
+　　◆┐If Len(strRootPath) = 0 Then
+　　│〇 strRootPath = strDefaultRootPath
+　　│┴End If
+　　│#  初期フォルダ決定
+　　◆┐If Len(strRootPath) > 0 Then
+　　││#  ルート固定
+　　│◆┐If swFixRootPath = 1 Then
+　　││〇 strPrevDir = strRootPath
+　　││┴End If
+　　││#  初回またはルート復帰
+　　│◆┐If ((Len(strPrevDir) <= 0) Or (swFixRootPath = 2)) Then
+　　││〇 strPrevDir = strRootPath
+　　││┴End If
+　　│┴End If
+　　│#  ダイアログ初期位置設定
+　　◆┐If Len(strPrevDir) > 0 Then
+　　│〇 strInitialFileName = strPrevDir
+　　│┴End If
+　　┴End Sub

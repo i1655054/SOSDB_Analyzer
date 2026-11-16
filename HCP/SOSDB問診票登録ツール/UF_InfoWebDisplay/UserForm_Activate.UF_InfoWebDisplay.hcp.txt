@@ -1,0 +1,12 @@
+Procedure: UF_InfoWebDisplay.UserForm_Activate  [ 情報表示開始＜UF_InfoWebDisplay＞ ]
+HCP	Business
+┬
+〇│Private Sub UserForm_Activate()	情報表示開始＜UF_InfoWebDisplay＞
+┴└┐
+　　│#  HTML表示
+　　◎ RenderHTML   ' ← ここで Document.Write（styleText が既に有効）	HTML表示＜UF_InfoWebDisplay＞
+　　│#  CSS適用
+　　◎ ApplyCss FontSize          ' 念のためここで明示適用	CSS適用＜UF_InfoWebDisplay＞
+　　│#  フォント監視開始
+　　◎ StartPollTimer 200   ' ← 200ms 間隔（好みに応じて 100?300ms）	フォント監視開始＜ModuleFontSync＞
+　　┴End Sub

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift_jis">
+<title>SumEigyoNissu</title>
+<style>
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+colgroup col:nth-of-type(1) {}
+colgroup col:nth-of-type(2) {}
+.resize {position: relative;}
+.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+</style>
+</head>
+<body>
+<h1>SumEigyoNissu</h1>
+<p>Module : clsAboutCalendar2</p>
+<p><a href="./_INDEX.html">← Module Index</a></p>
+<table>
+<colgroup><col/><col/></colgroup>
+<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<tbody>
+<tr><td>Procedure: clsAboutCalendar2.SumEigyoNissu  [ 営業日数集計＜clsAboutCalendar2＞ ]</td><td></td></tr>
+<tr><td>HCP</td><td>Business</td></tr>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Friend Sub SumEigyoNissu(ByVal dteDateF As Date,  ByVal dteDateT As Date,  ByRef lngCntEigyo As Long,  Optional ByRef lngCntReki As Long = 0)</td><td>営業日数集計＜clsAboutCalendar2＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　│#  集計値初期化</td><td></td></tr>
+<tr><td>　　〇 lngCntEigyo = 0</td><td></td></tr>
+<tr><td>　　〇 lngCntReki = 0</td><td></td></tr>
+<tr><td>　　│#  時刻情報除去</td><td></td></tr>
+<tr><td>　　〇 dteDateF = DateSerial(Year(dteDateF), Month(dteDateF), Day(dteDateF))</td><td></td></tr>
+<tr><td>　　〇 dteDateT = DateSerial(Year(dteDateT), Month(dteDateT), Day(dteDateT))</td><td></td></tr>
+<tr><td>　　│#  開始終了日確認</td><td></td></tr>
+<tr><td>　　◆→ If dteDateF &gt; dteDateF Then Exit Sub</td><td></td></tr>
+<tr><td>　　□ Dim dteTmp As Date                                              ' 作業日</td><td></td></tr>
+<tr><td>　　□ Dim currY As Long                                               ' 現在年</td><td></td></tr>
+<tr><td>　　□ Dim currM As Long                                               ' 現在月</td><td></td></tr>
+<tr><td>　　□ Dim prevY As Long                                               ' 直前年</td><td></td></tr>
+<tr><td>　　□ Dim prevM As Long                                               ' 直前月</td><td></td></tr>
+<tr><td>　　□ Dim swSyuku As Boolean                                          ' 祝日判定</td><td></td></tr>
+<tr><td>　　□ Dim lngIxS As Long                                              ' カレンダーテーブルINDEX</td><td></td></tr>
+<tr><td>　　□ Dim lngIxSMax As Long                                           ' カレンダーテーブルINDEX上限</td><td></td></tr>
+<tr><td>　　□ Dim tblCalendar() As g_typAboutCalendar2                        ' カレンダーテーブル</td><td></td></tr>
+<tr><td>　　〇 dteTmp = dteDateF</td><td></td></tr>
+<tr><td>　　〇 currY = Year(dteTmp)</td><td></td></tr>
+<tr><td>　　〇 currM = Month(dteTmp)</td><td></td></tr>
+<tr><td>　　│#  営業日集計開始</td><td></td></tr>
+<tr><td>　　＠┐Do While dteTmp &lt;= dteDateT</td><td></td></tr>
+<tr><td>　　│〇 lngIxS = 0</td><td></td></tr>
+<tr><td>　　│〇 prevY = currY</td><td></td></tr>
+<tr><td>　　│〇 prevM = currM</td><td></td></tr>
+<tr><td>　　│〇 lngIxSMax = -1</td><td></td></tr>
+<tr><td>　　│〇 ReDim tblCalendar(0)</td><td></td></tr>
+<tr><td>　　││#  月次カレンダー生成</td><td></td></tr>
+<tr><td>　　│◎ Call GP_GetCalendarSub(prevY, prevM, lngIxSMax, tblCalendar)</td><td>単月カレンダー生成内部処理＜clsAboutCalendar2＞</td></tr>
+<tr><td>　　││#  日次判定処理</td><td></td></tr>
+<tr><td>　　│＠┐Do While ((dteTmp &lt;= dteDateT) And (currY = prevY) And (currM = prevM))</td><td></td></tr>
+<tr><td>　　││〇 swSyuku = False</td><td></td></tr>
+<tr><td>　　││〇 lngCntReki = lngCntReki + 1                         ' 歴日数を加算</td><td></td></tr>
+<tr><td>　　││＠┐Do While lngIxS &lt;= lngIxSMax</td><td></td></tr>
+<tr><td>　　│││◆┐If tblCalendar(lngIxS).Hiduke = dteTmp Then</td><td></td></tr>
+<tr><td>　　│││││#  祝日判定</td><td></td></tr>
+<tr><td>　　││││〇 swSyuku = tblCalendar(lngIxS).Syuku &lt;&gt; 0</td><td></td></tr>
+<tr><td>　　││││→ Exit Do</td><td></td></tr>
+<tr><td>　　││││┴End If</td><td></td></tr>
+<tr><td>　　│││〇 lngIxS = lngIxS + 1</td><td></td></tr>
+<tr><td>　　│││┴Loop</td><td></td></tr>
+<tr><td>　　│││#  営業日判定</td><td></td></tr>
+<tr><td>　　││◆┐If ((Weekday(dteTmp) &lt;&gt; vbSunday) And  (Weekday(dteTmp) &lt;&gt; vbSaturday) And  (Not swSyuku)) Then</td><td></td></tr>
+<tr><td>　　││││#  営業日数加算</td><td></td></tr>
+<tr><td>　　│││〇 lngCntEigyo = lngCntEigyo + 1                   ' 営業日数を加算</td><td></td></tr>
+<tr><td>　　│││┴End If</td><td></td></tr>
+<tr><td>　　│││#  次日付設定</td><td></td></tr>
+<tr><td>　　││〇 dteTmp = dteTmp + 1</td><td></td></tr>
+<tr><td>　　││〇 currY = Year(dteTmp)</td><td></td></tr>
+<tr><td>　　││〇 currM = Month(dteTmp)</td><td></td></tr>
+<tr><td>　　││┴Loop</td><td></td></tr>
+<tr><td>　　│┴Loop</td><td></td></tr>
+<tr><td>　　┴End Sub</td><td></td></tr>
+</tbody>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function (eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function (e) {
+const styleTh = window.getComputedStyle(eleTh);
+const paddingLeft = parseFloat(styleTh.paddingLeft);
+const paddingRight = parseFloat(styleTh.paddingRight);
+const borderLeft = parseFloat(styleTh.borderLeftWidth);
+const borderRight = parseFloat(styleTh.borderRightWidth);
+startX = e.pageX;
+startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e) {
+const newWidth = startWidth + (e.pageX - startX);
+eleTh.style.width = newWidth + 'px';
+}
+function onMouseUp() {
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
+}
+});
+</script>
+</body>
+</html>

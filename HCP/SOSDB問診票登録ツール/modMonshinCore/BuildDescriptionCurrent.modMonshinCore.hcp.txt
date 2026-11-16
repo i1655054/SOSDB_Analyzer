@@ -1,0 +1,47 @@
+Procedure: modMonshinCore.BuildDescriptionCurrent  [ 説明文生成現行形式＜modMonshinCore＞ ]
+HCP	Business
+┬
+〇│Private Function BuildDescriptionCurrent(  ByRef info As MonshinInfoType) As String	説明文生成現行形式＜modMonshinCore＞
+┴└┐
+　　□ Dim sb As String
+　　□ Dim r() As String
+　　〇 r = info.RequestContents
+　　│#  問合せ内容出力
+　　◆┐If r(0) <> "" Then
+　　│〇 sb = sb & "＝＝＝＜問合せ内容＞＝＝＝" & vbCrLf & r(0) & vbCrLf
+　　│┴End If
+　　│#  故障発生状況見出し出力
+　　◆┐If r(1) <> "" Or r(2) <> "" Or r(3) <> "" Or  r(4) <> "" Or r(5) <> "" Or r(6) <> "" Then
+　　│〇 sb = sb & "＝＝＝＜故障発生状況＞＝＝＝" & vbCrLf
+　　│┴End If
+　　│#  現状運用系出力
+　　◆┐If r(1) <> "" Then
+　　│〇 sb = sb & "＝＝＝【現状の運用系】＝＝＝" & vbCrLf & r(1) & vbCrLf
+　　│┴End If
+　　│#  アラーム有無出力
+　　◆┐If r(2) <> "" Then
+　　│〇 sb = sb & "＝＝＝【アラーム発生の有無】＝＝＝" & vbCrLf & r(2) & vbCrLf
+　　│┴End If
+　　│#  アラーム内容出力
+　　◆┐If r(3) <> "" Then
+　　│〇 sb = sb & "＝＝＝【アラーム表示内容】＝＝＝" & vbCrLf & r(3) & vbCrLf
+　　│┴End If
+　　│#  発生状況出力
+　　◆┐If r(4) <> "" Then
+　　│〇 sb = sb & "＝＝＝【発生状況】＝＝＝" & vbCrLf & r(4) & vbCrLf
+　　│┴End If
+　　│#  対応状況出力
+　　◆┐If r(5) <> "" Then
+　　│〇 sb = sb & "＝＝＝【対応状況詳細】＝＝＝" & vbCrLf & r(5) & vbCrLf
+　　│┴End If
+　　│#  作業内容出力
+　　◆┐If r(6) <> "" Then
+　　│〇 sb = sb & "＝＝＝【実施していた作業】＝＝＝" & vbCrLf & r(6) & vbCrLf
+　　│┴End If
+　　│#  収集データ出力
+　　◆┐If r(7) <> "" Then
+　　│〇 sb = sb & "＝＝＝【収集データ】＝＝＝" & vbCrLf & r(7) & vbCrLf
+　　│┴End If
+　　│#  説明文返却
+　　〇 BuildDescriptionCurrent = sb
+　　┴End Function

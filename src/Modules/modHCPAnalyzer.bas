@@ -1,7 +1,7 @@
 Attribute VB_Name = "modHCPAnalyzer"
 Option Explicit
 '===================================================================
-'@JPName     HCP生成
+'@JPName     HCP生成エンジン
 '@Category   HCP
 '@Summary    プロシージャ解析結果からHCP(Hierarchical Control Process)
 '            を生成しシートへ出力する
@@ -248,6 +248,43 @@ Public Sub DumpHCPNodeRange( _
 End Sub
 
 ' @JPName
+' Debug.Print判定
+'
+' @Category
+' HCP
+'
+' @Input
+' Text(String)
+'
+' @Output
+' True : Debug.Print文
+' False: Debug.Print文以外
+'
+' @Summary
+' Debug.Print文か判定する
+'
+' @Remarks
+' HCP圧縮モード時の不要ノード除外で使用する
+' 文字列内に「Debug.Print」が含まれる場合は
+' Trueを返す
+'
+Private Function IsDebugPrint( _
+                ByVal Text As String) _
+                As Boolean
+
+    IsDebugPrint = _
+        (InStr(1, _
+               Text, _
+               "Debug.Print", _
+               vbTextCompare) > 0)
+
+End Function
+
+'--------------------------------------------------
+' HCP生成
+'--------------------------------------------------
+
+' @JPName
 ' HCP生成
 '
 ' @Category
@@ -367,13 +404,28 @@ Public Sub CreateHCP( _
         ModuleName, _
         ProcName
 
-    Trace "HCP", "Step=90 ExportHCPTextFileFromSheet"
+    'Trace "HCP", "Step=90 ExportHCPTextFileFromSheet"
+    
+    ' # HCPテキスト出力
+    'ExportHCPTextFileFromSheet _
+    '    ModuleName, _
+    '    ProcName
+    
+    Trace "HCP", "Step=90 ExportHCPTextFile"
     
     '# HCPテキスト出力
-    ExportHCPTextFileFromSheet _
+    ExportHCPTextFile _
         ModuleName, _
         ProcName
+
+    Trace "HCP", "Step=95 ExportHCPHtmlFile"
     
+    '# HCP HTML 出力
+    ExportHCPHtmlFile _
+        ModuleName, _
+        ProcName
+
+
     If gDevMode Then
 
         gContext.ManagementBook.Worksheets( _
@@ -381,6 +433,13 @@ Public Sub CreateHCP( _
 
     End If
     
+    '# モジュールINDEX再生成
+    RebuildModuleIndex _
+        ModuleName
+
+    '# ツールINDEX再生成
+    RebuildToolIndex
+
     Application.ScreenUpdating = True
     
     Exit Sub
@@ -459,7 +518,7 @@ Public Function ConvertProcToHCP( _
     Dim NewID As Long
 
     Trace "HCP", "CreateHCPNodes"
-
+    
     '# HCP変換管理初期化
     Set HCPNodes = New Collection
 
@@ -476,11 +535,6 @@ Public Function ConvertProcToHCP( _
     '--------------------------------
     '# ProcNode走査開始
     For Each ProcNode In ProcNodes
-
-        Trace "PROC", _
-            ProcNode.NodeType & _
-            ":" & _
-            ProcNode.SourceLine
 
         '# 制御構造終了処理
         Select Case ProcNode.NodeType
@@ -543,7 +597,7 @@ Public Function ConvertProcToHCP( _
         '# コメント情報引継ぎ
         HCPNode.CommentText = _
             ProcNode.CommentText
-
+            
         '# ELSEノード変換
         If ProcNode.NodeType = NODE_ELSE Then
 
@@ -561,6 +615,32 @@ Public Function ConvertProcToHCP( _
             '# CALLノード業務説明取得
             HCPNode.BusinessText = _
                 GetBusinessText(ProcNode)
+            
+            '# 内部呼出取得
+            HCPNode.InternalCalls = _
+                ProcNode.InternalCalls
+            
+            '# 内部呼出追記
+            If HCPNode.InternalCalls <> "" Then
+
+                If HCPNode.BusinessText <> "" Then
+                
+                    HCPNode.BusinessText = _
+                        HCPNode.BusinessText & _
+                        vbCrLf & _
+                        "内部呼出:" & _
+                        HCPNode.InternalCalls
+                Else
+
+                    HCPNode.BusinessText = _
+                        vbCrLf & _
+                        "内部呼出:" & _
+                        HCPNode.InternalCalls
+
+                End If
+    
+            End If
+
 
         End If
         
@@ -757,38 +837,9 @@ ContinueLoop:
 
 End Function
 
-' @JPName
-' Debug.Print判定
-'
-' @Category
-' HCP
-'
-' @Input
-' Text(String)
-'
-' @Output
-' True : Debug.Print文
-' False: Debug.Print文以外
-'
-' @Summary
-' Debug.Print文か判定する
-'
-' @Remarks
-' HCP圧縮モード時の不要ノード除外で使用する
-' 文字列内に「Debug.Print」が含まれる場合は
-' Trueを返す
-'
-Private Function IsDebugPrint( _
-                ByVal Text As String) _
-                As Boolean
-
-    IsDebugPrint = _
-        (InStr(1, _
-               Text, _
-               "Debug.Print", _
-               vbTextCompare) > 0)
-
-End Function
+'--------------------------------------------------
+' HCPノード変換
+'--------------------------------------------------
 
 ' @JPName
 ' TRUEノード追加
@@ -843,6 +894,58 @@ Private Sub AddTrueNode( _
 
 End Sub
 
+
+' @JPName
+' マージノード追加
+'
+' @Category
+' HCP
+'
+' @Input
+' HCPNodes(Collection)
+' NewID(Long)
+' ParentID(Long)
+' Text(String)
+'
+' @Output
+' HCPNodes(Collection)
+' NewID(Long)
+'
+' @Summary
+' マージノードを生成し追加する
+'
+' @Remarks
+' 制御構造終了位置を表す
+' MERGEノードを生成する
+' ノードID採番後にコレクションへ登録する
+'
+Private Sub AddMergeNode( _
+                ByVal HCPNodes As Collection, _
+                ByRef NewID As Long, _
+                ByVal ParentID As Long, _
+                ByVal Text As String)
+
+    ' MERGEノード
+    Dim HCPNode As clsHCPNode
+
+    '# MERGEノード生成
+    Set HCPNode = New clsHCPNode
+
+    HCPNode.NodeID = NewID
+
+    NewID = NewID + 1
+
+    HCPNode.ParentID = ParentID
+
+    HCPNode.NodeType = NODE_MERGE
+
+    HCPNode.Text = Text
+    
+    '# MERGEノード登録
+    HCPNodes.Add HCPNode
+
+End Sub
+
 ' @JPName
 ' マージ対象判定
 '
@@ -883,6 +986,45 @@ Private Function IsMergeNode( _
     End Select
 
 End Function
+
+' @JPName
+' マージスタック登録
+'
+' @Category
+' HCP
+'
+' @Input
+' MergeStack(Collection)
+' NodeType(String)
+' NodeID(Long)
+'
+' @Output
+' MergeStack
+'
+' @Summary
+' 制御構造開始ノードを
+' マージスタックへ登録する
+'
+' @Remarks
+' IF、FOR、SELECTなどの
+' 制御構造開始位置を
+' マージ判定用スタックへ登録する
+'
+Private Sub PushMergeStack( _
+                ByVal MergeStack As Collection, _
+                ByVal NodeType As String, _
+                ByVal NodeID As Long)
+
+    '# 制御構造開始位置登録
+    MergeStack.Add _
+        NodeType & ":" & NodeID
+
+    TraceStack _
+        "PUSH", _
+        NodeType & ":" & NodeID, _
+        MergeStack.Count
+
+End Sub
 
 ' @JPName
 ' マージスタック取得
@@ -948,44 +1090,6 @@ Private Sub PopMergeStack( _
 
 End Sub
 
-' @JPName
-' マージスタック登録
-'
-' @Category
-' HCP
-'
-' @Input
-' MergeStack(Collection)
-' NodeType(String)
-' NodeID(Long)
-'
-' @Output
-' MergeStack
-'
-' @Summary
-' 制御構造開始ノードを
-' マージスタックへ登録する
-'
-' @Remarks
-' IF、FOR、SELECTなどの
-' 制御構造開始位置を
-' マージ判定用スタックへ登録する
-'
-Private Sub PushMergeStack( _
-                ByVal MergeStack As Collection, _
-                ByVal NodeType As String, _
-                ByVal NodeID As Long)
-
-    '# 制御構造開始位置登録
-    MergeStack.Add _
-        NodeType & ":" & NodeID
-
-    TraceStack _
-        "PUSH", _
-        NodeType & ":" & NodeID, _
-        MergeStack.Count
-
-End Sub
 
 ' @JPName
 ' マージ親ID取得
@@ -1091,56 +1195,10 @@ Private Function GetBusinessText( _
 
 End Function
 
-' @JPName
-' マージノード追加
-'
-' @Category
-' HCP
-'
-' @Input
-' HCPNodes(Collection)
-' NewID(Long)
-' ParentID(Long)
-' Text(String)
-'
-' @Output
-' HCPNodes(Collection)
-' NewID(Long)
-'
-' @Summary
-' マージノードを生成し追加する
-'
-' @Remarks
-' 制御構造終了位置を表す
-' MERGEノードを生成する
-' ノードID採番後にコレクションへ登録する
-'
-Private Sub AddMergeNode( _
-                ByVal HCPNodes As Collection, _
-                ByRef NewID As Long, _
-                ByVal ParentID As Long, _
-                ByVal Text As String)
 
-    ' MERGEノード
-    Dim HCPNode As clsHCPNode
-
-    '# MERGEノード生成
-    Set HCPNode = New clsHCPNode
-
-    HCPNode.NodeID = NewID
-
-    NewID = NewID + 1
-
-    HCPNode.ParentID = ParentID
-
-    HCPNode.NodeType = NODE_MERGE
-
-    HCPNode.Text = Text
-    
-    '# MERGEノード登録
-    HCPNodes.Add HCPNode
-
-End Sub
+'--------------------------------------------------
+' HCP構造補正
+'--------------------------------------------------
 
 ' @JPName
 ' 親子関係再構築
@@ -1564,375 +1622,9 @@ Private Sub FixFalseBranch( _
 
 End Sub
 
-' @JPName
-' HCPノード出力
-'
-' @Category
-' HCP
-'
-' @Input
-' HCPNodes(Collection)
-'
-' @Output
-' HCPノードシート
-'
-' @Summary
-' HCPノード一覧をシートへ出力する
-'
-' @Remarks
-' HCPノード情報を一覧形式で出力する
-' 主にデバッグおよび解析確認用途で利用する
-'
-Public Sub ExportHCPNodes( _
-                ByVal HCPNodes As Collection)
-
-    ' 出力先シート
-    Dim ws As Worksheet
-
-    ' HCPノード
-    Dim Node As clsHCPNode
-
-    ' 出力行
-    Dim RowOut As Long
-
-    On Error Resume Next
-
-    '# HCPNodesシート取得
-    Set ws = _
-        gContext.ManagementBook.Worksheets( _
-            SHEET_HCP_NODES)
-    
-    On Error GoTo 0
-
-    '# HCPNodesシート作成
-    If ws Is Nothing Then
-
-        Set ws = _
-            gContext.ManagementBook.Worksheets.Add( _
-                After:=gContext.ManagementBook.Worksheets( _
-                gContext.ManagementBook.Worksheets.Count))
-
-        ws.Name = SHEET_HCP_NODES
-
-    End If
-
-    '# HCPNodesシート初期化
-    ws.Cells.Clear
-
-    '# HCPNodesヘッダ出力
-    ws.Range("A1:K1").Value = _
-        Array( _
-            "NodeID", _
-            "ParentID", _
-            "PrevNodeID", _
-            "NextNodeID", _
-            "Level", _
-            "NodeType", _
-            "BranchType", _
-            "Text", _
-            "SourceText", _
-            "BusinessText", _
-            "CommentText")
-
-    RowOut = 2
-
-    '# HCPノード一覧出力
-    For Each Node In HCPNodes
-
-        ws.Cells(RowOut, 1) = Node.NodeID
-        
-        ws.Cells(RowOut, 2) = Node.ParentID
-        
-        ws.Cells(RowOut, 3) = Node.PrevNodeID
-        
-        ws.Cells(RowOut, 4) = Node.NextNodeID
-        
-        ws.Cells(RowOut, 5) = Node.Level
-        
-        ws.Cells(RowOut, 6) = Node.NodeType
-        
-        ws.Cells(RowOut, 7) = Node.BranchType
-        
-        ws.Cells(RowOut, 8) = Node.Text
-        
-        ws.Cells(RowOut, 9) = Node.SourceText
-        
-        ws.Cells(RowOut, 10) = Node.BusinessText
-        
-        ws.Cells(RowOut, 11) = Node.CommentText
-
-        RowOut = RowOut + 1
-
-    Next Node
-    
-    '# HCPNodesシート体裁設定
-    ws.Columns.AutoFit
-
-End Sub
-
-' @JPName
-' 子ノード取得
-'
-' @Category
-' HCP
-'
-' @Input
-' ParentID(Long)
-' HCPNodes(Collection)
-'
-' @Output
-' Result(Collection)
-'
-' @Summary
-' 指定ノード配下の
-' 子ノード一覧を取得する
-'
-' @Remarks
-' TRUEノード、
-' FALSEノード、
-' その他ノードの順で返却する
-' 描画順序制御に利用する
-'
-Public Function GetChildNodes( _
-                ByVal ParentID As Long, _
-                ByVal HCPNodes As Collection) _
-                As Collection
-
-    ' 結果ノード一覧
-    Dim Result As Collection
-
-    ' HCPノード
-    Dim Node As clsHCPNode
-
-    '# 子ノード一覧初期化
-    Set Result = New Collection
-
-   '# TRUEノード収集
-    For Each Node In HCPNodes
-
-        If Node.ParentID = ParentID Then
-
-            If Node.NodeType = NODE_TRUE Then
-
-                Result.Add Node
-
-            End If
-
-        End If
-
-    Next Node
-
-    '# FALSEノード収集
-    For Each Node In HCPNodes
-
-        If Node.ParentID = ParentID Then
-
-            If Node.NodeType = NODE_FALSE Then
-
-                Result.Add Node
-
-            End If
-
-        End If
-
-    Next Node
-
-    '# 通常ノード収集
-    For Each Node In HCPNodes
-
-        If Node.ParentID = ParentID Then
-
-            If Node.NodeType <> NODE_TRUE _
-            And Node.NodeType <> NODE_FALSE Then
-
-                Result.Add Node
-
-            End If
-
-        End If
-
-    Next Node
-
-    '# 子ノード一覧返却
-    Set GetChildNodes = Result
-
-End Function
-
-' @JPName
-' ノード配置
-'
-' @Category
-' HCP
-'
-' @Input
-' Node(clsHCPNode)
-' HCPNodes(Collection)
-' Level(Long)
-' CurrentY(Double)
-'
-' @Output
-' Node.PosX
-' Node.PosY
-'
-' @Summary
-' HCPノードの表示位置を設定する
-'
-' @Remarks
-' 子ノードを再帰的に走査し
-' 階層レベルに応じた配置座標を設定する
-'
-Private Sub LayoutTree( _
-                ByVal Node As clsHCPNode, _
-                ByVal HCPNodes As Collection, _
-                ByVal Level As Long, _
-                ByRef CurrentY As Double)
-
-    ' 子ノード一覧
-    Dim Children As Collection
-    
-    ' 子ノード
-    Dim Child As clsHCPNode
-
-    '# ノード表示位置設定
-    Node.PosX = _
-        20 + Level * 220
-
-    Node.PosY = _
-        CurrentY
-
-    CurrentY = _
-        CurrentY + 60
-
-    '# 子ノード取得
-    Set Children = _
-        GetChildNodes( _
-            Node.NodeID, _
-            HCPNodes)
-
-    '# 子ノード配置
-    For Each Child In Children
-
-        LayoutTree _
-            Child, _
-            HCPNodes, _
-            Level + 1, _
-            CurrentY
-
-    Next Child
-
-End Sub
-
-' @JPName
-' HCP記号取得
-'
-' @Category
-' HCP
-'
-' @Input
-' Node(clsHCPNode)
-'
-' @Output
-' Symbol(String)
-'
-' @Summary
-' ノード種別に対応する
-' HCP表示記号を取得する
-'
-' @Remarks
-' IF、CALL、FORなどの
-' ノード種別に応じた記号を返却する
-'
-Private Function GetHCPSymbol( _
-                ByVal Node As clsHCPNode) _
-                As String
-
-    '# HCP記号判定
-    Select Case Node.NodeType
-
-        Case NODE_START
-            GetHCPSymbol = "〇│"
-
-        Case NODE_DECLARE
-            GetHCPSymbol = "□ "
-
-        Case NODE_REFERENCE
-            GetHCPSymbol = "◇ "
-
-        Case NODE_CONTROL
-            GetHCPSymbol = "☆ "
-
-        Case NODE_NORMAL
-            GetHCPSymbol = "〇 "
-
-        Case NODE_CALL
-            GetHCPSymbol = "◎ "
-
-        Case NODE_IF
-            GetHCPSymbol = "◆ "
-        
-        Case NODE_INLINE_IF
-        
-            If InStr(1, _
-                Node.Text, _
-                "Exit ", _
-                vbTextCompare) > 0 Then
-
-                GetHCPSymbol = "◆→ "
-
-            Else
-
-                GetHCPSymbol = "◆ "
-
-            End If
-
-        Case NODE_TRUE
-            GetHCPSymbol = "THEN "
-
-        Case NODE_FALSE
-            GetHCPSymbol = "ELSE "
-
-        Case NODE_FOR
-            GetHCPSymbol = "＠ "
-        
-        Case NODE_DO
-            GetHCPSymbol = "＠ "
-
-        Case NODE_WITH
-            GetHCPSymbol = "＠ "
-
-        Case NODE_WHILE
-            GetHCPSymbol = "＠ "
-
-        Case NODE_SELECT
-            GetHCPSymbol = "◆ "
-
-        Case NODE_CASE
-            GetHCPSymbol = ""
-
-        Case NODE_MERGE
-            GetHCPSymbol = ""
-
-        Case NODE_END
-            GetHCPSymbol = "┴"
-        
-        Case NODE_GOTO
-            GetHCPSymbol = "→ "
-    
-        Case NODE_EXIT
-            GetHCPSymbol = "→ "
-        
-        Case NODE_LABEL
-            GetHCPSymbol = "▼ "
-        
-        Case NODE_RESUME
-            GetHCPSymbol = "☆ "
-
-        Case Else
-            GetHCPSymbol = ""
-
-    End Select
-
-End Function
+'--------------------------------------------------
+' HCP描画
+'--------------------------------------------------
 
 ' @JPName
 ' HCP出力
@@ -2137,7 +1829,13 @@ Private Sub RenderNode( _
                     ' ExportHCPTextで出力済み
 
                 Case NODE_DECLARE
-
+                
+                    OutputComment _
+                        Node, _
+                        Prefix, _
+                        ws, _
+                        RowOut
+        
                     ws.Cells(RowOut, 1).Value = _
                         Prefix & _
                         "□ " & _
@@ -2173,6 +1871,136 @@ Private Sub RenderNode( _
         End If
 
     Next Node
+
+End Sub
+
+' @JPName
+' 制御ノード描画
+'
+' @Category
+' HCP
+'
+' @Input
+' HCPNodes(Collection)
+' Node(clsHCPNode)
+' Prefix(String)
+' ws(Worksheet)
+' RowOut(Long)
+'
+' @Output
+' RowOut(Long)
+'
+' @Summary
+' 制御構造ノードを種別に応じて
+' 適切な描画ルーチンへ振り分ける
+'
+' @Remarks
+' IF、FOR、DO、WITH、WHILE、
+' SELECT、条件コンパイルなどの
+' 制御構造を判定し
+' 専用描画処理へ委譲する
+' 通常ノードはOutputHCPNodeへ
+' 出力を委譲する
+'
+Private Sub RenderControlNode( _
+                ByVal HCPNodes As Collection, _
+                ByVal Node As clsHCPNode, _
+                ByVal Prefix As String, _
+                ByVal ws As Worksheet, _
+                ByRef RowOut As Long)
+
+    '# HCP描画ルーティング
+    Select Case Node.NodeType
+
+        Case NODE_IF
+
+            '# IFブロック描画
+            RenderIfBlock _
+                HCPNodes, _
+                Node, _
+                Prefix, _
+                ws, _
+                RowOut
+
+        Case NODE_ELSEIF
+
+            RenderIfBlock _
+                HCPNodes, _
+                Node, _
+                Prefix, _
+                ws, _
+                RowOut
+        
+        Case NODE_FOR
+
+            '# FORブロック描画
+            RenderForBlock _
+                HCPNodes, _
+                Node, _
+                Prefix, _
+                ws, _
+                RowOut
+
+        Case NODE_DO
+
+            '# DOブロック描画
+            RenderDoBlock _
+                HCPNodes, _
+                Node, _
+                Prefix, _
+                ws, _
+                RowOut
+
+        Case NODE_WITH
+
+            '# WITHブロック描画
+            RenderWithBlock _
+                HCPNodes, _
+                Node, _
+                Prefix, _
+                ws, _
+                RowOut
+
+        Case NODE_WHILE
+
+            '# WHILEブロック描画
+            RenderWhileBlock _
+                HCPNodes, _
+                Node, _
+                Prefix, _
+                ws, _
+                RowOut
+
+        Case NODE_SELECT
+
+            '# SELECTブロック描画
+            RenderSelectBlock _
+                HCPNodes, _
+                Node, _
+                Prefix, _
+                ws, _
+                RowOut
+
+        Case NODE_COMPILE_IF
+
+            '# 条件コンパイルブロック描画
+            RenderCompileBlock _
+                HCPNodes, _
+                Node, _
+                Prefix, _
+                ws, _
+                RowOut
+
+        Case Else
+
+            '# 通常ノード描画
+            OutputHCPNode _
+                Node, _
+                Prefix, _
+                ws, _
+                RowOut
+
+    End Select
 
 End Sub
 
@@ -2477,156 +2305,6 @@ Private Sub RenderForBlock( _
 End Sub
 
 ' @JPName
-' SELECTブロック描画
-'
-' @Category
-' HCP
-'
-' @Input
-' HCPNodes(Collection)
-' SelectNode(clsHCPNode)
-' Prefix(String)
-' ws(Worksheet)
-' RowOut(Long)
-'
-' @Output
-' RowOut(Long)
-'
-' @Summary
-' Select Case構造をHCP形式で描画する
-'
-' @Remarks
-' CASE単位でノードを展開して出力し
-' MERGEノードをEnd Selectとして描画する
-'
-Private Sub RenderSelectBlock( _
-                ByVal HCPNodes As Collection, _
-                ByVal SelectNode As clsHCPNode, _
-                ByVal Prefix As String, _
-                ByVal ws As Worksheet, _
-                ByRef RowOut As Long)
-
-    ' SELECT配下ノード
-    Dim Node As clsHCPNode
-    
-    ' MERGEノード
-    Dim MergeNode As clsHCPNode
-
-    ' CASE数
-    Dim CaseCount As Long
-    
-    ' 現在CASE番号
-    Dim CaseIndex As Long
-
-    OutputComment _
-        SelectNode, _
-        Prefix, _
-        ws, _
-        RowOut
-       
-    '# SELECT開始出力
-    ws.Cells(RowOut, 1).Value = _
-        Prefix & _
-        "◆┐" & _
-        GetDisplayText(SelectNode, Prefix)
-    
-    ws.Cells(RowOut, 1).WrapText = True
-
-    RowOut = RowOut + 1
-
-    '-----------------------------
-    '# CASE数集計
-    '-----------------------------
-    CaseCount = 0
-
-    For Each Node In HCPNodes
-
-        If Node.ParentID = SelectNode.NodeID Then
-
-            If Node.NodeType = NODE_CASE Then
-
-                CaseCount = CaseCount + 1
-
-            ElseIf Node.NodeType = NODE_MERGE Then
-
-                Set MergeNode = Node
-
-            End If
-
-        End If
-
-    Next Node
-
-    CaseIndex = 0
-
-    '-----------------------------
-    '# CASEブロック描画
-    '-----------------------------
-    For Each Node In HCPNodes
-
-        If Node.ParentID = SelectNode.NodeID Then
-
-            Select Case Node.NodeType
-
-                Case NODE_CASE
-
-                    CaseIndex = CaseIndex + 1
-
-                    '-----------------------------
-                    ' CASE見出し
-                    '-----------------------------
-                    If CaseIndex = 1 Then
-
-                        ws.Cells(RowOut, 1).Value = _
-                            Prefix & "││" & _
-                            GetDisplayText(Node, Prefix)
-
-                    Else
-
-                        ws.Cells(RowOut, 1).Value = _
-                            Prefix & "├┐" & _
-                            GetDisplayText(Node, Prefix)
-
-                    End If
-                    
-                    ws.Cells(RowOut, 1).WrapText = True
-
-                    RowOut = RowOut + 1
-
-                    '-----------------------------
-                    '# CASE配下描画
-                    '-----------------------------
-                    RenderNode _
-                        HCPNodes, _
-                        Node.NodeID, _
-                        Prefix & "│", _
-                        ws, _
-                        RowOut
-
-            End Select
-
-        End If
-
-    Next Node
-
-    '-----------------------------
-    '# End Select描画
-    '-----------------------------
-    If Not MergeNode Is Nothing Then
-    
-        ws.Cells(RowOut, 1).Value = _
-            Prefix & "┴" & _
-            GetDisplayText(MergeNode, Prefix)
-        
-        ws.Cells(RowOut, 1).WrapText = True
-
-        RowOut = RowOut + 1
-
-    End If
-
-End Sub
-
-' @JPName
 ' DOブロック描画
 '
 ' @Category
@@ -2708,6 +2386,94 @@ Private Sub RenderDoBlock( _
         ws.Cells(RowOut, 1).Value = _
             Prefix & "│┴" & _
             GetDisplayText(EndNode, Prefix)
+
+        RowOut = RowOut + 1
+
+    End If
+
+End Sub
+
+' @JPName
+' WHILEブロック描画
+'
+' @Category
+' HCP
+'
+' @Input
+' HCPNodes(Collection)
+' WhileNode(clsHCPNode)
+' Prefix(String)
+' ws(Worksheet)
+' RowOut(Long)
+'
+' @Output
+' RowOut(Long)
+'
+' @Summary
+' While構造をHCP形式で描画する
+'
+' @Remarks
+' WHILE配下のノードを再帰的に出力し
+' MERGEノードをループ終端として描画する
+'
+Private Sub RenderWhileBlock( _
+                ByVal HCPNodes As Collection, _
+                ByVal WhileNode As clsHCPNode, _
+                ByVal Prefix As String, _
+                ByVal ws As Worksheet, _
+                ByRef RowOut As Long)
+
+    ' WHILE配下ノード
+    Dim Node As clsHCPNode
+    
+    ' 終端MERGEノード
+    Dim EndNode As clsHCPNode
+
+    OutputComment _
+        WhileNode, _
+        Prefix, _
+        ws, _
+        RowOut
+    
+    '# WHILE開始出力
+    ws.Cells(RowOut, 1).Value = _
+        Prefix & _
+        "＠┐" & _
+        GetDisplayText(WhileNode, Prefix)
+
+    ws.Cells(RowOut, 1).WrapText = True
+
+    RowOut = RowOut + 1
+
+    '# 終端MERGEノード検索
+    For Each Node In HCPNodes
+
+        If Node.ParentID = WhileNode.NodeID Then
+
+            If Node.NodeType = NODE_MERGE Then
+
+                Set EndNode = Node
+
+            End If
+
+        End If
+
+    Next Node
+
+    '# WHILE配下ノード描画
+    RenderNode _
+        HCPNodes, _
+        WhileNode.NodeID, _
+        Prefix & "│", _
+        ws, _
+        RowOut
+
+    '# WHILE終端出力
+    If Not EndNode Is Nothing Then
+
+        ws.Cells(RowOut, 1).Value = _
+            Prefix & "│┴" & _
+                GetDisplayText(EndNode, Prefix)
 
         RowOut = RowOut + 1
 
@@ -2804,14 +2570,14 @@ Private Sub RenderWithBlock( _
 End Sub
 
 ' @JPName
-' WHILEブロック描画
+' SELECTブロック描画
 '
 ' @Category
 ' HCP
 '
 ' @Input
 ' HCPNodes(Collection)
-' WhileNode(clsHCPNode)
+' SelectNode(clsHCPNode)
 ' Prefix(String)
 ' ws(Worksheet)
 ' RowOut(Long)
@@ -2820,49 +2586,57 @@ End Sub
 ' RowOut(Long)
 '
 ' @Summary
-' While構造をHCP形式で描画する
+' Select Case構造をHCP形式で描画する
 '
 ' @Remarks
-' WHILE配下のノードを再帰的に出力し
-' MERGEノードをループ終端として描画する
+' CASE単位でノードを展開して出力し
+' MERGEノードをEnd Selectとして描画する
 '
-Private Sub RenderWhileBlock( _
+Private Sub RenderSelectBlock( _
                 ByVal HCPNodes As Collection, _
-                ByVal WhileNode As clsHCPNode, _
+                ByVal SelectNode As clsHCPNode, _
                 ByVal Prefix As String, _
                 ByVal ws As Worksheet, _
                 ByRef RowOut As Long)
 
-    ' WHILE配下ノード
+    ' SELECT配下ノード
     Dim Node As clsHCPNode
-    
-    ' 終端MERGEノード
-    Dim EndNode As clsHCPNode
+
+    ' MERGEノード
+    Dim MergeNode As clsHCPNode
 
     OutputComment _
-        WhileNode, _
+        SelectNode, _
         Prefix, _
         ws, _
         RowOut
-    
-    '# WHILE開始出力
+
+    '# SELECT開始出力
     ws.Cells(RowOut, 1).Value = _
         Prefix & _
-        "＠┐" & _
-        GetDisplayText(WhileNode, Prefix)
+        "◆┐" & _
+        GetDisplayText( _
+            SelectNode, _
+            Prefix)
 
     ws.Cells(RowOut, 1).WrapText = True
 
     RowOut = RowOut + 1
 
-    '# 終端MERGEノード検索
+    '-----------------------------
+    '# MERGEノード取得
+    '-----------------------------
     For Each Node In HCPNodes
 
-        If Node.ParentID = WhileNode.NodeID Then
+        If Node.ParentID = _
+            SelectNode.NodeID Then
 
-            If Node.NodeType = NODE_MERGE Then
+            If Node.NodeType = _
+                NODE_MERGE Then
 
-                Set EndNode = Node
+                Set MergeNode = Node
+
+                Exit For
 
             End If
 
@@ -2870,20 +2644,56 @@ Private Sub RenderWhileBlock( _
 
     Next Node
 
-    '# WHILE配下ノード描画
-    RenderNode _
-        HCPNodes, _
-        WhileNode.NodeID, _
-        Prefix & "│", _
-        ws, _
-        RowOut
+    '-----------------------------
+    '# CASEブロック描画
+    '-----------------------------
+    For Each Node In HCPNodes
 
-    '# WHILE終端出力
-    If Not EndNode Is Nothing Then
+        If Node.ParentID = _
+            SelectNode.NodeID Then
+
+            If Node.NodeType = _
+                NODE_CASE Then
+
+                '# CASE見出し
+                ws.Cells(RowOut, 1).Value = _
+                    Prefix & _
+                    "│├┐" & _
+                    GetDisplayText( _
+                        Node, _
+                        Prefix)
+
+                ws.Cells(RowOut, 1).WrapText = True
+
+                RowOut = RowOut + 1
+
+                '# CASE配下描画
+                RenderNode _
+                    HCPNodes, _
+                    Node.NodeID, _
+                    Prefix & "││", _
+                    ws, _
+                    RowOut
+
+            End If
+
+        End If
+
+    Next Node
+
+    '-----------------------------
+    '# End Select描画
+    '-----------------------------
+    If Not MergeNode Is Nothing Then
 
         ws.Cells(RowOut, 1).Value = _
-            Prefix & "│┴" & _
-                GetDisplayText(EndNode, Prefix)
+            Prefix & _
+            "│┴" & _
+            GetDisplayText( _
+                MergeNode, _
+                Prefix)
+
+        ws.Cells(RowOut, 1).WrapText = True
 
         RowOut = RowOut + 1
 
@@ -2979,13 +2789,12 @@ Private Sub RenderCompileBlock( _
 End Sub
 
 ' @JPName
-' 制御ノード描画
+' ノード出力
 '
 ' @Category
 ' HCP
 '
 ' @Input
-' HCPNodes(Collection)
 ' Node(clsHCPNode)
 ' Prefix(String)
 ' ws(Worksheet)
@@ -2995,116 +2804,80 @@ End Sub
 ' RowOut(Long)
 '
 ' @Summary
-' 制御構造ノードを種別に応じて
-' 適切な描画ルーチンへ振り分ける
+' 単一ノードをシートへ出力する
 '
 ' @Remarks
-' IF、FOR、DO、WITH、WHILE、
-' SELECT、条件コンパイルなどの
-' 制御構造を判定し
-' 専用描画処理へ委譲する
-' 通常ノードはOutputHCPNodeへ
-' 出力を委譲する
+' HCP記号と表示文字列を組み合わせて出力し
+' 業務説明が存在する場合は併せて出力する
 '
-Private Sub RenderControlNode( _
-                ByVal HCPNodes As Collection, _
+Private Sub OutputHCPNode( _
                 ByVal Node As clsHCPNode, _
                 ByVal Prefix As String, _
                 ByVal ws As Worksheet, _
                 ByRef RowOut As Long)
 
-    '# HCP描画ルーティング
-    Select Case Node.NodeType
+    Dim Text As String
 
-        Case NODE_IF
+    Dim Lines() As String
+    Dim i As Long
 
-            '# IFブロック描画
-            RenderIfBlock _
-                HCPNodes, _
-                Node, _
-                Prefix, _
-                ws, _
-                RowOut
+    '# ノードコメント出力
+    OutputComment _
+        Node, _
+        Prefix, _
+        ws, _
+        RowOut
 
-        Case NODE_ELSEIF
+    '# HCP表示文字列生成
+    If Node.NodeType = NODE_LABEL Then
 
-            RenderIfBlock _
-                HCPNodes, _
-                Node, _
-                Prefix, _
-                ws, _
-                RowOut
-        
-        Case NODE_FOR
+        Text = _
+            GetHCPSymbol(Node) & _
+            GetDisplayText(Node, Prefix)
 
-            '# FORブロック描画
-            RenderForBlock _
-                HCPNodes, _
-                Node, _
-                Prefix, _
-                ws, _
-                RowOut
+    Else
 
-        Case NODE_DO
+        Text = _
+            Prefix & _
+            GetHCPSymbol(Node) & _
+            GetDisplayText(Node, Prefix)
 
-            '# DOブロック描画
-            RenderDoBlock _
-                HCPNodes, _
-                Node, _
-                Prefix, _
-                ws, _
-                RowOut
+    End If
 
-        Case NODE_WITH
+    '# Businessなし
+    If Trim$(Node.BusinessText) = "" Then
 
-            '# WITHブロック描画
-            RenderWithBlock _
-                HCPNodes, _
-                Node, _
-                Prefix, _
-                ws, _
-                RowOut
+        ws.Cells(RowOut, 1).Value = Text
 
-        Case NODE_WHILE
+        RowOut = RowOut + 1
 
-            '# WHILEブロック描画
-            RenderWhileBlock _
-                HCPNodes, _
-                Node, _
-                Prefix, _
-                ws, _
-                RowOut
+        Exit Sub
 
-        Case NODE_SELECT
+    End If
 
-            '# SELECTブロック描画
-            RenderSelectBlock _
-                HCPNodes, _
-                Node, _
-                Prefix, _
-                ws, _
-                RowOut
+    '# Business分割
+    Lines = Split( _
+        Node.BusinessText, _
+        vbCrLf)
 
-        Case NODE_COMPILE_IF
+    '# 1行目
+    ws.Cells(RowOut, 1).Value = Text
+    ws.Cells(RowOut, 2).Value = Lines(0)
 
-            '# 条件コンパイルブロック描画
-            RenderCompileBlock _
-                HCPNodes, _
-                Node, _
-                Prefix, _
-                ws, _
-                RowOut
+    RowOut = RowOut + 1
 
-        Case Else
+    '# 2行目以降
+    For i = 1 To UBound(Lines)
 
-            '# 通常ノード描画
-            OutputHCPNode _
-                Node, _
-                Prefix, _
-                ws, _
-                RowOut
+        ws.Cells(RowOut, 1).Value = _
+            Prefix & "│"
 
-    End Select
+        ws.Cells(RowOut, 2).Value = _
+            Lines(i)
+
+        RowOut = RowOut + 1
+
+    Next i
 
 End Sub
 
@@ -3161,76 +2934,121 @@ Private Sub OutputComment( _
 
 End Sub
 
+'--------------------------------------------------
+' HCP表示文字列
+'--------------------------------------------------
+
 ' @JPName
-' ノード出力
+' HCP記号取得
 '
 ' @Category
 ' HCP
 '
 ' @Input
 ' Node(clsHCPNode)
-' Prefix(String)
-' ws(Worksheet)
-' RowOut(Long)
 '
 ' @Output
-' RowOut(Long)
+' Symbol(String)
 '
 ' @Summary
-' 単一ノードをシートへ出力する
+' ノード種別に対応する
+' HCP表示記号を取得する
 '
 ' @Remarks
-' HCP記号と表示文字列を組み合わせて出力し
-' 業務説明が存在する場合は併せて出力する
+' IF、CALL、FORなどの
+' ノード種別に応じた記号を返却する
 '
-Private Sub OutputHCPNode( _
-                ByVal Node As clsHCPNode, _
-                ByVal Prefix As String, _
-                ByVal ws As Worksheet, _
-                ByRef RowOut As Long)
+Private Function GetHCPSymbol( _
+                ByVal Node As clsHCPNode) _
+                As String
 
-    ' 出力文字列
-    Dim Text As String
+    '# HCP記号判定
+    Select Case Node.NodeType
 
-    '# ノードコメント出力
-    OutputComment _
-        Node, _
-        Prefix, _
-        ws, _
-        RowOut
-   
-    '# HCP表示文字列生成
-    If Node.NodeType = NODE_LABEL Then
+        Case NODE_START
+            GetHCPSymbol = "〇│"
 
-        Text = _
-            GetHCPSymbol(Node) & _
-            GetDisplayText(Node, Prefix)
+        Case NODE_DECLARE
+            GetHCPSymbol = "□ "
 
-    Else
+        Case NODE_REFERENCE
+            GetHCPSymbol = "◇ "
 
-        Text = _
-            Prefix & _
-            GetHCPSymbol(Node) & _
-            GetDisplayText(Node, Prefix)
+        Case NODE_CONTROL
+            GetHCPSymbol = "☆ "
 
-    End If
+        Case NODE_NORMAL
+            GetHCPSymbol = "〇 "
 
-    '# HCPノード出力
-    ws.Cells(RowOut, 1).Value = Text
+        Case NODE_CALL
+            GetHCPSymbol = "◎ "
 
-    ws.Cells(RowOut, 1).WrapText = True
+        Case NODE_IF
+            GetHCPSymbol = "◆ "
+        
+        Case NODE_INLINE_IF
+        
+            If InStr(1, _
+                Node.Text, _
+                "Exit ", _
+                vbTextCompare) > 0 Then
 
-    '# 業務説明出力
-    If Trim$(Node.BusinessText) <> "" Then
+                GetHCPSymbol = "◆→ "
 
-        ws.Cells(RowOut, 2).Value = _
-            Node.BusinessText
+            Else
 
-    End If
+                GetHCPSymbol = "◆ "
 
-    RowOut = RowOut + 1
+            End If
 
-End Sub
+        Case NODE_TRUE
+            GetHCPSymbol = "THEN "
+
+        Case NODE_FALSE
+            GetHCPSymbol = "ELSE "
+
+        Case NODE_FOR
+            GetHCPSymbol = "＠ "
+        
+        Case NODE_DO
+            GetHCPSymbol = "＠ "
+
+        Case NODE_WITH
+            GetHCPSymbol = "＠ "
+
+        Case NODE_WHILE
+            GetHCPSymbol = "＠ "
+
+        Case NODE_SELECT
+            GetHCPSymbol = "◆ "
+
+        Case NODE_CASE
+            GetHCPSymbol = ""
+
+        Case NODE_MERGE
+            GetHCPSymbol = ""
+
+        Case NODE_END
+            GetHCPSymbol = "┴"
+        
+        Case NODE_GOTO
+            GetHCPSymbol = "→ "
+    
+        Case NODE_EXIT
+            GetHCPSymbol = "→ "
+        
+        Case NODE_LABEL
+            GetHCPSymbol = "▼ "
+        
+        Case NODE_RESUME
+            GetHCPSymbol = "☆ "
+
+        Case Else
+            GetHCPSymbol = ""
+
+    End Select
+
+End Function
 
 ' @JPName
 ' HCP文字列整形
@@ -3385,6 +3203,268 @@ Private Function GetDisplayText( _
             Prefix)
 
 End Function
+
+'--------------------------------------------------
+' HCPノード出力
+'--------------------------------------------------
+
+' @JPName
+' HCPノード出力
+'
+' @Category
+' HCP
+'
+' @Input
+' HCPNodes(Collection)
+'
+' @Output
+' HCPノードシート
+'
+' @Summary
+' HCPノード一覧をシートへ出力する
+'
+' @Remarks
+' HCPノード情報を一覧形式で出力する
+' 主にデバッグおよび解析確認用途で利用する
+'
+Public Sub ExportHCPNodes( _
+                ByVal HCPNodes As Collection)
+
+    ' 出力先シート
+    Dim ws As Worksheet
+
+    ' HCPノード
+    Dim Node As clsHCPNode
+
+    ' 出力行
+    Dim RowOut As Long
+
+    On Error Resume Next
+
+    '# HCPNodesシート取得
+    Set ws = _
+        gContext.ManagementBook.Worksheets( _
+            SHEET_HCP_NODES)
+    
+    On Error GoTo 0
+
+    '# HCPNodesシート作成
+    If ws Is Nothing Then
+
+        Set ws = _
+            gContext.ManagementBook.Worksheets.Add( _
+                After:=gContext.ManagementBook.Worksheets( _
+                gContext.ManagementBook.Worksheets.Count))
+
+        ws.Name = SHEET_HCP_NODES
+
+    End If
+
+    '# HCPNodesシート初期化
+    ws.Cells.Clear
+
+    '# HCPNodesヘッダ出力
+    ws.Range("A1:K1").Value = _
+        Array( _
+            "NodeID", _
+            "ParentID", _
+            "PrevNodeID", _
+            "NextNodeID", _
+            "Level", _
+            "NodeType", _
+            "BranchType", _
+            "Text", _
+            "SourceText", _
+            "BusinessText", _
+            "CommentText")
+
+    RowOut = 2
+
+    '# HCPノード一覧出力
+    For Each Node In HCPNodes
+
+        ws.Cells(RowOut, 1) = Node.NodeID
+        
+        ws.Cells(RowOut, 2) = Node.ParentID
+        
+        ws.Cells(RowOut, 3) = Node.PrevNodeID
+        
+        ws.Cells(RowOut, 4) = Node.NextNodeID
+        
+        ws.Cells(RowOut, 5) = Node.Level
+        
+        ws.Cells(RowOut, 6) = Node.NodeType
+        
+        ws.Cells(RowOut, 7) = Node.BranchType
+        
+        ws.Cells(RowOut, 8) = Node.Text
+        
+        ws.Cells(RowOut, 9) = Node.SourceText
+        
+        ws.Cells(RowOut, 10) = Node.BusinessText
+        
+        ws.Cells(RowOut, 11) = Node.CommentText
+
+        RowOut = RowOut + 1
+
+    Next Node
+    
+    '# HCPNodesシート体裁設定
+    ws.Columns.AutoFit
+
+End Sub
+
+' @JPName
+' 子ノード取得
+'
+' @Category
+' HCP
+'
+' @Input
+' ParentID(Long)
+' HCPNodes(Collection)
+'
+' @Output
+' Result(Collection)
+'
+' @Summary
+' 指定ノード配下の
+' 子ノード一覧を取得する
+'
+' @Remarks
+' TRUEノード、
+' FALSEノード、
+' その他ノードの順で返却する
+' 描画順序制御に利用する
+'
+Public Function GetChildNodes( _
+                ByVal ParentID As Long, _
+                ByVal HCPNodes As Collection) _
+                As Collection
+
+    ' 結果ノード一覧
+    Dim Result As Collection
+
+    ' HCPノード
+    Dim Node As clsHCPNode
+
+    '# 子ノード一覧初期化
+    Set Result = New Collection
+
+   '# TRUEノード収集
+    For Each Node In HCPNodes
+
+        If Node.ParentID = ParentID Then
+
+            If Node.NodeType = NODE_TRUE Then
+
+                Result.Add Node
+
+            End If
+
+        End If
+
+    Next Node
+
+    '# FALSEノード収集
+    For Each Node In HCPNodes
+
+        If Node.ParentID = ParentID Then
+
+            If Node.NodeType = NODE_FALSE Then
+
+                Result.Add Node
+
+            End If
+
+        End If
+
+    Next Node
+
+    '# 通常ノード収集
+    For Each Node In HCPNodes
+
+        If Node.ParentID = ParentID Then
+
+            If Node.NodeType <> NODE_TRUE _
+            And Node.NodeType <> NODE_FALSE Then
+
+                Result.Add Node
+
+            End If
+
+        End If
+
+    Next Node
+
+    '# 子ノード一覧返却
+    Set GetChildNodes = Result
+
+End Function
+
+' @JPName
+' ノード配置
+'
+' @Category
+' HCP
+'
+' @Input
+' Node(clsHCPNode)
+' HCPNodes(Collection)
+' Level(Long)
+' CurrentY(Double)
+'
+' @Output
+' Node.PosX
+' Node.PosY
+'
+' @Summary
+' HCPノードの表示位置を設定する
+'
+' @Remarks
+' 子ノードを再帰的に走査し
+' 階層レベルに応じた配置座標を設定する
+'
+Private Sub LayoutTree( _
+                ByVal Node As clsHCPNode, _
+                ByVal HCPNodes As Collection, _
+                ByVal Level As Long, _
+                ByRef CurrentY As Double)
+
+    ' 子ノード一覧
+    Dim Children As Collection
+    
+    ' 子ノード
+    Dim Child As clsHCPNode
+
+    '# ノード表示位置設定
+    Node.PosX = _
+        20 + Level * 220
+
+    Node.PosY = _
+        CurrentY
+
+    CurrentY = _
+        CurrentY + 60
+
+    '# 子ノード取得
+    Set Children = _
+        GetChildNodes( _
+            Node.NodeID, _
+            HCPNodes)
+
+    '# 子ノード配置
+    For Each Child In Children
+
+        LayoutTree _
+            Child, _
+            HCPNodes, _
+            Level + 1, _
+            CurrentY
+
+    Next Child
+
+End Sub
 
 ' @JPName
 ' シート削除

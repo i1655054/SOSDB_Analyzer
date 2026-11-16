@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift_jis">
+<title>GP_UpdateFuriKokuminKyu</title>
+<style>
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+colgroup col:nth-of-type(1) {}
+colgroup col:nth-of-type(2) {}
+.resize {position: relative;}
+.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+</style>
+</head>
+<body>
+<h1>GP_UpdateFuriKokuminKyu</h1>
+<p>Module : clsAboutCalendar2</p>
+<p><a href="./_INDEX.html">← Module Index</a></p>
+<table>
+<colgroup><col/><col/></colgroup>
+<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<tbody>
+<tr><td>Procedure: clsAboutCalendar2.GP_UpdateFuriKokuminKyu  [ 振替休日国民の休日設定＜clsAboutCalendar2＞ ]</td><td></td></tr>
+<tr><td>HCP</td><td>Business</td></tr>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Private Sub GPUpdateFuriKokuminKyu(tblFuriDIx() As gtypFuriDIx,  ByRef tblCalendar() As g_typAboutCalendar2)</td><td>振替休日国民の休日設定＜clsAboutCalendar2＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　□ Dim lngIxF As Long                                              ' 振替休日判定日テーブルINDEX</td><td></td></tr>
+<tr><td>　　□ Dim lngIxC As Long                                              ' カレンダーテーブルINDEX</td><td></td></tr>
+<tr><td>　　□ Dim lngIxFMax As Long                                           ' 振替休日判定日テーブルINDEX上限</td><td></td></tr>
+<tr><td>　　□ Dim lngIxCMax As Long                                           ' カレンダーテーブルINDEX上限</td><td></td></tr>
+<tr><td>　　〇 lngIxFMax = UBound(tblFuriDIx)</td><td></td></tr>
+<tr><td>　　〇 lngIxCMax = UBound(tblCalendar)</td><td></td></tr>
+<tr><td>　　│#  振替休日候補走査</td><td></td></tr>
+<tr><td>　　＠┐Do While lngIxF &lt;= lngIxFMax</td><td></td></tr>
+<tr><td>　　││#  翌日算出</td><td></td></tr>
+<tr><td>　　│〇 lngIxC = tblFuriDIx(lngIxF).CalIx + 1</td><td></td></tr>
+<tr><td>　　││#  休日種別判定</td><td></td></tr>
+<tr><td>　　│◆┐If tblFuriDIx(lngIxF).Syubetsu = 0 Then</td><td></td></tr>
+<tr><td>　　│││#  振替休日設定</td><td></td></tr>
+<tr><td>　　││＠┐Do While lngIxC &lt;= lngIxCMax</td><td></td></tr>
+<tr><td>　　│││◆┐If ((tblCalendar(lngIxC).Syuku = 0) Or (tblCalendar(lngIxC).Syuku = 3)) Then</td><td></td></tr>
+<tr><td>　　││││〇 tblCalendar(lngIxC).Syuku = 2</td><td></td></tr>
+<tr><td>　　││││〇 tblCalendar(lngIxC).SyukuNm = g_cnsFuri         ' 振替休日</td><td></td></tr>
+<tr><td>　　││││→ Exit Do</td><td></td></tr>
+<tr><td>　　│││├┐ElseIf tblCalendar(lngIxC).SyukuNm = g_cnsKyu2 Then</td><td></td></tr>
+<tr><td>　　││││→ Exit Do</td><td></td></tr>
+<tr><td>　　││││┴End If</td><td></td></tr>
+<tr><td>　　│││〇 lngIxC = lngIxC + 1</td><td></td></tr>
+<tr><td>　　│││┴Loop</td><td></td></tr>
+<tr><td>　　││〇 Else    ' 国民の休日</td><td></td></tr>
+<tr><td>　　│││#  国民の休日設定</td><td></td></tr>
+<tr><td>　　││〇 tblCalendar(lngIxC).Syuku = 1</td><td></td></tr>
+<tr><td>　　││〇 tblCalendar(lngIxC).SyukuNm = g_cnsKyu2                 ' 国民の休日</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td>　　││#  次候補処理</td><td></td></tr>
+<tr><td>　　│〇 lngIxF = lngIxF + 1</td><td></td></tr>
+<tr><td>　　│┴Loop</td><td></td></tr>
+<tr><td>　　┴End Sub</td><td></td></tr>
+</tbody>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function (eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function (e) {
+const styleTh = window.getComputedStyle(eleTh);
+const paddingLeft = parseFloat(styleTh.paddingLeft);
+const paddingRight = parseFloat(styleTh.paddingRight);
+const borderLeft = parseFloat(styleTh.borderLeftWidth);
+const borderRight = parseFloat(styleTh.borderRightWidth);
+startX = e.pageX;
+startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e) {
+const newWidth = startWidth + (e.pageX - startX);
+eleTh.style.width = newWidth + 'px';
+}
+function onMouseUp() {
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
+}
+});
+</script>
+</body>
+</html>

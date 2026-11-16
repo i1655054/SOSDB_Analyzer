@@ -1,0 +1,30 @@
+Procedure: modIssueMapper.GetServerURL  [ RedmineサーバURL取得＜modIssueMapper＞ ]
+HCP	Business
+┬
+〇│Public Function GetServerURL(  ByVal serverName As String) As String	RedmineサーバURL取得＜modIssueMapper＞
+┴└┐
+　　│#  Sysdataシート取得
+　　□ Dim sht As Worksheet
+　　〇 Set sht = ThisWorkbook.Sheets(SheetName_Sysdata)
+　　□ Dim i As Long
+　　□ Dim srvIP As String
+　　│#  マスタ検索
+　　＠┐For i = 2 To sht.Cells(sht.Rows.count, RedmineDB_Col).End(xlUp).row
+　　│□ Dim name As String
+　　││#  マスタ情報取得
+　　│〇 name = Trim(sht.Cells(i, RedmineDB_Col).Value)
+　　││#  一致判定
+　　│◆┐If name = serverName Then
+　　│││#  取得値返却
+　　││〇 srvIP = Trim(sht.Cells(i, RedmineDB_Col + 1).Value)
+　　││◆┐If srvIP <> "" Then
+　　│││〇 GetServerURL = "http://" & srvIP & "/"
+　　││├┐ELSE
+　　│││〇 GetServerURL = "http://10.8.186.4/"
+　　│││┴End If
+　　││→ Exit Function
+　　││┴End If
+　　│┴Next i
+　　│#  未検出時初期値返却
+　　〇 GetServerURL = "http://10.8.186.4/"
+　　┴End Function

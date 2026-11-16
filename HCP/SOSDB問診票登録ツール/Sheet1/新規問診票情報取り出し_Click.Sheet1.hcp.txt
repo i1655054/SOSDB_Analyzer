@@ -1,0 +1,8 @@
+Procedure: Sheet1.V‹K–âf•[î•ñæ‚èo‚µ_Click  [ V‹K–âf•[“ÇƒSheet1„ ]
+HCP	Business
+„¦
+Z„ Private Sub V‹K–âf•[î•ñæ‚èo‚µ_Click()	V‹K–âf•[“ÇƒSheet1„
+„¨„¤„¢
+@@Ÿ¨ If modUtility.IsSearchResultActive Then Exit Sub
+@@ Call MonshinInfoHandler	–âf•[æˆ—ƒmodMonshinCore„
+@@„¨End Sub

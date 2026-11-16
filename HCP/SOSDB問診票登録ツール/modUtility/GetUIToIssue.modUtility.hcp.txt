@@ -1,0 +1,28 @@
+Procedure: modUtility.GetUIToIssue  [ 画面情報取得＜modUtility＞ ]
+HCP	Business
+┬
+〇│Public Sub GetUIToIssue(ByRef issue As IssueInfo)	画面情報取得＜modUtility＞
+┴└┐
+　　□ Dim targetVer As String
+　　□ Dim nen As String
+　　□ Dim numVal As Long
+　　□ Dim numStr As String
+　　＠┐With issue
+　　││#  担当者取得
+　　│〇 .AuthorName = Range(TANTOU_NAME_RANG).Value
+　　│〇 .AssignedTo = Range(TANTOU_NAME_RANG).Value
+　　││#  対象バージョン取得
+　　│〇 .targetVersion = Range(TARGET_VER_RANG).Value
+　　││#  トラブル番号生成
+　　│◎ .TroubleNum = BuildTroubleNum(.targetVersion, Range(TORBLE_NUM_RANG).Value)	トラブル番号生成＜modUtility＞
+　　││	内部呼出:Range
+　　││#  優先度取得
+　　│〇 .Priority = Range(PRIORITY_RANG).Value
+　　││#  装置プロダクト取得
+　　│〇 .EqProduct = Range(EQ_PRODUCT_RANG).Value
+　　││#  プロダクト担当者取得
+　　│〇 .ProductTantou = Range(PRODUCT_TANTOU_RANG).Value
+　　││#  エスカレーション日取得
+　　│〇 .Esukare_Date = Range(ESCALE_DAY_RANG).Value
+　　│┴End With
+　　┴End Sub

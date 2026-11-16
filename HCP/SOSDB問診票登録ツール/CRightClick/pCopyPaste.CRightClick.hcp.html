@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift_jis">
+<title>pCopyPaste</title>
+<style>
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+colgroup col:nth-of-type(1) {}
+colgroup col:nth-of-type(2) {}
+.resize {position: relative;}
+.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+</style>
+</head>
+<body>
+<h1>pCopyPaste</h1>
+<p>Module : CRightClick</p>
+<p><a href="./_INDEX.html">← Module Index</a></p>
+<table>
+<colgroup><col/><col/></colgroup>
+<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<tbody>
+<tr><td>Procedure: CRightClick.pCopyPaste  [ 編集メニュー表示＜CRightClick＞ ]</td><td></td></tr>
+<tr><td>HCP</td><td>Business</td></tr>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Private Sub pCopyPaste(bx As Object) 'Copy&amp;Paste右クリックメニュー</td><td>編集メニュー表示＜CRightClick＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　│#  ポップアップメニュー生成</td><td></td></tr>
+<tr><td>　　＠┐With Application.CommandBars.Add(position:=msoBarPopup, Temporary:=True)</td><td></td></tr>
+<tr><td>　　││#  切り取りメニュー追加</td><td></td></tr>
+<tr><td>　　│〇 Set BCut = .Controls.Add(msoControlButton)</td><td></td></tr>
+<tr><td>　　│＠┐With BCut</td><td></td></tr>
+<tr><td>　　││〇 .Caption = "切り取り(&amp;T)"</td><td></td></tr>
+<tr><td>　　││〇 .FaceId = 21</td><td></td></tr>
+<tr><td>　　│││#  選択状態判定</td><td></td></tr>
+<tr><td>　　││〇 .Enabled = bx.SelLength</td><td></td></tr>
+<tr><td>　　│││#  編集可否判定</td><td></td></tr>
+<tr><td>　　││◆ If bx.Locked Then .Enabled = False</td><td></td></tr>
+<tr><td>　　││┴End With</td><td></td></tr>
+<tr><td>　　││#  コピーメニュー追加</td><td></td></tr>
+<tr><td>　　│〇 Set BCopy = .Controls.Add(msoControlButton)</td><td></td></tr>
+<tr><td>　　│＠┐With BCopy</td><td></td></tr>
+<tr><td>　　││〇 .Caption = "コピー(&amp;C)"</td><td></td></tr>
+<tr><td>　　││〇 .FaceId = 19</td><td></td></tr>
+<tr><td>　　││〇 .Enabled = bx.SelLength</td><td></td></tr>
+<tr><td>　　││┴End With</td><td></td></tr>
+<tr><td>　　││#  貼り付けメニュー追加</td><td></td></tr>
+<tr><td>　　│〇 Set BPaste = .Controls.Add(msoControlButton)</td><td></td></tr>
+<tr><td>　　│＠┐With BPaste</td><td></td></tr>
+<tr><td>　　││〇 .Caption = "貼り付け(&amp;P)"</td><td></td></tr>
+<tr><td>　　││〇 .FaceId = 22</td><td></td></tr>
+<tr><td>　　│││#  貼り付け可否判定</td><td></td></tr>
+<tr><td>　　││〇 .Enabled = bx.CanPaste</td><td></td></tr>
+<tr><td>　　││┴End With</td><td></td></tr>
+<tr><td>　　││#  削除メニュー追加</td><td></td></tr>
+<tr><td>　　│〇 Set BDelete = .Controls.Add(msoControlButton)</td><td></td></tr>
+<tr><td>　　│＠┐With BDelete</td><td></td></tr>
+<tr><td>　　││〇 .Caption = "削除(&amp;D)"</td><td></td></tr>
+<tr><td>　　││〇 .FaceId = 47</td><td></td></tr>
+<tr><td>　　│││#  選択状態判定</td><td></td></tr>
+<tr><td>　　││〇 .Enabled = bx.SelLength</td><td></td></tr>
+<tr><td>　　│││#  メニュー区切り設定</td><td></td></tr>
+<tr><td>　　││〇 .BeginGroup = True</td><td></td></tr>
+<tr><td>　　││┴End With</td><td></td></tr>
+<tr><td>　　││#  全選択メニュー追加</td><td></td></tr>
+<tr><td>　　│〇 Set BAll = .Controls.Add(msoControlButton)</td><td></td></tr>
+<tr><td>　　│＠┐With BAll</td><td></td></tr>
+<tr><td>　　││〇 .Caption = "すべて選択(&amp;A)"</td><td></td></tr>
+<tr><td>　　│││#  入力有無判定</td><td></td></tr>
+<tr><td>　　││〇 .Enabled = Len(bx.Value)</td><td></td></tr>
+<tr><td>　　││┴End With</td><td></td></tr>
+<tr><td>　　││#  ポップアップ表示</td><td></td></tr>
+<tr><td>　　│〇 .ShowPopup</td><td></td></tr>
+<tr><td>　　││#  ポップアップ削除</td><td></td></tr>
+<tr><td>　　│〇 .Delete</td><td></td></tr>
+<tr><td>　　│┴End With</td><td></td></tr>
+<tr><td>　　┴End Sub</td><td></td></tr>
+</tbody>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function (eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function (e) {
+const styleTh = window.getComputedStyle(eleTh);
+const paddingLeft = parseFloat(styleTh.paddingLeft);
+const paddingRight = parseFloat(styleTh.paddingRight);
+const borderLeft = parseFloat(styleTh.borderLeftWidth);
+const borderRight = parseFloat(styleTh.borderRightWidth);
+startX = e.pageX;
+startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e) {
+const newWidth = startWidth + (e.pageX - startX);
+eleTh.style.width = newWidth + 'px';
+}
+function onMouseUp() {
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
+}
+});
+</script>
+</body>
+</html>

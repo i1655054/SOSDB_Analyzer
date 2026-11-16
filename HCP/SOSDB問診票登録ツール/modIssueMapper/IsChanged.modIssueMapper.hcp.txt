@@ -1,0 +1,23 @@
+Procedure: modIssueMapper.IsChanged  [ 変更判定＜modIssueMapper＞ ]
+HCP	Business
+┬
+〇│Public Function IsChanged(  ByVal newVal As Variant,  ByVal oldVal As Variant) As Boolean	変更判定＜modIssueMapper＞
+┴└┐
+　　│#  Nullおよび空値判定
+　　◆┐If (IsNull(newVal) Or isEmpty(newVal) Or newVal = "") And  (IsNull(oldVal) Or isEmpty(oldVal) Or oldVal = "") Then
+　　│〇 IsChanged = False
+　　│→ Exit Function
+　　│┴End If
+　　│#  日付比較
+　　◆┐If IsDate(newVal) And IsDate(oldVal) Then
+　　│〇 IsChanged = (CDbl(CDate(newVal)) <> CDbl(CDate(oldVal)))
+　　│→ Exit Function
+　　│┴End If
+　　│#  数値比較
+　　◆┐If IsNumeric(newVal) And IsNumeric(oldVal) Then
+　　│〇 IsChanged = (CDbl(newVal) <> CDbl(oldVal))
+　　│→ Exit Function
+　　│┴End If
+　　│#  文字列比較
+　　◎ IsChanged = (Normalize(newVal) <> Normalize(oldVal))	文字列正規化＜modIssueMapper＞
+　　┴End Function

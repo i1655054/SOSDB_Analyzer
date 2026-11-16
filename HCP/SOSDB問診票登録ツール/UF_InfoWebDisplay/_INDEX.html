@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift_jis">
+<title>UF_InfoWebDisplay</title>
+<style>
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.5;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+colgroup col:nth-of-type(1) {}
+colgroup col:nth-of-type(2) {}
+.resize {position: relative;}
+.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+</style>
+</head>
+<body>
+<p><a href="../_INDEX.html">← Tool Index</a></p>
+<h1>UF_InfoWebDisplay</h1>
+<p>Procedure Count : 20</p>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Status</th><th>Updated</th></tr>
+<tr><td><a href="ApplyCss.UF_InfoWebDisplay.hcp.html">ApplyCss</a></td><td>CSS適用</td><td>[OK]</td><td>2026/11/13 17:31:10</td></tr>
+<tr><td><a href="BuildHTMLContent.UF_InfoWebDisplay.hcp.html">BuildHTMLContent</a></td><td>HTML本文生成</td><td>[OK]</td><td>2026/11/13 17:31:12</td></tr>
+<tr><td><a href="RenderHTML.UF_InfoWebDisplay.hcp.html">RenderHTML</a></td><td>HTML表示</td><td>[OK]</td><td>2026/11/13 17:31:16</td></tr>
+<tr><td><a href="PollFontSize_Worker.UF_InfoWebDisplay.hcp.html">PollFontSize_Worker</a></td><td>フォント同期</td><td>[OK]</td><td>2026/11/13 17:31:19</td></tr>
+<tr><td><a href="ConvertNewLinesToHTML.UF_InfoWebDisplay.hcp.html">ConvertNewLinesToHTML</a></td><td>改行HTML変換</td><td>[OK]</td><td>2026/11/13 17:31:22</td></tr>
+<tr><td><a href="SpinButton1_Change.UF_InfoWebDisplay.hcp.html">SpinButton1_Change</a></td><td>文字サイズ変更</td><td>[OK]</td><td>2026/11/13 17:31:25</td></tr>
+<tr><td><a href="InitFormSize.UF_InfoWebDisplay.hcp.html">InitFormSize</a></td><td>フォームサイズ管理初期化</td><td>[OK]</td><td>2026/11/13 17:31:28</td></tr>
+<tr><td><a href="SaveCurrentSize.UF_InfoWebDisplay.hcp.html">SaveCurrentSize</a></td><td>フォームサイズ保存</td><td>[OK]</td><td>2026/11/13 17:31:30</td></tr>
+<tr><td><a href="RestoreCurrentSize.UF_InfoWebDisplay.hcp.html">RestoreCurrentSize</a></td><td>フォームサイズ復元</td><td>[OK]</td><td>2026/11/13 17:31:33</td></tr>
+<tr><td><a href="UserForm_Initialize.UF_InfoWebDisplay.hcp.html">UserForm_Initialize</a></td><td>情報表示フォーム初期化</td><td>[OK]</td><td>2026/11/13 17:31:36</td></tr>
+<tr><td><a href="UserForm_Activate.UF_InfoWebDisplay.hcp.html">UserForm_Activate</a></td><td>情報表示開始</td><td>[OK]</td><td>2026/11/13 17:31:38</td></tr>
+<tr><td><a href="UserForm_QueryClose.UF_InfoWebDisplay.hcp.html">UserForm_QueryClose</a></td><td>情報表示終了</td><td>[OK]</td><td>2026/11/13 17:31:41</td></tr>
+<tr><td><a href="UserForm_Resize.UF_InfoWebDisplay.hcp.html">UserForm_Resize</a></td><td>フォームサイズ変更</td><td>[OK]</td><td>2026/11/13 17:31:44</td></tr>
+<tr><td><a href="ResetFormSize.UF_InfoWebDisplay.hcp.html">ResetFormSize</a></td><td>フォームサイズ初期化</td><td>[OK]</td><td>2026/11/13 17:31:47</td></tr>
+<tr><td><a href="CommandButton1_Click.UF_InfoWebDisplay.hcp.html">CommandButton1_Click</a></td><td>情報表示終了</td><td>[OK]</td><td>2026/11/13 17:31:50</td></tr>
+<tr><td><a href="CommandButton2_Click.UF_InfoWebDisplay.hcp.html">CommandButton2_Click</a></td><td>改行表示切替</td><td>[OK]</td><td>2026/11/13 17:31:53</td></tr>
+<tr><td><a href="CommandButtonEdit_Click.UF_InfoWebDisplay.hcp.html">CommandButtonEdit_Click</a></td><td>編集モード切替</td><td>[OK]</td><td>2026/11/13 17:31:57</td></tr>
+<tr><td><a href="ResetEditMode.UF_InfoWebDisplay.hcp.html">ResetEditMode</a></td><td>編集モード解除</td><td>[OK]</td><td>2026/11/13 17:32:00</td></tr>
+<tr><td><a href="ToggleEditMode.UF_InfoWebDisplay.hcp.html">ToggleEditMode</a></td><td>編集モード切替処理</td><td>[OK]</td><td>2026/11/13 17:32:03</td></tr>
+<tr><td><a href="SaveEditedTextIntoVba.UF_InfoWebDisplay.hcp.html">SaveEditedTextIntoVba</a></td><td>編集内容保存</td><td>[OK]</td><td>2026/11/13 17:32:07</td></tr>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function (eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function (e) {
+const styleTh = window.getComputedStyle(eleTh);
+const paddingLeft = parseFloat(styleTh.paddingLeft);
+const paddingRight = parseFloat(styleTh.paddingRight);
+const borderLeft = parseFloat(styleTh.borderLeftWidth);
+const borderRight = parseFloat(styleTh.borderRightWidth);
+startX = e.pageX;
+startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e) {
+const newWidth = startWidth + (e.pageX - startX);
+eleTh.style.width = newWidth + 'px';
+}
+function onMouseUp() {
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
+}
+});
+</script>
+</body>
+</html>

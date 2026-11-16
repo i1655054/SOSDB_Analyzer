@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift_jis">
+<title>GP_UpdateHolidaySUB1</title>
+<style>
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+colgroup col:nth-of-type(1) {}
+colgroup col:nth-of-type(2) {}
+.resize {position: relative;}
+.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+</style>
+</head>
+<body>
+<h1>GP_UpdateHolidaySUB1</h1>
+<p>Module : clsAboutCalendar2</p>
+<p><a href="./_INDEX.html">← Module Index</a></p>
+<table>
+<colgroup><col/><col/></colgroup>
+<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<tbody>
+<tr><td>Procedure: clsAboutCalendar2.GP_UpdateHolidaySUB1  [ 固定日祝日設定＜clsAboutCalendar2＞ ]</td><td></td></tr>
+<tr><td>HCP</td><td>Business</td></tr>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Private Sub GPUpdateHolidaySUB1(ByVal lngDay As Long,  ByVal strName As String,  ByVal lngSyuku As Long,  ByVal lngFurikaeKbn As Long,  ByVal lngCalStrIx As Long,  ByVal lngIxSyuku As Long,  ByRef lngFuriDIxMax As Long,  ByRef tblFuriDIx() As gtypFuriDIx,  ByRef tblCalendar() As g_typAboutCalendar2)</td><td>固定日祝日設定＜clsAboutCalendar2＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　□ Dim lngIx As Long                                           ' テーブルINDEX</td><td></td></tr>
+<tr><td>　　□ Dim lngIxMax As Long                                        ' テーブルINDEX上限</td><td></td></tr>
+<tr><td>　　□ Dim lngIxA1 As Long                                         ' テーブルINDEX(1日後)</td><td></td></tr>
+<tr><td>　　□ Dim lngIxA2 As Long                                         ' テーブルINDEX(2日後)</td><td></td></tr>
+<tr><td>　　□ Dim lngIxB1 As Long                                         ' テーブルINDEX(1日前)</td><td></td></tr>
+<tr><td>　　□ Dim lngIxB2 As Long                                         ' テーブルINDEX(2日前)</td><td></td></tr>
+<tr><td>　　□ Dim lngIxSD As Long                                         ' 振替休日判定日INDEXテーブルINDEX</td><td></td></tr>
+<tr><td>　　□ Dim lngIxSyukuN As Long                                     ' 次の祝日パラメータテーブルINDEX</td><td></td></tr>
+<tr><td>　　□ Dim lngYearN As Long                                        ' 次の年</td><td></td></tr>
+<tr><td>　　□ Dim lngMonthN As Long                                       ' 次の月</td><td></td></tr>
+<tr><td>　　│#  対象日位置算出</td><td></td></tr>
+<tr><td>　　〇 lngIx = lngCalStrIx + lngDay - 1</td><td></td></tr>
+<tr><td>　　〇 lngIxMax = UBound(tblCalendar)</td><td></td></tr>
+<tr><td>　　│#  会社休日優先判定</td><td></td></tr>
+<tr><td>　　◆┐If ((lngSyuku = 3) And (tblCalendar(lngIx).Syuku &lt;&gt; 0)) Then</td><td></td></tr>
+<tr><td>　　│→ Exit Sub</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　│#  前後日位置算出</td><td></td></tr>
+<tr><td>　　〇 lngIxA1 = lngIx + 1</td><td></td></tr>
+<tr><td>　　〇 lngIxA2 = lngIx + 2</td><td></td></tr>
+<tr><td>　　〇 lngIxB1 = lngIx - 1</td><td></td></tr>
+<tr><td>　　〇 lngIxB2 = lngIx - 2</td><td></td></tr>
+<tr><td>　　│#  祝日設定</td><td></td></tr>
+<tr><td>　　＠┐With tblCalendar(lngIx)</td><td></td></tr>
+<tr><td>　　│〇 .Syuku = lngSyuku</td><td></td></tr>
+<tr><td>　　│〇 .SyukuNm = strName</td><td></td></tr>
+<tr><td>　　│〇 .FurikaeKbn = lngFurikaeKbn</td><td></td></tr>
+<tr><td>　　│┴End With</td><td></td></tr>
+<tr><td>　　│#  振替対象確認</td><td></td></tr>
+<tr><td>　　◆→ If lngFurikaeKbn = 1 Then Exit Sub</td><td></td></tr>
+<tr><td>　　│#  振替休日候補登録</td><td></td></tr>
+<tr><td>　　◆┐If tblCalendar(lngIx).Yobi = 0 Then</td><td></td></tr>
+<tr><td>　　│〇 lngFuriDIxMax = lngFuriDIxMax + 1</td><td></td></tr>
+<tr><td>　　│〇 ReDim Preserve tblFuriDIx(lngFuriDIxMax)</td><td></td></tr>
+<tr><td>　　│〇 tblFuriDIx(lngFuriDIxMax).CalIx = lngIx</td><td></td></tr>
+<tr><td>　　│〇 tblFuriDIx(lngFuriDIxMax).Syubetsu = 0</td><td></td></tr>
+<tr><td>　　│→ Exit Sub</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　◆┐If lngIxB2 &gt;= 0 Then</td><td></td></tr>
+<tr><td>　　│◆┐If ((tblCalendar(lngIxB2).Syuku &lt;&gt; 0) And  (tblCalendar(lngIxB1).Syuku = 0) And  (tblCalendar(lngIxB2).FurikaeKbn = 0)) Then</td><td></td></tr>
+<tr><td>　　││〇 lngFuriDIxMax = lngFuriDIxMax + 1</td><td></td></tr>
+<tr><td>　　││〇 ReDim Preserve tblFuriDIx(lngFuriDIxMax)</td><td></td></tr>
+<tr><td>　　││〇 tblFuriDIx(lngFuriDIxMax).CalIx = lngIxB2</td><td></td></tr>
+<tr><td>　　││〇 tblFuriDIx(lngFuriDIxMax).Syubetsu = 1</td><td></td></tr>
+<tr><td>　　││→ Exit Sub</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　◆┐If lngIxA2 &lt;= lngIxMax Then</td><td></td></tr>
+<tr><td>　　│◆┐If ((tblCalendar(lngIxA2).Syuku &lt;&gt; 0) And  (tblCalendar(lngIxA1).Syuku = 0) And  (tblCalendar(lngIxA2).FurikaeKbn = 0)) Then</td><td></td></tr>
+<tr><td>　　││〇 lngFuriDIxMax = lngFuriDIxMax + 1</td><td></td></tr>
+<tr><td>　　││〇 ReDim Preserve tblFuriDIx(lngFuriDIxMax)</td><td></td></tr>
+<tr><td>　　││〇 tblFuriDIx(lngFuriDIxMax).CalIx = lngIx</td><td></td></tr>
+<tr><td>　　││〇 tblFuriDIx(lngFuriDIxMax).Syubetsu = 1</td><td></td></tr>
+<tr><td>　　││→ Exit Sub</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　│#  国民の休日候補登録</td><td></td></tr>
+<tr><td>　　◆┐If lngIx = lngIxMax - 1 Then</td><td></td></tr>
+<tr><td>　　│〇 lngIxSyukuN = lngIxSyuku + 1</td><td></td></tr>
+<tr><td>　　│◆┐If ((g_tblParamater(lngIxSyukuN).Hiduke = 1) And  (g_tblParamater(lngIxSyukuN).FurikaeKbn = 0)) Then</td><td></td></tr>
+<tr><td>　　││〇 lngYearN = Year(tblCalendar(lngIx).Hiduke)</td><td></td></tr>
+<tr><td>　　││〇 lngMonthN = Month(tblCalendar(lngIx).Hiduke) + 1     ' 次の月</td><td></td></tr>
+<tr><td>　　││◆┐If lngMonthN &gt; 12 Then</td><td></td></tr>
+<tr><td>　　│││〇 lngYearN = lngYearN + 1</td><td></td></tr>
+<tr><td>　　│││〇 lngMonthN = 1</td><td></td></tr>
+<tr><td>　　│││┴End If</td><td></td></tr>
+<tr><td>　　││＠┐With g_tblParamater(lngIxSyukuN)</td><td></td></tr>
+<tr><td>　　│││◆┐If ((.Getsu = lngMonthN) And  (.StrYear &lt;= lngYearN) And  (.EndYear &gt;= lngYearN)) Then</td><td></td></tr>
+<tr><td>　　││││〇 lngFuriDIxMax = lngFuriDIxMax + 1</td><td></td></tr>
+<tr><td>　　││││〇 ReDim Preserve tblFuriDIx(lngFuriDIxMax)</td><td></td></tr>
+<tr><td>　　││││〇 tblFuriDIx(lngFuriDIxMax).CalIx = lngIx</td><td></td></tr>
+<tr><td>　　││││〇 tblFuriDIx(lngFuriDIxMax).Syubetsu = 1</td><td></td></tr>
+<tr><td>　　││││→ Exit Sub</td><td></td></tr>
+<tr><td>　　││││┴End If</td><td></td></tr>
+<tr><td>　　│││┴End With</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　┴End Sub</td><td></td></tr>
+</tbody>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function (eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function (e) {
+const styleTh = window.getComputedStyle(eleTh);
+const paddingLeft = parseFloat(styleTh.paddingLeft);
+const paddingRight = parseFloat(styleTh.paddingRight);
+const borderLeft = parseFloat(styleTh.borderLeftWidth);
+const borderRight = parseFloat(styleTh.borderRightWidth);
+startX = e.pageX;
+startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e) {
+const newWidth = startWidth + (e.pageX - startX);
+eleTh.style.width = newWidth + 'px';
+}
+function onMouseUp() {
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
+}
+});
+</script>
+</body>
+</html>

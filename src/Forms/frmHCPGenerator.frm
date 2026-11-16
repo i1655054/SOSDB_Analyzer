@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} frmHCPGenerator 
    Caption         =   "HCP生成"
-   ClientHeight    =   6165
+   ClientHeight    =   8325.001
    ClientLeft      =   120
    ClientTop       =   465
    ClientWidth     =   8160
@@ -14,6 +14,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
+
 
 ' @JPName
 ' 画面初期化
@@ -36,11 +37,47 @@ Option Explicit
 '
 Private Sub UserForm_Initialize()
 
+    '# 開発モードを ON
+    chkDevMode.Value = True
+    
+    ' PROCトレース出力を OFF
+    gTraceProc = False
+    
+    ' STACKトレース出力を OFF
+    gTraceStack = False
+    
+    gDevMode = chkDevMode.Value
+    
+    gTraceProc = chkProcLog.Value
+    
+    gTraceStack = chkStackLog.Value
+    
     '# HCP表示設定初期化
     optCompact.Value = True
     
     '# モジュール一覧読込
     LoadModuleList
+
+End Sub
+
+Private Sub chkDevMode_Click()
+
+    gDevMode = _
+        chkDevMode.Value
+
+End Sub
+
+Private Sub chkProcLog_Click()
+
+    gTraceProc = _
+        chkProcLog.Value
+
+End Sub
+
+Private Sub chkStackLog_Click()
+
+    gTraceStack = _
+        chkStackLog.Value
 
 End Sub
 
@@ -464,6 +501,67 @@ Private Sub cmdGenerate_Click()
     gContext.ManagementBook.Worksheets( _
         SHEET_HCP_CHART).Activate
     
+End Sub
+
+Private Sub cmdHCPTargets_Click()
+
+    Dim ws As Worksheet
+
+    If gContext Is Nothing Then
+
+        MsgBox _
+            "先に関数分析を実行してください。", _
+            vbExclamation
+
+        Exit Sub
+
+    End If
+
+    gContext.ManagementBook.Activate
+
+    On Error Resume Next
+
+    Set ws = _
+        gContext.ManagementBook.Worksheets( _
+            SHEET_HCP_TARGETS)
+
+    On Error GoTo 0
+
+    If ws Is Nothing Then
+
+        Trace "HCP", _
+            "Create HCP_TARGETS"
+
+        CreateHCPTargets
+
+        Set ws = _
+            gContext.ManagementBook.Worksheets( _
+                SHEET_HCP_TARGETS)
+
+    End If
+
+    ws.Activate
+
+End Sub
+
+Private Sub cmdGenerateBatch_Click()
+
+    Dim Message As String
+
+    Message = _
+        BuildHCPBatchMessage()
+
+    If MsgBox( _
+            Message, _
+            vbYesNo + vbQuestion, _
+            "HCP一括生成") <> vbYes Then
+
+        Exit Sub
+
+    End If
+
+    GenerateHCPBatch
+
 End Sub
 
 ' @JPName

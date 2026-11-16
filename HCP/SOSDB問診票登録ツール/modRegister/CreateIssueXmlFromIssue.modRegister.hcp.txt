@@ -1,0 +1,47 @@
+Procedure: modRegister.CreateIssueXmlFromIssue  [ 新規登録XML生成＜modRegister＞ ]
+HCP	Business
+┬
+〇│Public Function CreateIssueXmlFromIssue(  ByVal issue As IssueInfo) As String	新規登録XML生成＜modRegister＞
+┴└┐
+　　□ Dim xml As String
+　　│#  XML開始
+　　〇 xml = "<?xml version=""1.0""?>"
+　　〇 xml = xml & "<issue>"
+　　│#  固定情報出力
+　　〇 xml = xml & "<project_id>" & PROJECT_ID & "</project_id>"
+　　〇 xml = xml & "<tracker_id>" & TRACKER_ID & "</tracker_id>"
+　　│#  ステータス出力
+　　◆┐If issue.Status <> "" Then
+　　│◎ xml = xml & "<status_id>" & GetStatusId(issue.Status) & "</status_id>"	ステータスID取得＜modIssueMapper＞
+　　│┴End If
+　　│#  優先度出力
+　　◆┐If issue.Priority <> "" Then
+　　│◎ xml = xml & "<priority_id>" & GetPriorityId(issue.Priority) & "</priority_id>"	優先度ID取得＜modIssueMapper＞
+　　│┴End If
+　　│#  作成者出力
+　　◆┐If issue.AuthorName <> "" Then
+　　│◎ xml = xml & "<author_id>" & GetUserId(issue.AuthorName) & "</author_id>"	ユーザーID取得＜modIssueMapper＞
+　　│┴End If
+　　│#  担当者出力
+　　◆┐If issue.AssignedTo <> "" Then
+　　│◎ xml = xml & "<assigned_to_id>" & GetUserId(issue.AssignedTo) & "</assigned_to_id>"	ユーザーID取得＜modIssueMapper＞
+　　│┴End If
+　　│#  対象バージョン出力
+　　◆┐If issue.targetVersion <> "" Then
+　　│◎ xml = xml & "<fixed_version_id>" & GetVersionId(issue.targetVersion) & "</fixed_version_id>"	対象バージョンID取得＜modIssueMapper＞
+　　│┴End If
+　　│#  題名出力
+　　◆┐If issue.Subject <> "" Then
+　　│◎ xml = xml & "<subject>" & EscapeXML(issue.Subject) & "</subject>"	XMLエスケープ＜XmlLoader＞
+　　│┴End If
+　　│#  説明出力
+　　◆┐If issue.Description <> "" Then
+　　│◎ xml = xml & "<description>" & EscapeXML(issue.Description) & "</description>"	XMLエスケープ＜XmlLoader＞
+　　│┴End If
+　　│#  カスタムフィールド出力
+　　◎ xml = xml & BuildCustomFieldsXml(issue)	カスタムフィールドXML生成＜modRegister＞
+　　│#  XML終了
+　　〇 xml = xml & "</issue>"
+　　│#  XML返却
+　　〇 CreateIssueXmlFromIssue = xml
+　　┴End Function

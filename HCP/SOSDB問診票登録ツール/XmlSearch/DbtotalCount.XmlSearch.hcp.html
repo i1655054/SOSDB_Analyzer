@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift_jis">
+<title>DbtotalCount</title>
+<style>
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+colgroup col:nth-of-type(1) {}
+colgroup col:nth-of-type(2) {}
+.resize {position: relative;}
+.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+</style>
+</head>
+<body>
+<h1>DbtotalCount</h1>
+<p>Module : XmlSearch</p>
+<p><a href="./_INDEX.html">← Module Index</a></p>
+<table>
+<colgroup><col/><col/></colgroup>
+<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<tbody>
+<tr><td>Procedure: XmlSearch.DbtotalCount  [ 検索件数取得＜XmlSearch＞ ]</td><td></td></tr>
+<tr><td>HCP</td><td>Business</td></tr>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Public Function DbtotalCount(ByVal apiUrl As String, ByVal apiKey As String) As Long</td><td>検索件数取得＜XmlSearch＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　□ Dim http As XMLHTTP60</td><td></td></tr>
+<tr><td>　　□ Dim xmlDoc As DOMDocument60</td><td></td></tr>
+<tr><td>　　□ Dim rootNode As IXMLDOMElement</td><td></td></tr>
+<tr><td>　　□ Dim statusCode As Integer</td><td></td></tr>
+<tr><td>　　〇 DbtotalCount = 0</td><td></td></tr>
+<tr><td>　　☆ On Error GoTo ErrorHandler</td><td></td></tr>
+<tr><td>　　│#  HTTP通信開始</td><td></td></tr>
+<tr><td>　　〇 Set http = New XMLHTTP60</td><td></td></tr>
+<tr><td>　　〇 http.Open "GET", apiUrl, False</td><td></td></tr>
+<tr><td>　　│#  APIキー設定</td><td></td></tr>
+<tr><td>　　〇 http.setRequestHeader "X-Redmine-API-Key", apiKey</td><td></td></tr>
+<tr><td>　　〇 http.send</td><td></td></tr>
+<tr><td>　　│#  レスポンス確認</td><td></td></tr>
+<tr><td>　　〇 statusCode = http.Status</td><td></td></tr>
+<tr><td>　　◆ If statusCode = 1223 Then statusCode = 204</td><td></td></tr>
+<tr><td>　　◆┐If statusCode &lt;&gt; 200 Then</td><td></td></tr>
+<tr><td>　　││#  通信エラー</td><td></td></tr>
+<tr><td>　　│〇 MsgBox "接続失敗: " &amp; statusCode, vbCritical</td><td></td></tr>
+<tr><td>　　│→ GoTo CleanUp</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　│#  レスポンス有無確認</td><td></td></tr>
+<tr><td>　　◆┐If Len(http.responseText) = 0 Then</td><td></td></tr>
+<tr><td>　　│〇 MsgBox "データなし（204）", vbInformation</td><td></td></tr>
+<tr><td>　　│→ GoTo CleanUp</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　│#  XML解析</td><td></td></tr>
+<tr><td>　　〇 Set xmlDoc = New DOMDocument60</td><td></td></tr>
+<tr><td>　　〇 xmlDoc.LoadXML http.responseText</td><td></td></tr>
+<tr><td>　　│#  XML解析結果確認</td><td></td></tr>
+<tr><td>　　◆┐If xmlDoc.parseError.ErrorCode &lt;&gt; 0 Then</td><td></td></tr>
+<tr><td>　　│〇 MsgBox "XML解析失敗: " &amp; xmlDoc.parseError.reason, vbCritical</td><td></td></tr>
+<tr><td>　　│→ GoTo CleanUp</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　│#  総件数取得</td><td></td></tr>
+<tr><td>　　〇 Set rootNode = xmlDoc.DocumentElement</td><td></td></tr>
+<tr><td>　　〇 DbtotalCount = CLng(rootNode.getAttribute("total_count"))</td><td></td></tr>
+<tr><td>▼ CleanUp:</td><td></td></tr>
+<tr><td>　　│#  オブジェクト解放</td><td></td></tr>
+<tr><td>　　◎ Call ReleaseHttpObjects(http, xmlDoc, rootNode)</td><td>通信オブジェクト解放＜XmlSearch＞</td></tr>
+<tr><td>　　→ Exit Function</td><td></td></tr>
+<tr><td>▼ ErrorHandler:</td><td></td></tr>
+<tr><td>　　〇 MsgBox "エラー: " &amp; Err.Description, vbCritical</td><td></td></tr>
+<tr><td>　　☆ Resume CleanUp</td><td></td></tr>
+<tr><td>　　┴End Function</td><td></td></tr>
+</tbody>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function (eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function (e) {
+const styleTh = window.getComputedStyle(eleTh);
+const paddingLeft = parseFloat(styleTh.paddingLeft);
+const paddingRight = parseFloat(styleTh.paddingRight);
+const borderLeft = parseFloat(styleTh.borderLeftWidth);
+const borderRight = parseFloat(styleTh.borderRightWidth);
+startX = e.pageX;
+startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e) {
+const newWidth = startWidth + (e.pageX - startX);
+eleTh.style.width = newWidth + 'px';
+}
+function onMouseUp() {
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
+}
+});
+</script>
+</body>
+</html>

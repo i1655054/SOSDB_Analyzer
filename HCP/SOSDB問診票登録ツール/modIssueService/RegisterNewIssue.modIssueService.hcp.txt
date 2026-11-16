@@ -1,0 +1,41 @@
+Procedure: modIssueService.RegisterNewIssue  [ 新規Issue登録＜modIssueService＞ ]
+HCP	Business
+┬
+〇│Private Sub RegisterNewIssue(  ByVal issue As IssueInfo)	新規Issue登録＜modIssueService＞
+┴└┐
+　　│#  トラバス管理番号重複確認
+　　□ Dim existId As String
+　　◎ existId = FindIssueIdByTroubleNum(issue.AuthorName, issue.TroubleNum)	トラバス管理番号検索＜modIssueService＞
+　　│#  登録済判定
+　　◆┐If existId <> "" Then
+　　│〇 MsgBox "トラバス管理番号【" & issue.TroubleNum & "】は既に登録済です（ID:" & existId & "）"
+　　│→ Exit Sub
+　　│┴End If
+　　│#  登録XML生成
+　　□ Dim xml As String
+　　□ Dim xmlPath As String
+　　□ Dim result As Variant
+　　◎ xml = CreateIssueXmlFromIssue(issue)	新規登録XML生成＜modRegister＞
+　　│#  XMLファイル出力
+　　◎ xmlPath = AutomaticTextOutput(xml, "New", "")	XMLファイル出力＜modFileUtility＞
+　　│#  Redmine新規登録
+　　◎ result = XmlLoader.PostXmlData(xmlPath, issue)	新規登録送信＜XmlLoader＞
+　　│#  一時XML削除
+　　◎ DeleteFileSafe (xmlPath)	安全ファイル削除＜modUtility＞
+　　│#  登録結果確認
+　　◆┐If result(0) <> "" Then
+　　││#  IssueID反映
+　　│〇 Range(DB_ID_RANG).Value = result(0)
+　　│〇 issue.IssueId = result(0)
+　　││#  OriginalIssue生成
+　　│◆┐If g_OriginalIssue Is Nothing Then
+　　││〇 Set g_OriginalIssue = New IssueInfo
+　　││┴End If
+　　││#  OriginalIssue更新
+　　│◎ Call InitializeOriginalIssue	OriginalIssue初期化＜modIssueService＞
+　　│◎ g_OriginalIssue.CopyFrom issue	Issue情報コピー＜IssueInfo＞
+　　├┐ELSE
+　　││#  登録失敗終了
+　　│→ Exit Sub
+　　│┴End If
+　　┴End Sub

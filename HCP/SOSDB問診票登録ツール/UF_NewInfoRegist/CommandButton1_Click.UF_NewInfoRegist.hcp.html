@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift_jis">
+<title>CommandButton1_Click</title>
+<style>
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+colgroup col:nth-of-type(1) {}
+colgroup col:nth-of-type(2) {}
+.resize {position: relative;}
+.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+</style>
+</head>
+<body>
+<h1>CommandButton1_Click</h1>
+<p>Module : UF_NewInfoRegist</p>
+<p><a href="./_INDEX.html">← Module Index</a></p>
+<table>
+<colgroup><col/><col/></colgroup>
+<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<tbody>
+<tr><td>Procedure: UF_NewInfoRegist.CommandButton1_Click  [ 新規Issue登録情報確定＜UF_NewInfoRegist＞ ]</td><td></td></tr>
+<tr><td>HCP</td><td>Business</td></tr>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Private Sub CommandButton1_Click()</td><td>新規Issue登録情報確定＜UF_NewInfoRegist＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　□ Dim response As VbMsgBoxResult</td><td></td></tr>
+<tr><td>　　□ Dim message As String</td><td></td></tr>
+<tr><td>　　│#  ## mainシートの選択 ###</td><td></td></tr>
+<tr><td>　　□ Dim sht As Worksheet</td><td></td></tr>
+<tr><td>　　〇 Set sht = ThisWorkbook.Worksheets(SheetName_Main)</td><td></td></tr>
+<tr><td>　　│#  入力チェック</td><td></td></tr>
+<tr><td>　　◆ If Not 管理番号_子番号_chk Then message = message &amp; "管理番号_子番号" &amp; vbCrLf</td><td></td></tr>
+<tr><td>　　◆ If Not 優先度_chk Then message = message &amp; "優先度" &amp; vbCrLf</td><td></td></tr>
+<tr><td>　　◆ If Not 装置プロダクト_chk Then message = message &amp; "装置プロダクト" &amp; vbCrLf</td><td></td></tr>
+<tr><td>　　◆ If Not プロダクト担当者_chk Then message = message &amp; "プロダクト担当者" &amp; vbCrLf</td><td></td></tr>
+<tr><td>　　◆ If Not 発生日_chk Then message = message &amp; "発生日" &amp; vbCrLf</td><td></td></tr>
+<tr><td>　　◆ If Not 事象名_chk Then message = message &amp; "事象名" &amp; vbCrLf</td><td></td></tr>
+<tr><td>　　◆ If Not 依頼元管理番号_chk Then message = message &amp; "依頼元管理番号" &amp; vbCrLf</td><td></td></tr>
+<tr><td>　　◆ If Not 依頼者_chk Then message = message &amp; "依頼者" &amp; vbCrLf</td><td></td></tr>
+<tr><td>　　◆ If Not 説明_chk Then message = message &amp; "説明" &amp; vbCrLf</td><td></td></tr>
+<tr><td>　　│#  入力エラー確認</td><td></td></tr>
+<tr><td>　　◆┐If message &lt;&gt; "" Then</td><td></td></tr>
+<tr><td>　　││#  エラーメッセージ表示</td><td></td></tr>
+<tr><td>　　│〇 response = MsgBox(message, vbOKCancel + vbQuestion, "未入力NG")</td><td></td></tr>
+<tr><td>　　││#  再入力判定</td><td></td></tr>
+<tr><td>　　│◆┐If response = vbOK Then</td><td></td></tr>
+<tr><td>　　│││#  エラー表示解除</td><td></td></tr>
+<tr><td>　　││◎ Clear_chk</td><td>入力エラー表示解除＜UF_NewInfoRegist＞</td></tr>
+<tr><td>　　││→ Exit Sub</td><td></td></tr>
+<tr><td>　　│├┐ELSE</td><td></td></tr>
+<tr><td>　　│││#  入力取消</td><td></td></tr>
+<tr><td>　　││〇 IsCanceled = True</td><td></td></tr>
+<tr><td>　　││〇 Unload Me</td><td></td></tr>
+<tr><td>　　││→ Exit Sub</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　│#  Issue情報設定</td><td></td></tr>
+<tr><td>　　＠┐With TargetIssue</td><td></td></tr>
+<tr><td>　　││#  基本情報設定</td><td></td></tr>
+<tr><td>　　│〇 .Subject = Me.txt事象名.Value</td><td></td></tr>
+<tr><td>　　│〇 .Phenomenon = Me.txt事象名.Value</td><td></td></tr>
+<tr><td>　　│〇 .Description = Me.txt説明.Value</td><td></td></tr>
+<tr><td>　　││#  問合せ情報設定</td><td></td></tr>
+<tr><td>　　│〇 .RequesterNum = Me.txt依頼元管理番号.Value</td><td></td></tr>
+<tr><td>　　│〇 .Requester_Pro = Me.txt依頼者.Value</td><td></td></tr>
+<tr><td>　　││#  備考設定</td><td></td></tr>
+<tr><td>　　│〇 .Remarks = Me.txt備考.Value</td><td></td></tr>
+<tr><td>　　│〇 .Priority = Me.cmb優先度.Value</td><td></td></tr>
+<tr><td>　　│〇 .Status = Me.cmbステータス.Value</td><td></td></tr>
+<tr><td>　　│〇 .AssignedTo = sht.Range(TANTOU_NAME_RANG).Value</td><td></td></tr>
+<tr><td>　　│〇 .targetVersion = Me.cmb年度.Value</td><td></td></tr>
+<tr><td>　　││#  設備情報設定</td><td></td></tr>
+<tr><td>　　│〇 .ProblemBuilding = Me.txtビル.Value</td><td></td></tr>
+<tr><td>　　│〇 .HostName = Me.txtホスト名.Value</td><td></td></tr>
+<tr><td>　　││#  プロダクト情報設定</td><td></td></tr>
+<tr><td>　　│〇 .EqProduct = Me.cmb装置プロダクト.Value</td><td></td></tr>
+<tr><td>　　│〇 .ProductTantou = Me.txtプロダクト担当者.Value</td><td></td></tr>
+<tr><td>　　││#  発生日時設定</td><td></td></tr>
+<tr><td>　　│〇 .OccurrenceDateTime = Me.txt問題発生日時.Value</td><td></td></tr>
+<tr><td>　　│〇 .Esukare_Date = Me.txt発生日.Value</td><td></td></tr>
+<tr><td>　　│〇 .Close_Date = Me.txt完了日.Value</td><td></td></tr>
+<tr><td>　　│〇 .Equipment = Me.txt問題発生装置.Value</td><td></td></tr>
+<tr><td>　　││#  管理番号生成</td><td></td></tr>
+<tr><td>　　│◆┐If Trim(Me.txt管理番号_子番号.Value) &lt;&gt; "" Then</td><td></td></tr>
+<tr><td>　　││◎ .TroubleNum =  BuildTroubleNum(sht.Range(TARGET_VER_RANG).Value, Me.txt管理番号_子番号.Value)</td><td>トラブル番号生成＜modUtility＞</td></tr>
+<tr><td>　　│││</td><td>内部呼出:Range</td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td>　　│┴End With</td><td></td></tr>
+<tr><td>　　│#  登録完了</td><td></td></tr>
+<tr><td>　　〇 IsCanceled = False</td><td></td></tr>
+<tr><td>　　〇 Unload Me</td><td></td></tr>
+<tr><td>　　┴End Sub</td><td></td></tr>
+</tbody>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function (eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function (e) {
+const styleTh = window.getComputedStyle(eleTh);
+const paddingLeft = parseFloat(styleTh.paddingLeft);
+const paddingRight = parseFloat(styleTh.paddingRight);
+const borderLeft = parseFloat(styleTh.borderLeftWidth);
+const borderRight = parseFloat(styleTh.borderRightWidth);
+startX = e.pageX;
+startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e) {
+const newWidth = startWidth + (e.pageX - startX);
+eleTh.style.width = newWidth + 'px';
+}
+function onMouseUp() {
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
+}
+});
+</script>
+</body>
+</html>

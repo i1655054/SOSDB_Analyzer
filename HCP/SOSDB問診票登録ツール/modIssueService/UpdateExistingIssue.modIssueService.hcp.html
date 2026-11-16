@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift_jis">
+<title>UpdateExistingIssue</title>
+<style>
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+colgroup col:nth-of-type(1) {}
+colgroup col:nth-of-type(2) {}
+.resize {position: relative;}
+.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+</style>
+</head>
+<body>
+<h1>UpdateExistingIssue</h1>
+<p>Module : modIssueService</p>
+<p><a href="./_INDEX.html">← Module Index</a></p>
+<table>
+<colgroup><col/><col/></colgroup>
+<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<tbody>
+<tr><td>Procedure: modIssueService.UpdateExistingIssue  [ Issue更新登録＜modIssueService＞ ]</td><td></td></tr>
+<tr><td>HCP</td><td>Business</td></tr>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Private Sub UpdateExistingIssue(  ByVal issue As IssueInfo)</td><td>Issue更新登録＜modIssueService＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　│#  変数初期化</td><td></td></tr>
+<tr><td>　　□ Dim flags As Long</td><td></td></tr>
+<tr><td>　　□ Dim xml As String</td><td></td></tr>
+<tr><td>　　□ Dim xmlPath As String</td><td></td></tr>
+<tr><td>　　□ Dim result As Variant</td><td></td></tr>
+<tr><td>　　│#  キーワード情報出力</td><td></td></tr>
+<tr><td>　　〇 Debug.Print "===== UpdateExistingIssue ====="</td><td></td></tr>
+<tr><td>　　〇 Debug.Print "Issue KeyWord   =[" &amp; issue.Key_Word &amp; "]"</td><td></td></tr>
+<tr><td>　　〇 Debug.Print "Current KeyWord =[" &amp; g_CurrentIssue.Key_Word &amp; "]"</td><td></td></tr>
+<tr><td>　　〇 Debug.Print "Original KeyWord=[" &amp; g_OriginalIssue.Key_Word &amp; "]"</td><td></td></tr>
+<tr><td>　　│#  差分判定</td><td></td></tr>
+<tr><td>　　◎ flags = GetUpdateCheckResult(issue, g_OriginalIssue)</td><td>更新差分判定＜modIssueMapper＞</td></tr>
+<tr><td>　　│#  差分情報出力</td><td></td></tr>
+<tr><td>　　◆┐If glbdbgflg Then</td><td></td></tr>
+<tr><td>　　│〇 Debug.Print "差分フラグ:", flags</td><td></td></tr>
+<tr><td>　　│◎ Debug.Print "ビット位置:", GetSetBitPositions(flags)</td><td>設定ビット位置取得＜modMonshinCore＞</td></tr>
+<tr><td>　　│〇 Debug.Print "変更項目:"</td><td></td></tr>
+<tr><td>　　│◎ Debug.Print GetDiffFlagNames(flags)</td><td>差分名称取得＜modUtility＞</td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　│#  更新有無判定</td><td></td></tr>
+<tr><td>　　◆┐If flags = 0 Then</td><td></td></tr>
+<tr><td>　　│〇 MsgBox "更新なし"</td><td></td></tr>
+<tr><td>　　│→ Exit Sub</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　│#  MonFolder存在確認</td><td></td></tr>
+<tr><td>　　◆→ If Not EnsureMonFolder(issue) Then Exit Sub</td><td></td></tr>
+<tr><td>　　│#  更新XML生成</td><td></td></tr>
+<tr><td>　　◎ xml = CreateUpdateXmlFromIssue(issue, g_OriginalIssue, flags)</td><td>更新登録XML生成＜modRegister＞</td></tr>
+<tr><td>　　│#  XMLファイル出力</td><td></td></tr>
+<tr><td>　　◎ xmlPath = AutomaticTextOutput(xml, issue.IssueId, "")</td><td>XMLファイル出力＜modFileUtility＞</td></tr>
+<tr><td>　　│#  Redmine更新実行</td><td></td></tr>
+<tr><td>　　◎ result = XmlLoader.SendXmlData(xmlPath, issue)</td><td>更新送信＜XmlLoader＞</td></tr>
+<tr><td>　　│#  一時XML削除</td><td></td></tr>
+<tr><td>　　◎ DeleteFileSafe (xmlPath)</td><td>安全ファイル削除＜modUtility＞</td></tr>
+<tr><td>　　│#  更新結果確認</td><td></td></tr>
+<tr><td>　　◆┐If result(0) &lt;&gt; "" Then</td><td></td></tr>
+<tr><td>　　││#  OriginalIssue更新</td><td></td></tr>
+<tr><td>　　│◎ Call InitializeOriginalIssue</td><td>OriginalIssue初期化＜modIssueService＞</td></tr>
+<tr><td>　　│◎ g_OriginalIssue.CopyFrom issue</td><td>Issue情報コピー＜IssueInfo＞</td></tr>
+<tr><td>　　├┐ELSE</td><td></td></tr>
+<tr><td>　　││#  更新失敗終了</td><td></td></tr>
+<tr><td>　　│→ Exit Sub</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　┴End Sub</td><td></td></tr>
+</tbody>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function (eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function (e) {
+const styleTh = window.getComputedStyle(eleTh);
+const paddingLeft = parseFloat(styleTh.paddingLeft);
+const paddingRight = parseFloat(styleTh.paddingRight);
+const borderLeft = parseFloat(styleTh.borderLeftWidth);
+const borderRight = parseFloat(styleTh.borderRightWidth);
+startX = e.pageX;
+startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e) {
+const newWidth = startWidth + (e.pageX - startX);
+eleTh.style.width = newWidth + 'px';
+}
+function onMouseUp() {
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
+}
+});
+</script>
+</body>
+</html>

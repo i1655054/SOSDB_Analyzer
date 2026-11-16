@@ -1,0 +1,11 @@
+Procedure: modUtility.EnsureCurrentIssue  [ CurrentIssue生成保証＜modUtility＞ ]
+HCP	Business
+┬
+〇│Public Sub EnsureCurrentIssue()	CurrentIssue生成保証＜modUtility＞
+┴└┐
+　　│#  CurrentIssue生成確認
+　　◆┐If g_CurrentIssue Is Nothing Then
+　　││#  CurrentIssue生成
+　　│〇 Set g_CurrentIssue = New IssueInfo
+　　│┴End If
+　　┴End Sub

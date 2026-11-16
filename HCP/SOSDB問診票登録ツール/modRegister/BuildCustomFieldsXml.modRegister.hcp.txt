@@ -1,0 +1,79 @@
+Procedure: modRegister.BuildCustomFieldsXml  [ カスタムフィールドXML生成＜modRegister＞ ]
+HCP	Business
+┬
+〇│Public Function BuildCustomFieldsXml(  ByVal issue As IssueInfo) As String	カスタムフィールドXML生成＜modRegister＞
+┴└┐
+　　□ Dim body As String
+　　□ Dim xml As String
+　　│#  カスタムフィールド生成開始
+　　〇 body = ""
+　　│#  問診情報フィールド出力
+　　◆┐If Trim(issue.OccurrenceDateTime) <> "" Then
+　　│◎ body = body & BuildCustomFieldXmlEx("発生時間", CF_OCCURRENCE_DATETIME, issue.OccurrenceDateTime)	カスタムフィールドXML要素生成＜modRegister＞
+　　│┴End If
+　　◆┐If Trim(issue.ProblemBuilding) <> "" Then
+　　│◎ body = body & BuildCustomFieldXmlEx("ビル(収容局)", CF_PROBLEM_BUILDING, issue.ProblemBuilding)	カスタムフィールドXML要素生成＜modRegister＞
+　　│┴End If
+　　◆┐If Trim(issue.HostName) <> "" Then
+　　│◎ body = body & BuildCustomFieldXmlEx("ホスト名", CF_HOSTNAME, issue.HostName)	カスタムフィールドXML要素生成＜modRegister＞
+　　│┴End If
+　　◆┐If Trim(issue.Phenomenon) <> "" Then
+　　│◎ body = body & BuildCustomFieldXmlEx("事象詳細", CF_PHENOMENON, issue.Phenomenon)	カスタムフィールドXML要素生成＜modRegister＞
+　　│┴End If
+　　◆┐If Trim(issue.CauseDetail) <> "" Then
+　　│◎ body = body & BuildCustomFieldXmlEx("詳細原因", CF_CAUSE, issue.CauseDetail)	カスタムフィールドXML要素生成＜modRegister＞
+　　│┴End If
+　　│#  管理情報フィールド出力
+　　◆┐If Trim(issue.Mondainum_Pro) <> "" Then
+　　│◎ body = body & BuildCustomFieldXmlEx("問処番号", CF_MONDAINUM, issue.Mondainum_Pro)	カスタムフィールドXML要素生成＜modRegister＞
+　　│┴End If
+　　◆┐If Trim(issue.Remarks) <> "" Then
+　　│◎ body = body & BuildCustomFieldXmlEx("備考", CF_REMARKS, issue.Remarks)	カスタムフィールドXML要素生成＜modRegister＞
+　　│┴End If
+　　◆┐If Trim(issue.Esukare_Date) <> "" Then
+　　│◎ body = body & BuildCustomFieldXmlEx("発生日(トラバス)", CF_ESUKARE_DATE, issue.Esukare_Date)	カスタムフィールドXML要素生成＜modRegister＞
+　　│┴End If
+　　◆┐If Trim(issue.Close_Date) <> "" Then
+　　│◎ body = body & BuildCustomFieldXmlEx("完了日(トラバス)", CF_CLOSE_DATE, issue.Close_Date)	カスタムフィールドXML要素生成＜modRegister＞
+　　│┴End If
+　　│#  業務情報フィールド出力
+　　◆┐If Trim(issue.Requester_Pro) <> "" Then
+　　│◎ body = body & BuildCustomFieldXmlEx("問合せ者", CF_REQUESTER_PRO, issue.Requester_Pro)	カスタムフィールドXML要素生成＜modRegister＞
+　　│┴End If
+　　◆┐If Trim(issue.ServiceImpact) <> "" Then
+　　│◎ body = body & BuildCustomFieldXmlEx("サービス影響", CF_SERVICE_IMPACT, issue.ServiceImpact)	カスタムフィールドXML要素生成＜modRegister＞
+　　│┴End If
+　　◆┐If Trim(issue.TroubleNum) <> "" Then
+　　│◎ body = body & BuildCustomFieldXmlEx("管理番号", CF_TROUBLE_NUM, issue.TroubleNum)	カスタムフィールドXML要素生成＜modRegister＞
+　　│┴End If
+　　◆┐If Trim(issue.Equipment) <> "" Then
+　　│◎ body = body & BuildCustomFieldXmlEx("対象装置", CF_EQUIPMENT, issue.Equipment)	カスタムフィールドXML要素生成＜modRegister＞
+　　│┴End If
+　　◆┐If Trim(issue.Countermeasure) <> "" Then
+　　│◎ body = body & BuildCustomFieldXmlEx("対処内容", CF_COUNTERMEASURE, issue.Countermeasure)	カスタムフィールドXML要素生成＜modRegister＞
+　　│┴End If
+　　│#  拡張情報フィールド出力
+　　◆┐If Trim(issue.RequesterNum) <> "" Then
+　　│◎ body = body & BuildCustomFieldXmlEx("依頼元管理番号", CF_REQUESTER_NUM, issue.RequesterNum)	カスタムフィールドXML要素生成＜modRegister＞
+　　│┴End If
+　　◆┐If Trim(issue.ProductTantou) <> "" Then
+　　│◎ body = body & BuildCustomFieldXmlEx("プロダクト担当者", CF_PRODUCT_TANTOU, issue.ProductTantou)	カスタムフィールドXML要素生成＜modRegister＞
+　　│┴End If
+　　◆┐If Trim(issue.KihensinName_Date) <> "" Then
+　　│◎ body = body & BuildCustomFieldXmlEx("規変審名/開催日", CF_KIHENSIN, issue.KihensinName_Date)	カスタムフィールドXML要素生成＜modRegister＞
+　　│┴End If
+　　◆┐If Trim(issue.Key_Word) <> "" Then
+　　│◎ body = body & BuildCustomFieldXmlEx("キーワード", CF_KEYWORD, issue.Key_Word)	カスタムフィールドXML要素生成＜modRegister＞
+　　│┴End If
+　　◆┐If Trim(issue.EqProduct) <> "" Then
+　　│◎ body = body & BuildCustomFieldXmlEx("プロダクト装置／サービス", CF_EQ_PRODUCT, issue.EqProduct)	カスタムフィールドXML要素生成＜modRegister＞
+　　│┴End If
+　　│#  カスタムフィールドタグ生成
+　　◆┐If body <> "" Then
+　　│〇 xml = "<custom_fields type=""array"">" &  body &  "</custom_fields>"
+　　├┐ELSE
+　　│〇 xml = ""
+　　│┴End If
+　　│#  XML返却
+　　〇 BuildCustomFieldsXml = xml
+　　┴End Function

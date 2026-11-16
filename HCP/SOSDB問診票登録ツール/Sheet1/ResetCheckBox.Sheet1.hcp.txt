@@ -1,0 +1,7 @@
+Procedure: Sheet1.ResetCheckBox  [ 問診票チェック初期化＜Sheet1＞ ]
+HCP	Business
+┬
+〇│Public Sub ResetCheckBox()	問診票チェック初期化＜Sheet1＞
+┴└┐
+　　〇 Sheet1.CheckBox1.Value = True
+　　┴End Sub

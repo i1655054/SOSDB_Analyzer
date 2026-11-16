@@ -1,0 +1,75 @@
+Procedure: UF_ExplanationRegist.CommandButton1_Click  [ 説明文生成登録＜UF_ExplanationRegist＞ ]
+HCP	Business
+┬
+〇│Private Sub CommandButton1_Click()	説明文生成登録＜UF_ExplanationRegist＞
+┴└┐
+　　□ Dim Description As String
+　　□ Dim Operational As Control '現状の運用系
+　　□ Dim Alarm As Control    'アラームの発生
+　　□ Dim Kei As String   '系
+　　□ Dim Existence As String '有無
+　　□ Dim AlarmContent     'アラーム表示内容
+　　□ Dim OccurrenceStatus '発生状況
+　　□ Dim StatusDetails    '対応状況詳細
+　　□ Dim ImplementationWork     '実施していた作業
+　　□ Dim CollectedData    '収集データ
+　　│#  運用系取得
+　　＠┐For Each Operational In fr現状の運用系.Controls
+　　│◆┐If Operational.Value = True Then
+　　││〇 Kei = Operational.Caption
+　　││→ Exit For
+　　││┴End If
+　　│〇 Kei = "不明"
+　　│┴Next
+　　│#  アラーム有無取得
+　　＠┐For Each Alarm In frアラームの発生.Controls
+　　│◆┐If Alarm.Value = True Then
+　　││〇 Existence = Alarm.Caption
+　　││→ Exit For
+　　││┴End If
+　　│〇 Existence = "不明"
+　　│┴Next
+　　│#  アラーム内容取得
+　　◆┐If frアラーム表示内容.Controls("txtアラーム") <> "" Then
+　　│〇 AlarmContent = frアラーム表示内容.Controls("txtアラーム")
+　　├┐ELSE
+　　│〇 AlarmContent = "―"
+　　│┴End If
+　　│#  発生状況取得
+　　◆┐If fr発生状況.Controls("txt発生状況") <> "" Then
+　　│〇 OccurrenceStatus = fr発生状況.Controls("txt発生状況")
+　　├┐ELSE
+　　│〇 OccurrenceStatus = "―"
+　　│┴End If
+　　│#  対応状況取得
+　　◆┐If fr対応状況詳細.Controls("txt対応状況") <> "" Then
+　　│〇 StatusDetails = fr対応状況詳細.Controls("txt対応状況")
+　　├┐ELSE
+　　│〇 StatusDetails = "―"
+　　│┴End If
+　　│#  作業内容取得
+　　◆┐If fr実施していた作業.Controls("txt作業") <> "" Then
+　　│〇 ImplementationWork = fr実施していた作業.Controls("txt作業")
+　　├┐ELSE
+　　│〇 ImplementationWork = "―"
+　　│┴End If
+　　│#  収集データ取得
+　　◆┐If fr収集データ.Controls("txtデータ") <> "" Then
+　　│〇 CollectedData = fr収集データ.Controls("txtデータ")
+　　├┐ELSE
+　　│〇 CollectedData = "―"
+　　│┴End If
+　　☆ On Error GoTo エラー処理
+　　│#  説明文生成
+　　〇 Description = "＝＝＝＜故障発生状況＞＝＝＝" & vbCrLf &  "＝＝＝【現状の運用系】＝＝＝" & vbCrLf &  Kei & vbCrLf &  "＝＝＝【アラーム発生の有無】＝＝＝" & vbCrLf &  Existence & vbCrLf &  "＝＝＝【アラーム表示内容】＝＝＝" & vbCrLf &  AlarmContent & vbCrLf &  "＝＝＝【発生状況】＝＝＝" & vbCrLf &  OccurrenceStatus & vbCrLf &  "＝＝＝【対応状況詳細】＝＝＝" & vbCrLf &  StatusDetails & vbCrLf &  "＝＝＝【実施していた作業】＝＝＝" & vbCrLf &  ImplementationWork & vbCrLf &  "＝＝＝【収集データ】＝＝＝" & vbCrLf &  CollectedData
+　　│#  内容確認表示
+　　〇 MsgBox Description, , "設定内容"
+　　│#  説明欄反映
+　　〇 UF_NewInfoRegist.txt説明 = Description
+　　│#  フォーム終了
+　　〇 Unload Me
+　　→ Exit Sub
+▼ エラー処理:
+　　│#  入力エラー通知
+　　〇 MsgBox "ボタンを選択してください。"
+　　┴End Sub

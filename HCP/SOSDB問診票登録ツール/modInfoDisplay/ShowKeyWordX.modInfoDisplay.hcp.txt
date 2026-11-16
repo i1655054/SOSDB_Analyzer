@@ -1,0 +1,97 @@
+Procedure: modInfoDisplay.ShowKeyWordX  [ キーワード表示編集＜modInfoDisplay＞ ]
+HCP	Business
+┬
+〇│Public Function ShowKeyWordX(ByVal issue As IssueInfo)	キーワード表示編集＜modInfoDisplay＞
+┴└┐
+　　□ Dim bodyHTML As String
+　　│#  同一画面表示中判定
+　　◆┐If UF_InfoWebDisplay.Visible  And CallingInfoDisplay = "ShowKeyWord" Then
+　　││#  表示状態初期化
+　　│〇 CallingInfoDisplay = ""
+　　││#  フォーム非表示
+　　│〇 UF_InfoWebDisplay.Hide
+　　│→ Exit Function
+　　│┴End If
+　　│#  現在サイズ保存
+　　◆┐If UF_InfoWebDisplay.Visible Then
+　　│◎ UF_InfoWebDisplay.SaveCurrentSize	フォームサイズ保存＜UF_InfoWebDisplay＞
+　　│┴End If
+　　│#  表示種別設定
+　　〇 CallingInfoDisplay = "ShowKeyWord"
+　　│#  キーワード取得
+　　〇 bodyHTML = issue.Key_Word
+　　│#  情報表示フォーム取得
+　　□ Dim uf As UF_InfoWebDisplay
+　　〇 Set uf = UF_InfoWebDisplay
+　　＠┐With uf
+　　│〇 .Font = "MSゴシック"
+　　│〇 .ForeColor = &HFF8080
+　　│┴End With
+　　│#  タイトルラベル設定
+　　＠┐With uf.Label1
+　　│〇 .Top = margin
+　　│〇 .Left = margin
+　　│〇 .Caption = "キーワード"
+　　│┴End With
+　　│#  スクロールラベル表示
+　　＠┐With uf.Label4
+　　│〇 .Top = uf.Frame1.Top + uf.Frame1.Height + margin
+　　│〇 .Left = uf.Frame1.Width / 2 - uf.Label4.Width / 2
+　　│〇 .Visible = True             ' ラベルを表示に設定
+　　│┴End With
+　　│#  表示フレーム設定
+　　＠┐With uf.Frame1
+　　│〇 .Top = 3 * margin
+　　│〇 .Left = margin
+　　│〇 .Width = uf.Width - (3 * margin)
+　　│〇 .Height = uf.Height - (9 * margin)
+　　│┴End With
+　　│#  HTML表示領域設定
+　　＠┐With uf.WebBrowser1
+　　│〇 .Top = 1
+　　│〇 .Left = 1
+　　│〇 .Width = uf.Frame1.Width - 2
+　　│〇 .Height = uf.Frame1.Height - 2
+　　│┴End With
+　　│#  キーワード変更フラグ初期化
+　　〇 KeyWordChangFlg = False
+　　│#  閉じるボタン設定
+　　＠┐With uf.CommandButton1
+　　│〇 .Top = uf.Frame1.Top + uf.Frame1.Height + margin
+　　│〇 .Left = uf.Frame1.Left + uf.Frame1.Width - btWidth
+　　│〇 .Height = btHeight          'UF_InfoWebDisplay内のCommandButton1の高さ 18インチ
+　　│〇 .Width = btWidth            'UF_InfoWebDisplay内のCommandButton1の長さ 66インチ
+　　│〇 .Caption = "閉じる"
+　　│〇 .Visible = True ' コマンドボタンを表示に設定
+　　│┴End With
+　　│#  編集ボタン設定
+　　＠┐With uf.CommandButtonEdit
+　　│〇 .Top = uf.Frame1.Top + uf.Frame1.Height + margin
+　　│〇 .Left = uf.Frame1.Left + uf.Frame1.Width - 2 * btWidth - 10
+　　│〇 .Height = btHeight          'UF_InfoWebDisplay内のCommandButton1の高さ 18インチ
+　　│〇 .Width = btWidth            'UF_InfoWebDisplay内のCommandButton1の長さ 66インチ
+　　│〇 .Caption = "編集"
+　　│〇 .Visible = True ' コマンドボタンを表示に設定
+　　│┴End With
+　　│#  編集ボタン非表示
+　　＠┐With uf.CommandButton2
+　　│〇 .Top = uf.Frame1.Top + uf.Frame1.Height + margin
+　　│〇 .Left = margin
+　　│〇 .Visible = True ' コマンドボタンを表示に設定
+　　│┴End With
+　　│#  HTML生成
+　　＠┐With uf
+　　│〇 .ScrollEnabled = True  ' ← ここでスクロールバーの表示を指定
+　　│◎ .BuildHTMLContent bodyHTML	HTML本文生成＜UF_InfoWebDisplay＞
+　　│┴End With
+　　│#  キーワード有無判定
+　　◆┐If issue.Key_Word <> "" Then
+　　││#  キーワードボタン有効化
+　　│◎ Sheet1.KeyWord_Button_Set	キーワードボタン強調表示＜Sheet1＞
+　　├┐ELSE
+　　││#  キーワードボタン無効化
+　　│◎ Sheet1.KeyWord_Button_Release	キーワードボタン解除＜Sheet1＞
+　　│┴End If
+　　│#  フォーム表示
+　　◎ Call ShowInfoDisplay(uf)	情報表示フォーム表示＜modInfoDisplay＞
+　　┴End Function

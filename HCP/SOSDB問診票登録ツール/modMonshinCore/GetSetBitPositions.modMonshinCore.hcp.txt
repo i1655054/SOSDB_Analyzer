@@ -1,0 +1,25 @@
+Procedure: modMonshinCore.GetSetBitPositions  [ 設定ビット位置取得＜modMonshinCore＞ ]
+HCP	Business
+┬
+〇│Public Function GetSetBitPositions(ByVal Value As Long) As String	設定ビット位置取得＜modMonshinCore＞
+┴└┐
+　　│#  変数初期化
+　　□ Dim i As Integer
+　　□ Dim mask As LongLong
+　　□ Dim result As String
+　　〇 result = ""
+　　│#  ビット位置走査
+　　＠┐For i = 31 To 0 Step -1
+　　││#  判定用マスク生成
+　　│〇 mask = CLngLng(2) ^ i
+　　││#  ビット設定確認
+　　│◆┐If (CLngLng(Value) And mask) <> 0 Then
+　　│││#  区切り文字追加
+　　││◆ If result <> "" Then result = result & ","
+　　│││#  ビット位置追加
+　　││〇 result = result & i
+　　││┴End If
+　　│┴Next i
+　　│#  ビット位置一覧返却
+　　〇 GetSetBitPositions = result
+　　┴End Function

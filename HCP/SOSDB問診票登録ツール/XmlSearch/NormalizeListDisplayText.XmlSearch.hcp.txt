@@ -1,0 +1,16 @@
+Procedure: XmlSearch.NormalizeListDisplayText  [ 一覧表示文字列整形＜XmlSearch＞ ]
+HCP	Business
+┬
+〇│Private Function NormalizeListDisplayText(  ByVal text As String) As String	一覧表示文字列整形＜XmlSearch＞
+┴└┐
+　　│#  空文字確認
+　　◆┐If text = "" Then
+　　│→ Exit Function
+　　│┴End If
+　　│#  改行除去
+　　〇 text = Replace(text, vbCrLf, " ")
+　　〇 text = Replace(text, vbCr, " ")
+　　〇 text = Replace(text, vbLf, " ")
+　　│#  一覧表示文字列返却
+　　〇 NormalizeListDisplayText = Trim(text)
+　　┴End Function

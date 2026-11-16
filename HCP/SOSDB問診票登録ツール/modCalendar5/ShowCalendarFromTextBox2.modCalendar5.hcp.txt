@@ -1,0 +1,39 @@
+Procedure: modCalendar5.ShowCalendarFromTextBox2  [ テキストボックス日付選択＜modCalendar5＞ ]
+HCP	Business
+┬
+〇│Public Sub ShowCalendarFromTextBox2(ByRef objTextBox As MSForms.TextBox,  Optional ByVal lngLeft As Long = 0,  Optional ByVal lngTop As Long = 0,  Optional ByVal strCaption As String = gcnsCaption,  Optional ByVal strFormat As String = g_cnsDateFormat)	テキストボックス日付選択＜modCalendar5＞
+┴└┐
+　　□ Dim lngFormWidth As Long                                        ' カレンダーフォームの幅
+　　□ Dim lngFormHeight As Long                                       ' カレンダーフォームの高さ
+　　□ Dim lngScreenRight As Long                                      ' スクリーン右端位置
+　　□ Dim lngScreenBottom As Long                                     ' スクリーン下端位置
+　　□ Dim lngDPIX As Long                                             ' Dots Per Inch(水平)
+　　□ Dim lngDPIY As Long                                             ' Dots Per Inch(垂直)
+　　□ Dim lngPPI As Long                                              ' Pixels Per Inch
+　　〇 lngFormWidth = UF_Calendar5.Width
+　　〇 lngFormHeight = UF_Calendar5.Height
+　　〇 lngDPIX = FP_GetDPIX
+　　〇 lngDPIY = FP_GetDPIY
+　　〇 lngPPI = FP_GetPPI
+　　◎ Call GP_GetScreenPos(0, 0, lngScreenRight, lngScreenBottom)	画面有効領域取得＜modCalendar5＞
+　　◆┐If (lngLeft + lngFormWidth) * (lngDPIX / lngPPI) > lngScreenRight Then
+　　│〇 lngLeft = lngScreenRight * (lngPPI / lngDPIX) - lngFormWidth + 3
+　　│┴End If
+　　◆┐If (lngTop + lngFormHeight) * (lngDPIY / lngPPI) > lngScreenBottom Then
+　　│〇 lngTop = lngTop - (objTextBox.Height + lngFormHeight) + 3
+　　│┴End If
+　　＠┐With UF_Calendar5
+　　│〇 .prpTitle = strCaption                              ' タイトル
+　　│〇 .prpEntMode = 1                                     ' 入力モード(0=セル、1=TextBox)
+　　│〇 Set .prpTextBox = objTextBox                        ' 対象TextBox
+　　│〇 .prpDateFormat = strFormat                          ' 日付フォーマット
+　　│◆┐If ((lngLeft <> 0) Or (lngTop <> 0)) Then
+　　││〇 .StartUpPosition = 0
+　　││〇 .Left = lngLeft
+　　││〇 .Top = lngTop
+　　│├┐ELSE
+　　││〇 .StartUpPosition = 2
+　　││┴End If
+　　│〇 .Show
+　　│┴End With
+　　┴End Sub

@@ -1,0 +1,90 @@
+Procedure: IssueInfo.GetDiffFlags  [ 差分フラグ取得＜IssueInfo＞ ]
+HCP	Business
+┬
+〇│Public Function GetDiffFlags(other As IssueInfo) As Long	差分フラグ取得＜IssueInfo＞
+┴└┐
+　　□ Dim result As Long
+　　〇 result = 0
+　　│#  基本項目差分判定
+　　◆┐If Me.Subject <> other.Subject Then
+　　│〇 result = result Or flg_Subject_Name
+　　│┴End If
+　　◆┐If Me.Description <> other.Description Then
+　　│〇 result = result Or flg_Description
+　　│┴End If
+　　◆┐If Me.Status <> other.Status Then
+　　│〇 result = result Or flg_Status_Name
+　　│┴End If
+　　◆┐If Me.Priority <> other.Priority Then
+　　│〇 result = result Or flg_Priority_Name
+　　│┴End If
+　　◆┐If Me.AuthorName <> other.AuthorName Then
+　　│〇 result = result Or flg_Author_Name
+　　│┴End If
+　　◆┐If Me.AssignedTo <> other.AssignedTo Then
+　　│〇 result = result Or flg_Assigned_to_Name
+　　│┴End If
+　　◆┐If Me.targetVersion <> other.targetVersion Then
+　　│〇 result = result Or flg_Target_Version
+　　│┴End If
+　　│#  カスタムフィールド差分判定
+　　◆┐If Me.OccurrenceDateTime <> other.OccurrenceDateTime Then
+　　│〇 result = result Or flg_OccurrenceDateTime
+　　│┴End If
+　　◆┐If Me.ProblemBuilding <> other.ProblemBuilding Then
+　　│〇 result = result Or flg_ProblemBuilding
+　　│┴End If
+　　◆┐If Me.HostName <> other.HostName Then
+　　│〇 result = result Or flg_HostName
+　　│┴End If
+　　◆┐If Me.Phenomenon <> other.Phenomenon Then
+　　│〇 result = result Or flg_Phenomenon
+　　│┴End If
+　　◆┐If Me.CauseDetail <> other.CauseDetail Then
+　　│〇 result = result Or flg_Cause
+　　│┴End If
+　　◆┐If Me.Mondainum_Pro <> other.Mondainum_Pro Then
+　　│〇 result = result Or flg_Mondainum_Pro
+　　│┴End If
+　　◆┐If Me.Remarks <> other.Remarks Then
+　　│〇 result = result Or flg_Remarks
+　　│┴End If
+　　◆┐If Me.Esukare_Date <> other.Esukare_Date Then
+　　│〇 result = result Or flg_Esukare_Date
+　　│┴End If
+　　◆┐If Me.Close_Date <> other.Close_Date Then
+　　│〇 result = result Or flg_Close_Date
+　　│┴End If
+　　◆┐If Me.Requester_Pro <> other.Requester_Pro Then
+　　│〇 result = result Or flg_Requester_Pro
+　　│┴End If
+　　◆┐If Me.ServiceImpact <> other.ServiceImpact Then
+　　│〇 result = result Or flg_ServiceImpact
+　　│┴End If
+　　◆┐If Me.TroubleNum <> other.TroubleNum Then
+　　│〇 result = result Or flg_TroubleNum
+　　│┴End If
+　　◆┐If Me.Equipment <> other.Equipment Then
+　　│〇 result = result Or flg_Equipment
+　　│┴End If
+　　◆┐If Me.Countermeasure <> other.Countermeasure Then
+　　│〇 result = result Or flg_Cope
+　　│┴End If
+　　◆┐If Me.RequesterNum <> other.RequesterNum Then
+　　│〇 result = result Or flg_RequesterNum
+　　│┴End If
+　　◆┐If Me.ProductTantou <> other.ProductTantou Then
+　　│〇 result = result Or flg_ProductTantou
+　　│┴End If
+　　◆┐If Me.KihensinName_Date <> other.KihensinName_Date Then
+　　│〇 result = result Or flg_KihensinName_Date
+　　│┴End If
+　　◆┐If Me.Key_Word <> other.Key_Word Then
+　　│〇 result = result Or flg_Key_Word
+　　│┴End If
+　　◆┐If Me.EqProduct <> other.EqProduct Then
+　　│〇 result = result Or flg_EqProduct
+　　│┴End If
+　　│#  差分フラグ返却
+　　〇 GetDiffFlags = result
+　　┴End Function

@@ -1,0 +1,11 @@
+Procedure: modAboutCalendar2.FP_InitAboutCalendar  [ カレンダー初期化＜modAboutCalendar2＞ ]
+HCP	Business
+┬
+〇│Public Function FP_InitAboutCalendar(Optional ByVal blnOmitCheck As Boolean = False) As Boolean	カレンダー初期化＜modAboutCalendar2＞
+┴└┐
+　　◆┐If Not g_blnInitAboutCalendar Then
+　　│〇 Set g_clsAboutCalendar = New clsAboutCalendar2
+　　│◎ g_blnInitAboutCalendar = g_clsAboutCalendar.MakeHoliParamater(blnOmitCheck)	祝日パラメータ作成＜clsAboutCalendar2＞
+　　│┴End If
+　　〇 FP_InitAboutCalendar = g_blnInitAboutCalendar
+　　┴End Function

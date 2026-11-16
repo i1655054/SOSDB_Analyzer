@@ -1,0 +1,27 @@
+Procedure: UF_OccDateTimeRegist.UserForm_Initialize  [ 発生日時フォーム初期化＜UF_OccDateTimeRegist＞ ]
+HCP	Business
+┬
+〇│Private Sub UserForm_Initialize()	発生日時フォーム初期化＜UF_OccDateTimeRegist＞
+┴└┐
+　　│#  現在日時取得
+　　〇 datTime = Now
+　　│#  発生日初期化
+　　〇 txt問題発生日.text = Format(datTime, "yyyy/mm/dd")
+　　〇 txt問題発生日.Font.size = 9 ' フォントサイズを調整
+　　〇 txt問題発生日.TextAlign = fmTextAlignCenter ' テキストを中央揃え
+　　│#  時刻入力初期化
+　　〇 Chk発生時分.Value = True
+　　〇 txt時刻_時.text = Format(datTime, "hh")
+　　〇 txt時刻_分.text = Format(datTime, "nn")
+　　〇 txt時刻_時.Font.size = 9 ' フォントサイズを調整
+　　〇 txt時刻_分.Font.size = 9 ' フォントサイズを調整
+　　〇 txt時刻_時.TextAlign = fmTextAlignCenter ' テキストを中央揃え
+　　〇 txt時刻_分.TextAlign = fmTextAlignCenter ' テキストを中央揃え
+　　│#  IME設定
+　　〇 txt問題発生日.IMEMode = fmIMEModeOff
+　　〇 txt時刻_時.IMEMode = fmIMEModeOff
+　　〇 txt時刻_分.IMEMode = fmIMEModeOff
+　　│#  右クリック機能初期化
+　　〇 Static dcp As New CRightClick
+　　◎ dcp.Initialize Me	右クリック機能初期化＜CRightClick＞
+　　┴End Sub

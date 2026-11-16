@@ -1,0 +1,7 @@
+Procedure: modAboutCalendar2.GP_GetCalendarTable3  [ 三か月カレンダー生成＜modAboutCalendar2＞ ]
+HCP	Business
+┬
+〇│Public Sub GPGetCalendarTable3(ByVal lngYear As Long,  ByVal lngMonth As Long,  ByRef tblCalendar() As gtypAboutCalendar2,  Optional ByRef lngCurrStartIx As Long = -1,  Optional ByRef lngCurrEndIx As Long = -1)	三か月カレンダー生成＜modAboutCalendar2＞
+┴└┐
+　　◎ Call g_clsAboutCalendar.GetCalendarTable3(lngYear,  lngMonth,  tblCalendar,  lngCurrStartIx,  lngCurrEndIx)	三か月カレンダーテーブル生成＜clsAboutCalendar2＞
+　　┴End Sub

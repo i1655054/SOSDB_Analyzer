@@ -1,0 +1,10 @@
+Procedure: UF_RedminDbRegist.CommandButton1_Click  [ 登録実行＜UF_RedminDbRegist＞ ]
+HCP	Business
+┬
+〇│Private Sub CommandButton1_Click()	登録実行＜UF_RedminDbRegist＞
+┴└┐
+　　│#  登録承認
+　　〇 vYesNo = vbYes
+　　│#  フォーム非表示
+　　〇 Me.Hide
+　　┴End Sub

@@ -1,0 +1,12 @@
+Procedure: UF_Calendar5.UserForm_QueryClose  [ カレンダーフォーム終了制御＜UF_Calendar5＞ ]
+HCP	Business
+┬
+〇│Private Sub UserForm_QueryClose(Cancel As Integer, CloseMode As Integer)	カレンダーフォーム終了制御＜UF_Calendar5＞
+┴└┐
+　　│#  クローズ抑止
+　　◆┐If CloseMode = vbFormControlMenu Then
+　　││#  フォーム非表示
+　　│〇 Me.Hide
+　　│〇 Cancel = True
+　　│┴End If
+　　┴End Sub

@@ -1,0 +1,9 @@
+Procedure: CRightClick.Cb_MouseUp  [ コンボボックス右クリック＜CRightClick＞ ]
+HCP	Business
+┬
+〇│Private Sub CbMouseUp(ByVal Button As Integer, ByVal Shift As Integer,  ByVal X As Single, ByVal Y As Single)	コンボボックス右クリック＜CRightClick＞
+┴└┐
+　　│#  右クリック判定
+　　│#  編集メニュー表示
+　　◆ If Button = 2 And Cb.Style = fmStyleDropDownCombo Then pCopyPaste Cb
+　　┴End Sub

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift_jis">
+<title>SOSDB問診票登録ツール</title>
+<style>
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.5;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+colgroup col:nth-of-type(1) {}
+colgroup col:nth-of-type(2) {}
+.resize {position: relative;}
+.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+</style>
+</head>
+<body>
+<h1>SOSDB問診票登録ツール</h1>
+<p>Module Count : 32</p>
+<p>Procedure Count : 347</p>
+<p>Generated Count : 347</p>
+<p>Pending Count : 0</p>
+<table>
+<tr><th>Module</th><th>Procedures</th><th>Generated</th></tr>
+<tr><td><a href="clsAboutCalendar2/_INDEX.html">clsAboutCalendar2</a></td><td align="right">19</td><td align="right">19</td></tr>
+<tr><td><a href="clsUF_Cal5Label1/_INDEX.html">clsUF_Cal5Label1</a></td><td align="right">3</td><td align="right">3</td></tr>
+<tr><td><a href="clsUF_Cal5Label2/_INDEX.html">clsUF_Cal5Label2</a></td><td align="right">2</td><td align="right">2</td></tr>
+<tr><td><a href="CRightClick/_INDEX.html">CRightClick</a></td><td align="right">9</td><td align="right">9</td></tr>
+<tr><td><a href="frmProcessing/_INDEX.html">frmProcessing</a></td><td align="right">2</td><td align="right">2</td></tr>
+<tr><td><a href="IssueInfo/_INDEX.html">IssueInfo</a></td><td align="right">9</td><td align="right">9</td></tr>
+<tr><td><a href="modAboutCalendar2/_INDEX.html">modAboutCalendar2</a></td><td align="right">9</td><td align="right">9</td></tr>
+<tr><td><a href="modCalendar5/_INDEX.html">modCalendar5</a></td><td align="right">8</td><td align="right">8</td></tr>
+<tr><td><a href="modFileUtility/_INDEX.html">modFileUtility</a></td><td align="right">14</td><td align="right">14</td></tr>
+<tr><td><a href="modInfoDisplay/_INDEX.html">modInfoDisplay</a></td><td align="right">9</td><td align="right">9</td></tr>
+<tr><td><a href="modIssueMapper/_INDEX.html">modIssueMapper</a></td><td align="right">18</td><td align="right">18</td></tr>
+<tr><td><a href="modIssueService/_INDEX.html">modIssueService</a></td><td align="right">6</td><td align="right">6</td></tr>
+<tr><td><a href="modMonshinCore/_INDEX.html">modMonshinCore</a></td><td align="right">19</td><td align="right">19</td></tr>
+<tr><td><a href="modMonshinMap/_INDEX.html">modMonshinMap</a></td><td align="right">4</td><td align="right">4</td></tr>
+<tr><td><a href="modProcessing/_INDEX.html">modProcessing</a></td><td align="right">3</td><td align="right">3</td></tr>
+<tr><td><a href="modRegister/_INDEX.html">modRegister</a></td><td align="right">5</td><td align="right">5</td></tr>
+<tr><td><a href="modStartup/_INDEX.html">modStartup</a></td><td align="right">1</td><td align="right">1</td></tr>
+<tr><td><a href="ModuleFontSync/_INDEX.html">ModuleFontSync</a></td><td align="right">4</td><td align="right">4</td></tr>
+<tr><td><a href="modUtility/_INDEX.html">modUtility</a></td><td align="right">45</td><td align="right">45</td></tr>
+<tr><td><a href="Sheet1/_INDEX.html">Sheet1</a></td><td align="right">33</td><td align="right">33</td></tr>
+<tr><td><a href="ThisWorkbook/_INDEX.html">ThisWorkbook</a></td><td align="right">2</td><td align="right">2</td></tr>
+<tr><td><a href="UF_Calendar5/_INDEX.html">UF_Calendar5</a></td><td align="right">20</td><td align="right">20</td></tr>
+<tr><td><a href="UF_ExplanationRegist/_INDEX.html">UF_ExplanationRegist</a></td><td align="right">3</td><td align="right">3</td></tr>
+<tr><td><a href="UF_InfoWebDisplay/_INDEX.html">UF_InfoWebDisplay</a></td><td align="right">20</td><td align="right">20</td></tr>
+<tr><td><a href="UF_NewInfoRegist/_INDEX.html">UF_NewInfoRegist</a></td><td align="right">20</td><td align="right">20</td></tr>
+<tr><td><a href="UF_OccDateTimeRegist/_INDEX.html">UF_OccDateTimeRegist</a></td><td align="right">9</td><td align="right">9</td></tr>
+<tr><td><a href="UF_RedminDbRegist/_INDEX.html">UF_RedminDbRegist</a></td><td align="right">3</td><td align="right">3</td></tr>
+<tr><td><a href="UF_RequesterNumRegist/_INDEX.html">UF_RequesterNumRegist</a></td><td align="right">8</td><td align="right">8</td></tr>
+<tr><td><a href="UF_Search/_INDEX.html">UF_Search</a></td><td align="right">3</td><td align="right">3</td></tr>
+<tr><td><a href="UF_SearchResults/_INDEX.html">UF_SearchResults</a></td><td align="right">23</td><td align="right">23</td></tr>
+<tr><td><a href="XmlLoader/_INDEX.html">XmlLoader</a></td><td align="right">6</td><td align="right">6</td></tr>
+<tr><td><a href="XmlSearch/_INDEX.html">XmlSearch</a></td><td align="right">8</td><td align="right">8</td></tr>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function (eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function (e) {
+const styleTh = window.getComputedStyle(eleTh);
+const paddingLeft = parseFloat(styleTh.paddingLeft);
+const paddingRight = parseFloat(styleTh.paddingRight);
+const borderLeft = parseFloat(styleTh.borderLeftWidth);
+const borderRight = parseFloat(styleTh.borderRightWidth);
+startX = e.pageX;
+startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e) {
+const newWidth = startWidth + (e.pageX - startX);
+eleTh.style.width = newWidth + 'px';
+}
+function onMouseUp() {
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
+}
+});
+</script>
+</body>
+</html>

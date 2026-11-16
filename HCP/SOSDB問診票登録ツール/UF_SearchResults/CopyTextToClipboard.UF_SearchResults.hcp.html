@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift_jis">
+<title>CopyTextToClipboard</title>
+<style>
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+colgroup col:nth-of-type(1) {}
+colgroup col:nth-of-type(2) {}
+.resize {position: relative;}
+.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+</style>
+</head>
+<body>
+<h1>CopyTextToClipboard</h1>
+<p>Module : UF_SearchResults</p>
+<p><a href="./_INDEX.html">← Module Index</a></p>
+<table>
+<colgroup><col/><col/></colgroup>
+<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<tbody>
+<tr><td>Procedure: UF_SearchResults.CopyTextToClipboard  [ クリップボードコピー＜UF_SearchResults＞ ]</td><td></td></tr>
+<tr><td>HCP</td><td>Business</td></tr>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Sub CopyTextToClipboard(text As String)</td><td>クリップボードコピー＜UF_SearchResults＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　□ Dim hGlobalMemory As LongPtr</td><td></td></tr>
+<tr><td>　　□ Dim lpGlobalMemory As LongPtr</td><td></td></tr>
+<tr><td>　　□ Dim size As LongPtr</td><td></td></tr>
+<tr><td>　　│#  コピー領域サイズ算出</td><td></td></tr>
+<tr><td>　　〇 size = (Len(text) + 1) * 2 ' Unicodeは2バイト</td><td></td></tr>
+<tr><td>　　│#  クリップボードオープン</td><td></td></tr>
+<tr><td>　　◆┐If OpenClipboard(0&amp;) Then</td><td></td></tr>
+<tr><td>　　││#  クリップボード初期化</td><td></td></tr>
+<tr><td>　　│〇 EmptyClipboard</td><td></td></tr>
+<tr><td>　　││#  メモリ確保</td><td></td></tr>
+<tr><td>　　│〇 hGlobalMemory = GlobalAlloc(GHND, size)</td><td></td></tr>
+<tr><td>　　││#  メモリロック</td><td></td></tr>
+<tr><td>　　│〇 lpGlobalMemory = GlobalLock(hGlobalMemory)</td><td></td></tr>
+<tr><td>　　││#  文字列コピー</td><td></td></tr>
+<tr><td>　　│〇 CopyMemory ByVal lpGlobalMemory, ByVal StrPtr(text), size</td><td></td></tr>
+<tr><td>　　││#  メモリ解放</td><td></td></tr>
+<tr><td>　　│〇 GlobalUnlock hGlobalMemory</td><td></td></tr>
+<tr><td>　　││#  クリップボード設定</td><td></td></tr>
+<tr><td>　　│〇 SetClipboardData CF_UNICODETEXT, hGlobalMemory</td><td></td></tr>
+<tr><td>　　││#  クリップボードクローズ</td><td></td></tr>
+<tr><td>　　│〇 CloseClipboard</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　┴End Sub</td><td></td></tr>
+</tbody>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function (eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function (e) {
+const styleTh = window.getComputedStyle(eleTh);
+const paddingLeft = parseFloat(styleTh.paddingLeft);
+const paddingRight = parseFloat(styleTh.paddingRight);
+const borderLeft = parseFloat(styleTh.borderLeftWidth);
+const borderRight = parseFloat(styleTh.borderRightWidth);
+startX = e.pageX;
+startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e) {
+const newWidth = startWidth + (e.pageX - startX);
+eleTh.style.width = newWidth + 'px';
+}
+function onMouseUp() {
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
+}
+});
+</script>
+</body>
+</html>

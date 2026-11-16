@@ -1,0 +1,83 @@
+Procedure: clsAboutCalendar2.GP_UpdateHolidaySUB1  [ 固定日祝日設定＜clsAboutCalendar2＞ ]
+HCP	Business
+┬
+〇│Private Sub GPUpdateHolidaySUB1(ByVal lngDay As Long,  ByVal strName As String,  ByVal lngSyuku As Long,  ByVal lngFurikaeKbn As Long,  ByVal lngCalStrIx As Long,  ByVal lngIxSyuku As Long,  ByRef lngFuriDIxMax As Long,  ByRef tblFuriDIx() As gtypFuriDIx,  ByRef tblCalendar() As g_typAboutCalendar2)	固定日祝日設定＜clsAboutCalendar2＞
+┴└┐
+　　□ Dim lngIx As Long                                           ' テーブルINDEX
+　　□ Dim lngIxMax As Long                                        ' テーブルINDEX上限
+　　□ Dim lngIxA1 As Long                                         ' テーブルINDEX(1日後)
+　　□ Dim lngIxA2 As Long                                         ' テーブルINDEX(2日後)
+　　□ Dim lngIxB1 As Long                                         ' テーブルINDEX(1日前)
+　　□ Dim lngIxB2 As Long                                         ' テーブルINDEX(2日前)
+　　□ Dim lngIxSD As Long                                         ' 振替休日判定日INDEXテーブルINDEX
+　　□ Dim lngIxSyukuN As Long                                     ' 次の祝日パラメータテーブルINDEX
+　　□ Dim lngYearN As Long                                        ' 次の年
+　　□ Dim lngMonthN As Long                                       ' 次の月
+　　│#  対象日位置算出
+　　〇 lngIx = lngCalStrIx + lngDay - 1
+　　〇 lngIxMax = UBound(tblCalendar)
+　　│#  会社休日優先判定
+　　◆┐If ((lngSyuku = 3) And (tblCalendar(lngIx).Syuku <> 0)) Then
+　　│→ Exit Sub
+　　│┴End If
+　　│#  前後日位置算出
+　　〇 lngIxA1 = lngIx + 1
+　　〇 lngIxA2 = lngIx + 2
+　　〇 lngIxB1 = lngIx - 1
+　　〇 lngIxB2 = lngIx - 2
+　　│#  祝日設定
+　　＠┐With tblCalendar(lngIx)
+　　│〇 .Syuku = lngSyuku
+　　│〇 .SyukuNm = strName
+　　│〇 .FurikaeKbn = lngFurikaeKbn
+　　│┴End With
+　　│#  振替対象確認
+　　◆→ If lngFurikaeKbn = 1 Then Exit Sub
+　　│#  振替休日候補登録
+　　◆┐If tblCalendar(lngIx).Yobi = 0 Then
+　　│〇 lngFuriDIxMax = lngFuriDIxMax + 1
+　　│〇 ReDim Preserve tblFuriDIx(lngFuriDIxMax)
+　　│〇 tblFuriDIx(lngFuriDIxMax).CalIx = lngIx
+　　│〇 tblFuriDIx(lngFuriDIxMax).Syubetsu = 0
+　　│→ Exit Sub
+　　│┴End If
+　　◆┐If lngIxB2 >= 0 Then
+　　│◆┐If ((tblCalendar(lngIxB2).Syuku <> 0) And  (tblCalendar(lngIxB1).Syuku = 0) And  (tblCalendar(lngIxB2).FurikaeKbn = 0)) Then
+　　││〇 lngFuriDIxMax = lngFuriDIxMax + 1
+　　││〇 ReDim Preserve tblFuriDIx(lngFuriDIxMax)
+　　││〇 tblFuriDIx(lngFuriDIxMax).CalIx = lngIxB2
+　　││〇 tblFuriDIx(lngFuriDIxMax).Syubetsu = 1
+　　││→ Exit Sub
+　　││┴End If
+　　│┴End If
+　　◆┐If lngIxA2 <= lngIxMax Then
+　　│◆┐If ((tblCalendar(lngIxA2).Syuku <> 0) And  (tblCalendar(lngIxA1).Syuku = 0) And  (tblCalendar(lngIxA2).FurikaeKbn = 0)) Then
+　　││〇 lngFuriDIxMax = lngFuriDIxMax + 1
+　　││〇 ReDim Preserve tblFuriDIx(lngFuriDIxMax)
+　　││〇 tblFuriDIx(lngFuriDIxMax).CalIx = lngIx
+　　││〇 tblFuriDIx(lngFuriDIxMax).Syubetsu = 1
+　　││→ Exit Sub
+　　││┴End If
+　　│┴End If
+　　│#  国民の休日候補登録
+　　◆┐If lngIx = lngIxMax - 1 Then
+　　│〇 lngIxSyukuN = lngIxSyuku + 1
+　　│◆┐If ((g_tblParamater(lngIxSyukuN).Hiduke = 1) And  (g_tblParamater(lngIxSyukuN).FurikaeKbn = 0)) Then
+　　││〇 lngYearN = Year(tblCalendar(lngIx).Hiduke)
+　　││〇 lngMonthN = Month(tblCalendar(lngIx).Hiduke) + 1     ' 次の月
+　　││◆┐If lngMonthN > 12 Then
+　　│││〇 lngYearN = lngYearN + 1
+　　│││〇 lngMonthN = 1
+　　│││┴End If
+　　││＠┐With g_tblParamater(lngIxSyukuN)
+　　│││◆┐If ((.Getsu = lngMonthN) And  (.StrYear <= lngYearN) And  (.EndYear >= lngYearN)) Then
+　　││││〇 lngFuriDIxMax = lngFuriDIxMax + 1
+　　││││〇 ReDim Preserve tblFuriDIx(lngFuriDIxMax)
+　　││││〇 tblFuriDIx(lngFuriDIxMax).CalIx = lngIx
+　　││││〇 tblFuriDIx(lngFuriDIxMax).Syubetsu = 1
+　　││││→ Exit Sub
+　　││││┴End If
+　　│││┴End With
+　　││┴End If
+　　│┴End If
+　　┴End Sub

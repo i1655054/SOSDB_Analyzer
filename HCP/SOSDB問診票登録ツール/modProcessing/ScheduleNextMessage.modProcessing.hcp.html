@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift_jis">
+<title>ScheduleNextMessage</title>
+<style>
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+colgroup col:nth-of-type(1) {}
+colgroup col:nth-of-type(2) {}
+.resize {position: relative;}
+.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+</style>
+</head>
+<body>
+<h1>ScheduleNextMessage</h1>
+<p>Module : modProcessing</p>
+<p><a href="./_INDEX.html">← Module Index</a></p>
+<table>
+<colgroup><col/><col/></colgroup>
+<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<tbody>
+<tr><td>Procedure: modProcessing.ScheduleNextMessage  [ 進捗メッセージ更新＜modProcessing＞ ]</td><td></td></tr>
+<tr><td>HCP</td><td>Business</td></tr>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Sub ScheduleNextMessage()</td><td>進捗メッセージ更新＜modProcessing＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　│#  メッセージ残数確認</td><td></td></tr>
+<tr><td>　　◆┐If messageIndex &lt;= UBound(messages) Then</td><td></td></tr>
+<tr><td>　　││#  進捗メッセージ表示</td><td></td></tr>
+<tr><td>　　│◎ frmProcessing.UpdateMessage messages(messageIndex)</td><td>メッセージ更新＜frmProcessing＞</td></tr>
+<tr><td>　　││</td><td>内部呼出:messages</td></tr>
+<tr><td>　　││#  メッセージ番号更新</td><td></td></tr>
+<tr><td>　　│〇 messageIndex = messageIndex + 1</td><td></td></tr>
+<tr><td>　　││#  次回実行予約</td><td></td></tr>
+<tr><td>　　│〇 nextTime = Now + TimeSerial(0, 0, 1)</td><td></td></tr>
+<tr><td>　　│〇 Application.OnTime nextTime, "ScheduleNextMessage"</td><td></td></tr>
+<tr><td>　　├┐ELSE</td><td></td></tr>
+<tr><td>　　││#  処理中画面終了</td><td></td></tr>
+<tr><td>　　│◎ StopMessageDisplay</td><td>処理中画面終了＜modProcessing＞</td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　┴End Sub</td><td></td></tr>
+</tbody>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function (eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function (e) {
+const styleTh = window.getComputedStyle(eleTh);
+const paddingLeft = parseFloat(styleTh.paddingLeft);
+const paddingRight = parseFloat(styleTh.paddingRight);
+const borderLeft = parseFloat(styleTh.borderLeftWidth);
+const borderRight = parseFloat(styleTh.borderRightWidth);
+startX = e.pageX;
+startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e) {
+const newWidth = startWidth + (e.pageX - startX);
+eleTh.style.width = newWidth + 'px';
+}
+function onMouseUp() {
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
+}
+});
+</script>
+</body>
+</html>

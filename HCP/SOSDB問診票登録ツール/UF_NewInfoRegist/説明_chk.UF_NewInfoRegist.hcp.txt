@@ -1,0 +1,16 @@
+Procedure: UF_NewInfoRegist.説明_chk  [ 説明入力確認＜UF_NewInfoRegist＞ ]
+HCP	Business
+┬
+〇│Private Function 説明_chk() As Boolean	説明入力確認＜UF_NewInfoRegist＞
+┴└┐
+　　〇 説明_chk = True
+　　│#  入力有無確認
+　　◆┐If Trim(Me.txt説明.Value) = "" Then
+　　││#  エラー表示
+　　│〇 説明_chk = False
+　　│〇 Me.txt説明.BackColor = &HC0C0FF
+　　├┐ELSE
+　　││#  表示復元
+　　│〇 Me.txt説明.BackColor = &H80000005
+　　│┴End If
+　　┴End Function

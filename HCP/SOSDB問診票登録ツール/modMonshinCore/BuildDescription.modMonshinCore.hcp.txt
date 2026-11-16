@@ -1,0 +1,15 @@
+Procedure: modMonshinCore.BuildDescription  [ 説明文生成＜modMonshinCore＞ ]
+HCP	Business
+┬
+〇│Private Function BuildDescription(  ByRef info As MonshinInfoType) As String	説明文生成＜modMonshinCore＞
+┴└┐
+　　│#  問診票形式判定
+　　◆┐Select Case info.sheetType
+　　│├┐Case Monshin_2010
+　　││◎ BuildDescription = BuildDescription2010(info)	説明文生成2010形式＜modMonshinCore＞
+　　│├┐Case Monshin_Format1,  Monshin_Book,  Monshin_Current
+　　││◎ BuildDescription = BuildDescriptionCurrent(info)	説明文生成現行形式＜modMonshinCore＞
+　　│├┐Case Else
+　　││◎ BuildDescription = BuildDescriptionFallback(info)	説明文生成互換形式＜modMonshinCore＞
+　　│┴End Select
+　　┴End Function

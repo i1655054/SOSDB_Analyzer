@@ -1,0 +1,25 @@
+Procedure: modUtility.ValidateAndHighlight  [ 入力確認強調表示＜modUtility＞ ]
+HCP	Business
+┬
+〇│Public Function ValidateAndHighlight(  ByVal val As Variant,  ByVal rngName As String,  Optional ByVal alertColor As Long = -1,  Optional ByVal defaultValue As String = "") As Boolean	入力確認強調表示＜modUtility＞
+┴└┐
+　　│#  入力値取得
+　　□ Dim s As String
+　　〇 s = Trim(CStr(val))
+　　│#  未入力判定
+　　□ Dim isEmpty As Boolean
+　　〇 isEmpty = (s = "" Or s = defaultValue)
+　　│#  入力済判定
+　　◆┐If Not isEmpty Then
+　　││#  セル色復元
+　　│◎ Call RestoreColor(rngName)	セル色復元＜modUtility＞
+　　│〇 ValidateAndHighlight = True
+　　│→ Exit Function
+　　│┴End If
+　　│#  セル強調表示
+　　◆┐If alertColor <> -1 Then
+　　│◎ Call HighlightCell(rngName, alertColor)	セル強調表示＜modUtility＞
+　　│┴End If
+　　│#  入力エラー返却
+　　〇 ValidateAndHighlight = False
+　　┴End Function

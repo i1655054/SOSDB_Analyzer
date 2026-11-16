@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift_jis">
+<title>URLEncode_UTF8</title>
+<style>
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+colgroup col:nth-of-type(1) {}
+colgroup col:nth-of-type(2) {}
+.resize {position: relative;}
+.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+</style>
+</head>
+<body>
+<h1>URLEncode_UTF8</h1>
+<p>Module : XmlSearch</p>
+<p><a href="./_INDEX.html">← Module Index</a></p>
+<table>
+<colgroup><col/><col/></colgroup>
+<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<tbody>
+<tr><td>Procedure: XmlSearch.URLEncode_UTF8  [ UTF8URLエンコード＜XmlSearch＞ ]</td><td></td></tr>
+<tr><td>HCP</td><td>Business</td></tr>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Private Function URLEncode_UTF8(str As String) As String</td><td>UTF8URLエンコード＜XmlSearch＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　□ Dim utf8Bytes() As Byte</td><td></td></tr>
+<tr><td>　　□ Dim size As Long</td><td></td></tr>
+<tr><td>　　□ Dim i As Long</td><td></td></tr>
+<tr><td>　　□ Dim ret As String</td><td></td></tr>
+<tr><td>　　□ Dim b As Byte</td><td></td></tr>
+<tr><td>　　│#  UTF8サイズ取得</td><td></td></tr>
+<tr><td>　　〇 size = WideCharToMultiByte(65001, 0, StrPtr(str), Len(str), 0, 0, 0, 0)</td><td></td></tr>
+<tr><td>　　│#  サイズ確認</td><td></td></tr>
+<tr><td>　　◆┐If size = 0 Then</td><td></td></tr>
+<tr><td>　　│〇 URLEncode_UTF8 = ""</td><td></td></tr>
+<tr><td>　　│→ Exit Function</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　│#  UTF8変換</td><td></td></tr>
+<tr><td>　　〇 ReDim utf8Bytes(0 To size - 1)</td><td></td></tr>
+<tr><td>　　〇 WideCharToMultiByte 65001, 0, StrPtr(str), Len(str), VarPtr(utf8Bytes(0)), size, 0, 0</td><td></td></tr>
+<tr><td>　　│#  URLエンコード変換</td><td></td></tr>
+<tr><td>　　＠┐For i = 0 To size - 1</td><td></td></tr>
+<tr><td>　　│〇 b = utf8Bytes(i)</td><td></td></tr>
+<tr><td>　　│◆┐Select Case b</td><td></td></tr>
+<tr><td>　　││├┐Case 48 To 57, 65 To 90, 97 To 122 ' 0-9, A-Z, a-z はそのまま</td><td></td></tr>
+<tr><td>　　│││〇 ret = ret &amp; Chr(b)</td><td></td></tr>
+<tr><td>　　││├┐Case 32</td><td></td></tr>
+<tr><td>　　│││〇 ret = ret &amp; "+"</td><td></td></tr>
+<tr><td>　　││├┐Case Else</td><td></td></tr>
+<tr><td>　　│││〇 ret = ret &amp; "%" &amp; Right("0" &amp; Hex(b), 2)</td><td></td></tr>
+<tr><td>　　││┴End Select</td><td></td></tr>
+<tr><td>　　│┴Next i</td><td></td></tr>
+<tr><td>　　│#  URLエンコード文字列返却</td><td></td></tr>
+<tr><td>　　〇 URLEncode_UTF8 = ret</td><td></td></tr>
+<tr><td>　　┴End Function</td><td></td></tr>
+</tbody>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function (eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function (e) {
+const styleTh = window.getComputedStyle(eleTh);
+const paddingLeft = parseFloat(styleTh.paddingLeft);
+const paddingRight = parseFloat(styleTh.paddingRight);
+const borderLeft = parseFloat(styleTh.borderLeftWidth);
+const borderRight = parseFloat(styleTh.borderRightWidth);
+startX = e.pageX;
+startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e) {
+const newWidth = startWidth + (e.pageX - startX);
+eleTh.style.width = newWidth + 'px';
+}
+function onMouseUp() {
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
+}
+});
+</script>
+</body>
+</html>

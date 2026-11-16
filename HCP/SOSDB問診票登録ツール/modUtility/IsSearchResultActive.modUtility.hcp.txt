@@ -1,0 +1,12 @@
+Procedure: modUtility.IsSearchResultActive  [ 検索結果表示状態確認＜modUtility＞ ]
+HCP	Business
+┬
+〇│Public Function IsSearchResultActive() As Boolean	検索結果表示状態確認＜modUtility＞
+┴└┐
+　　│#  検索結果表示判定
+　　〇 IsSearchResultActive =  (Sheet1.DB検索.Caption <> "検索")
+　　│#  表示中警告
+　　◆┐If IsSearchResultActive Then
+　　│〇 MsgBox  "検索結果が表示されています。" & vbCrLf &  "検索結果を閉じる、または" & vbCrLf &  "「Work情報削除」を実行してください。",  vbExclamation
+　　│┴End If
+　　┴End Function

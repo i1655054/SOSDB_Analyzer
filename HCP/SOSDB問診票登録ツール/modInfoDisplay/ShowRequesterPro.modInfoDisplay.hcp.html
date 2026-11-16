@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift_jis">
+<title>ShowRequesterPro</title>
+<style>
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+colgroup col:nth-of-type(1) {}
+colgroup col:nth-of-type(2) {}
+.resize {position: relative;}
+.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+</style>
+</head>
+<body>
+<h1>ShowRequesterPro</h1>
+<p>Module : modInfoDisplay</p>
+<p><a href="./_INDEX.html">← Module Index</a></p>
+<table>
+<colgroup><col/><col/></colgroup>
+<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<tbody>
+<tr><td>Procedure: modInfoDisplay.ShowRequesterPro  [ 依頼者表示＜modInfoDisplay＞ ]</td><td></td></tr>
+<tr><td>HCP</td><td>Business</td></tr>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Public Function ShowRequesterPro(ByVal issue As IssueInfo)</td><td>依頼者表示＜modInfoDisplay＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　□ Dim bodyHTML As String</td><td></td></tr>
+<tr><td>　　│#  同一画面表示中判定</td><td></td></tr>
+<tr><td>　　◆┐If UF_InfoWebDisplay.Visible  And CallingInfoDisplay = "ShowRequesterPro" Then</td><td></td></tr>
+<tr><td>　　││#  表示状態初期化</td><td></td></tr>
+<tr><td>　　│〇 CallingInfoDisplay = ""</td><td></td></tr>
+<tr><td>　　││#  フォーム非表示</td><td></td></tr>
+<tr><td>　　│〇 UF_InfoWebDisplay.Hide</td><td></td></tr>
+<tr><td>　　│→ Exit Function</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　│#  現在サイズ保存</td><td></td></tr>
+<tr><td>　　◆┐If UF_InfoWebDisplay.Visible Then</td><td></td></tr>
+<tr><td>　　│◎ UF_InfoWebDisplay.SaveCurrentSize</td><td>フォームサイズ保存＜UF_InfoWebDisplay＞</td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　│#  表示種別設定</td><td></td></tr>
+<tr><td>　　〇 CallingInfoDisplay = "ShowRequesterPro"</td><td></td></tr>
+<tr><td>　　│#  依頼者取得</td><td></td></tr>
+<tr><td>　　〇 bodyHTML = issue.Requester_Pro</td><td></td></tr>
+<tr><td>　　│#  情報表示フォーム取得</td><td></td></tr>
+<tr><td>　　□ Dim uf As UF_InfoWebDisplay</td><td></td></tr>
+<tr><td>　　〇 Set uf = UF_InfoWebDisplay</td><td></td></tr>
+<tr><td>　　＠┐With uf</td><td></td></tr>
+<tr><td>　　│┴End With</td><td></td></tr>
+<tr><td>　　│#  タイトルラベル設定</td><td></td></tr>
+<tr><td>　　＠┐With uf.Label1</td><td></td></tr>
+<tr><td>　　│〇 .Top = margin</td><td></td></tr>
+<tr><td>　　│〇 .Left = margin</td><td></td></tr>
+<tr><td>　　│〇 .Caption = "依頼者"</td><td></td></tr>
+<tr><td>　　│┴End With</td><td></td></tr>
+<tr><td>　　│#  スクロールラベル非表示</td><td></td></tr>
+<tr><td>　　＠┐With uf.Label4</td><td></td></tr>
+<tr><td>　　│〇 .Top = uf.Frame1.Top + uf.Frame1.Height + margin</td><td></td></tr>
+<tr><td>　　│〇 .Left = uf.Frame1.Width / 2 - uf.Label4.Width / 2</td><td></td></tr>
+<tr><td>　　│〇 .Visible = False             ' ラベルを非表示に設定</td><td></td></tr>
+<tr><td>　　│┴End With</td><td></td></tr>
+<tr><td>　　│#  表示フレーム設定</td><td></td></tr>
+<tr><td>　　＠┐With uf.Frame1</td><td></td></tr>
+<tr><td>　　│〇 .Top = 3 * margin</td><td></td></tr>
+<tr><td>　　│〇 .Left = margin</td><td></td></tr>
+<tr><td>　　│〇 .Width = uf.Width - (3 * margin)</td><td></td></tr>
+<tr><td>　　│〇 .Height = uf.Height - (9 * margin)</td><td></td></tr>
+<tr><td>　　│┴End With</td><td></td></tr>
+<tr><td>　　│#  HTML表示領域設定</td><td></td></tr>
+<tr><td>　　＠┐With uf.WebBrowser1</td><td></td></tr>
+<tr><td>　　│〇 .Top = 1</td><td></td></tr>
+<tr><td>　　│〇 .Left = 1</td><td></td></tr>
+<tr><td>　　│〇 .Width = uf.Frame1.Width - 2</td><td></td></tr>
+<tr><td>　　│〇 .Height = uf.Frame1.Height - 2</td><td></td></tr>
+<tr><td>　　│┴End With</td><td></td></tr>
+<tr><td>　　│#  閉じるボタン設定</td><td></td></tr>
+<tr><td>　　＠┐With uf.CommandButton1</td><td></td></tr>
+<tr><td>　　│〇 .Top = uf.Frame1.Top + uf.Frame1.Height + margin</td><td></td></tr>
+<tr><td>　　│〇 .Left = uf.Frame1.Left + uf.Frame1.Width - btWidth</td><td></td></tr>
+<tr><td>　　│〇 .Height = btHeight          'UF_InfoWebDisplay内のCommandButton1の高さ 18インチ</td><td></td></tr>
+<tr><td>　　│〇 .Width = btWidth            'UF_InfoWebDisplay内のCommandButton1の長さ 66インチ</td><td></td></tr>
+<tr><td>　　│〇 .Caption = "閉じる"</td><td></td></tr>
+<tr><td>　　│〇 .Visible = True ' コマンドボタンを表示に設定</td><td></td></tr>
+<tr><td>　　│┴End With</td><td></td></tr>
+<tr><td>　　│#  編集ボタン非表示</td><td></td></tr>
+<tr><td>　　＠┐With uf.CommandButtonEdit</td><td></td></tr>
+<tr><td>　　│〇 .Visible = False        ' コマンドボタンを非表示に設定</td><td></td></tr>
+<tr><td>　　│┴End With</td><td></td></tr>
+<tr><td>　　│#  補助ボタン非表示</td><td></td></tr>
+<tr><td>　　＠┐With uf.CommandButton2</td><td></td></tr>
+<tr><td>　　│〇 .Visible = False            ' コマンドボタンを非表示に設定</td><td></td></tr>
+<tr><td>　　│┴End With</td><td></td></tr>
+<tr><td>　　│#  HTML生成</td><td></td></tr>
+<tr><td>　　＠┐With uf</td><td></td></tr>
+<tr><td>　　│〇 .ScrollEnabled = False  ' ← ここでスクロールバーの非表示を指定</td><td></td></tr>
+<tr><td>　　│◎ .BuildHTMLContent bodyHTML</td><td>HTML本文生成＜UF_InfoWebDisplay＞</td></tr>
+<tr><td>　　│┴End With</td><td></td></tr>
+<tr><td>　　│#  フォーム表示</td><td></td></tr>
+<tr><td>　　◎ Call ShowInfoDisplay(uf)</td><td>情報表示フォーム表示＜modInfoDisplay＞</td></tr>
+<tr><td>　　┴End Function</td><td></td></tr>
+</tbody>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function (eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function (e) {
+const styleTh = window.getComputedStyle(eleTh);
+const paddingLeft = parseFloat(styleTh.paddingLeft);
+const paddingRight = parseFloat(styleTh.paddingRight);
+const borderLeft = parseFloat(styleTh.borderLeftWidth);
+const borderRight = parseFloat(styleTh.borderRightWidth);
+startX = e.pageX;
+startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e) {
+const newWidth = startWidth + (e.pageX - startX);
+eleTh.style.width = newWidth + 'px';
+}
+function onMouseUp() {
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
+}
+});
+</script>
+</body>
+</html>

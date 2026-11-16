@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift_jis">
+<title>cmb年度_Change</title>
+<style>
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+colgroup col:nth-of-type(1) {}
+colgroup col:nth-of-type(2) {}
+.resize {position: relative;}
+.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+</style>
+</head>
+<body>
+<h1>cmb年度_Change</h1>
+<p>Module : UF_NewInfoRegist</p>
+<p><a href="./_INDEX.html">← Module Index</a></p>
+<table>
+<colgroup><col/><col/></colgroup>
+<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<tbody>
+<tr><td>Procedure: UF_NewInfoRegist.cmb年度_Change  [ 年度変更処理＜UF_NewInfoRegist＞ ]</td><td></td></tr>
+<tr><td>HCP</td><td>Business</td></tr>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Private Sub cmb年度_Change()</td><td>年度変更処理＜UF_NewInfoRegist＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　□ Dim Rng As Range</td><td></td></tr>
+<tr><td>　　□ Dim LookupValue As String</td><td></td></tr>
+<tr><td>　　□ Dim result As Variant</td><td></td></tr>
+<tr><td>　　□ Dim NameValue As Variant</td><td></td></tr>
+<tr><td>　　□ Dim DefName As String</td><td></td></tr>
+<tr><td>　　□ Dim sht As Worksheet</td><td></td></tr>
+<tr><td>　　〇 DefName = "年度"</td><td></td></tr>
+<tr><td>　　〇 Set sht = ThisWorkbook.Sheets(SheetName_Main) ' 対象のシート名を指定</td><td></td></tr>
+<tr><td>　　☆ On Error Resume Next</td><td></td></tr>
+<tr><td>　　〇 Set Rng = ThisWorkbook.Names(DefName).RefersToRange</td><td></td></tr>
+<tr><td>　　☆ On Error GoTo 0</td><td></td></tr>
+<tr><td>　　〇 NameValue = Rng.Value</td><td></td></tr>
+<tr><td>　　│#  年度選択値取得</td><td></td></tr>
+<tr><td>　　〇 LookupValue = cmb年度.Value</td><td></td></tr>
+<tr><td>　　│#  対象年度設定</td><td></td></tr>
+<tr><td>　　〇 sht.Range(TARGET_VER_RANG) = LookupValue</td><td></td></tr>
+<tr><td>　　☆ On Error Resume Next</td><td></td></tr>
+<tr><td>　　│#  年度コード取得</td><td></td></tr>
+<tr><td>　　〇 result = Application.WorksheetFunction.VLookup(LookupValue, NameValue, 2, False)</td><td></td></tr>
+<tr><td>　　☆ On Error GoTo 0</td><td></td></tr>
+<tr><td>　　│#  管理番号年度設定</td><td></td></tr>
+<tr><td>　　◆┐If Not IsError(result) Then</td><td></td></tr>
+<tr><td>　　│〇 txt管理番号_年度.Value = result</td><td></td></tr>
+<tr><td>　　├┐ELSE</td><td></td></tr>
+<tr><td>　　│〇 txt管理番号_年度 = ""</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　┴End Sub</td><td></td></tr>
+</tbody>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function (eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function (e) {
+const styleTh = window.getComputedStyle(eleTh);
+const paddingLeft = parseFloat(styleTh.paddingLeft);
+const paddingRight = parseFloat(styleTh.paddingRight);
+const borderLeft = parseFloat(styleTh.borderLeftWidth);
+const borderRight = parseFloat(styleTh.borderRightWidth);
+startX = e.pageX;
+startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e) {
+const newWidth = startWidth + (e.pageX - startX);
+eleTh.style.width = newWidth + 'px';
+}
+function onMouseUp() {
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
+}
+});
+</script>
+</body>
+</html>

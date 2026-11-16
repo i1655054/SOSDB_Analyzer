@@ -1,0 +1,8 @@
+Procedure: UF_InfoWebDisplay.UserForm_QueryClose  [ 情報表示終了＜UF_InfoWebDisplay＞ ]
+HCP	Business
+┬
+〇│Private Sub UserForm_QueryClose(Cancel As Integer, CloseMode As Integer)	情報表示終了＜UF_InfoWebDisplay＞
+┴└┐
+　　│#  フォント監視停止
+　　◎ StopPollTimer	フォント監視停止＜ModuleFontSync＞
+　　┴End Sub

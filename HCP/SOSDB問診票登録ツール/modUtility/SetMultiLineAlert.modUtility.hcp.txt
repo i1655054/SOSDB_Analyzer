@@ -1,0 +1,28 @@
+Procedure: modUtility.SetMultiLineAlert  [ 複数行注意表示設定＜modUtility＞ ]
+HCP	Business
+┬
+〇│Public Sub SetMultiLineAlert(ByVal TargetRange As String)	複数行注意表示設定＜modUtility＞
+┴└┐
+　　＠┐With Range(TargetRange)
+　　│☆ On Error Resume Next
+　　││#  既存コメント削除
+　　│〇 .Comment.Delete
+　　│〇 .ClearComments
+　　│〇 .ClearCommentsThreaded
+　　│☆ On Error GoTo 0
+　　││#  改行有無確認
+　　│◆┐If InStr(CStr(.Value), vbLf) > 0 Then
+　　│││#  注意表示設定
+　　││〇 .Interior.color = RGB(255, 255, 150)
+　　│││#  強調表示設定
+　　││〇 .Font.Bold = True
+　　│││#  コメント追加
+　　││〇 .AddComment "■複数行データあり" & vbLf &  "・セルをダブルクリックしてください。"
+　　│├┐ELSE
+　　│││#  注意表示解除
+　　││◎ Call RestoreColor(TargetRange)	セル色復元＜modUtility＞
+　　│││#  強調解除
+　　││〇 .Font.Bold = False
+　　││┴End If
+　　│┴End With
+　　┴End Sub

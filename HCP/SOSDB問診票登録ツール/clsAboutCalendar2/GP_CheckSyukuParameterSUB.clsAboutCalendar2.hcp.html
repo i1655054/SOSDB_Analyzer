@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift_jis">
+<title>GP_CheckSyukuParameterSUB</title>
+<style>
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+colgroup col:nth-of-type(1) {}
+colgroup col:nth-of-type(2) {}
+.resize {position: relative;}
+.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+</style>
+</head>
+<body>
+<h1>GP_CheckSyukuParameterSUB</h1>
+<p>Module : clsAboutCalendar2</p>
+<p><a href="./_INDEX.html">← Module Index</a></p>
+<table>
+<colgroup><col/><col/></colgroup>
+<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<tbody>
+<tr><td>Procedure: clsAboutCalendar2.GP_CheckSyukuParameterSUB  [ 祝日パラメータ行検証＜clsAboutCalendar2＞ ]</td><td></td></tr>
+<tr><td>HCP</td><td>Business</td></tr>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Private Sub GPCheckSyukuParameterSUB(ByRef objParaSheet As Worksheet,  ByVal lngRow As Long,  ByRef lngPrevM As Long,  ByRef strMSG As String)</td><td>祝日パラメータ行検証＜clsAboutCalendar2＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　□ Const cnsError01 As String = "」が入力されていません。"</td><td></td></tr>
+<tr><td>　　□ Const cnsError02 As String = "」が数値ではありません。"</td><td></td></tr>
+<tr><td>　　□ Const cnsError03 As String = "」の値が有効範囲外です。"</td><td></td></tr>
+<tr><td>　　□ Const cnsError04 As String = "」は入力不要です。"</td><td></td></tr>
+<tr><td>　　□ Dim blnRowErr As Boolean                                        ' 行あたりエラー有無</td><td></td></tr>
+<tr><td>　　□ Dim lngValue As Long                                            ' 数値WORK</td><td></td></tr>
+<tr><td>　　□ Dim lngGatsu As Long                                            ' 月</td><td></td></tr>
+<tr><td>　　□ Dim lngSyoriKbn As Long                                         ' 処理区分</td><td></td></tr>
+<tr><td>　　□ Dim lngStrYear As Long                                          ' 開始年</td><td></td></tr>
+<tr><td>　　□ Dim lngEndYear As Long                                          ' 開始年</td><td></td></tr>
+<tr><td>　　□ Dim strRow As String                                            ' メッセージ補助</td><td></td></tr>
+<tr><td>　　〇 strRow = CStr(lngRow) &amp; "行目："</td><td></td></tr>
+<tr><td>　　＠┐With objParaSheet</td><td></td></tr>
+<tr><td>　　││#  月チェック</td><td></td></tr>
+<tr><td>　　│◆┐If Not FP_CheckNumber(.Cells(lngRow, 1), lngGatsu) Then</td><td></td></tr>
+<tr><td>　　││〇 blnRowErr = True</td><td></td></tr>
+<tr><td>　　││◎ Call GP_AppendMessage(strRow &amp; "「月" &amp; cnsError02, strMSG)</td><td>メッセージ追加＜clsAboutCalendar2＞</td></tr>
+<tr><td>　　│├┐ElseIf ((lngGatsu &lt; 1) Or (lngGatsu &gt; 12)) Then</td><td></td></tr>
+<tr><td>　　││〇 blnRowErr = True</td><td></td></tr>
+<tr><td>　　││◎ Call GP_AppendMessage(strRow &amp; "「月" &amp; cnsError03, strMSG)</td><td>メッセージ追加＜clsAboutCalendar2＞</td></tr>
+<tr><td>　　│├┐ElseIf lngGatsu &lt; lngPrevM Then</td><td></td></tr>
+<tr><td>　　││〇 blnRowErr = True</td><td></td></tr>
+<tr><td>　　││◎ Call GP_AppendMessage(strRow &amp; "「月」が昇順ではありません。", strMSG)</td><td>メッセージ追加＜clsAboutCalendar2＞</td></tr>
+<tr><td>　　│├┐ELSE</td><td></td></tr>
+<tr><td>　　││〇 lngPrevM = lngGatsu</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td>　　││#  処理区分チェック</td><td></td></tr>
+<tr><td>　　│◆┐If Not FP_CheckNumber(.Cells(lngRow, 2), lngSyoriKbn) Then</td><td></td></tr>
+<tr><td>　　││〇 blnRowErr = True</td><td></td></tr>
+<tr><td>　　││◎ Call GP_AppendMessage(strRow &amp; "「処理区分" &amp; cnsError02, strMSG)</td><td>メッセージ追加＜clsAboutCalendar2＞</td></tr>
+<tr><td>　　│├┐ElseIf (((lngSyoriKbn &lt; 0) Or (lngSyoriKbn &gt; 2)) And (lngSyoriKbn &lt;&gt; 9)) Then</td><td></td></tr>
+<tr><td>　　││〇 blnRowErr = True</td><td></td></tr>
+<tr><td>　　││◎ Call GP_AppendMessage(strRow &amp; "「処理区分" &amp; cnsError03, strMSG)</td><td>メッセージ追加＜clsAboutCalendar2＞</td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td>　　│◆┐If Not blnRowErr Then</td><td></td></tr>
+<tr><td>　　│││#  固定日設定チェック</td><td></td></tr>
+<tr><td>　　││◆┐If ((lngSyoriKbn = 0) Or (lngSyoriKbn = 2)) Then    ' ｢固定値｣</td><td></td></tr>
+<tr><td>　　│││◆┐If Not FP_CheckNumber(.Cells(lngRow, 3), lngValue) Then</td><td></td></tr>
+<tr><td>　　││││〇 blnRowErr = True</td><td></td></tr>
+<tr><td>　　││││◎ Call GP_AppendMessage(strRow &amp; "「[固定値]日" &amp; cnsError02, strMSG)</td><td>メッセージ追加＜clsAboutCalendar2＞</td></tr>
+<tr><td>　　│││├┐ElseIf lngValue &lt; 1 Then</td><td></td></tr>
+<tr><td>　　││││〇 blnRowErr = True</td><td></td></tr>
+<tr><td>　　││││◎ Call GP_AppendMessage(strRow &amp; "「[固定値]日" &amp; cnsError03, strMSG)</td><td>メッセージ追加＜clsAboutCalendar2＞</td></tr>
+<tr><td>　　│││├┐ELSE</td><td></td></tr>
+<tr><td>　　││││◆┐Select Case lngGatsu</td><td></td></tr>
+<tr><td>　　│││││├┐Case 4, 6, 9, 11</td><td></td></tr>
+<tr><td>　　││││││◆┐If lngValue &gt; 30 Then</td><td></td></tr>
+<tr><td>　　│││││││〇 blnRowErr = True</td><td></td></tr>
+<tr><td>　　│││││││◎ Call GP_AppendMessage(strRow &amp; "「[固定値]日" &amp; cnsError03, strMSG)</td><td>メッセージ追加＜clsAboutCalendar2＞</td></tr>
+<tr><td>　　│││││││┴End If</td><td></td></tr>
+<tr><td>　　│││││├┐Case Else</td><td></td></tr>
+<tr><td>　　││││││◆┐If lngValue &gt; 31 Then</td><td></td></tr>
+<tr><td>　　│││││││〇 blnRowErr = True</td><td></td></tr>
+<tr><td>　　│││││││◎ Call GP_AppendMessage(strRow &amp; "「[固定値]日" &amp; cnsError03, strMSG)</td><td>メッセージ追加＜clsAboutCalendar2＞</td></tr>
+<tr><td>　　│││││││┴End If</td><td></td></tr>
+<tr><td>　　│││││┴End Select</td><td></td></tr>
+<tr><td>　　││││Case 2</td><td></td></tr>
+<tr><td>　　││││◆┐If lngValue &gt; 28 Then</td><td></td></tr>
+<tr><td>　　│││││〇 blnRowErr = True</td><td></td></tr>
+<tr><td>　　│││││◎ Call GP_AppendMessage(strRow &amp; "「[固定値]日" &amp; cnsError03, strMSG)</td><td>メッセージ追加＜clsAboutCalendar2＞</td></tr>
+<tr><td>　　│││││┴End If</td><td></td></tr>
+<tr><td>　　││││┴End If</td><td></td></tr>
+<tr><td>　　│││◆┐If Not FP_CheckNumber(.Cells(lngRow, 4), lngValue) Then</td><td></td></tr>
+<tr><td>　　││││〇 blnRowErr = True</td><td></td></tr>
+<tr><td>　　││││◎ Call GP_AppendMessage(strRow &amp; "「[固定値]振替" &amp; cnsError02, strMSG)</td><td>メッセージ追加＜clsAboutCalendar2＞</td></tr>
+<tr><td>　　│││├┐ElseIf ((lngValue &lt; 0) Or (lngValue &gt; 1)) Then</td><td></td></tr>
+<tr><td>　　││││〇 blnRowErr = True</td><td></td></tr>
+<tr><td>　　││││◎ Call GP_AppendMessage(strRow &amp; "「[固定値]振替" &amp; cnsError03, strMSG)</td><td>メッセージ追加＜clsAboutCalendar2＞</td></tr>
+<tr><td>　　││││┴End If</td><td></td></tr>
+<tr><td>　　││││#  HappyMonday設定チェック</td><td></td></tr>
+<tr><td>　　│││◆┐If .Cells(lngRow, 5).Value &lt;&gt; "" Then</td><td></td></tr>
+<tr><td>　　││││〇 blnRowErr = True</td><td></td></tr>
+<tr><td>　　││││◎ Call GP_AppendMessage(strRow &amp; "「[HM]週数" &amp; cnsError04, strMSG)</td><td>メッセージ追加＜clsAboutCalendar2＞</td></tr>
+<tr><td>　　││││┴End If</td><td></td></tr>
+<tr><td>　　│││◆┐If .Cells(lngRow, 6).Value &lt;&gt; "" Then</td><td></td></tr>
+<tr><td>　　││││〇 blnRowErr = True</td><td></td></tr>
+<tr><td>　　││││◎ Call GP_AppendMessage(strRow &amp; "「[HM]曜日" &amp; cnsError04, strMSG)</td><td>メッセージ追加＜clsAboutCalendar2＞</td></tr>
+<tr><td>　　│││├┐ElseIf lngSyoriKbn = 1 Then                         ' ｢HM｣</td><td></td></tr>
+<tr><td>　　││││◆┐If Not FP_CheckNumber(.Cells(lngRow, 5), lngValue) Then</td><td></td></tr>
+<tr><td>　　│││││〇 blnRowErr = True</td><td></td></tr>
+<tr><td>　　│││││◎ Call GP_AppendMessage(strRow &amp; "「[HM]週数" &amp; cnsError02, strMSG)</td><td>メッセージ追加＜clsAboutCalendar2＞</td></tr>
+<tr><td>　　││││├┐ElseIf ((lngValue &lt; 1) Or (lngValue &gt; 5)) Then</td><td></td></tr>
+<tr><td>　　│││││〇 blnRowErr = True</td><td></td></tr>
+<tr><td>　　│││││◎ Call GP_AppendMessage(strRow &amp; "「[HM]週数" &amp; cnsError03, strMSG)</td><td>メッセージ追加＜clsAboutCalendar2＞</td></tr>
+<tr><td>　　│││││┴End If</td><td></td></tr>
+<tr><td>　　││││◆┐If Not FP_CheckNumber(.Cells(lngRow, 6), lngValue) Then</td><td></td></tr>
+<tr><td>　　│││││〇 blnRowErr = True</td><td></td></tr>
+<tr><td>　　│││││◎ Call GP_AppendMessage(strRow &amp; "「[HM]曜日" &amp; cnsError02, strMSG)</td><td>メッセージ追加＜clsAboutCalendar2＞</td></tr>
+<tr><td>　　││││├┐ElseIf ((lngValue &lt; 0) Or (lngValue &gt; 6)) Then</td><td></td></tr>
+<tr><td>　　│││││〇 blnRowErr = True</td><td></td></tr>
+<tr><td>　　│││││◎ Call GP_AppendMessage(strRow &amp; "「[HM]曜日" &amp; cnsError03, strMSG)</td><td>メッセージ追加＜clsAboutCalendar2＞</td></tr>
+<tr><td>　　│││││┴End If</td><td></td></tr>
+<tr><td>　　││││◆┐If .Cells(lngRow, 3).Value &lt;&gt; "" Then</td><td></td></tr>
+<tr><td>　　│││││〇 blnRowErr = True</td><td></td></tr>
+<tr><td>　　│││││◎ Call GP_AppendMessage(strRow &amp; "「[固定値]日" &amp; cnsError04, strMSG)</td><td>メッセージ追加＜clsAboutCalendar2＞</td></tr>
+<tr><td>　　│││││┴End If</td><td></td></tr>
+<tr><td>　　││││◆┐If .Cells(lngRow, 4).Value &lt;&gt; "" Then</td><td></td></tr>
+<tr><td>　　│││││〇 blnRowErr = True</td><td></td></tr>
+<tr><td>　　│││││◎ Call GP_AppendMessage(strRow &amp; "「[固定値]振替" &amp; cnsError04, strMSG)</td><td>メッセージ追加＜clsAboutCalendar2＞</td></tr>
+<tr><td>　　│││││┴End If</td><td></td></tr>
+<tr><td>　　││││┴End If</td><td></td></tr>
+<tr><td>　　│││┴End If</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td>　　││#  祝日名チェック</td><td></td></tr>
+<tr><td>　　│◆┐If Trim(.Cells(lngRow, 7).Value) = "" Then</td><td></td></tr>
+<tr><td>　　││〇 blnRowErr = True</td><td></td></tr>
+<tr><td>　　││◎ Call GP_AppendMessage(strRow &amp; "「祝日名" &amp; cnsError01, strMSG)</td><td>メッセージ追加＜clsAboutCalendar2＞</td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td>　　││#  開始年チェック</td><td></td></tr>
+<tr><td>　　│◆┐If Not FP_CheckNumber(.Cells(lngRow, 8), lngStrYear) Then</td><td></td></tr>
+<tr><td>　　││〇 blnRowErr = True</td><td></td></tr>
+<tr><td>　　││◎ Call GP_AppendMessage(strRow &amp; "「開始年" &amp; cnsError02, strMSG)</td><td>メッセージ追加＜clsAboutCalendar2＞</td></tr>
+<tr><td>　　│├┐ElseIf ((lngStrYear &lt; 0) Or (lngStrYear &gt; (Year(Date) + 3))) Then</td><td></td></tr>
+<tr><td>　　││〇 blnRowErr = True</td><td></td></tr>
+<tr><td>　　││◎ Call GP_AppendMessage(strRow &amp; "「開始年" &amp; cnsError03, strMSG)</td><td>メッセージ追加＜clsAboutCalendar2＞</td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td>　　││#  終了年チェック</td><td></td></tr>
+<tr><td>　　│◆┐If Not FP_CheckNumber(.Cells(lngRow, 9), lngEndYear) Then</td><td></td></tr>
+<tr><td>　　││〇 blnRowErr = True</td><td></td></tr>
+<tr><td>　　││◎ Call GP_AppendMessage(strRow &amp; "「終了年" &amp; cnsError02, strMSG)</td><td>メッセージ追加＜clsAboutCalendar2＞</td></tr>
+<tr><td>　　│├┐ElseIf ((lngEndYear &lt; 1948) Or (lngEndYear &gt; 9999)) Then</td><td></td></tr>
+<tr><td>　　││〇 blnRowErr = True</td><td></td></tr>
+<tr><td>　　││◎ Call GP_AppendMessage(strRow &amp; "「終了年" &amp; cnsError03, strMSG)</td><td>メッセージ追加＜clsAboutCalendar2＞</td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td>　　││#  有効期間チェック</td><td></td></tr>
+<tr><td>　　│◆┐If Not blnRowErr Then</td><td></td></tr>
+<tr><td>　　││◆┐If lngEndYear &lt; lngStrYear Then</td><td></td></tr>
+<tr><td>　　│││〇 blnRowErr = True</td><td></td></tr>
+<tr><td>　　│││◎ Call GP_AppendMessage(strRow &amp; "「有効年期間」が逆転しています。", strMSG)</td><td>メッセージ追加＜clsAboutCalendar2＞</td></tr>
+<tr><td>　　│││┴End If</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td>　　│┴End With</td><td></td></tr>
+<tr><td>　　┴End Sub</td><td></td></tr>
+</tbody>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function (eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function (e) {
+const styleTh = window.getComputedStyle(eleTh);
+const paddingLeft = parseFloat(styleTh.paddingLeft);
+const paddingRight = parseFloat(styleTh.paddingRight);
+const borderLeft = parseFloat(styleTh.borderLeftWidth);
+const borderRight = parseFloat(styleTh.borderRightWidth);
+startX = e.pageX;
+startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e) {
+const newWidth = startWidth + (e.pageX - startX);
+eleTh.style.width = newWidth + 'px';
+}
+function onMouseUp() {
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
+}
+});
+</script>
+</body>
+</html>

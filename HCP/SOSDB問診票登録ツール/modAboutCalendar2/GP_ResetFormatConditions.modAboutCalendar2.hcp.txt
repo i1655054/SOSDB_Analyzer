@@ -1,0 +1,30 @@
+Procedure: modAboutCalendar2.GP_ResetFormatConditions  [ 条件付き書式再構築＜modAboutCalendar2＞ ]
+HCP	Business
+┬
+〇│Public Sub GP_ResetFormatConditions(ByRef objParaSheet As Worksheet)	条件付き書式再構築＜modAboutCalendar2＞
+┴└┐
+　　□ Dim intReferenceStyleSV As Integer                              ' セル参照形式退避
+　　〇 intReferenceStyleSV = Application.ReferenceStyle
+　　〇 Application.ReferenceStyle = xlR1C1
+　　＠┐With objParaSheet
+　　│◆ If .FilterMode Then .ShowAllData
+　　│〇 .Cells.FormatConditions.Delete
+　　│＠┐With .Columns("A:J")
+　　││〇 .FormatConditions.Add Type:=xlExpression, Formula1:="=AND(ROW()>3,RC1<>R[-1]C1)"
+　　││＠┐With .FormatConditions(.FormatConditions.count)
+　　│││＠┐With .Borders(xlTop)
+　　││││〇 .LineStyle = xlContinuous
+　　││││〇 .ColorIndex = xlAutomatic
+　　││││〇 .TintAndShade = 0
+　　││││〇 .Weight = xlThin
+　　││││┴End With
+　　│││〇 .StopIfTrue = True
+　　│││┴End With
+　　││┴End With
+　　│┴End With
+　　＠┐With Application
+　　│◆┐If .ReferenceStyle <> intReferenceStyleSV Then
+　　││〇 .ReferenceStyle = intReferenceStyleSV
+　　││┴End If
+　　│┴End With
+　　┴End Sub

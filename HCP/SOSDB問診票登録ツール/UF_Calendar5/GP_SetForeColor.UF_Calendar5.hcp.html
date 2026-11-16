@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift_jis">
+<title>GP_SetForeColor</title>
+<style>
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+colgroup col:nth-of-type(1) {}
+colgroup col:nth-of-type(2) {}
+.resize {position: relative;}
+.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+</style>
+</head>
+<body>
+<h1>GP_SetForeColor</h1>
+<p>Module : UF_Calendar5</p>
+<p><a href="./_INDEX.html">← Module Index</a></p>
+<table>
+<colgroup><col/><col/></colgroup>
+<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<tbody>
+<tr><td>Procedure: UF_Calendar5.GP_SetForeColor  [ カレンダー表示色設定＜UF_Calendar5＞ ]</td><td></td></tr>
+<tr><td>HCP</td><td>Business</td></tr>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Private Sub GP_SetForeColor(ByVal lngPos As Long, ByVal dteCurDate As Date)</td><td>カレンダー表示色設定＜UF_Calendar5＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　□ Dim dteDate As Date                                             ' 日付Work</td><td></td></tr>
+<tr><td>　　□ Dim lngYear As Long                                             ' 現在年</td><td></td></tr>
+<tr><td>　　□ Dim lngMonth As Long                                            ' 現在月</td><td></td></tr>
+<tr><td>　　│#  表示属性初期化</td><td></td></tr>
+<tr><td>　　＠┐With g_tblDateLabel(lngPos)</td><td></td></tr>
+<tr><td>　　│〇 dteDate = .Hiduke</td><td></td></tr>
+<tr><td>　　│〇 lngYear = Year(dteDate)</td><td></td></tr>
+<tr><td>　　│〇 lngMonth = Month(dteDate)</td><td></td></tr>
+<tr><td>　　│〇 .Label.Font.Bold = False</td><td></td></tr>
+<tr><td>　　│〇 .Label.ForeColor = cnsFC_Normal</td><td></td></tr>
+<tr><td>　　││#  選択日判定</td><td></td></tr>
+<tr><td>　　│◆┐If dteDate = dteCurDate Then</td><td></td></tr>
+<tr><td>　　││〇 .Label.BackColor = cnsBC_Select</td><td></td></tr>
+<tr><td>　　│││#  選択日表示</td><td></td></tr>
+<tr><td>　　││〇 g_CurPos = lngPos</td><td></td></tr>
+<tr><td>　　│├┐ElseIf ((lngYear = g_intCurYear) And (lngMonth = g_intCurMonth)) Then   ' 当月内か</td><td></td></tr>
+<tr><td>　　│││#  当月日付表示</td><td></td></tr>
+<tr><td>　　││◆┐Select Case .Yobi</td><td></td></tr>
+<tr><td>　　│││├┐Case 0                  ' 日曜日</td><td></td></tr>
+<tr><td>　　││││〇 .Label.BackColor = cnsBC_Sunday</td><td></td></tr>
+<tr><td>　　│││├┐Case 6                  ' 土曜日</td><td></td></tr>
+<tr><td>　　││││〇 .Label.BackColor = cnsBC_Saturday</td><td></td></tr>
+<tr><td>　　│││├┐Case Else</td><td></td></tr>
+<tr><td>　　││││〇 .Label.BackColor = cnsBC_Month</td><td></td></tr>
+<tr><td>　　│││┴End Select</td><td></td></tr>
+<tr><td>　　│├┐ELSE</td><td></td></tr>
+<tr><td>　　│││#  他月日付表示</td><td></td></tr>
+<tr><td>　　││〇 .Label.BackColor = cnsBC_Other</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td>　　││#  祝日表示設定</td><td></td></tr>
+<tr><td>　　│◆┐If .Syuku &lt;&gt; 0 Then</td><td></td></tr>
+<tr><td>　　││〇 .Label.ForeColor = cnsFC_Hori</td><td></td></tr>
+<tr><td>　　││◆ If ((lngYear = g_intCurYear) And (lngMonth = g_intCurMonth)) Then .Label.Font.Bold = True</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td>　　│┴End With</td><td></td></tr>
+<tr><td>　　┴End Sub</td><td></td></tr>
+</tbody>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function (eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function (e) {
+const styleTh = window.getComputedStyle(eleTh);
+const paddingLeft = parseFloat(styleTh.paddingLeft);
+const paddingRight = parseFloat(styleTh.paddingRight);
+const borderLeft = parseFloat(styleTh.borderLeftWidth);
+const borderRight = parseFloat(styleTh.borderRightWidth);
+startX = e.pageX;
+startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e) {
+const newWidth = startWidth + (e.pageX - startX);
+eleTh.style.width = newWidth + 'px';
+}
+function onMouseUp() {
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
+}
+});
+</script>
+</body>
+</html>

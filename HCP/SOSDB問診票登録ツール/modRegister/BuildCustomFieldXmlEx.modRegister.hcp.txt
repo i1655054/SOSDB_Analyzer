@@ -1,0 +1,8 @@
+Procedure: modRegister.BuildCustomFieldXmlEx  [ カスタムフィールドXML要素生成＜modRegister＞ ]
+HCP	Business
+┬
+〇│Public Function BuildCustomFieldXmlEx(  ByVal fieldName As String,  ByVal fieldId As Long,  ByVal Value As String) As String	カスタムフィールドXML要素生成＜modRegister＞
+┴└┐
+　　│#  カスタムフィールドXML生成
+　　◎ BuildCustomFieldXmlEx =  "<custom_field id=""" & fieldId & """ name=""" & fieldName & """>" &  "<value>" & EscapeXML(Value) & "</value>" &  "</custom_field>"	XMLエスケープ＜XmlLoader＞
+　　┴End Function

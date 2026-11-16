@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift_jis">
+<title>CreateUpdateXmlFromIssue</title>
+<style>
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+colgroup col:nth-of-type(1) {}
+colgroup col:nth-of-type(2) {}
+.resize {position: relative;}
+.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+</style>
+</head>
+<body>
+<h1>CreateUpdateXmlFromIssue</h1>
+<p>Module : modRegister</p>
+<p><a href="./_INDEX.html">← Module Index</a></p>
+<table>
+<colgroup><col/><col/></colgroup>
+<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<tbody>
+<tr><td>Procedure: modRegister.CreateUpdateXmlFromIssue  [ 更新登録XML生成＜modRegister＞ ]</td><td></td></tr>
+<tr><td>HCP</td><td>Business</td></tr>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Public Function CreateUpdateXmlFromIssue(  ByVal newIssue As IssueInfo,  ByVal oldIssue As IssueInfo,  ByVal flags As Long) As String</td><td>更新登録XML生成＜modRegister＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　□ Dim xml As String</td><td></td></tr>
+<tr><td>　　│#  XML開始</td><td></td></tr>
+<tr><td>　　〇 xml = "&lt;?xml version=""1.0""?&gt;"</td><td></td></tr>
+<tr><td>　　〇 xml = xml &amp; "&lt;issue&gt;"</td><td></td></tr>
+<tr><td>　　│#  基本属性差分出力</td><td></td></tr>
+<tr><td>　　◆┐If (flags And flg_Status_Name) &lt;&gt; 0 Then</td><td></td></tr>
+<tr><td>　　│◎ xml = xml &amp; "&lt;status_id&gt;" &amp;  GetStatusId(newIssue.Status) &amp;  "&lt;/status_id&gt;"</td><td>ステータスID取得＜modIssueMapper＞</td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　◆┐If (flags And flg_Priority_Name) &lt;&gt; 0 Then</td><td></td></tr>
+<tr><td>　　│◎ xml = xml &amp; "&lt;priority_id&gt;" &amp;  GetPriorityId(newIssue.Priority) &amp;  "&lt;/priority_id&gt;"</td><td>優先度ID取得＜modIssueMapper＞</td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　◆┐If (flags And flg_Assigned_to_Name) &lt;&gt; 0 Then</td><td></td></tr>
+<tr><td>　　│◎ xml = xml &amp; "&lt;assigned_to_id&gt;" &amp;  GetUserId(newIssue.AssignedTo) &amp;  "&lt;/assigned_to_id&gt;"</td><td>ユーザーID取得＜modIssueMapper＞</td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　◆┐If (flags And flg_Target_Version) &lt;&gt; 0 Then</td><td></td></tr>
+<tr><td>　　│◎ xml = xml &amp; "&lt;fixed_version_id&gt;" &amp;  GetVersionId(newIssue.targetVersion) &amp;  "&lt;/fixed_version_id&gt;"</td><td>対象バージョンID取得＜modIssueMapper＞</td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　│#  本文差分出力</td><td></td></tr>
+<tr><td>　　◆┐If (flags And flg_Subject_Name) &lt;&gt; 0 Then</td><td></td></tr>
+<tr><td>　　│◎ xml = xml &amp; "&lt;subject&gt;" &amp;  EscapeXML(newIssue.Subject) &amp;  "&lt;/subject&gt;"</td><td>XMLエスケープ＜XmlLoader＞</td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　◆┐If (flags And flg_Description) &lt;&gt; 0 Then</td><td></td></tr>
+<tr><td>　　│◎ xml = xml &amp; "&lt;description&gt;" &amp;  EscapeXML(newIssue.Description) &amp;  "&lt;/description&gt;"</td><td>XMLエスケープ＜XmlLoader＞</td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　│#  カスタムフィールド差分出力</td><td></td></tr>
+<tr><td>　　◎ xml = xml &amp; BuildCustomFieldsXmlDiff(newIssue, flags)</td><td>差分カスタムフィールドXML生成＜modRegister＞</td></tr>
+<tr><td>　　│#  XML終了</td><td></td></tr>
+<tr><td>　　〇 xml = xml &amp; "&lt;/issue&gt;"</td><td></td></tr>
+<tr><td>　　│#  XML返却</td><td></td></tr>
+<tr><td>　　〇 CreateUpdateXmlFromIssue = xml</td><td></td></tr>
+<tr><td>　　┴End Function</td><td></td></tr>
+</tbody>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function (eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function (e) {
+const styleTh = window.getComputedStyle(eleTh);
+const paddingLeft = parseFloat(styleTh.paddingLeft);
+const paddingRight = parseFloat(styleTh.paddingRight);
+const borderLeft = parseFloat(styleTh.borderLeftWidth);
+const borderRight = parseFloat(styleTh.borderRightWidth);
+startX = e.pageX;
+startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e) {
+const newWidth = startWidth + (e.pageX - startX);
+eleTh.style.width = newWidth + 'px';
+}
+function onMouseUp() {
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
+}
+});
+</script>
+</body>
+</html>

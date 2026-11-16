@@ -1,0 +1,36 @@
+Procedure: clsAboutCalendar2.GP_UpdateHolidayToCalendar  [ 祝日反映処理＜clsAboutCalendar2＞ ]
+HCP	Business
+┬
+〇│Private Sub GPUpdateHolidayToCalendar(ByVal lngY As Long,  ByVal lngM As Long,  ByVal lngCalStrIx As Long,  ByRef lngFuriDIxMax As Long,  ByRef tblFuriDIx() As gtypFuriDIx,  ByRef tblCalendar() As g_typAboutCalendar2)	祝日反映処理＜clsAboutCalendar2＞
+┴└┐
+　　□ Dim lngIxS_Str As Long                                          ' 祝日テーブル当月開始位置
+　　□ Dim lngIxS_End As Long                                          ' 祝日テーブル当月終了位置
+　　□ Dim lngIxSyuku As Long                                          ' 祝日テーブルテーブルINDEX
+　　│#  当月祝日範囲取得
+　　〇 lngIxS_Str = g_tblParamMMPos(lngM).StrIx
+　　〇 lngIxS_End = g_tblParamMMPos(lngM).EndIx
+　　│#  祝日パラメータ走査
+　　＠┐For lngIxSyuku = lngIxS_Str To lngIxS_End
+　　│＠┐With g_tblParamater(lngIxSyuku)
+　　│││#  有効年判定
+　　││◆┐If ((.StrYear <= lngY) And (.EndYear >= lngY)) Then
+　　││││#  処理区分判定
+　　│││◆┐Select Case .SyoriKbn
+　　││││├┐Case 0                          ' 固定日
+　　│││││◎ Call GP_UpdateHolidaySUB1(.Hiduke,  .SyukuNm,  1,  .FurikaeKbn,  lngCalStrIx,  lngIxSyuku,  lngFuriDIxMax,  tblFuriDIx,  tblCalendar)	固定日祝日設定＜clsAboutCalendar2＞
+　　││││├┐Case 1                          ' HappyMonday
+　　│││││◎ Call GP_UpdateHolidaySUB2(.HmSyusu,  .HmYobi,  .SyukuNm,  1,  .FurikaeKbn,  lngCalStrIx,  lngIxSyuku,  lngFuriDIxMax,  tblFuriDIx,  tblCalendar)	HappyMonday祝日設定＜clsAboutCalendar2＞
+　　││││├┐Case 2                          ' 固定日(会社休日)
+　　│││││◎ Call GP_UpdateHolidaySUB1(.Hiduke,  .SyukuNm,  3,  .FurikaeKbn,  lngCalStrIx,  lngIxSyuku,  lngFuriDIxMax,  tblFuriDIx,  tblCalendar)	固定日祝日設定＜clsAboutCalendar2＞
+　　││││├┐Case 9                          ' 特殊処理
+　　│││││◆┐If lngM = 3 Then
+　　││││││◎ Call GP_GetSyunbun(lngY,  lngCalStrIx,  lngIxSyuku,  lngFuriDIxMax,  tblFuriDIx,  tblCalendar)	春分の日算出＜clsAboutCalendar2＞
+　　│││││├┐ElseIf lngM = 9 Then
+　　││││││◎ Call GP_GetSyuubun(lngY,  lngCalStrIx,  lngIxSyuku,  lngFuriDIxMax,  tblFuriDIx,  tblCalendar)	秋分の日算出＜clsAboutCalendar2＞
+　　││││││〇 Else ' 他月は無視
+　　││││││┴End If
+　　││││┴End Select
+　　│││┴End If
+　　││┴End With
+　　│┴Next lngIxSyuku
+　　┴End Sub

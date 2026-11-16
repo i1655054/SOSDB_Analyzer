@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift_jis">
+<title>GP_GetScreenPos</title>
+<style>
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+colgroup col:nth-of-type(1) {}
+colgroup col:nth-of-type(2) {}
+.resize {position: relative;}
+.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+</style>
+</head>
+<body>
+<h1>GP_GetScreenPos</h1>
+<p>Module : modCalendar5</p>
+<p><a href="./_INDEX.html">← Module Index</a></p>
+<table>
+<colgroup><col/><col/></colgroup>
+<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<tbody>
+<tr><td>Procedure: modCalendar5.GP_GetScreenPos  [ 画面有効領域取得＜modCalendar5＞ ]</td><td></td></tr>
+<tr><td>HCP</td><td>Business</td></tr>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Private Sub GPGetScreenPos(ByRef lngScreenLeft As Long,  ByRef lngScreenTop As Long,  ByRef lngScreenRight As Long,  ByRef lngScreenBottom As Long)</td><td>画面有効領域取得＜modCalendar5＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　□ Dim lngWidth As Long                                            ' スクリーンの幅</td><td></td></tr>
+<tr><td>　　□ Dim lngHeight As Long                                           ' スクリーンの高さ①</td><td></td></tr>
+<tr><td>　　□ Dim lngHeight2 As Long                                          ' スクリーンの高さ②</td><td></td></tr>
+<tr><td>　　□ Dim lngHeight3 As Long                                          ' スクリーンの高さ③</td><td></td></tr>
+<tr><td>　　□ Dim objRect As g_typRect                                        ' Rect</td><td></td></tr>
+<tr><td>　　〇 lngScreenLeft = GetSystemMetrics(SM_XVIRTUALSCREEN)         ' 左端</td><td></td></tr>
+<tr><td>　　〇 lngScreenTop = GetSystemMetrics(SM_YVIRTUALSCREEN)          ' 上端</td><td></td></tr>
+<tr><td>　　〇 lngWidth = GetSystemMetrics(SM_CXVIRTUALSCREEN)             ' 幅(仮想スクリーン域)</td><td></td></tr>
+<tr><td>　　〇 lngHeight = GetSystemMetrics(SM_CYVIRTUALSCREEN)            ' 高さ(仮想スクリーン域)</td><td></td></tr>
+<tr><td>　　〇 lngHeight2 = GetSystemMetrics(SM_CYSCREEN)                  ' 高さ(メインスクリーンのみ)</td><td></td></tr>
+<tr><td>　　〇 Call SystemParametersInfo(SPI_GETWORKAREA, 0, objRect, 0)</td><td></td></tr>
+<tr><td>　　〇 lngHeight3 = objRect.Bottom - objRect.Top                   ' 高さ(メインのタスクバー以外の分)</td><td></td></tr>
+<tr><td>　　〇 lngHeight = lngHeight - (lngHeight2 - lngHeight3)</td><td></td></tr>
+<tr><td>　　〇 lngScreenRight = lngWidth - lngScreenLeft</td><td></td></tr>
+<tr><td>　　〇 lngScreenBottom = lngHeight - lngScreenTop</td><td></td></tr>
+<tr><td>　　┴End Sub</td><td></td></tr>
+</tbody>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function (eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function (e) {
+const styleTh = window.getComputedStyle(eleTh);
+const paddingLeft = parseFloat(styleTh.paddingLeft);
+const paddingRight = parseFloat(styleTh.paddingRight);
+const borderLeft = parseFloat(styleTh.borderLeftWidth);
+const borderRight = parseFloat(styleTh.borderRightWidth);
+startX = e.pageX;
+startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e) {
+const newWidth = startWidth + (e.pageX - startX);
+eleTh.style.width = newWidth + 'px';
+}
+function onMouseUp() {
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
+}
+});
+</script>
+</body>
+</html>

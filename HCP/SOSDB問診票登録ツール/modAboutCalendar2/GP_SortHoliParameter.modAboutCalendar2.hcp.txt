@@ -1,0 +1,31 @@
+Procedure: modAboutCalendar2.GP_SortHoliParameter  [ 祝日パラメータ並替＜modAboutCalendar2＞ ]
+HCP	Business
+┬
+〇│Public Sub GP_SortHoliParameter(ByRef objParaSheet As Worksheet)	祝日パラメータ並替＜modAboutCalendar2＞
+┴└┐
+　　□ Dim lngRow As Long                                              ' 行INDEX
+　　□ Dim lngRowMax As Long                                           ' 行INDEX上限
+　　＠┐With objParaSheet
+　　│◆ If .FilterMode Then .ShowAllData
+　　│〇 lngRowMax = .Range("$A$" & .Rows.count).End(xlUp).row
+　　│〇 .Columns("$K").ClearContents
+　　│〇 lngRow = 3
+　　│＠┐Do While lngRow <= lngRowMax
+　　││◆┐Select Case .Cells(lngRow, 2).Value
+　　│││├┐Case 0, 2                                   ' 固定日
+　　││││〇 .Cells(lngRow, 11).Value = .Cells(lngRow, 3).Value
+　　│││├┐Case 1                                      ' HappyMonday
+　　││││〇 .Cells(lngRow, 11).Value = .Cells(lngRow, 5).Value * 7
+　　│││├┐Case Else                                   ' 特殊
+　　││││◆┐If .Cells(lngRow, 1).Value = 3 Then
+　　│││││〇 .Cells(lngRow, 11).Value = 20
+　　││││├┐ELSE
+　　│││││〇 .Cells(lngRow, 11).Value = 23
+　　│││││┴End If
+　　│││┴End Select
+　　││〇 lngRow = lngRow + 1
+　　││┴Loop
+　　│〇 .Range("$A$3:$K$" & lngRowMax).Sort  Key1:=.Range("$A$3"), Order1:=xlAscending,  Key2:=.Range("$K$3"), Order1:=xlAscending,  header:=xlNo, Orientation:=xlTopToBottom, SortMethod:=xlCodePage
+　　│〇 .Columns("$K").ClearContents
+　　│┴End With
+　　┴End Sub

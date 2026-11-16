@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift_jis">
+<title>XmlLoader</title>
+<style>
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.5;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+colgroup col:nth-of-type(1) {}
+colgroup col:nth-of-type(2) {}
+.resize {position: relative;}
+.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+</style>
+</head>
+<body>
+<p><a href="../_INDEX.html">← Tool Index</a></p>
+<h1>XmlLoader</h1>
+<p>Procedure Count : 6</p>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Status</th><th>Updated</th></tr>
+<tr><td><a href="GetXmlData.XmlLoader.hcp.html">GetXmlData</a></td><td>XML取得</td><td>[OK]</td><td>2026/11/13 17:13:44</td></tr>
+<tr><td><a href="PostXmlData.XmlLoader.hcp.html">PostXmlData</a></td><td>新規登録送信</td><td>[OK]</td><td>2026/11/13 17:13:48</td></tr>
+<tr><td><a href="SendXmlData.XmlLoader.hcp.html">SendXmlData</a></td><td>更新送信</td><td>[OK]</td><td>2026/11/13 17:13:52</td></tr>
+<tr><td><a href="ExecuteRedmineRequest.XmlLoader.hcp.html">ExecuteRedmineRequest</a></td><td>Redmine通信実行</td><td>[OK]</td><td>2026/11/13 17:13:57</td></tr>
+<tr><td><a href="EscapeXML.XmlLoader.hcp.html">EscapeXML</a></td><td>XMLエスケープ</td><td>[OK]</td><td>2026/11/13 17:14:00</td></tr>
+<tr><td><a href="UnescapeXML.XmlLoader.hcp.html">UnescapeXML</a></td><td>XMLデコード</td><td>[OK]</td><td>2026/11/13 17:14:03</td></tr>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function (eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function (e) {
+const styleTh = window.getComputedStyle(eleTh);
+const paddingLeft = parseFloat(styleTh.paddingLeft);
+const paddingRight = parseFloat(styleTh.paddingRight);
+const borderLeft = parseFloat(styleTh.borderLeftWidth);
+const borderRight = parseFloat(styleTh.borderRightWidth);
+startX = e.pageX;
+startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e) {
+const newWidth = startWidth + (e.pageX - startX);
+eleTh.style.width = newWidth + 'px';
+}
+function onMouseUp() {
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
+}
+});
+</script>
+</body>
+</html>

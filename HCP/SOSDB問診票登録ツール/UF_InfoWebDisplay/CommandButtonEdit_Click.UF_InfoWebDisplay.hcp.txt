@@ -1,0 +1,19 @@
+Procedure: UF_InfoWebDisplay.CommandButtonEdit_Click  [ 編集モード切替＜UF_InfoWebDisplay＞ ]
+HCP	Business
+┬
+〇│Private Sub CommandButtonEdit_Click()	編集モード切替＜UF_InfoWebDisplay＞
+┴└┐
+　　│#  編集モード切替
+　　〇 m_IsEditing = Not m_IsEditing
+　　│#  編集開始
+　　◆┐If m_IsEditing Then
+　　│◎ ToggleEditMode True	編集モード切替処理＜UF_InfoWebDisplay＞
+　　│〇 Me.CommandButtonEdit.Caption = "編集終了"
+　　├┐ELSE
+　　││#  編集終了
+　　│◎ ToggleEditMode False	編集モード切替処理＜UF_InfoWebDisplay＞
+　　││#  編集内容保存
+　　│◎ SaveEditedTextIntoVba         ' ← A方式：テキストで取り込み	編集内容保存＜UF_InfoWebDisplay＞
+　　│〇 Me.CommandButtonEdit.Caption = "編集"
+　　│┴End If
+　　┴End Sub

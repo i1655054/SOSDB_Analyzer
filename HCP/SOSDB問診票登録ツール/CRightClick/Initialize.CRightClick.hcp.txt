@@ -1,0 +1,23 @@
+Procedure: CRightClick.Initialize  [ 右クリック機能初期化＜CRightClick＞ ]
+HCP	Business
+┬
+〇│Sub Initialize(fm As Object)	右クリック機能初期化＜CRightClick＞
+┴└┐
+　　□ Dim cc As CRightClick, bx As Object
+　　☆ On Error Resume Next
+　　│#  管理コレクション生成
+　　〇 Set dbox = New Collection
+　　│#  コントロール走査
+　　＠┐For Each bx In fm.Controls
+　　││#  対象コントロール判定
+　　│◆┐Select Case TypeName(bx)
+　　││├┐Case "TextBox", "ComboBox"
+　　││││#  右クリック管理オブジェクト生成
+　　│││〇 Set cc = New CRightClick
+　　││││#  イベント関連付け
+　　│││◆ If TypeName(bx) = "TextBox" Then Set cc.Tb = bx Else Set cc.Cb = bx
+　　││││#  管理コレクション登録
+　　│││〇 dbox.Add cc
+　　││┴End Select
+　　│┴Next
+　　┴End Sub

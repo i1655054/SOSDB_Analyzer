@@ -1,0 +1,8 @@
+Procedure: modUtility.chk_Target  [ 対象バージョン確認＜modUtility＞ ]
+HCP	Business
+┬
+〇│Public Function chk_Target(issue As IssueInfo) As Boolean	対象バージョン確認＜modUtility＞
+┴└┐
+　　│#  対象バージョン入力確認
+　　◎ chk_Target = ValidateAndHighlight(  issue.targetVersion,  TARGET_VER_RANG,  COLOR_REQUIRED,  "対象バージョン")        ' 赤系	入力確認強調表示＜modUtility＞
+　　┴End Function

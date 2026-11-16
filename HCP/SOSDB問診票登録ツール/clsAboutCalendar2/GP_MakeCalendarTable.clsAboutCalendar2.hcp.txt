@@ -1,0 +1,43 @@
+Procedure: clsAboutCalendar2.GP_MakeCalendarTable  [ 日付テーブル生成＜clsAboutCalendar2＞ ]
+HCP	Business
+┬
+〇│Private Sub GPMakeCalendarTable(ByVal lngY As Long,  ByVal lngM As Long,  ByRef lngCalIxMax As Long,  ByRef tblCalendar() As g_typAboutCalendar2)	日付テーブル生成＜clsAboutCalendar2＞
+┴└┐
+　　□ Dim dteStrDate As Date                                          ' 月初日
+　　□ Dim dteEndDate As Date                                          ' 月末日
+　　□ Dim dteDate As Date                                             ' 作業日付
+　　□ Dim lngSyusu As Long                                            ' 週数(1始まり､日曜日発見で1加算)
+　　□ Dim lngHmSyusu As Long                                          ' HM週数(0始まり､月曜日発見で1加算)
+　　□ Dim lngCalIxMax2 As Long                                        '
+　　│#  月初月末算出
+　　〇 dteStrDate = DateSerial(lngY, lngM, 1)
+　　〇 dteEndDate = DateSerial(lngY, lngM + 1, 0)
+　　〇 lngCalIxMax2 = lngCalIxMax + Day(dteEndDate)
+　　│#  テーブル領域確保
+　　〇 ReDim Preserve tblCalendar(lngCalIxMax2)
+　　〇 dteDate = dteStrDate
+　　│#  週数初期化
+　　◆┐If Weekday(dteStrDate, vbSunday) = vbSunday Then
+　　│〇 lngSyusu = 0
+　　├┐ELSE
+　　│〇 lngSyusu = 1
+　　│┴End If
+　　│#  日付テーブル生成
+　　＠┐Do While dteDate <= dteEndDate
+　　│〇 lngCalIxMax = lngCalIxMax + 1
+　　│＠┐With tblCalendar(lngCalIxMax)
+　　│││#  日付情報設定
+　　││〇 .Hiduke = dteDate
+　　│││#  曜日設定
+　　││〇 .Yobi = Weekday(dteDate, vbSunday) - 1      ' ←日曜日=0とする値(VBAのWeekdayは1になる)
+　　│││#  週数設定
+　　││◆ If .Yobi = 0 Then lngSyusu = lngSyusu + 1
+　　│││#  HappyMonday週数設定
+　　││◆ If .Yobi = 1 Then lngHmSyusu = lngHmSyusu + 1
+　　││〇 .Syusu = lngSyusu
+　　││〇 .HmSyusu = lngHmSyusu
+　　││┴End With
+　　││#  次日設定
+　　│〇 dteDate = dteDate + 1
+　　│┴Loop
+　　┴End Sub

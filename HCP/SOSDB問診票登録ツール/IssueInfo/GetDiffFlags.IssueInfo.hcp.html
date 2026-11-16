@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift_jis">
+<title>GetDiffFlags</title>
+<style>
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+colgroup col:nth-of-type(1) {}
+colgroup col:nth-of-type(2) {}
+.resize {position: relative;}
+.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+</style>
+</head>
+<body>
+<h1>GetDiffFlags</h1>
+<p>Module : IssueInfo</p>
+<p><a href="./_INDEX.html">← Module Index</a></p>
+<table>
+<colgroup><col/><col/></colgroup>
+<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<tbody>
+<tr><td>Procedure: IssueInfo.GetDiffFlags  [ 差分フラグ取得＜IssueInfo＞ ]</td><td></td></tr>
+<tr><td>HCP</td><td>Business</td></tr>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Public Function GetDiffFlags(other As IssueInfo) As Long</td><td>差分フラグ取得＜IssueInfo＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　□ Dim result As Long</td><td></td></tr>
+<tr><td>　　〇 result = 0</td><td></td></tr>
+<tr><td>　　│#  基本項目差分判定</td><td></td></tr>
+<tr><td>　　◆┐If Me.Subject &lt;&gt; other.Subject Then</td><td></td></tr>
+<tr><td>　　│〇 result = result Or flg_Subject_Name</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　◆┐If Me.Description &lt;&gt; other.Description Then</td><td></td></tr>
+<tr><td>　　│〇 result = result Or flg_Description</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　◆┐If Me.Status &lt;&gt; other.Status Then</td><td></td></tr>
+<tr><td>　　│〇 result = result Or flg_Status_Name</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　◆┐If Me.Priority &lt;&gt; other.Priority Then</td><td></td></tr>
+<tr><td>　　│〇 result = result Or flg_Priority_Name</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　◆┐If Me.AuthorName &lt;&gt; other.AuthorName Then</td><td></td></tr>
+<tr><td>　　│〇 result = result Or flg_Author_Name</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　◆┐If Me.AssignedTo &lt;&gt; other.AssignedTo Then</td><td></td></tr>
+<tr><td>　　│〇 result = result Or flg_Assigned_to_Name</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　◆┐If Me.targetVersion &lt;&gt; other.targetVersion Then</td><td></td></tr>
+<tr><td>　　│〇 result = result Or flg_Target_Version</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　│#  カスタムフィールド差分判定</td><td></td></tr>
+<tr><td>　　◆┐If Me.OccurrenceDateTime &lt;&gt; other.OccurrenceDateTime Then</td><td></td></tr>
+<tr><td>　　│〇 result = result Or flg_OccurrenceDateTime</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　◆┐If Me.ProblemBuilding &lt;&gt; other.ProblemBuilding Then</td><td></td></tr>
+<tr><td>　　│〇 result = result Or flg_ProblemBuilding</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　◆┐If Me.HostName &lt;&gt; other.HostName Then</td><td></td></tr>
+<tr><td>　　│〇 result = result Or flg_HostName</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　◆┐If Me.Phenomenon &lt;&gt; other.Phenomenon Then</td><td></td></tr>
+<tr><td>　　│〇 result = result Or flg_Phenomenon</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　◆┐If Me.CauseDetail &lt;&gt; other.CauseDetail Then</td><td></td></tr>
+<tr><td>　　│〇 result = result Or flg_Cause</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　◆┐If Me.Mondainum_Pro &lt;&gt; other.Mondainum_Pro Then</td><td></td></tr>
+<tr><td>　　│〇 result = result Or flg_Mondainum_Pro</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　◆┐If Me.Remarks &lt;&gt; other.Remarks Then</td><td></td></tr>
+<tr><td>　　│〇 result = result Or flg_Remarks</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　◆┐If Me.Esukare_Date &lt;&gt; other.Esukare_Date Then</td><td></td></tr>
+<tr><td>　　│〇 result = result Or flg_Esukare_Date</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　◆┐If Me.Close_Date &lt;&gt; other.Close_Date Then</td><td></td></tr>
+<tr><td>　　│〇 result = result Or flg_Close_Date</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　◆┐If Me.Requester_Pro &lt;&gt; other.Requester_Pro Then</td><td></td></tr>
+<tr><td>　　│〇 result = result Or flg_Requester_Pro</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　◆┐If Me.ServiceImpact &lt;&gt; other.ServiceImpact Then</td><td></td></tr>
+<tr><td>　　│〇 result = result Or flg_ServiceImpact</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　◆┐If Me.TroubleNum &lt;&gt; other.TroubleNum Then</td><td></td></tr>
+<tr><td>　　│〇 result = result Or flg_TroubleNum</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　◆┐If Me.Equipment &lt;&gt; other.Equipment Then</td><td></td></tr>
+<tr><td>　　│〇 result = result Or flg_Equipment</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　◆┐If Me.Countermeasure &lt;&gt; other.Countermeasure Then</td><td></td></tr>
+<tr><td>　　│〇 result = result Or flg_Cope</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　◆┐If Me.RequesterNum &lt;&gt; other.RequesterNum Then</td><td></td></tr>
+<tr><td>　　│〇 result = result Or flg_RequesterNum</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　◆┐If Me.ProductTantou &lt;&gt; other.ProductTantou Then</td><td></td></tr>
+<tr><td>　　│〇 result = result Or flg_ProductTantou</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　◆┐If Me.KihensinName_Date &lt;&gt; other.KihensinName_Date Then</td><td></td></tr>
+<tr><td>　　│〇 result = result Or flg_KihensinName_Date</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　◆┐If Me.Key_Word &lt;&gt; other.Key_Word Then</td><td></td></tr>
+<tr><td>　　│〇 result = result Or flg_Key_Word</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　◆┐If Me.EqProduct &lt;&gt; other.EqProduct Then</td><td></td></tr>
+<tr><td>　　│〇 result = result Or flg_EqProduct</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　│#  差分フラグ返却</td><td></td></tr>
+<tr><td>　　〇 GetDiffFlags = result</td><td></td></tr>
+<tr><td>　　┴End Function</td><td></td></tr>
+</tbody>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function (eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function (e) {
+const styleTh = window.getComputedStyle(eleTh);
+const paddingLeft = parseFloat(styleTh.paddingLeft);
+const paddingRight = parseFloat(styleTh.paddingRight);
+const borderLeft = parseFloat(styleTh.borderLeftWidth);
+const borderRight = parseFloat(styleTh.borderRightWidth);
+startX = e.pageX;
+startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e) {
+const newWidth = startWidth + (e.pageX - startX);
+eleTh.style.width = newWidth + 'px';
+}
+function onMouseUp() {
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
+}
+});
+</script>
+</body>
+</html>

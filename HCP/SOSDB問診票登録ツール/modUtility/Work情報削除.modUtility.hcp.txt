@@ -1,0 +1,12 @@
+Procedure: modUtility.Work情報削除  [ ワーク情報削除＜modUtility＞ ]
+HCP	Business
+┬
+〇│Sub Work情報削除()	ワーク情報削除＜modUtility＞
+┴└┐
+　　│#  入力セル初期化
+　　◎ Call Clear_InputCellDat(True)	入力セル初期化＜modUtility＞
+　　│#  ワークファイル削除
+　　◎ Call Clear_WorkFile	ワークファイル削除＜modUtility＞
+　　│#  カーソル位置初期化
+　　〇 Range(TARGET_VER_RANG).Select
+　　┴End Sub

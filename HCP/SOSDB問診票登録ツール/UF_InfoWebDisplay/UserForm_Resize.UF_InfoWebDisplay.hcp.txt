@@ -1,0 +1,69 @@
+Procedure: UF_InfoWebDisplay.UserForm_Resize  [ フォームサイズ変更＜UF_InfoWebDisplay＞ ]
+HCP	Business
+┬
+〇│Private Sub UserForm_Resize()	フォームサイズ変更＜UF_InfoWebDisplay＞
+┴└┐
+　　◆┐If Not m_IsRestoring Then
+　　││#  サイズ保存
+　　│◎ SaveCurrentSize	フォームサイズ保存＜UF_InfoWebDisplay＞
+　　│┴End If
+　　│#  フォントサイズ取得
+　　〇 FontSize = SpinButton1.Value
+　　＠┐With Me.Label1
+　　│〇 .Top = margin
+　　│〇 .Left = margin
+　　│┴End With
+　　◆┐If Me.Height < 9 * margin Then
+　　│→ Exit Sub
+　　│┴End If
+　　│#  フレーム再配置
+　　＠┐With Me.Frame1
+　　│〇 .Top = 3 * margin
+　　│〇 .Left = margin
+　　│〇 .Width = Me.Width - (3 * margin)
+　　│〇 .Height = Me.Height - (9 * margin)
+　　│┴End With
+　　│#  WebBrowser再配置
+　　＠┐With Me.WebBrowser1
+　　│〇 .Top = 1
+　　│〇 .Left = 1
+　　│〇 .Width = Me.Frame1.Width - 2
+　　│〇 .Height = Me.Frame1.Height - 2
+　　│┴End With
+　　│#  ボタン再配置
+　　＠┐With Me.CommandButton1
+　　│〇 .Top = Me.Frame1.Top + Me.Frame1.Height + margin
+　　│〇 .Left = Me.Frame1.Left + Me.Frame1.Width - btWidth
+　　│〇 .Height = btHeight          'UF_InfoDisplay内のCommandButton1の高さ 18インチ
+　　│〇 .Width = btWidth            'UF_InfoDisplay内のCommandButton1の長さ 66インチ
+　　│┴End With
+　　＠┐With Me.CommandButtonEdit
+　　│〇 .Top = Me.Frame1.Top + Me.Frame1.Height + margin
+　　│〇 .Left = Me.Frame1.Left + Me.Frame1.Width - 2 * btWidth - 10
+　　│〇 .Height = btHeight          'UF_InfoDisplay内のCommandButton1の高さ 18インチ
+　　│〇 .Width = btWidth            'UF_InfoDisplay内のCommandButton1の長さ 66インチ
+　　│┴End With
+　　＠┐With Me.CommandButton2
+　　│〇 .Top = Me.Frame1.Top + Me.Frame1.Height + margin
+　　│〇 .Left = margin
+　　│┴End With
+　　│#  フォント操作部再配置
+　　＠┐With Me.SpinButton1
+　　│〇 .Top = margin - 4
+　　│〇 .Left = Me.Frame1.Left + Me.Frame1.Width - 2 * margin
+　　│┴End With
+　　＠┐With Me.Label2
+　　│〇 .Top = margin
+　　│〇 .Left = Me.Frame1.Left + Me.Frame1.Width - (2 * margin + Me.Label2.Width + Me.SpinButton1.Width)
+　　│〇 .Caption = FontSize
+　　│┴End With
+　　＠┐With Me.Label3
+　　│〇 .Top = margin
+　　│〇 .Left = Me.Frame1.Left + Me.Frame1.Width - (2 * margin + Me.Label3.Width + Me.Label2.Width + Me.SpinButton1.Width)
+　　│〇 .Caption = "文字サイズ:"
+　　│┴End With
+　　＠┐With Label4
+　　│〇 .Top = Me.Frame1.Top + Me.Frame1.Height + margin
+　　│〇 .Left = Frame1.Width / 2 - Label4.Width / 2
+　　│┴End With
+　　┴End Sub

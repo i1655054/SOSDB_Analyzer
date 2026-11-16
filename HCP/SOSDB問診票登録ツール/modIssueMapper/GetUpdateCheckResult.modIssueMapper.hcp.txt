@@ -1,0 +1,89 @@
+Procedure: modIssueMapper.GetUpdateCheckResult  [ 更新差分判定＜modIssueMapper＞ ]
+HCP	Business
+┬
+〇│Public Function GetUpdateCheckResult(  ByVal newIssue As IssueInfo,  ByVal oldIssue As IssueInfo) As Long	更新差分判定＜modIssueMapper＞
+┴└┐
+　　│#  判定結果初期化
+　　□ Dim result As Long
+　　〇 result = 0
+　　│#  基本情報差分判定
+　　◆┐If IsChanged(newIssue.Subject, oldIssue.Subject) Then
+　　│〇 result = result Or flg_Subject_Name
+　　│┴End If
+　　◆┐If IsChangedDescription(newIssue.Description, oldIssue.Description) Then
+　　│〇 result = result Or flg_Description
+　　│┴End If
+　　◆┐If IsChanged(newIssue.Status, oldIssue.Status) Then
+　　│〇 result = result Or flg_Status_Name
+　　│┴End If
+　　◆┐If IsChanged(newIssue.Priority, oldIssue.Priority) Then
+　　│〇 result = result Or flg_Priority_Name
+　　│┴End If
+　　◆┐If IsChanged(newIssue.AssignedTo, oldIssue.AssignedTo) Then
+　　│〇 result = result Or flg_Assigned_to_Name
+　　│┴End If
+　　◆┐If IsChanged(newIssue.targetVersion, oldIssue.targetVersion) Then
+　　│〇 result = result Or flg_Target_Version
+　　│┴End If
+　　│#  問診情報差分判定
+　　◆┐If IsChanged(newIssue.OccurrenceDateTime, oldIssue.OccurrenceDateTime) Then
+　　│〇 result = result Or flg_OccurrenceDateTime
+　　│┴End If
+　　◆┐If IsChanged(newIssue.ProblemBuilding, oldIssue.ProblemBuilding) Then
+　　│〇 result = result Or flg_ProblemBuilding
+　　│┴End If
+　　◆┐If IsChanged(newIssue.HostName, oldIssue.HostName) Then
+　　│〇 result = result Or flg_HostName
+　　│┴End If
+　　◆┐If IsChanged(newIssue.Phenomenon, oldIssue.Phenomenon) Then
+　　│〇 result = result Or flg_Phenomenon
+　　│┴End If
+　　◆┐If IsChanged(newIssue.CauseDetail, oldIssue.CauseDetail) Then
+　　│〇 result = result Or flg_Cause
+　　│┴End If
+　　◆┐If IsChanged(newIssue.Mondainum_Pro, oldIssue.Mondainum_Pro) Then
+　　│〇 result = result Or flg_Mondainum_Pro
+　　│┴End If
+　　◆┐If IsChanged(newIssue.Remarks, oldIssue.Remarks) Then
+　　│〇 result = result Or flg_Remarks
+　　│┴End If
+　　◆┐If IsChanged(newIssue.Esukare_Date, oldIssue.Esukare_Date) Then
+　　│〇 result = result Or flg_Esukare_Date
+　　│┴End If
+　　◆┐If IsChanged(newIssue.Close_Date, oldIssue.Close_Date) Then
+　　│〇 result = result Or flg_Close_Date
+　　│┴End If
+　　◆┐If IsChanged(newIssue.Requester_Pro, oldIssue.Requester_Pro) Then
+　　│〇 result = result Or flg_Requester_Pro
+　　│┴End If
+　　◆┐If IsChanged(newIssue.ServiceImpact, oldIssue.ServiceImpact) Then
+　　│〇 result = result Or flg_ServiceImpact
+　　│┴End If
+　　◆┐If IsChanged(newIssue.TroubleNum, oldIssue.TroubleNum) Then
+　　│〇 result = result Or flg_TroubleNum
+　　│┴End If
+　　◆┐If IsChanged(newIssue.Equipment, oldIssue.Equipment) Then
+　　│〇 result = result Or flg_Equipment
+　　│┴End If
+　　◆┐If IsChanged(newIssue.Countermeasure, oldIssue.Countermeasure) Then
+　　│〇 result = result Or flg_Cope
+　　│┴End If
+　　◆┐If IsChanged(newIssue.RequesterNum, oldIssue.RequesterNum) Then
+　　│〇 result = result Or flg_RequesterNum
+　　│┴End If
+　　│#  拡張情報差分判定
+　　◆┐If IsChanged(newIssue.ProductTantou, oldIssue.ProductTantou) Then
+　　│〇 result = result Or flg_ProductTantou
+　　│┴End If
+　　◆┐If IsChanged(newIssue.KihensinName_Date, oldIssue.KihensinName_Date) Then
+　　│〇 result = result Or flg_KihensinName_Date
+　　│┴End If
+　　◆┐If IsChanged(newIssue.Key_Word, oldIssue.Key_Word) Then
+　　│〇 result = result Or flg_Key_Word
+　　│┴End If
+　　◆┐If IsChanged(newIssue.EqProduct, oldIssue.EqProduct) Then
+　　│〇 result = result Or flg_EqProduct
+　　│┴End If
+　　│#  判定結果返却
+　　〇 GetUpdateCheckResult = result
+　　┴End Function

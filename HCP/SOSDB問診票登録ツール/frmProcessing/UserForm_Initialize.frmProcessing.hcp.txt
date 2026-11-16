@@ -1,0 +1,20 @@
+Procedure: frmProcessing.UserForm_Initialize  [ 処理中画面初期化＜frmProcessing＞ ]
+HCP	Business
+┬
+〇│Private Sub UserForm_Initialize()	処理中画面初期化＜frmProcessing＞
+┴└┐
+　　□ Dim xlLeft As Long
+　　□ Dim xlTop As Long
+　　□ Dim xlWidth As Long
+　　□ Dim xlHeight As Long
+　　│#  Excel画面情報取得
+　　＠┐With Application
+　　│〇 xlLeft = .Left
+　　│〇 xlTop = .Top
+　　│〇 xlWidth = .Width
+　　│〇 xlHeight = .Height
+　　│┴End With
+　　│#  フォーム中央配置
+　　〇 Me.Left = xlLeft + (xlWidth - Me.Width) / 2
+　　〇 Me.Top = xlTop + (xlHeight - Me.Height) / 2
+　　┴End Sub

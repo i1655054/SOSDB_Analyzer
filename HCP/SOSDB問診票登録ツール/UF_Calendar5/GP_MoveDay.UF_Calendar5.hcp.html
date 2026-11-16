@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift_jis">
+<title>GP_MoveDay</title>
+<style>
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+colgroup col:nth-of-type(1) {}
+colgroup col:nth-of-type(2) {}
+.resize {position: relative;}
+.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+</style>
+</head>
+<body>
+<h1>GP_MoveDay</h1>
+<p>Module : UF_Calendar5</p>
+<p><a href="./_INDEX.html">← Module Index</a></p>
+<table>
+<colgroup><col/><col/></colgroup>
+<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<tbody>
+<tr><td>Procedure: UF_Calendar5.GP_MoveDay  [ 日付移動＜UF_Calendar5＞ ]</td><td></td></tr>
+<tr><td>HCP</td><td>Business</td></tr>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Private Sub GP_MoveDay(lngMove As Long)</td><td>日付移動＜UF_Calendar5＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　□ Dim lngPos As Long                                              ' テーブル位置INDEX</td><td></td></tr>
+<tr><td>　　□ Dim dteDate As Date                                             ' 日付Work</td><td></td></tr>
+<tr><td>　　│#  年月選択非表示</td><td></td></tr>
+<tr><td>　　◎ Call GP_EraseYearMonth</td><td>年月選択非表示＜UF_Calendar5＞</td></tr>
+<tr><td>　　│#  移動先算出</td><td></td></tr>
+<tr><td>　　〇 lngPos = g_CurPos + lngMove                                 ' 移動後位置</td><td></td></tr>
+<tr><td>　　〇 dteDate = g_FormDate1 + lngMove                             ' 移動後日付</td><td></td></tr>
+<tr><td>　　│#  月変更判定</td><td></td></tr>
+<tr><td>　　◆┐If ((lngPos &lt; 0) Or (lngPos &gt; 41)) Then</td><td></td></tr>
+<tr><td>　　│〇 g_FormDate1 = dteDate</td><td></td></tr>
+<tr><td>　　││#  カレンダー再生成</td><td></td></tr>
+<tr><td>　　│◎ Call GP_MakeCalendar</td><td>カレンダー生成＜UF_Calendar5＞</td></tr>
+<tr><td>　　│→ Exit Sub</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　│#  旧選択解除</td><td></td></tr>
+<tr><td>　　◎ Call GP_SetForeColor(g_CurPos, dteDate)</td><td>カレンダー表示色設定＜UF_Calendar5＞</td></tr>
+<tr><td>　　│#  選択日更新</td><td></td></tr>
+<tr><td>　　〇 g_FormDate1 = dteDate</td><td></td></tr>
+<tr><td>　　〇 g_CurPos = lngPos</td><td></td></tr>
+<tr><td>　　│#  新選択設定</td><td></td></tr>
+<tr><td>　　◎ Call GP_SetForeColor(g_CurPos, g_FormDate1)</td><td>カレンダー表示色設定＜UF_Calendar5＞</td></tr>
+<tr><td>　　│#  ガイド更新</td><td></td></tr>
+<tr><td>　　〇 LBL_GUIDE.Caption = g_tblDateLabel(g_CurPos).StsGuide   ' ガイド表示</td><td></td></tr>
+<tr><td>　　┴End Sub</td><td></td></tr>
+</tbody>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function (eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function (e) {
+const styleTh = window.getComputedStyle(eleTh);
+const paddingLeft = parseFloat(styleTh.paddingLeft);
+const paddingRight = parseFloat(styleTh.paddingRight);
+const borderLeft = parseFloat(styleTh.borderLeftWidth);
+const borderRight = parseFloat(styleTh.borderRightWidth);
+startX = e.pageX;
+startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e) {
+const newWidth = startWidth + (e.pageX - startX);
+eleTh.style.width = newWidth + 'px';
+}
+function onMouseUp() {
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
+}
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+Procedure: modFileUtility.GetCursorPosition  [ カーソル位置取得＜modFileUtility＞ ]
+HCP	Business
+┬
+〇│Public Function GetCursorPosition()	カーソル位置取得＜modFileUtility＞
+┴└┐
+　　□ Dim CPos As POINTAPI
+　　│#  カーソル位置取得
+　　〇 GetCursorPos CPos
+　　│#  X座標出力
+　　〇 Debug.Print CPos.X  'カーソル位置のX座標をイミディエイトウィンドウに表示
+　　│#  Y座標出力
+　　〇 Debug.Print CPos.Y  'カーソル位置のY座標をイミディエイトウィンドウに表示
+　　┴End Function

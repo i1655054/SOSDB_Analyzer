@@ -1,0 +1,8 @@
+Procedure: UF_Calendar5.UserForm_MouseMove  [ ガイド表示初期化＜UF_Calendar5＞ ]
+HCP	Business
+┬
+〇│Private Sub UserFormMouseMove(ByVal Button As Integer,  ByVal Shift As Integer,  ByVal X As Single, ByVal Y As Single)	ガイド表示初期化＜UF_Calendar5＞
+┴└┐
+　　│#  ガイド初期化
+　　〇 Me.LBL_GUIDE.Caption = cnsDefaultGuide
+　　┴End Sub

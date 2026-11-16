@@ -1,0 +1,22 @@
+Procedure: modMonshinCore.BuildDescriptionFallback  [ 説明文生成互換形式＜modMonshinCore＞ ]
+HCP	Business
+┬
+〇│Private Function BuildDescriptionFallback(  ByRef info As MonshinInfoType) As String	説明文生成互換形式＜modMonshinCore＞
+┴└┐
+　　│#  変数初期化
+　　□ Dim sb As String
+　　□ Dim r() As String
+　　□ Dim i As Long
+　　│#  問合せ内容取得
+　　〇 r = info.RequestContents
+　　│#  内容連結
+　　＠┐For i = LBound(r) To UBound(r)
+　　││#  空文字判定
+　　│◆┐If Trim(r(i)) <> "" Then
+　　│││#  説明文追加
+　　││〇 sb = sb & r(i) & vbCrLf
+　　││┴End If
+　　│┴Next
+　　│#  説明文返却
+　　〇 BuildDescriptionFallback = sb
+　　┴End Function

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift_jis">
+<title>UpdateMonshinHandler</title>
+<style>
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+colgroup col:nth-of-type(1) {}
+colgroup col:nth-of-type(2) {}
+.resize {position: relative;}
+.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+</style>
+</head>
+<body>
+<h1>UpdateMonshinHandler</h1>
+<p>Module : modMonshinCore</p>
+<p><a href="./_INDEX.html">← Module Index</a></p>
+<table>
+<colgroup><col/><col/></colgroup>
+<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<tbody>
+<tr><td>Procedure: modMonshinCore.UpdateMonshinHandler  [ 問診票更新処理＜modMonshinCore＞ ]</td><td></td></tr>
+<tr><td>HCP</td><td>Business</td></tr>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Public Sub UpdateMonshinHandler()</td><td>問診票更新処理＜modMonshinCore＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　│#  CurrentIssue準備</td><td></td></tr>
+<tr><td>　　◎ Call EnsureCurrentIssue</td><td>CurrentIssue生成保証＜modUtility＞</td></tr>
+<tr><td>　　│#  UI内容取得</td><td></td></tr>
+<tr><td>　　◎ Call GetUIToIssue(g_CurrentIssue)</td><td>画面情報取得＜modUtility＞</td></tr>
+<tr><td>　　│#  入力セル表示初期化</td><td></td></tr>
+<tr><td>　　◎ Call RestoreAllColors</td><td>全セル色復元＜modUtility＞</td></tr>
+<tr><td>　　│#  問診票更新前入力チェック</td><td></td></tr>
+<tr><td>　　◆→ If Not ValidateForMonshin(g_CurrentIssue) Then Exit Sub</td><td></td></tr>
+<tr><td>　　│#  トラブル番号妥当性確認</td><td></td></tr>
+<tr><td>　　◆┐If Not chk_TorbleNum(g_CurrentIssue) Then</td><td></td></tr>
+<tr><td>　　│〇 MsgBox "トラブル番号は1～999の範囲で入力してください。"</td><td></td></tr>
+<tr><td>　　│◎ Call RestoreAllColors</td><td>全セル色復元＜modUtility＞</td></tr>
+<tr><td>　　│→ Exit Sub</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　□ Dim xlApp As Object</td><td></td></tr>
+<tr><td>　　□ Dim xlBook As Object</td><td></td></tr>
+<tr><td>　　□ Dim strMonShoFileName As String</td><td></td></tr>
+<tr><td>　　□ Dim sheetType As enMonshinSheetType</td><td></td></tr>
+<tr><td>　　□ Dim info As MonshinInfoType</td><td></td></tr>
+<tr><td>　　□ Dim oldIssue As IssueInfo</td><td></td></tr>
+<tr><td>　　□ Dim newIssue As IssueInfo</td><td></td></tr>
+<tr><td>　　□ Dim displayIssue As IssueInfo</td><td></td></tr>
+<tr><td>　　□ Dim Author_Name As String</td><td></td></tr>
+<tr><td>　　□ Dim Bug_id As String</td><td></td></tr>
+<tr><td>　　□ Dim nen As String, num As String</td><td></td></tr>
+<tr><td>　　□ Dim PW As String</td><td></td></tr>
+<tr><td>　　☆ On Error GoTo ErrHandler</td><td></td></tr>
+<tr><td>　　〇 Sheet1.CheckBox1.Value = True</td><td></td></tr>
+<tr><td>　　│#  Redmine IssueID取得</td><td></td></tr>
+<tr><td>　　◎ Bug_id = FindIssueIdByTroubleNum(g_CurrentIssue.AuthorName, g_CurrentIssue.TroubleNum)</td><td>トラバス管理番号検索＜modIssueService＞</td></tr>
+<tr><td>　　│#  IssueID取得結果確認</td><td></td></tr>
+<tr><td>　　◆┐If Bug_id = "" Then</td><td></td></tr>
+<tr><td>　　│〇 MsgBox "トラバス管理番号【 " &amp; g_CurrentIssue.TroubleNum &amp; " 】を取得できません"</td><td></td></tr>
+<tr><td>　　│→ GoTo CleanUp</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　│#  Redmine情報取得</td><td></td></tr>
+<tr><td>　　◎ Set oldIssue = modIssueMapper.Get_RedmineDataToIssueInfo(Author_Name, Bug_id)</td><td>Redmine情報取得＜modIssueMapper＞</td></tr>
+<tr><td>　　│#  比較用Issue保存</td><td></td></tr>
+<tr><td>　　〇 Set g_OriginalIssue = oldIssue</td><td></td></tr>
+<tr><td>　　│#  問診票選択</td><td></td></tr>
+<tr><td>　　◎ strMonShoFileName = get_MonshinFile2("問診票を選択")</td><td>問診票ファイル選択＜modFileUtility＞</td></tr>
+<tr><td>　　│#  選択結果確認</td><td></td></tr>
+<tr><td>　　◆┐If strMonShoFileName = "" Then</td><td></td></tr>
+<tr><td>　　││#  Redmine情報を画面表示</td><td></td></tr>
+<tr><td>　　│〇 Set g_CurrentIssue = oldIssue</td><td></td></tr>
+<tr><td>　　│◎ Call SetIssueToUI(oldIssue)</td><td>Issue画面反映＜modUtility＞</td></tr>
+<tr><td>　　│◎ Call Button_Set_Check(oldIssue)</td><td>詳細表示ボタン制御＜modUtility＞</td></tr>
+<tr><td>　　│→ GoTo CleanUp</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　│#  読込中表示開始</td><td></td></tr>
+<tr><td>　　◎ Call StartMessageDisplay</td><td>処理中画面開始＜modProcessing＞</td></tr>
+<tr><td>　　│#  画面更新</td><td></td></tr>
+<tr><td>　　〇 DoEvents</td><td></td></tr>
+<tr><td>　　│#  Excel起動</td><td></td></tr>
+<tr><td>　　〇 PW = GetPassword</td><td></td></tr>
+<tr><td>　　〇 Set xlApp = CreateObject("Excel.Application")</td><td></td></tr>
+<tr><td>　　〇 xlApp.Visible = False</td><td></td></tr>
+<tr><td>　　☆ On Error Resume Next</td><td></td></tr>
+<tr><td>　　│#  問診票ブック読込</td><td></td></tr>
+<tr><td>　　〇 Set xlBook = xlApp.Workbooks.Open(Filename:=strMonShoFileName, Password:=PW)</td><td></td></tr>
+<tr><td>　　◆┐If Err.Number &lt;&gt; 0 Then</td><td></td></tr>
+<tr><td>　　│◎ Err.Clear</td><td>Issue情報初期化＜IssueInfo＞</td></tr>
+<tr><td>　　│〇 Set xlBook = xlApp.Workbooks.Open(Filename:=strMonShoFileName)</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　☆ On Error GoTo ErrHandler</td><td></td></tr>
+<tr><td>　　│#  ブック取得結果確認</td><td></td></tr>
+<tr><td>　　◆┐If xlBook Is Nothing Then</td><td></td></tr>
+<tr><td>　　│〇 MsgBox "問診票ファイルを開けませんでした。", vbCritical</td><td></td></tr>
+<tr><td>　　│→ GoTo CleanUp</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　│#  問診票形式判定</td><td></td></tr>
+<tr><td>　　◎ sheetType = modMonshinCore.DetectMonshinSheetType(xlBook)</td><td>問診票形式判定＜modMonshinCore＞</td></tr>
+<tr><td>　　◆ If sheetType = Monshin_NotFound Then GoTo CleanUp</td><td></td></tr>
+<tr><td>　　│#  問診情報取得</td><td></td></tr>
+<tr><td>　　◎ info = modMonshinCore.Get_MonshinInfo(xlBook, sheetType)</td><td>問診情報取得＜modMonshinCore＞</td></tr>
+<tr><td>　　│#  問診票Issue生成</td><td></td></tr>
+<tr><td>　　◎ Set newIssue = CreateIssueFromInfo(info)</td><td>問診情報からIssue生成＜modIssueMapper＞</td></tr>
+<tr><td>　　│#  IssueID引継ぎ</td><td></td></tr>
+<tr><td>　　〇 newIssue.IssueId = Bug_id</td><td></td></tr>
+<tr><td>　　│#  問診票保存元設定</td><td></td></tr>
+<tr><td>　　◎ Call SetMonshinSource(newIssue, xlBook)</td><td>問診票保存元設定＜modUtility＞</td></tr>
+<tr><td>　　│#  表示用Issue生成</td><td></td></tr>
+<tr><td>　　〇 Set displayIssue = New IssueInfo</td><td></td></tr>
+<tr><td>　　│#  Redmine情報コピー</td><td></td></tr>
+<tr><td>　　◎ displayIssue.CopyFrom oldIssue</td><td>Issue情報コピー＜IssueInfo＞</td></tr>
+<tr><td>　　│#  問診票情報反映</td><td></td></tr>
+<tr><td>　　◎ displayIssue.MergeFromMonshin newIssue</td><td>問診票情報優先マージ＜IssueInfo＞</td></tr>
+<tr><td>　　│#  問診票フォルダ引継ぎ</td><td></td></tr>
+<tr><td>　　〇 displayIssue.MonFolder = newIssue.MonFolder</td><td></td></tr>
+<tr><td>　　│#  CurrentIssue更新</td><td></td></tr>
+<tr><td>　　〇 Set g_CurrentIssue = displayIssue</td><td></td></tr>
+<tr><td>　　│#  画面反映</td><td></td></tr>
+<tr><td>　　◎ Call SetIssueToUI(displayIssue)</td><td>Issue画面反映＜modUtility＞</td></tr>
+<tr><td>　　│#  ボタン制御更新</td><td></td></tr>
+<tr><td>　　◎ Call Button_Set_Check(displayIssue)</td><td>詳細表示ボタン制御＜modUtility＞</td></tr>
+<tr><td>▼ CleanUp:</td><td></td></tr>
+<tr><td>　　☆ On Error Resume Next</td><td></td></tr>
+<tr><td>　　│#  問診票クローズ</td><td></td></tr>
+<tr><td>　　◆ If Not xlBook Is Nothing Then xlBook.Close False</td><td></td></tr>
+<tr><td>　　│#  Excel終了</td><td></td></tr>
+<tr><td>　　◆ If Not xlApp Is Nothing Then xlApp.Quit</td><td></td></tr>
+<tr><td>　　│#  オブジェクト解放</td><td></td></tr>
+<tr><td>　　〇 Set xlBook = Nothing</td><td></td></tr>
+<tr><td>　　〇 Set xlApp = Nothing</td><td></td></tr>
+<tr><td>　　│#  読込中表示終了</td><td></td></tr>
+<tr><td>　　◎ Call StopMessageDisplay</td><td>処理中画面終了＜modProcessing＞</td></tr>
+<tr><td>　　→ Exit Sub</td><td></td></tr>
+<tr><td>▼ ErrHandler:</td><td></td></tr>
+<tr><td>　　〇 MsgBox "エラー発生: " &amp; Err.Description, vbCritical</td><td></td></tr>
+<tr><td>　　☆ Resume CleanUp</td><td></td></tr>
+<tr><td>　　┴End Sub</td><td></td></tr>
+</tbody>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function (eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function (e) {
+const styleTh = window.getComputedStyle(eleTh);
+const paddingLeft = parseFloat(styleTh.paddingLeft);
+const paddingRight = parseFloat(styleTh.paddingRight);
+const borderLeft = parseFloat(styleTh.borderLeftWidth);
+const borderRight = parseFloat(styleTh.borderRightWidth);
+startX = e.pageX;
+startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e) {
+const newWidth = startWidth + (e.pageX - startX);
+eleTh.style.width = newWidth + 'px';
+}
+function onMouseUp() {
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
+}
+});
+</script>
+</body>
+</html>

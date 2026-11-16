@@ -1,0 +1,8 @@
+Procedure: UF_Calendar5.GP_ShowGuide  [ 日付ガイド表示＜UF_Calendar5＞ ]
+HCP	Business
+┬
+〇│Friend Sub GP_ShowGuide(ByVal lngPos As Long)	日付ガイド表示＜UF_Calendar5＞
+┴└┐
+　　│#  ガイド表示
+　　〇 LBL_GUIDE.Caption = g_tblDateLabel(lngPos).StsGuide
+　　┴End Sub

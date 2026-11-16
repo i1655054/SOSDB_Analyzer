@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift_jis">
+<title>GP_GetSyuubun</title>
+<style>
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+colgroup col:nth-of-type(1) {}
+colgroup col:nth-of-type(2) {}
+.resize {position: relative;}
+.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+</style>
+</head>
+<body>
+<h1>GP_GetSyuubun</h1>
+<p>Module : clsAboutCalendar2</p>
+<p><a href="./_INDEX.html">← Module Index</a></p>
+<table>
+<colgroup><col/><col/></colgroup>
+<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<tbody>
+<tr><td>Procedure: clsAboutCalendar2.GP_GetSyuubun  [ 秋分の日算出＜clsAboutCalendar2＞ ]</td><td></td></tr>
+<tr><td>HCP</td><td>Business</td></tr>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Private Sub GPGetSyuubun(ByVal lngY As Long,  ByVal lngCalStrIx As Long,  ByVal lngIxSyuku As Long,  ByRef lngFuriDIxMax As Long,  ByRef tblFuriDIx() As gtypFuriDIx,  ByRef tblCalendar() As g_typAboutCalendar2)</td><td>秋分の日算出＜clsAboutCalendar2＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　□ Dim lngD As Long                                                ' 算出日</td><td></td></tr>
+<tr><td>　　□ Dim lngY2 As Long                                               ' 年算出WORK</td><td></td></tr>
+<tr><td>　　〇 lngY2 = lngY - 1980</td><td></td></tr>
+<tr><td>　　│#  秋分日算出</td><td></td></tr>
+<tr><td>　　◆┐Select Case lngY</td><td></td></tr>
+<tr><td>　　│├┐Case Is &lt;= 1979</td><td></td></tr>
+<tr><td>　　││〇 lngD = Int(23.2588 + (0.242194 * lngY2) - Int(lngY2 / 4))</td><td></td></tr>
+<tr><td>　　│├┐Case Is &lt;= 2099</td><td></td></tr>
+<tr><td>　　││〇 lngD = Int(23.2488 + (0.242194 * lngY2) - Int(lngY2 / 4))</td><td></td></tr>
+<tr><td>　　│├┐Case Else</td><td></td></tr>
+<tr><td>　　││〇 lngD = Int(24.2488 + (0.242194 * lngY2) - Int(lngY2 / 4))</td><td></td></tr>
+<tr><td>　　│┴End Select</td><td></td></tr>
+<tr><td>　　│#  秋分の日設定</td><td></td></tr>
+<tr><td>　　◎ Call GP_UpdateHolidaySUB1(lngD,  "秋分の日",  1,  0,  lngCalStrIx,  lngIxSyuku,  lngFuriDIxMax,  tblFuriDIx,  tblCalendar)</td><td>固定日祝日設定＜clsAboutCalendar2＞</td></tr>
+<tr><td>　　┴End Sub</td><td></td></tr>
+</tbody>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function (eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function (e) {
+const styleTh = window.getComputedStyle(eleTh);
+const paddingLeft = parseFloat(styleTh.paddingLeft);
+const paddingRight = parseFloat(styleTh.paddingRight);
+const borderLeft = parseFloat(styleTh.borderLeftWidth);
+const borderRight = parseFloat(styleTh.borderRightWidth);
+startX = e.pageX;
+startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e) {
+const newWidth = startWidth + (e.pageX - startX);
+eleTh.style.width = newWidth + 'px';
+}
+function onMouseUp() {
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
+}
+});
+</script>
+</body>
+</html>

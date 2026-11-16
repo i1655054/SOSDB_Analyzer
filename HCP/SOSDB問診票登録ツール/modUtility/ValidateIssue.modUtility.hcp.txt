@@ -1,0 +1,23 @@
+Procedure: modUtility.ValidateIssue  [ 登録前入力確認＜modUtility＞ ]
+HCP	Business
+┬
+〇│Public Function ValidateIssue(ByVal issue As IssueInfo) As Boolean	登録前入力確認＜modUtility＞
+┴└┐
+　　□ Dim errMsg As String
+　　│#  必須項目確認
+　　◆ If Not chk_Person(issue) Then errMsg = errMsg & "・担当者" & vbCrLf
+　　◆ If Not chk_Target(issue) Then errMsg = errMsg & "・対象バージョン" & vbCrLf
+　　◆ If Not chk_TorbleNum(issue) Then errMsg = errMsg & "・トラブル番号" & vbCrLf
+　　◆ If Not chk_Priority(issue) Then errMsg = errMsg & "・優先度" & vbCrLf
+　　◆ If Not chk_Eq_Product(issue) Then errMsg = errMsg & "・装置プロダクト" & vbCrLf
+　　◆ If Not chk_Escale_Day(issue) Then errMsg = errMsg & "・エスカレーション日" & vbCrLf
+　　│#  入力エラー確認
+　　◆┐If errMsg <> "" Then
+　　││#  エラーメッセージ表示
+　　│〇 MsgBox "未入力の項目があります。" & vbCrLf & vbCrLf &  "以下を入力してください：" & vbCrLf & vbCrLf & errMsg
+　　│〇 ValidateIssue = False
+　　│→ Exit Function
+　　│┴End If
+　　│#  入力確認完了
+　　〇 ValidateIssue = True
+　　┴End Function

@@ -1,0 +1,24 @@
+Procedure: modIssueService.RegisterIssueFromUI  [ Issue登録実行＜modIssueService＞ ]
+HCP	Business
+┬
+〇│Public Sub RegisterIssueFromUI()	Issue登録実行＜modIssueService＞
+┴└┐
+　　│#  CurrentIssue取得
+　　□ Dim issue As IssueInfo
+　　〇 Set issue = g_CurrentIssue
+　　│#  Issue存在確認
+　　◆┐If issue Is Nothing Then
+　　│〇 Debug.Print "issue取得失敗: "
+　　│→ Exit Sub
+　　│┴End If
+　　│#  メインシート情報反映
+　　◎ Call ApplyMainSheetToIssue(issue)	メイン画面反映＜modIssueMapper＞
+　　│#  新規登録判定
+　　◆┐If issue.IssueId = "" Then
+　　││#  新規Issue登録
+　　│◎ Call RegisterNewIssue(issue)	新規Issue登録＜modIssueService＞
+　　├┐ELSE
+　　││#  既存Issue更新
+　　│◎ Call UpdateExistingIssue(issue)	Issue更新登録＜modIssueService＞
+　　│┴End If
+　　┴End Sub

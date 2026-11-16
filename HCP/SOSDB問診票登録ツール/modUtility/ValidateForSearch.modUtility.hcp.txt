@@ -1,0 +1,22 @@
+Procedure: modUtility.ValidateForSearch  [ 検索前入力確認＜modUtility＞ ]
+HCP	Business
+┬
+〇│Public Function ValidateForSearch(ByVal issue As IssueInfo) As Boolean	検索前入力確認＜modUtility＞
+┴└┐
+　　□ Dim errMsg As String
+　　│#  担当者確認
+　　◆ If Not chk_Person(issue) Then errMsg = errMsg & "・担当者" & vbCrLf
+　　│#  対象バージョン確認
+　　◆ If Not chk_Target(issue) Then errMsg = errMsg & "・対象バージョン" & vbCrLf
+　　│#  トラブル番号確認
+　　◆ If Not chk_TorbleNum(issue) Then errMsg = errMsg & "・トラブル番号" & vbCrLf
+　　│#  入力エラー確認
+　　◆┐If errMsg <> "" Then
+　　││#  エラーメッセージ表示
+　　│〇 MsgBox "検索に必要な項目が未入力です：" & vbCrLf & vbCrLf & errMsg
+　　│〇 ValidateForSearch = False
+　　│→ Exit Function
+　　│┴End If
+　　│#  入力確認完了
+　　〇 ValidateForSearch = True
+　　┴End Function

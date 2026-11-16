@@ -1,0 +1,26 @@
+Procedure: modIssueMapper.GetVersionId  [ 対象バージョンID取得＜modIssueMapper＞ ]
+HCP	Business
+┬
+〇│Public Function GetVersionId(  ByVal versionName As String) As Long	対象バージョンID取得＜modIssueMapper＞
+┴└┐
+　　│#  Sysdataシート取得
+　　□ Dim sht As Worksheet
+　　〇 Set sht = ThisWorkbook.Sheets(SheetName_Sysdata)
+　　□ Dim i As Long
+　　│#  マスタ検索
+　　＠┐For i = 2 To sht.Cells(sht.Rows.count, Versionid_Col).End(xlUp).row
+　　│□ Dim id As Variant
+　　│□ Dim name As String
+　　││#  マスタ情報取得
+　　│〇 id = sht.Cells(i, Versionid_Col).Value
+　　│〇 name = Trim(sht.Cells(i, Versionid_Col + 1).Value)
+　　││#  一致判定
+　　│◆┐If name = versionName Then
+　　│││#  取得値返却
+　　││〇 GetVersionId = id
+　　││→ Exit Function
+　　││┴End If
+　　│┴Next i
+　　│#  未検出時初期値返却
+　　〇 GetVersionId = 0
+　　┴End Function

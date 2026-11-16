@@ -1,0 +1,45 @@
+Procedure: modUtility.PrepareIssueFor  [ 事前処理実行＜modUtility＞ ]
+HCP	Business
+┬
+〇│Public Function PrepareIssueFor(actionType As String) As Boolean	事前処理実行＜modUtility＞
+┴└┐
+　　│#  CurrentIssue準備
+　　◎ Call EnsureCurrentIssue	CurrentIssue生成保証＜modUtility＞
+　　│#  画面情報取得
+　　◎ Call GetUIToIssue(g_CurrentIssue)	画面情報取得＜modUtility＞
+　　│#  セル色初期化
+　　◎ Call RestoreAllColors	全セル色復元＜modUtility＞
+　　│#  処理種別判定
+　　◆┐Select Case actionType
+　　│├┐Case "SEARCH"
+　　│││#  検索前入力確認
+　　││◆┐If Not ValidateForSearch(g_CurrentIssue) Then
+　　│││◎ Call RestoreAllColors	全セル色復元＜modUtility＞
+　　│││→ Exit Function
+　　│││┴End If
+　　│├┐Case "REGISTER"
+　　│││#  登録前入力確認
+　　││◆┐If Not ValidateIssue(g_CurrentIssue) Then
+　　│││◎ Call RestoreAllColors	全セル色復元＜modUtility＞
+　　│││→ Exit Function
+　　│││┴End If
+　　│││#  登録前確認
+　　││◆┐If Not ConfirmBeforeRegister(g_CurrentIssue) Then
+　　│││◎ Call RestoreAllColors	全セル色復元＜modUtility＞
+　　│││→ Exit Function
+　　│││┴End If
+　　│├┐Case "MONSHIN"
+　　│││#  問診票処理入力確認
+　　││◆┐If Not ValidateForMonshin(g_CurrentIssue) Then
+　　│││◎ Call RestoreAllColors	全セル色復元＜modUtility＞
+　　│││→ Exit Function
+　　│││┴End If
+　　│├┐Case "SEARCH_SIMPLE"
+　　│││#  担当者確認
+　　││◆┐If Not chk_Person(g_CurrentIssue) Then
+　　│││→ Exit Function
+　　│││┴End If
+　　│┴End Select
+　　│#  事前処理完了
+　　〇 PrepareIssueFor = True
+　　┴End Function

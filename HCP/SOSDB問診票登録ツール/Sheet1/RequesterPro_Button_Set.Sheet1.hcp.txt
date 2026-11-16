@@ -1,0 +1,10 @@
+Procedure: Sheet1.RequesterPro_Button_Set  [ 依頼者ボタン強調表示＜Sheet1＞ ]
+HCP	Business
+┬
+〇│Public Sub RequesterPro_Button_Set()	依頼者ボタン強調表示＜Sheet1＞
+┴└┐
+　　＠┐With RequesterProButton
+　　│〇 .BackColor = &HFFC0C0
+　　│〇 .ForeColor = &HFF0000
+　　│┴End With
+　　┴End Sub

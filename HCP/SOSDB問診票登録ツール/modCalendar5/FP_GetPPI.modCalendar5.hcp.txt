@@ -1,0 +1,7 @@
+Procedure: modCalendar5.FP_GetPPI  [ PPI取得＜modCalendar5＞ ]
+HCP	Business
+┬
+〇│Private Function FP_GetPPI() As Long	PPI取得＜modCalendar5＞
+┴└┐
+　　〇 FP_GetPPI = Application.InchesToPoints(1)
+　　┴End Function

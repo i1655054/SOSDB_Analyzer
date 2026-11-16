@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift_jis">
+<title>SetMonshinValue</title>
+<style>
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+colgroup col:nth-of-type(1) {}
+colgroup col:nth-of-type(2) {}
+.resize {position: relative;}
+.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+</style>
+</head>
+<body>
+<h1>SetMonshinValue</h1>
+<p>Module : modMonshinCore</p>
+<p><a href="./_INDEX.html">← Module Index</a></p>
+<table>
+<colgroup><col/><col/></colgroup>
+<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<tbody>
+<tr><td>Procedure: modMonshinCore.SetMonshinValue  [ 問診情報設定＜modMonshinCore＞ ]</td><td></td></tr>
+<tr><td>HCP</td><td>Business</td></tr>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Private Sub SetMonshinValue(  ByRef info As MonshinInfoType,  ByVal Key As String,  ByVal Value As String)</td><td>問診情報設定＜modMonshinCore＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　◆┐Select Case Key</td><td></td></tr>
+<tr><td>　　│├┐Case "MonShinNum"          ' 問診票管理番号</td><td></td></tr>
+<tr><td>　　││〇 info.MonShinNum = Value</td><td></td></tr>
+<tr><td>　　│├┐Case "FaultRepNum"           ' 故障票番号</td><td></td></tr>
+<tr><td>　　││〇 info.faultRepNum = Value</td><td></td></tr>
+<tr><td>　　│├┐Case "UnKanNum"              ' 運管管理番号</td><td></td></tr>
+<tr><td>　　││〇 info.unKanNum = Value</td><td></td></tr>
+<tr><td>　　│├┐Case "TitleLine"             ' 題名（1行目）</td><td></td></tr>
+<tr><td>　　││〇 info.TitleLine = Value</td><td></td></tr>
+<tr><td>　　│├┐Case "Phenomenon"            ' 事象／問合せ内容</td><td></td></tr>
+<tr><td>　　││〇 info.Phenomenon = Value</td><td></td></tr>
+<tr><td>　　│├┐Case "Request_Client"</td><td></td></tr>
+<tr><td>　　││〇 info.Request_Client = Value</td><td></td></tr>
+<tr><td>　　│├┐Case "OccurrenceDate"        ' 発生日</td><td></td></tr>
+<tr><td>　　││〇 info.occurrenceDate = Format(Value, "yyyy-mm-dd")</td><td></td></tr>
+<tr><td>　　│├┐Case "OccurrenceTime"        ' 発生時間</td><td></td></tr>
+<tr><td>　　││〇 info.occurrenceTime = Format(Value, "hh:mm")</td><td></td></tr>
+<tr><td>　　│├┐Case "ProblemBuilding"       ' 問題発生ビル</td><td></td></tr>
+<tr><td>　　││〇 info.ProblemBuilding = Value</td><td></td></tr>
+<tr><td>　　│├┐Case "Equipment"             ' 装置詳細</td><td></td></tr>
+<tr><td>　　││〇 info.Equipment = Value</td><td></td></tr>
+<tr><td>　　│├┐Case "HostName"              ' ホスト名</td><td></td></tr>
+<tr><td>　　││〇 info.HostName = Value</td><td></td></tr>
+<tr><td>　　│├┐Case "FileVer"               ' ファイル版数</td><td></td></tr>
+<tr><td>　　││〇 info.FileVer = Value</td><td></td></tr>
+<tr><td>　　│├┐Case "AlarmInfo"             ' アラーム表示内容</td><td></td></tr>
+<tr><td>　　││〇 info.AlarmInfo = Value</td><td></td></tr>
+<tr><td>　　│├┐Case "OccurrenceStatus"      ' 発生状況</td><td></td></tr>
+<tr><td>　　││〇 info.OccurrenceStatus = Value</td><td></td></tr>
+<tr><td>　　│├┐Case "ResponseStatus"        ' 対応状況</td><td></td></tr>
+<tr><td>　　││〇 info.ResponseStatus = Value</td><td></td></tr>
+<tr><td>　　│├┐Case "Req0": info.RequestContents(0) = Value</td><td></td></tr>
+<tr><td>　　│├┐Case "Req1": info.RequestContents(1) = Value</td><td></td></tr>
+<tr><td>　　│├┐Case "Req2": info.RequestContents(2) = Value</td><td></td></tr>
+<tr><td>　　│├┐Case "Req3": info.RequestContents(3) = Value</td><td></td></tr>
+<tr><td>　　│├┐Case "Req4": info.RequestContents(4) = Value</td><td></td></tr>
+<tr><td>　　│├┐Case "Req5": info.RequestContents(5) = Value</td><td></td></tr>
+<tr><td>　　│├┐Case "Req6": info.RequestContents(6) = Value</td><td></td></tr>
+<tr><td>　　│├┐Case "Req7": info.RequestContents(7) = Value</td><td></td></tr>
+<tr><td>　　│├┐Case "CollectedData"         ' 収集データ</td><td></td></tr>
+<tr><td>　　││〇 info.CollectedData = Value</td><td></td></tr>
+<tr><td>　　│├┐Case "CauseDetail"           ' 原因</td><td></td></tr>
+<tr><td>　　││〇 info.CauseDetail = Value</td><td></td></tr>
+<tr><td>　　│├┐Case "Countermeasure"        ' 対処</td><td></td></tr>
+<tr><td>　　││〇 info.Countermeasure = Value</td><td></td></tr>
+<tr><td>　　│├┐Case "AnswerDate"            ' 回答日</td><td></td></tr>
+<tr><td>　　││〇 info.AnswerDate = Value</td><td></td></tr>
+<tr><td>　　│├┐Case "AnswerPerson"          ' 回答者</td><td></td></tr>
+<tr><td>　　││〇 info.AnswerPerson = Value</td><td></td></tr>
+<tr><td>　　│├┐Case "AnswerInfo"            ' 解析結果・対処方法</td><td></td></tr>
+<tr><td>　　││〇 info.AnswerInfo = Value</td><td></td></tr>
+<tr><td>　　│├┐Case "Key_Word"              ' キーワード</td><td></td></tr>
+<tr><td>　　││〇 info.Key_Word = Value</td><td></td></tr>
+<tr><td>　　│├┐Case Else</td><td></td></tr>
+<tr><td>　　│┴End Select</td><td></td></tr>
+<tr><td>　　┴End Sub</td><td></td></tr>
+</tbody>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function (eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function (e) {
+const styleTh = window.getComputedStyle(eleTh);
+const paddingLeft = parseFloat(styleTh.paddingLeft);
+const paddingRight = parseFloat(styleTh.paddingRight);
+const borderLeft = parseFloat(styleTh.borderLeftWidth);
+const borderRight = parseFloat(styleTh.borderRightWidth);
+startX = e.pageX;
+startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e) {
+const newWidth = startWidth + (e.pageX - startX);
+eleTh.style.width = newWidth + 'px';
+}
+function onMouseUp() {
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
+}
+});
+</script>
+</body>
+</html>

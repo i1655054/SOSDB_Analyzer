@@ -1,0 +1,36 @@
+Procedure: modRegister.CreateUpdateXmlFromIssue  [ 更新登録XML生成＜modRegister＞ ]
+HCP	Business
+┬
+〇│Public Function CreateUpdateXmlFromIssue(  ByVal newIssue As IssueInfo,  ByVal oldIssue As IssueInfo,  ByVal flags As Long) As String	更新登録XML生成＜modRegister＞
+┴└┐
+　　□ Dim xml As String
+　　│#  XML開始
+　　〇 xml = "<?xml version=""1.0""?>"
+　　〇 xml = xml & "<issue>"
+　　│#  基本属性差分出力
+　　◆┐If (flags And flg_Status_Name) <> 0 Then
+　　│◎ xml = xml & "<status_id>" &  GetStatusId(newIssue.Status) &  "</status_id>"	ステータスID取得＜modIssueMapper＞
+　　│┴End If
+　　◆┐If (flags And flg_Priority_Name) <> 0 Then
+　　│◎ xml = xml & "<priority_id>" &  GetPriorityId(newIssue.Priority) &  "</priority_id>"	優先度ID取得＜modIssueMapper＞
+　　│┴End If
+　　◆┐If (flags And flg_Assigned_to_Name) <> 0 Then
+　　│◎ xml = xml & "<assigned_to_id>" &  GetUserId(newIssue.AssignedTo) &  "</assigned_to_id>"	ユーザーID取得＜modIssueMapper＞
+　　│┴End If
+　　◆┐If (flags And flg_Target_Version) <> 0 Then
+　　│◎ xml = xml & "<fixed_version_id>" &  GetVersionId(newIssue.targetVersion) &  "</fixed_version_id>"	対象バージョンID取得＜modIssueMapper＞
+　　│┴End If
+　　│#  本文差分出力
+　　◆┐If (flags And flg_Subject_Name) <> 0 Then
+　　│◎ xml = xml & "<subject>" &  EscapeXML(newIssue.Subject) &  "</subject>"	XMLエスケープ＜XmlLoader＞
+　　│┴End If
+　　◆┐If (flags And flg_Description) <> 0 Then
+　　│◎ xml = xml & "<description>" &  EscapeXML(newIssue.Description) &  "</description>"	XMLエスケープ＜XmlLoader＞
+　　│┴End If
+　　│#  カスタムフィールド差分出力
+　　◎ xml = xml & BuildCustomFieldsXmlDiff(newIssue, flags)	差分カスタムフィールドXML生成＜modRegister＞
+　　│#  XML終了
+　　〇 xml = xml & "</issue>"
+　　│#  XML返却
+　　〇 CreateUpdateXmlFromIssue = xml
+　　┴End Function

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift_jis">
+<title>AutomaticTextOutput</title>
+<style>
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+colgroup col:nth-of-type(1) {}
+colgroup col:nth-of-type(2) {}
+.resize {position: relative;}
+.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+</style>
+</head>
+<body>
+<h1>AutomaticTextOutput</h1>
+<p>Module : modFileUtility</p>
+<p><a href="./_INDEX.html">← Module Index</a></p>
+<table>
+<colgroup><col/><col/></colgroup>
+<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<tbody>
+<tr><td>Procedure: modFileUtility.AutomaticTextOutput  [ XMLファイル出力＜modFileUtility＞ ]</td><td></td></tr>
+<tr><td>HCP</td><td>Business</td></tr>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Public Function AutomaticTextOutput(ByVal sendBody As Variant, ByVal id As Variant, ByRef outPath As String) As String</td><td>XMLファイル出力＜modFileUtility＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　□ Const cnsTitle = "SendBodyテキストファイル出力処理"</td><td></td></tr>
+<tr><td>　　□ Const cnsFilter = "SendBodyファイル (*.xml),*.xml"</td><td></td></tr>
+<tr><td>　　□ Dim xlApp As Application        ' Applicationオブジェクト</td><td></td></tr>
+<tr><td>　　□ Dim intFF As Integer            ' FreeFile値</td><td></td></tr>
+<tr><td>　　□ Dim strFileName As String       ' OPENするファイル名(フルパス)</td><td></td></tr>
+<tr><td>　　□ Dim vntFileName As Variant      ' ファイル名受取り用</td><td></td></tr>
+<tr><td>　　□ Dim NowTime As String           ' 現在に日時</td><td></td></tr>
+<tr><td>　　□ Dim MyFolder As String</td><td></td></tr>
+<tr><td>　　□ Dim WorkFolder As String: WorkFolder = "WorkRedmine"</td><td></td></tr>
+<tr><td>　　〇 glbdbgflg = False</td><td></td></tr>
+<tr><td>　　│#  出力ファイル名生成用日時取得</td><td></td></tr>
+<tr><td>　　〇 NowTime = Format(Year(Now), "0000") &amp; Format(Month(Now), "00") &amp; Format(Day(Now), "00") &amp; Format(Hour(Now), "00") &amp; Format(Minute(Now), "00") &amp; Format(Second(Now), "00")</td><td></td></tr>
+<tr><td>　　│#  出力先フォルダ決定</td><td></td></tr>
+<tr><td>　　◆┐If (outPath = "") Then</td><td></td></tr>
+<tr><td>　　│〇 MyFolder = GetDocumentFolderPath</td><td></td></tr>
+<tr><td>　　│〇 outPath = MyFolder &amp; "\" &amp; WorkFolder</td><td></td></tr>
+<tr><td>　　│◆┐If Dir(outPath, vbDirectory) = "" Then</td><td></td></tr>
+<tr><td>　　││〇 MkDir outPath</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　│#  XML出力ファイル名生成</td><td></td></tr>
+<tr><td>　　〇 strFileName = outPath &amp; "\" &amp; "SendBody" &amp; id &amp; "_" &amp; NowTime &amp; ".xml"</td><td></td></tr>
+<tr><td>　　□ Dim line As String</td><td></td></tr>
+<tr><td>　　│#  UTF-8ストリーム生成</td><td></td></tr>
+<tr><td>　　□ Dim outStream As New ADODB.stream</td><td></td></tr>
+<tr><td>　　＠┐With outStream</td><td></td></tr>
+<tr><td>　　│〇 .Type = adTypeText</td><td></td></tr>
+<tr><td>　　│〇 .CharSet = "UTF-8"</td><td></td></tr>
+<tr><td>　　│〇 .LineSeparator = adCRLF</td><td></td></tr>
+<tr><td>　　│〇 .Open</td><td></td></tr>
+<tr><td>　　│┴End With</td><td></td></tr>
+<tr><td>　　│#  XML本文書込</td><td></td></tr>
+<tr><td>　　〇 outStream.WriteText sendBody, adWriteLine</td><td></td></tr>
+<tr><td>　　│#  ファイル保存</td><td></td></tr>
+<tr><td>　　〇 outStream.SaveToFile strFileName, adSaveCreateOverWrite</td><td></td></tr>
+<tr><td>　　│#  出力ファイル返却</td><td></td></tr>
+<tr><td>　　〇 AutomaticTextOutput = strFileName</td><td></td></tr>
+<tr><td>　　┴End Function</td><td></td></tr>
+</tbody>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function (eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function (e) {
+const styleTh = window.getComputedStyle(eleTh);
+const paddingLeft = parseFloat(styleTh.paddingLeft);
+const paddingRight = parseFloat(styleTh.paddingRight);
+const borderLeft = parseFloat(styleTh.borderLeftWidth);
+const borderRight = parseFloat(styleTh.borderRightWidth);
+startX = e.pageX;
+startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e) {
+const newWidth = startWidth + (e.pageX - startX);
+eleTh.style.width = newWidth + 'px';
+}
+function onMouseUp() {
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
+}
+});
+</script>
+</body>
+</html>

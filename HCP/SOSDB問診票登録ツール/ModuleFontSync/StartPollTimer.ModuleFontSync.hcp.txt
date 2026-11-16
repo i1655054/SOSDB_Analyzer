@@ -1,0 +1,10 @@
+Procedure: ModuleFontSync.StartPollTimer  [ フォント監視開始＜ModuleFontSync＞ ]
+HCP	Business
+┬
+〇│Public Sub StartPollTimer(ByVal intervalMs As Long)	フォント監視開始＜ModuleFontSync＞
+┴└┐
+　　│#  タイマー起動済確認
+　　◆→ If gTimerID <> 0 Then Exit Sub
+　　│#  フォント監視タイマー開始
+　　〇 gTimerID = SetTimer(0, 0, intervalMs, AddressOf PollFontSize_Callback)
+　　┴End Sub

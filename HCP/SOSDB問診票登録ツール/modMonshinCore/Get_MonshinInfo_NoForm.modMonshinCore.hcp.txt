@@ -1,0 +1,31 @@
+Procedure: modMonshinCore.Get_MonshinInfo_NoForm  [ 問診票なし登録＜modMonshinCore＞ ]
+HCP	Business
+┬
+〇│Public Function Get_MonshinInfo_NoForm() As IssueInfo	問診票なし登録＜modMonshinCore＞
+┴└┐
+　　│#  Issue生成
+　　□ Dim issue As New IssueInfo
+　　│#  問診票保存先確認
+　　◆┐If Not EnsureMonFolder(issue) Then
+　　│〇 Set Get_MonshinInfo_NoForm = Nothing
+　　│→ Exit Function
+　　│┴End If
+　　│#  登録フォーム初期化
+　　〇 Set UF_NewInfoRegist.TargetIssue = issue
+　　〇 UF_NewInfoRegist.IsCanceled = False
+　　│#  登録フォーム表示
+　　〇 UF_NewInfoRegist.Show
+　　│#  キャンセル判定
+　　◆┐If UF_NewInfoRegist.IsCanceled Then
+　　│〇 Set Get_MonshinInfo_NoForm = Nothing
+　　│→ Exit Function
+　　│┴End If
+　　│#  OriginalIssue初期化
+　　◆┐If g_OriginalIssue Is Nothing Then
+　　│◎ Set g_OriginalIssue = issue.Clone	Issue情報複製＜IssueInfo＞
+　　│┴End If
+　　│#  CurrentIssue更新
+　　〇 Set g_CurrentIssue = issue
+　　│#  Issue返却
+　　〇 Set Get_MonshinInfo_NoForm = issue
+　　┴End Function

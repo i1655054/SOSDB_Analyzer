@@ -1,0 +1,27 @@
+Procedure: clsAboutCalendar2.FP_CheckNumber  [ 数値妥当性確認＜clsAboutCalendar2＞ ]
+HCP	Business
+┬
+〇│Private Function FPCheckNumber(ByRef objRange As Range,  Optional ByRef lngValue As Long = -1) As Boolean	数値妥当性確認＜clsAboutCalendar2＞
+┴└┐
+　　□ Dim strText1 As String                                          ' 文字列WORK
+　　□ Dim strText2 As String                                          ' 文字列WORK
+　　│#  セル値取得
+　　〇 strText1 = CStr(objRange.Value)
+　　│#  空文字判定
+　　〇 strText2 = Trim(strText1)
+　　◆┐If strText2 = "" Then
+　　│〇 lngValue = 0
+　　│〇 FP_CheckNumber = True
+　　│→ Exit Function
+　　│┴End If
+　　│#  数値変換確認
+　　☆ On Error Resume Next
+　　〇 lngValue = CLng(strText2)
+　　│#  判定結果返却
+　　◆┐If Err.Number = 0 Then
+　　│〇 FP_CheckNumber = True
+　　├┐ELSE
+　　│〇 FP_CheckNumber = False
+　　│┴End If
+　　☆ On Error GoTo 0
+　　┴End Function

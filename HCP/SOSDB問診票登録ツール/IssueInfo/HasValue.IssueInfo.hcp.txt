@@ -1,0 +1,18 @@
+Procedure: IssueInfo.HasValue  [ 有効値判定＜IssueInfo＞ ]
+HCP	Business
+┬
+〇│Function HasValue(val As Variant) As Boolean	有効値判定＜IssueInfo＞
+┴└┐
+　　│#  Null判定
+　　◆┐If IsNull(val) Then
+　　│〇 HasValue = False
+　　│→ Exit Function
+　　│┴End If
+　　│#  Empty判定
+　　◆┐If isEmpty(val) Then
+　　│〇 HasValue = False
+　　│→ Exit Function
+　　│┴End If
+　　│#  有効値判定
+　　〇 HasValue = Trim(CStr(val)) <> ""
+　　┴End Sub

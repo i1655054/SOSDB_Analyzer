@@ -1,0 +1,67 @@
+Procedure: modIssueMapper.ApplyMainSheetToIssue  [ メイン画面反映＜modIssueMapper＞ ]
+HCP	Business
+┬
+〇│Public Sub ApplyMainSheetToIssue(  ByRef issue As IssueInfo)	メイン画面反映＜modIssueMapper＞
+┴└┐
+　　│#  Issue存在確認
+　　◆┐If issue Is Nothing Then
+　　│〇 Debug.Print "issue取得失敗: "
+　　│→ Exit Sub
+　　│┴End If
+　　│#  メインシート取得
+　　□ Dim sht As Worksheet
+　　〇 Set sht = ThisWorkbook.Sheets(SheetName_Main)
+　　＠┐With issue
+　　││#  ステータス反映
+　　│◆┐If sht.Range(DB_STATUS_RANG).Value <> "" Then
+　　││〇 .Status = sht.Range(DB_STATUS_RANG).Value
+　　││┴End If
+　　││#  優先度反映
+　　│◆┐If sht.Range(PRIORITY_RANG).Value <> "" Then
+　　││〇 .Priority = sht.Range(PRIORITY_RANG).Value
+　　││┴End If
+　　││#  担当者反映
+　　│□ Dim person As String
+　　│〇 person = sht.Range(TANTOU_NAME_RANG).Value
+　　│◆┐If person <> "" Then
+　　││〇 .AuthorName = person
+　　││〇 .AssignedTo = person
+　　││┴End If
+　　││#  対象バージョン反映
+　　│〇 .targetVersion = sht.Range(TARGET_VER_RANG).Value
+　　││#  トラバス管理番号生成
+　　│◆┐If sht.Range(TORBLE_NUM_RANG).Value <> "" And .targetVersion <> "" Then
+　　││□ Dim versionId As Long
+　　││◎ versionId = GetVersionId(.targetVersion)	対象バージョンID取得＜modIssueMapper＞
+　　││◆┐If versionId <> 0 Then
+　　│││◎ .TroubleNum = BuildTroubleNum(sht.Range(TARGET_VER_RANG).Value, sht.Range(TORBLE_NUM_RANG).Value)	トラブル番号生成＜modUtility＞
+　　││││	内部呼出:Range, Range
+　　││├┐ELSE
+　　│││〇 Debug.Print "警告: Version未登録 " & .targetVersion
+　　│││┴End If
+　　││┴End If
+　　││#  装置プロダクト反映
+　　│◆┐If sht.Range(EQ_PRODUCT_RANG).Value <> "" Then
+　　││〇 .EqProduct = sht.Range(EQ_PRODUCT_RANG).Value
+　　││┴End If
+　　││#  プロダクト担当反映
+　　│◆┐If sht.Range(PRODUCT_TANTOU_RANG).Value <> "" Then
+　　││〇 .ProductTantou = sht.Range(PRODUCT_TANTOU_RANG).Value
+　　││┴End If
+　　││#  発生日反映
+　　│◆┐If sht.Range(ESCALE_DAY_RANG).Value <> "" Then
+　　││〇 .Esukare_Date = Format(sht.Range(ESCALE_DAY_RANG).Value, "yyyy-mm-dd")
+　　││┴End If
+　　││#  完了日反映
+　　│◆┐If sht.Range(CLOSE_DAY_RANG).Value <> "" Then
+　　││〇 .Close_Date = Format(sht.Range(CLOSE_DAY_RANG).Value, "yyyy-mm-dd")
+　　││┴End If
+　　││#  問処票情報生成
+　　│◎ .Mondainum_Pro = BuildMondainumPro()	問処番号生成＜modUtility＞
+　　│◎ .KihensinName_Date = BuildKihensinNameDate()	規変審情報生成＜modUtility＞
+　　││#  サービス影響反映
+　　│◆┐If sht.Range(SERVICE_IMPACT_RANG).Value <> "" Then
+　　││〇 .ServiceImpact = sht.Range(SERVICE_IMPACT_RANG).Value
+　　││┴End If
+　　│┴End With
+　　┴End Sub

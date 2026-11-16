@@ -1,0 +1,45 @@
+Procedure: modUtility.ParseKihensinNameDate  [ 規変審情報解析＜modUtility＞ ]
+HCP	Business
+┬
+〇│Public Function ParseKihensinNameDate(  src As String,  ByRef nameVal As String,  ByRef dateVal As Variant) As Boolean	規変審情報解析＜modUtility＞
+┴└┐
+　　□ Dim parts() As String
+　　│#  入力文字列整形
+　　〇 src = Trim(src)
+　　│#  出力値初期化
+　　〇 nameVal = ""
+　　〇 dateVal = ""
+　　│#  入力有無確認
+　　◆┐If src = "" Then
+　　│〇 ParseKihensinNameDate = False
+　　│→ Exit Function
+　　│┴End If
+　　│#  規変審情報分割
+　　〇 parts = Split(src, "/")
+　　│#  分割数判定
+　　◆┐Select Case UBound(parts)
+　　│├┐Case 0
+　　│││#  規変審名設定
+　　││〇 nameVal = Trim(parts(0))
+　　│├┐Case 1
+　　│││#  規変審名設定
+　　││〇 nameVal = Trim(parts(0))
+　　││□ Dim tmp As String
+　　│││#  開催日変換
+　　││〇 tmp = Trim(parts(1))
+　　││◆┐If tmp = "" Then
+　　│││〇 dateVal = ""
+　　││├┐ElseIf IsDate(tmp) Then
+　　│││〇 dateVal = CDate(tmp)
+　　││├┐ELSE
+　　││││#  日付変換不可
+　　│││〇 dateVal = tmp  ' 文字列として保持（必要に応じてエラー扱いでもOK）
+　　│││┴End If
+　　│├┐Case Else
+　　│││#  フォーマット異常
+　　││〇 ParseKihensinNameDate = False
+　　││→ Exit Function
+　　│┴End Select
+　　│#  解析成功
+　　〇 ParseKihensinNameDate = True
+　　┴End Function

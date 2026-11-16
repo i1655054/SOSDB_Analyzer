@@ -1,0 +1,20 @@
+Procedure: modFileUtility.get_MonshinFile2  [ 問診票ファイル選択＜modFileUtility＞ ]
+HCP	Business
+┬
+〇│Function get_MonshinFile2(str_cnsTitle As String)	問診票ファイル選択＜modFileUtility＞
+┴└┐
+　　│#  問診票選択用フィルタ準備
+　　□ Dim strFileName As String
+　　□ Dim tblFilter(2, 1) As String
+　　〇 tblFilter(0, 0) = "Excelワークブック"
+　　〇 tblFilter(0, 1) = "*.xls;*.xlsx;*.xlsm"
+　　〇 tblFilter(1, 0) = "Excelテンプレート"
+　　〇 tblFilter(1, 1) = "*.xlt;*.xltx;*.xltm"
+　　〇 tblFilter(2, 0) = "全てのファイル"
+　　〇 tblFilter(2, 1) = "*.*"
+　　│#  指定タイトルでダイアログ表示
+　　◎ strFileName = OpenDialog(  str_cnsTitle,  tblFilter,  False,  GetTargetPath(g_CurrentIssue.targetVersion),  g_cnsFixRootPath,  CurDir,  "選択")	ファイル選択ダイアログ表示＜modFileUtility＞
+　　│	内部呼出:GetTargetPath
+　　│#  選択結果返却
+　　〇 get_MonshinFile2 = strFileName
+　　┴End Sub

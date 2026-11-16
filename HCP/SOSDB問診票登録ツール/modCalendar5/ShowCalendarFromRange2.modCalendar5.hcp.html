@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift_jis">
+<title>ShowCalendarFromRange2</title>
+<style>
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+colgroup col:nth-of-type(1) {}
+colgroup col:nth-of-type(2) {}
+.resize {position: relative;}
+.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+</style>
+</head>
+<body>
+<h1>ShowCalendarFromRange2</h1>
+<p>Module : modCalendar5</p>
+<p><a href="./_INDEX.html">← Module Index</a></p>
+<table>
+<colgroup><col/><col/></colgroup>
+<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<tbody>
+<tr><td>Procedure: modCalendar5.ShowCalendarFromRange2  [ セル日付選択＜modCalendar5＞ ]</td><td></td></tr>
+<tr><td>HCP</td><td>Business</td></tr>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Public Sub ShowCalendarFromRange2(ByRef objRange As Range,  Optional ByVal strCaption As String = g_cnsCaption)</td><td>セル日付選択＜modCalendar5＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　□ Dim lngLeft As Long                                             ' 横位置</td><td></td></tr>
+<tr><td>　　□ Dim lngTop As Long                                              ' 縦位置</td><td></td></tr>
+<tr><td>　　◆┐If objRange.count &gt; 1 Then</td><td></td></tr>
+<tr><td>　　│◆→ If objRange.Address &lt;&gt; objRange.Cells(1).MergeArea.Address Then Exit Sub</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　◎ Call FP_GetFormPosition(objRange, UF_Calendar5.Width, UF_Calendar5.Height, lngLeft, lngTop)</td><td>フォーム表示位置算出＜modCalendar5＞</td></tr>
+<tr><td>　　＠┐With UF_Calendar5</td><td></td></tr>
+<tr><td>　　│〇 .prpTitle = strCaption                              ' タイトル</td><td></td></tr>
+<tr><td>　　│〇 .prpEntMode = 0                                     ' 入力モード(0=セル、1=TextBox)</td><td></td></tr>
+<tr><td>　　│〇 Set .prpRange = objRange                            ' 対象セル</td><td></td></tr>
+<tr><td>　　│◆┐If ((lngLeft &lt;&gt; 0) Or (lngTop &lt;&gt; 0)) Then</td><td></td></tr>
+<tr><td>　　││〇 .StartUpPosition = 0</td><td></td></tr>
+<tr><td>　　││〇 .Left = lngLeft</td><td></td></tr>
+<tr><td>　　││〇 .Top = lngTop</td><td></td></tr>
+<tr><td>　　│├┐ELSE</td><td></td></tr>
+<tr><td>　　││〇 .StartUpPosition = 2</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td>　　│〇 .Show</td><td></td></tr>
+<tr><td>　　│┴End With</td><td></td></tr>
+<tr><td>　　┴End Sub</td><td></td></tr>
+</tbody>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function (eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function (e) {
+const styleTh = window.getComputedStyle(eleTh);
+const paddingLeft = parseFloat(styleTh.paddingLeft);
+const paddingRight = parseFloat(styleTh.paddingRight);
+const borderLeft = parseFloat(styleTh.borderLeftWidth);
+const borderRight = parseFloat(styleTh.borderRightWidth);
+startX = e.pageX;
+startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e) {
+const newWidth = startWidth + (e.pageX - startX);
+eleTh.style.width = newWidth + 'px';
+}
+function onMouseUp() {
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
+}
+});
+</script>
+</body>
+</html>

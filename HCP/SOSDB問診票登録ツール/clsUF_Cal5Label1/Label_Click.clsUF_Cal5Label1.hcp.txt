@@ -1,0 +1,8 @@
+Procedure: clsUF_Cal5Label1.Label_Click  [ 日付選択＜clsUF_Cal5Label1＞ ]
+HCP	Business
+┬
+〇│Private Sub Label_Click()	日付選択＜clsUF_Cal5Label1＞
+┴└┐
+　　│#  日付選択通知
+　　◎ Call UF_Calendar5.GP_ClickCalendar(g_lngIndex)	日付確定＜UF_Calendar5＞
+　　┴End Sub

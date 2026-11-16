@@ -1,0 +1,127 @@
+Procedure: XmlSearch.ExportRedmineIDsToCSV  [ 検索結果CSV生成＜XmlSearch＞ ]
+HCP	Business
+┬
+〇│Private Function ExportRedmineIDsToCSV(ByVal SearchKey As String, ByVal baseUrl As String, ByVal apiKey As String)	検索結果CSV生成＜XmlSearch＞
+┴└┐
+　　□ Dim http As XMLHTTP60, http2 As XMLHTTP60
+　　□ Dim xmlDoc As DOMDocument60, xmlDoc2 As DOMDocument60
+　　□ Dim xmlNode As Object
+　　□ Dim statusCode As Integer
+　　□ Dim statusCode2 As Integer
+　　□ Dim csvContent As String, csvfilepath As String
+　　□ Dim offset As Long, limit As Long, hasMoreData As Boolean
+　　□ Dim Status As String, Subject As String, TroubleNum As String, RequesterNum As String
+　　□ Dim MyFolder As String, WorkFolder As String: WorkFolder = "WorkRedmine"
+　　□ Dim totalCountUrl As String, totalCount As Long, i As Integer: i = 0
+　　☆ On Error GoTo ErrorHandler
+　　│#  通信オブジェクト生成
+　　〇 Set http = New XMLHTTP60
+　　〇 Set xmlDoc = New DOMDocument60
+　　〇 Set http2 = New XMLHTTP60
+　　〇 Set xmlDoc2 = New DOMDocument60
+　　│#  初期値設定
+　　〇 limit = 100
+　　〇 offset = 0
+　　〇 hasMoreData = True
+　　│#  CSVヘッダ生成
+　　〇 csvContent = "No,ID,TroubleNum,status,RequesterNum,subject,URL" & vbCrLf ' CSVヘッダー
+　　│#  CSV保存先生成
+　　〇 MyFolder = GetDocumentFolderPath
+　　◆ If Dir(MyFolder & "\" & WorkFolder, vbDirectory) = "" Then MkDir MyFolder & "\" & WorkFolder
+　　〇 csvfilepath = MyFolder & "\" & WorkFolder & "\Redmine_IDs.csv"
+　　│#  検索件数取得
+　　〇 totalCountUrl = baseUrl & "&limit=1"
+　　◎ totalCount = DbtotalCount(totalCountUrl, apiKey)	検索件数取得＜XmlSearch＞
+　　│#  画面更新停止
+　　〇 Application.ScreenUpdating = False
+　　│#  検索結果取得ループ
+　　＠┐Do While hasMoreData
+　　│□ Dim requestUrl As String
+　　││#  検索URL生成
+　　│〇 requestUrl = baseUrl & "&key=" & apiKey & "&offset=" & offset & "&limit=" & limit
+　　││#  検索実行
+　　│〇 http.Open "GET", requestUrl, False
+　　│〇 http.send
+　　││#  レスポンス確認
+　　│〇 statusCode = http.Status
+　　│◆ If statusCode = 1223 Then statusCode = 204
+　　│◆┐If statusCode = 200 Then
+　　│││#  XML解析
+　　││〇 xmlDoc.LoadXML http.responseText
+　　│││#  検索結果処理
+　　││＠┐For Each xmlNode In xmlDoc.SelectNodes("//result")
+　　│││□ Dim id As String, url As String, xmlurl As String
+　　││││#  IssueID取得
+　　│││〇 id = xmlNode.SelectSingleNode("id").text
+　　││││#  Issue詳細URL取得
+　　│││〇 url = xmlNode.SelectSingleNode("url").text
+　　│││〇 xmlurl = url & ".xml"
+　　││││#  Issue詳細取得
+　　│││〇 http2.Open "GET", xmlurl, False
+　　│││〇 http2.setRequestHeader "X-Redmine-API-Key", apiKey
+　　│││〇 http2.send
+　　│││〇 statusCode2 = http2.Status
+　　││││#  詳細取得結果確認
+　　│││◆ If statusCode2 = 1223 Then statusCode2 = 204
+　　│││◆┐If statusCode2 = 200 Or statusCode2 = 204 Then
+　　│││││#  詳細XML解析
+　　││││〇 xmlDoc2.LoadXML http2.responseText
+　　│││││#  一覧表示情報取得
+　　││││〇 Status = ""
+　　││││〇 Status = xmlDoc2.getElementsByTagName("status").Item(0).Attributes.getNamedItem("name").text
+　　││││◎ Subject = NormalizeListDisplayText(xmlDoc2.getElementsByTagName("subject").Item(0).text)	一覧表示文字列整形＜XmlSearch＞
+　　│││││	内部呼出:getElementsByTagName, Item
+　　││││〇 TroubleNum = xmlDoc2.SelectSingleNode("//custom_field[@id='68']").text
+　　││││◎ RequesterNum = NormalizeListDisplayText(xmlDoc2.SelectSingleNode("//custom_field[@id='228']").text)	一覧表示文字列整形＜XmlSearch＞
+　　│││││	内部呼出:SelectSingleNode
+　　││││〇 RequesterNum = Left(RequesterNum & Space(52), 52)
+　　│││├┐ELSE
+　　│││││#  詳細取得失敗
+　　││││〇 MsgBox "詳細取得失敗: " & statusCode2, vbCritical
+　　││││→ GoTo CleanUp
+　　││││┴End If
+　　││││#  CSV行追加
+　　│││〇 csvContent = csvContent & id & "," & TroubleNum & "," & Status & "," & RequesterNum & "," & url & "," & Subject & vbCrLf
+　　││││#  進捗表示更新
+　　│││〇 i = i + 1
+　　│││〇 UF_Search.lbl状況.Caption = "状況：" & Format(i, "###") & " / " & Format(totalCount, "###")
+　　│││〇 UF_Search.lbl進捗率.Caption = Round((i) / totalCount * 100)
+　　│││〇 UF_Search.Repaint
+　　│││┴Next xmlNode
+　　│││#  次ページ有無確認
+　　││◆┐If xmlDoc.SelectNodes("//result").Length < limit Then
+　　│││〇 hasMoreData = False
+　　││├┐ELSE
+　　││││#  次ページへ移動
+　　│││〇 offset = offset + limit
+　　│││┴End If
+　　│├┐ELSE
+　　│││#  検索失敗
+　　││〇 MsgBox "エラー: " & http.Status & " - " & http.statusText
+　　││→ Exit Function
+　　││┴End If
+　　│┴Loop
+　　│#  画面更新再開
+　　〇 Application.ScreenUpdating = True
+　　│#  CSV保存
+　　□ Dim fileNum As Integer
+　　〇 fileNum = FreeFile
+　　〇 Open csvfilepath For Output As #fileNum
+　　〇 Print #fileNum, csvContent
+　　〇 Close #fileNum
+　　│#  検索フォーム終了
+　　〇 Unload UF_Search
+　　│#  検索結果表示
+　　◎ Call UF_SearchResults.loadcsv(SearchKey, csvfilepath)	検索結果読込＜UF_SearchResults＞
+　　→ Exit Function
+▼ CleanUp:
+　　│#  画面更新再開
+　　〇 Application.ScreenUpdating = True
+　　│#  オブジェクト解放
+　　◎ Call ReleaseHttpObjects(http, xmlDoc)	通信オブジェクト解放＜XmlSearch＞
+　　◎ Call ReleaseHttpObjects(http2, xmlDoc2)	通信オブジェクト解放＜XmlSearch＞
+　　→ Exit Function
+▼ ErrorHandler:
+　　〇 MsgBox "エラー: " & Err.Description, vbCritical
+　　☆ Resume CleanUp
+　　┴End Function

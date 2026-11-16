@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift_jis">
+<title>Chk発生時分_Click</title>
+<style>
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+colgroup col:nth-of-type(1) {}
+colgroup col:nth-of-type(2) {}
+.resize {position: relative;}
+.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+</style>
+</head>
+<body>
+<h1>Chk発生時分_Click</h1>
+<p>Module : UF_OccDateTimeRegist</p>
+<p><a href="./_INDEX.html">← Module Index</a></p>
+<table>
+<colgroup><col/><col/></colgroup>
+<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<tbody>
+<tr><td>Procedure: UF_OccDateTimeRegist.Chk発生時分_Click  [ 発生時刻入力切替＜UF_OccDateTimeRegist＞ ]</td><td></td></tr>
+<tr><td>HCP</td><td>Business</td></tr>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Private Sub Chk発生時分_Click()</td><td>発生時刻入力切替＜UF_OccDateTimeRegist＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　│#  時刻入力有無判定</td><td></td></tr>
+<tr><td>　　◆┐If Chk発生時分.Value = False Then</td><td></td></tr>
+<tr><td>　　││#  時刻入力無効化</td><td></td></tr>
+<tr><td>　　│＠┐With txt時刻_時</td><td></td></tr>
+<tr><td>　　││〇 .Enabled = False</td><td></td></tr>
+<tr><td>　　││〇 .BackColor = &amp;H80000005</td><td></td></tr>
+<tr><td>　　││〇 .SpecialEffect = fmSpecialEffectSunken</td><td></td></tr>
+<tr><td>　　││〇 .BorderColor = &amp;H80000006</td><td></td></tr>
+<tr><td>　　││〇 .BorderStyle = fmBorderStyleNone</td><td></td></tr>
+<tr><td>　　││〇 .text = ""</td><td></td></tr>
+<tr><td>　　││┴End With</td><td></td></tr>
+<tr><td>　　│＠┐With txt時刻_分</td><td></td></tr>
+<tr><td>　　││〇 .Enabled = False</td><td></td></tr>
+<tr><td>　　││〇 .BackColor = &amp;H80000005</td><td></td></tr>
+<tr><td>　　││〇 .SpecialEffect = fmSpecialEffectSunken</td><td></td></tr>
+<tr><td>　　││〇 .BorderColor = &amp;H80000006</td><td></td></tr>
+<tr><td>　　││〇 .BorderStyle = fmBorderStyleNone</td><td></td></tr>
+<tr><td>　　││〇 .text = ""</td><td></td></tr>
+<tr><td>　　││┴End With</td><td></td></tr>
+<tr><td>　　│＠┐With txt時刻_コロン</td><td></td></tr>
+<tr><td>　　││〇 .Enabled = False</td><td></td></tr>
+<tr><td>　　││〇 .BackColor = &amp;H8000000F</td><td></td></tr>
+<tr><td>　　││〇 .SpecialEffect = fmSpecialEffectEtched</td><td></td></tr>
+<tr><td>　　││〇 .BorderColor = &amp;H8000000F</td><td></td></tr>
+<tr><td>　　││〇 .BorderStyle = fmBorderStyleSingle</td><td></td></tr>
+<tr><td>　　││┴End With</td><td></td></tr>
+<tr><td>　　││#  表示状態変更</td><td></td></tr>
+<tr><td>　　│＠┐With Chk発生時分</td><td></td></tr>
+<tr><td>　　││〇 .ForeColor = &amp;H80000010</td><td></td></tr>
+<tr><td>　　││〇 .BackStyle = fmBackStyleTransparent</td><td></td></tr>
+<tr><td>　　││┴End With</td><td></td></tr>
+<tr><td>　　││#  スピンボタン無効化</td><td></td></tr>
+<tr><td>　　│〇 SpinButton1.Enabled = False</td><td></td></tr>
+<tr><td>　　│＠┐With txt時刻_分</td><td></td></tr>
+<tr><td>　　││〇 .Enabled = True</td><td></td></tr>
+<tr><td>　　││〇 .BackColor = &amp;H80000005</td><td></td></tr>
+<tr><td>　　││〇 .SpecialEffect = fmSpecialEffectSunken</td><td></td></tr>
+<tr><td>　　││〇 .BorderColor = &amp;H80000006</td><td></td></tr>
+<tr><td>　　││〇 .BorderStyle = fmBorderStyleNone</td><td></td></tr>
+<tr><td>　　││〇 .text = Format(datTime, "nn")</td><td></td></tr>
+<tr><td>　　││┴End With</td><td></td></tr>
+<tr><td>　　│＠┐With txt時刻_コロン</td><td></td></tr>
+<tr><td>　　││〇 .Enabled = True</td><td></td></tr>
+<tr><td>　　││〇 .text = "："</td><td></td></tr>
+<tr><td>　　││┴End With</td><td></td></tr>
+<tr><td>　　││#  表示状態変更</td><td></td></tr>
+<tr><td>　　│＠┐With Chk発生時分</td><td></td></tr>
+<tr><td>　　││〇 .ForeColor = &amp;H80000012</td><td></td></tr>
+<tr><td>　　││〇 .BackStyle = fmBackStyleOpaque</td><td></td></tr>
+<tr><td>　　││┴End With</td><td></td></tr>
+<tr><td>　　││#  スピンボタン有効化</td><td></td></tr>
+<tr><td>　　│〇 SpinButton1.Enabled = True</td><td></td></tr>
+<tr><td>　　├┐ELSE</td><td></td></tr>
+<tr><td>　　││#  現在日時取得</td><td></td></tr>
+<tr><td>　　│〇 datTime = Now</td><td></td></tr>
+<tr><td>　　││#  時刻入力有効化</td><td></td></tr>
+<tr><td>　　│＠┐With txt時刻_時</td><td></td></tr>
+<tr><td>　　││┴End With</td><td></td></tr>
+<tr><td>　　│〇 .Enabled = True</td><td></td></tr>
+<tr><td>　　│〇 .BackColor = &amp;H80000005</td><td></td></tr>
+<tr><td>　　│〇 .SpecialEffect = fmSpecialEffectSunken</td><td></td></tr>
+<tr><td>　　│〇 .BorderColor = &amp;H80000006</td><td></td></tr>
+<tr><td>　　│〇 .BorderStyle = fmBorderStyleNone</td><td></td></tr>
+<tr><td>　　│〇 .text = Format(datTime, "hh")</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　┴End Sub</td><td></td></tr>
+</tbody>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function (eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function (e) {
+const styleTh = window.getComputedStyle(eleTh);
+const paddingLeft = parseFloat(styleTh.paddingLeft);
+const paddingRight = parseFloat(styleTh.paddingRight);
+const borderLeft = parseFloat(styleTh.borderLeftWidth);
+const borderRight = parseFloat(styleTh.borderRightWidth);
+startX = e.pageX;
+startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e) {
+const newWidth = startWidth + (e.pageX - startX);
+eleTh.style.width = newWidth + 'px';
+}
+function onMouseUp() {
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
+}
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+Procedure: modProcessing.StopMessageDisplay  [ 処理中画面終了＜modProcessing＞ ]
+HCP	Business
+┬
+〇│Sub StopMessageDisplay()	処理中画面終了＜modProcessing＞
+┴└┐
+　　☆ On Error Resume Next
+　　│#  タイマー停止
+　　〇 Application.OnTime nextTime, "ScheduleNextMessage", schedule:=False
+　　│#  処理中画面終了
+　　〇 Unload frmProcessing
+　　┴End Sub

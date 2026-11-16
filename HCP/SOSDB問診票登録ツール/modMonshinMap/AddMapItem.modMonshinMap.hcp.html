@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift_jis">
+<title>AddMapItem</title>
+<style>
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+colgroup col:nth-of-type(1) {}
+colgroup col:nth-of-type(2) {}
+.resize {position: relative;}
+.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+</style>
+</head>
+<body>
+<h1>AddMapItem</h1>
+<p>Module : modMonshinMap</p>
+<p><a href="./_INDEX.html">← Module Index</a></p>
+<table>
+<colgroup><col/><col/></colgroup>
+<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<tbody>
+<tr><td>Procedure: modMonshinMap.AddMapItem  [ マッピング項目登録＜modMonshinMap＞ ]</td><td></td></tr>
+<tr><td>HCP</td><td>Business</td></tr>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Private Sub AddMapItem(  ByVal Key As String,  ByVal v0 As String,  ByVal v1 As String,  ByVal v2 As String,  ByVal v3 As String,  ByVal v4 As String)</td><td>マッピング項目登録＜modMonshinMap＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　│#  フォーマット別アドレス情報生成</td><td></td></tr>
+<tr><td>　　□ Dim d As Object</td><td></td></tr>
+<tr><td>　　〇 Set d = CreateObject("Scripting.Dictionary")</td><td></td></tr>
+<tr><td>　　│#  2010形式アドレス設定</td><td></td></tr>
+<tr><td>　　〇 d(Monshin_2010) = v0</td><td></td></tr>
+<tr><td>　　│#  フォーマット①アドレス設定</td><td></td></tr>
+<tr><td>　　〇 d(Monshin_Format1) = v1</td><td></td></tr>
+<tr><td>　　│#  帳票形式アドレス設定</td><td></td></tr>
+<tr><td>　　〇 d(Monshin_Book) = v2</td><td></td></tr>
+<tr><td>　　│#  現行形式アドレス設定</td><td></td></tr>
+<tr><td>　　〇 d(Monshin_Current) = v3</td><td></td></tr>
+<tr><td>　　│#  互換形式アドレス設定</td><td></td></tr>
+<tr><td>　　〇 d(Monshin_Other) = v4</td><td></td></tr>
+<tr><td>　　│#  マッピング登録</td><td></td></tr>
+<tr><td>　　〇 MonshinMap.Add Key, d</td><td></td></tr>
+<tr><td>　　┴End Sub</td><td></td></tr>
+</tbody>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function (eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function (e) {
+const styleTh = window.getComputedStyle(eleTh);
+const paddingLeft = parseFloat(styleTh.paddingLeft);
+const paddingRight = parseFloat(styleTh.paddingRight);
+const borderLeft = parseFloat(styleTh.borderLeftWidth);
+const borderRight = parseFloat(styleTh.borderRightWidth);
+startX = e.pageX;
+startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e) {
+const newWidth = startWidth + (e.pageX - startX);
+eleTh.style.width = newWidth + 'px';
+}
+function onMouseUp() {
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
+}
+});
+</script>
+</body>
+</html>

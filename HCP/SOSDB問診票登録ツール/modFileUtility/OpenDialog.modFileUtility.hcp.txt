@@ -1,0 +1,56 @@
+Procedure: modFileUtility.OpenDialog  [ ファイル選択ダイアログ表示＜modFileUtility＞ ]
+HCP	Business
+┬
+〇│Public Function OpenDialog(strTitle As String,  Optional tblFilter As Variant,  Optional blnNetGetConnection As Boolean = False,  Optional strRootPath As String = "",  Optional swFixRootPath As Integer = 0,  Optional strDefaultRootPath As String = "",  Optional strButtonName As String = "開く") As String	ファイル選択ダイアログ表示＜modFileUtility＞
+┴└┐
+　　│#  前回選択フォルダ保持
+　　〇 Static strPrevDir As String
+　　□ Dim strFileName As String, strFileName2 As String
+　　□ Dim IX As Integer
+　　│#  ファイル選択ダイアログ初期化
+　　＠┐With Application.FileDialog(msoFileDialogOpen)
+　　│〇 .Title = strTitle
+　　││#  初期フォルダ設定
+　　│◎ Call GP_SetRootPathName(  .InitialFileName, strPrevDir, strRootPath, strDefaultRootPath, swFixRootPath)	初期フォルダ設定＜modFileUtility＞
+　　││#  ボタン名称設定
+　　│◆┐If Len(strButtonName) > 0 Then
+　　││〇 .ButtonName = strButtonName
+　　││┴End If
+　　││#  フィルタ設定
+　　│◆┐If IsArray(tblFilter) Then
+　　││＠┐With .Filters
+　　│││◎ .Clear	Issue情報初期化＜IssueInfo＞
+　　│││〇 IX = 0
+　　│││＠┐Do While IX <= UBound(tblFilter)
+　　││││〇 .Add tblFilter(IX, 0), tblFilter(IX, 1), IX + 1
+　　││││〇 IX = IX + 1
+　　││││┴Loop
+　　│││┴End With
+　　││┴End If
+　　│〇 .InitialFileName = strPrevDir
+　　│〇 .InitialView = msoFileDialogViewDetails
+　　│〇 .AllowMultiSelect = False
+　　││#  ダイアログ表示
+　　│◆┐If .Show Then
+　　│││#  選択ファイル取得
+　　││〇 strFileName = .SelectedItems(1)
+　　│││#  UNCパス変換
+　　││◆┐If (blnNetGetConnection And (Mid$(strFileName, 2, 1) = g_cnsCol)) Then
+　　│││◎ strFileName2 = GetResourceNameFromLocalDrive(strFileName)	ネットワーク共有パス取得＜modFileUtility＞
+　　│││◆┐If Left(strFileName2, 2) = g_cnsYen & g_cnsYen Then
+　　││││〇 strFileName = strFileName2 & Mid$(strFileName, 3)
+　　││││┴End If
+　　│││┴End If
+　　│││#  次回用フォルダ保存
+　　││◆┐If ((swFixRootPath = 0) Or (Len(strPrevDir) = 0)) Then
+　　│││〇 strFileName2 = Left(strFileName, InStrRev(strFileName, g_cnsYen))
+　　│││〇 strPrevDir = strFileName2
+　　││├┐ElseIf swFixRootPath = 3 Then
+　　││││#  キャンセル時フォルダ初期化
+　　│││〇 strPrevDir = strDefaultRootPath
+　　│││┴End If
+　　││┴End If
+　　│┴End With
+　　│#  選択結果返却
+　　〇 OpenDialog = strFileName
+　　┴End Function

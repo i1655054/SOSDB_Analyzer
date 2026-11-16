@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift_jis">
+<title>Clear_WorkFile</title>
+<style>
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+colgroup col:nth-of-type(1) {}
+colgroup col:nth-of-type(2) {}
+.resize {position: relative;}
+.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+</style>
+</head>
+<body>
+<h1>Clear_WorkFile</h1>
+<p>Module : modUtility</p>
+<p><a href="./_INDEX.html">← Module Index</a></p>
+<table>
+<colgroup><col/><col/></colgroup>
+<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<tbody>
+<tr><td>Procedure: modUtility.Clear_WorkFile  [ ワークファイル削除＜modUtility＞ ]</td><td></td></tr>
+<tr><td>HCP</td><td>Business</td></tr>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Public Sub Clear_WorkFile()</td><td>ワークファイル削除＜modUtility＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　□ Dim sht As Worksheet</td><td></td></tr>
+<tr><td>　　〇 Set sht = ThisWorkbook.Worksheets(SheetName_Main)</td><td></td></tr>
+<tr><td>　　□ Dim MyFolder As String</td><td></td></tr>
+<tr><td>　　□ Dim WorkFolder As String: WorkFolder = "WorkRedmine"</td><td></td></tr>
+<tr><td>　　│#  ドキュメントフォルダ取得</td><td></td></tr>
+<tr><td>　　〇 MyFolder = GetDocumentFolderPath</td><td></td></tr>
+<tr><td>　　□ Dim filePath As String</td><td></td></tr>
+<tr><td>　　│#  検索結果ファイル削除</td><td></td></tr>
+<tr><td>　　〇 filePath = MyFolder &amp; "\" &amp; WorkFolder &amp; "\Redmine_IDs.csv"</td><td></td></tr>
+<tr><td>　　◎ DeleteFileSafe filePath</td><td>安全ファイル削除＜modUtility＞</td></tr>
+<tr><td>　　□ Dim targets As Variant</td><td></td></tr>
+<tr><td>　　〇 targets = Array(MONFOLDER_RANG)</td><td></td></tr>
+<tr><td>　　□ Dim i As Long</td><td></td></tr>
+<tr><td>　　□ Dim Rng As Range</td><td></td></tr>
+<tr><td>　　│#  ワークファイル削除</td><td></td></tr>
+<tr><td>　　＠┐For i = LBound(targets) To UBound(targets)</td><td></td></tr>
+<tr><td>　　│〇 Set Rng = sht.Range(targets(i))</td><td></td></tr>
+<tr><td>　　││#  ファイルパス取得</td><td></td></tr>
+<tr><td>　　│〇 filePath = Trim(Rng.Value)</td><td></td></tr>
+<tr><td>　　││#  ファイル削除</td><td></td></tr>
+<tr><td>　　│◎ DeleteFileSafe filePath</td><td>安全ファイル削除＜modUtility＞</td></tr>
+<tr><td>　　││#  セル初期化</td><td></td></tr>
+<tr><td>　　│◎ ClearRangeValue Rng</td><td>セル内容初期化＜modUtility＞</td></tr>
+<tr><td>　　│┴Next</td><td></td></tr>
+<tr><td>　　┴End Sub</td><td></td></tr>
+</tbody>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function (eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function (e) {
+const styleTh = window.getComputedStyle(eleTh);
+const paddingLeft = parseFloat(styleTh.paddingLeft);
+const paddingRight = parseFloat(styleTh.paddingRight);
+const borderLeft = parseFloat(styleTh.borderLeftWidth);
+const borderRight = parseFloat(styleTh.borderRightWidth);
+startX = e.pageX;
+startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e) {
+const newWidth = startWidth + (e.pageX - startX);
+eleTh.style.width = newWidth + 'px';
+}
+function onMouseUp() {
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
+}
+});
+</script>
+</body>
+</html>

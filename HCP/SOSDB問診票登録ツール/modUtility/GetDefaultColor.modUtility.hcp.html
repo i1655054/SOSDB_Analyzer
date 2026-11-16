@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift_jis">
+<title>GetDefaultColor</title>
+<style>
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+colgroup col:nth-of-type(1) {}
+colgroup col:nth-of-type(2) {}
+.resize {position: relative;}
+.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+</style>
+</head>
+<body>
+<h1>GetDefaultColor</h1>
+<p>Module : modUtility</p>
+<p><a href="./_INDEX.html">← Module Index</a></p>
+<table>
+<colgroup><col/><col/></colgroup>
+<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<tbody>
+<tr><td>Procedure: modUtility.GetDefaultColor  [ 標準背景色取得＜modUtility＞ ]</td><td></td></tr>
+<tr><td>HCP</td><td>Business</td></tr>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Public Function GetDefaultColor(rngName As String) As Long</td><td>標準背景色取得＜modUtility＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　│#  セル種別判定</td><td></td></tr>
+<tr><td>　　◆┐Select Case rngName</td><td></td></tr>
+<tr><td>　　│├┐Case TARGET_VER_RANG, TANTOU_NAME_RANG</td><td></td></tr>
+<tr><td>　　││〇 GetDefaultColor = COLOR_KEYITEM</td><td></td></tr>
+<tr><td>　　│├┐Case TANTOU_RANG, DB_ID_RANG</td><td></td></tr>
+<tr><td>　　││〇 GetDefaultColor = COLOR_MASTER</td><td></td></tr>
+<tr><td>　　│├┐Case DB_STATUS_RANG, TORBLE_NUM_RANG, PRIORITY_RANG,  EQID_RANG, EQ_PRODUCT_RANG</td><td></td></tr>
+<tr><td>　　││〇 GetDefaultColor = COLOR_SYSTEM</td><td></td></tr>
+<tr><td>　　│├┐Case PRODUCT_TANTOU_RANG, ESCALE_DAY_RANG, CLOSE_DAY_RANG</td><td></td></tr>
+<tr><td>　　││〇 GetDefaultColor = COLOR_OPTIONAL</td><td></td></tr>
+<tr><td>　　│├┐Case MONDAINUM_RANG, MONDAIPRO_RANG, KIHENSIN_RANG,  KIKAKU_DAY_RANG, SERVICE_IMPACT_RANG, PROBLEM_YMDHM_RANG,  PROBLEM_BUILDING_RANG, HOST_NAME_RANG, PROBLEM_EQUIPMENT_RANG</td><td></td></tr>
+<tr><td>　　││〇 GetDefaultColor = COLOR_NORMAL</td><td></td></tr>
+<tr><td>　　│├┐Case Else</td><td></td></tr>
+<tr><td>　　││〇 GetDefaultColor = COLOR_NONE</td><td></td></tr>
+<tr><td>　　│┴End Select</td><td></td></tr>
+<tr><td>　　┴End Function</td><td></td></tr>
+</tbody>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function (eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function (e) {
+const styleTh = window.getComputedStyle(eleTh);
+const paddingLeft = parseFloat(styleTh.paddingLeft);
+const paddingRight = parseFloat(styleTh.paddingRight);
+const borderLeft = parseFloat(styleTh.borderLeftWidth);
+const borderRight = parseFloat(styleTh.borderRightWidth);
+startX = e.pageX;
+startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e) {
+const newWidth = startWidth + (e.pageX - startX);
+eleTh.style.width = newWidth + 'px';
+}
+function onMouseUp() {
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
+}
+});
+</script>
+</body>
+</html>

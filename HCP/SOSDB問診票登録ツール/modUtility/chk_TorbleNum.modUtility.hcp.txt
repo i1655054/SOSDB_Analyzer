@@ -1,0 +1,44 @@
+Procedure: modUtility.chk_TorbleNum  [ トラブル番号確認＜modUtility＞ ]
+HCP	Business
+┬
+〇│Public Function chk_TorbleNum(ByVal issue As IssueInfo) As Boolean	トラブル番号確認＜modUtility＞
+┴└┐
+　　│#  トラブル番号取得
+　　□ Dim val As String
+　　〇 val = Trim(CStr(issue.TroubleNum))
+　　│#  未入力確認
+　　◆┐If val = "" Then
+　　│◎ Call HighlightCell(TORBLE_NUM_RANG, COLOR_REQUIRED)	セル強調表示＜modUtility＞
+　　│〇 chk_TorbleNum = False
+　　│→ Exit Function
+　　│┴End If
+　　│#  フォーマット確認（xx-xxx）
+　　◆┐If Not val Like "##-###" Then
+　　│◎ Call HighlightCell(TORBLE_NUM_RANG, COLOR_REQUIRED)	セル強調表示＜modUtility＞
+　　│〇 chk_TorbleNum = False
+　　│→ Exit Function
+　　│┴End If
+　　│#  トラブル番号分解
+　　□ Dim parts() As String
+　　〇 parts = Split(val, "-")
+　　□ Dim num1 As Long, num2 As Long
+　　│#  数値変換
+　　〇 num1 = CLng(parts(0))
+　　〇 num2 = CLng(parts(1))
+　　│#  年度番号範囲確認
+　　◆┐If num1 < 1 Or num1 > 99 Then
+　　│◎ Call HighlightCell(TORBLE_NUM_RANG, COLOR_REQUIRED)	セル強調表示＜modUtility＞
+　　│〇 chk_TorbleNum = False
+　　│→ Exit Function
+　　│┴End If
+　　│#  管理番号範囲確認
+　　◆┐If num2 < 1 Or num2 > 999 Then
+　　│◎ Call HighlightCell(TORBLE_NUM_RANG, COLOR_REQUIRED)	セル強調表示＜modUtility＞
+　　│〇 chk_TorbleNum = False
+　　│→ Exit Function
+　　│┴End If
+　　│#  セル色復元
+　　◎ Call RestoreColor(TORBLE_NUM_RANG)	セル色復元＜modUtility＞
+　　│#  入力確認完了
+　　〇 chk_TorbleNum = True
+　　┴End Function

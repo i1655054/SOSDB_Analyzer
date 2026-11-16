@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift_jis">
+<title>SetIssueToUI</title>
+<style>
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+colgroup col:nth-of-type(1) {}
+colgroup col:nth-of-type(2) {}
+.resize {position: relative;}
+.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+</style>
+</head>
+<body>
+<h1>SetIssueToUI</h1>
+<p>Module : modUtility</p>
+<p><a href="./_INDEX.html">← Module Index</a></p>
+<table>
+<colgroup><col/><col/></colgroup>
+<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<tbody>
+<tr><td>Procedure: modUtility.SetIssueToUI  [ Issue画面反映＜modUtility＞ ]</td><td></td></tr>
+<tr><td>HCP</td><td>Business</td></tr>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Public Sub SetIssueToUI(ByVal issue As IssueInfo)</td><td>Issue画面反映＜modUtility＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　＠┐With ThisWorkbook.Sheets(SheetName_Main)</td><td></td></tr>
+<tr><td>　　││#  Issue基本情報反映</td><td></td></tr>
+<tr><td>　　│〇 .Range(DB_ID_RANG).Value = issue.IssueId</td><td></td></tr>
+<tr><td>　　│〇 .Range(DB_STATUS_RANG).Value = issue.Status</td><td></td></tr>
+<tr><td>　　│〇 .Range(PRIORITY_RANG).Value = issue.Priority</td><td></td></tr>
+<tr><td>　　│□ Dim TrNum As String</td><td></td></tr>
+<tr><td>　　││#  トラブル番号反映</td><td></td></tr>
+<tr><td>　　│◆┐If Len(issue.TroubleNum) &gt;= 5 Then</td><td></td></tr>
+<tr><td>　　││〇 TrNum = Right(issue.TroubleNum, 3)</td><td></td></tr>
+<tr><td>　　││◆┐If IsNumeric(TrNum) Then</td><td></td></tr>
+<tr><td>　　│││〇 .Range(TORBLE_NUM_RANG).Value = Format(CLng(TrNum), "000")</td><td></td></tr>
+<tr><td>　　││├┐ELSE</td><td></td></tr>
+<tr><td>　　│││〇 .Range(TORBLE_NUM_RANG).Value = ""</td><td></td></tr>
+<tr><td>　　│││┴End If</td><td></td></tr>
+<tr><td>　　│├┐ELSE</td><td></td></tr>
+<tr><td>　　││〇 .Range(TORBLE_NUM_RANG).Value = ""</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td>　　││#  管理情報反映</td><td></td></tr>
+<tr><td>　　│〇 .Range(EQ_PRODUCT_RANG).Value = issue.EqProduct</td><td></td></tr>
+<tr><td>　　│〇 .Range(PRODUCT_TANTOU_RANG).Value = issue.ProductTantou</td><td></td></tr>
+<tr><td>　　│〇 .Range(ESCALE_DAY_RANG).Value = issue.Esukare_Date</td><td></td></tr>
+<tr><td>　　│〇 .Range(CLOSE_DAY_RANG).Value = issue.Close_Date</td><td></td></tr>
+<tr><td>　　││#  問処番号解析反映</td><td></td></tr>
+<tr><td>　　│◆┐If issue.Mondainum_Pro &lt;&gt; "" Then</td><td></td></tr>
+<tr><td>　　││□ Dim num As String</td><td></td></tr>
+<tr><td>　　││□ Dim pro As String</td><td></td></tr>
+<tr><td>　　││◆┐If ParseMondainumPro(issue.Mondainum_Pro, num, pro) Then</td><td></td></tr>
+<tr><td>　　│││〇 .Range(MONDAINUM_RANG).Value = num</td><td></td></tr>
+<tr><td>　　│││〇 .Range(MONDAIPRO_RANG).Value = pro</td><td></td></tr>
+<tr><td>　　│││┴End If</td><td></td></tr>
+<tr><td>　　│├┐ELSE</td><td></td></tr>
+<tr><td>　　││〇 .Range(MONDAINUM_RANG).Value = ""</td><td></td></tr>
+<tr><td>　　││〇 .Range(MONDAIPRO_RANG).Value = ""</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td>　　││#  規変審情報解析反映</td><td></td></tr>
+<tr><td>　　│◆┐If issue.KihensinName_Date &lt;&gt; "" Then</td><td></td></tr>
+<tr><td>　　││□ Dim nameVal As String</td><td></td></tr>
+<tr><td>　　││□ Dim dateVal As Variant</td><td></td></tr>
+<tr><td>　　││◆┐If ParseKihensinNameDate(issue.KihensinName_Date, nameVal, dateVal) Then</td><td></td></tr>
+<tr><td>　　│││〇 .Range(KIHENSIN_RANG).Value = nameVal</td><td></td></tr>
+<tr><td>　　│││〇 .Range(KIKAKU_DAY_RANG).Value = dateVal</td><td></td></tr>
+<tr><td>　　│││┴End If</td><td></td></tr>
+<tr><td>　　│├┐ELSE</td><td></td></tr>
+<tr><td>　　││〇 .Range(KIHENSIN_RANG).Value = ""</td><td></td></tr>
+<tr><td>　　││〇 .Range(KIKAKU_DAY_RANG).Value = ""</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td>　　││#  サービス影響反映</td><td></td></tr>
+<tr><td>　　│〇 .Range(SERVICE_IMPACT_RANG).Value = issue.ServiceImpact</td><td></td></tr>
+<tr><td>　　││#  発生日時反映</td><td></td></tr>
+<tr><td>　　│◆┐If issue.OccurrenceDateTime &lt;&gt; "" Then</td><td></td></tr>
+<tr><td>　　││◎ .Range(PROBLEM_YMDHM_RANG).Value =  FormatOccurrence(issue.OccurrenceDateTime, "")</td><td>発生日時整形＜modUtility＞</td></tr>
+<tr><td>　　│││</td><td>内部呼出:Range</td></tr>
+<tr><td>　　│├┐ELSE</td><td></td></tr>
+<tr><td>　　││〇 .Range(PROBLEM_YMDHM_RANG).Value = ""</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td>　　││#  発生日時注意表示設定</td><td></td></tr>
+<tr><td>　　│◎ Call SetMultiLineAlert(PROBLEM_YMDHM_RANG)</td><td>複数行注意表示設定＜modUtility＞</td></tr>
+<tr><td>　　││#  問題発生ビル反映</td><td></td></tr>
+<tr><td>　　│〇 .Range(PROBLEM_BUILDING_RANG).Value = issue.ProblemBuilding</td><td></td></tr>
+<tr><td>　　││#  ビル注意表示設定</td><td></td></tr>
+<tr><td>　　│◎ Call SetMultiLineAlert(PROBLEM_BUILDING_RANG)</td><td>複数行注意表示設定＜modUtility＞</td></tr>
+<tr><td>　　││#  ホスト名反映</td><td></td></tr>
+<tr><td>　　│〇 .Range(HOST_NAME_RANG).Value = issue.HostName</td><td></td></tr>
+<tr><td>　　││#  ホスト名注意表示設定</td><td></td></tr>
+<tr><td>　　│◎ Call SetMultiLineAlert(HOST_NAME_RANG)</td><td>複数行注意表示設定＜modUtility＞</td></tr>
+<tr><td>　　││#  対象装置反映</td><td></td></tr>
+<tr><td>　　│〇 .Range(PROBLEM_EQUIPMENT_RANG).Value = issue.Equipment</td><td></td></tr>
+<tr><td>　　││#  対象装置注意表示設定</td><td></td></tr>
+<tr><td>　　│◎ Call SetMultiLineAlert(PROBLEM_EQUIPMENT_RANG)</td><td>複数行注意表示設定＜modUtility＞</td></tr>
+<tr><td>　　│┴End With</td><td></td></tr>
+<tr><td>　　┴End Sub</td><td></td></tr>
+</tbody>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function (eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function (e) {
+const styleTh = window.getComputedStyle(eleTh);
+const paddingLeft = parseFloat(styleTh.paddingLeft);
+const paddingRight = parseFloat(styleTh.paddingRight);
+const borderLeft = parseFloat(styleTh.borderLeftWidth);
+const borderRight = parseFloat(styleTh.borderRightWidth);
+startX = e.pageX;
+startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e) {
+const newWidth = startWidth + (e.pageX - startX);
+eleTh.style.width = newWidth + 'px';
+}
+function onMouseUp() {
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
+}
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,116 @@
+Procedure: modMonshinCore.UpdateMonshinHandler  [ 問診票更新処理＜modMonshinCore＞ ]
+HCP	Business
+┬
+〇│Public Sub UpdateMonshinHandler()	問診票更新処理＜modMonshinCore＞
+┴└┐
+　　│#  CurrentIssue準備
+　　◎ Call EnsureCurrentIssue	CurrentIssue生成保証＜modUtility＞
+　　│#  UI内容取得
+　　◎ Call GetUIToIssue(g_CurrentIssue)	画面情報取得＜modUtility＞
+　　│#  入力セル表示初期化
+　　◎ Call RestoreAllColors	全セル色復元＜modUtility＞
+　　│#  問診票更新前入力チェック
+　　◆→ If Not ValidateForMonshin(g_CurrentIssue) Then Exit Sub
+　　│#  トラブル番号妥当性確認
+　　◆┐If Not chk_TorbleNum(g_CurrentIssue) Then
+　　│〇 MsgBox "トラブル番号は1～999の範囲で入力してください。"
+　　│◎ Call RestoreAllColors	全セル色復元＜modUtility＞
+　　│→ Exit Sub
+　　│┴End If
+　　□ Dim xlApp As Object
+　　□ Dim xlBook As Object
+　　□ Dim strMonShoFileName As String
+　　□ Dim sheetType As enMonshinSheetType
+　　□ Dim info As MonshinInfoType
+　　□ Dim oldIssue As IssueInfo
+　　□ Dim newIssue As IssueInfo
+　　□ Dim displayIssue As IssueInfo
+　　□ Dim Author_Name As String
+　　□ Dim Bug_id As String
+　　□ Dim nen As String, num As String
+　　□ Dim PW As String
+　　☆ On Error GoTo ErrHandler
+　　〇 Sheet1.CheckBox1.Value = True
+　　│#  Redmine IssueID取得
+　　◎ Bug_id = FindIssueIdByTroubleNum(g_CurrentIssue.AuthorName, g_CurrentIssue.TroubleNum)	トラバス管理番号検索＜modIssueService＞
+　　│#  IssueID取得結果確認
+　　◆┐If Bug_id = "" Then
+　　│〇 MsgBox "トラバス管理番号【 " & g_CurrentIssue.TroubleNum & " 】を取得できません"
+　　│→ GoTo CleanUp
+　　│┴End If
+　　│#  Redmine情報取得
+　　◎ Set oldIssue = modIssueMapper.Get_RedmineDataToIssueInfo(Author_Name, Bug_id)	Redmine情報取得＜modIssueMapper＞
+　　│#  比較用Issue保存
+　　〇 Set g_OriginalIssue = oldIssue
+　　│#  問診票選択
+　　◎ strMonShoFileName = get_MonshinFile2("問診票を選択")	問診票ファイル選択＜modFileUtility＞
+　　│#  選択結果確認
+　　◆┐If strMonShoFileName = "" Then
+　　││#  Redmine情報を画面表示
+　　│〇 Set g_CurrentIssue = oldIssue
+　　│◎ Call SetIssueToUI(oldIssue)	Issue画面反映＜modUtility＞
+　　│◎ Call Button_Set_Check(oldIssue)	詳細表示ボタン制御＜modUtility＞
+　　│→ GoTo CleanUp
+　　│┴End If
+　　│#  読込中表示開始
+　　◎ Call StartMessageDisplay	処理中画面開始＜modProcessing＞
+　　│#  画面更新
+　　〇 DoEvents
+　　│#  Excel起動
+　　〇 PW = GetPassword
+　　〇 Set xlApp = CreateObject("Excel.Application")
+　　〇 xlApp.Visible = False
+　　☆ On Error Resume Next
+　　│#  問診票ブック読込
+　　〇 Set xlBook = xlApp.Workbooks.Open(Filename:=strMonShoFileName, Password:=PW)
+　　◆┐If Err.Number <> 0 Then
+　　│◎ Err.Clear	Issue情報初期化＜IssueInfo＞
+　　│〇 Set xlBook = xlApp.Workbooks.Open(Filename:=strMonShoFileName)
+　　│┴End If
+　　☆ On Error GoTo ErrHandler
+　　│#  ブック取得結果確認
+　　◆┐If xlBook Is Nothing Then
+　　│〇 MsgBox "問診票ファイルを開けませんでした。", vbCritical
+　　│→ GoTo CleanUp
+　　│┴End If
+　　│#  問診票形式判定
+　　◎ sheetType = modMonshinCore.DetectMonshinSheetType(xlBook)	問診票形式判定＜modMonshinCore＞
+　　◆ If sheetType = Monshin_NotFound Then GoTo CleanUp
+　　│#  問診情報取得
+　　◎ info = modMonshinCore.Get_MonshinInfo(xlBook, sheetType)	問診情報取得＜modMonshinCore＞
+　　│#  問診票Issue生成
+　　◎ Set newIssue = CreateIssueFromInfo(info)	問診情報からIssue生成＜modIssueMapper＞
+　　│#  IssueID引継ぎ
+　　〇 newIssue.IssueId = Bug_id
+　　│#  問診票保存元設定
+　　◎ Call SetMonshinSource(newIssue, xlBook)	問診票保存元設定＜modUtility＞
+　　│#  表示用Issue生成
+　　〇 Set displayIssue = New IssueInfo
+　　│#  Redmine情報コピー
+　　◎ displayIssue.CopyFrom oldIssue	Issue情報コピー＜IssueInfo＞
+　　│#  問診票情報反映
+　　◎ displayIssue.MergeFromMonshin newIssue	問診票情報優先マージ＜IssueInfo＞
+　　│#  問診票フォルダ引継ぎ
+　　〇 displayIssue.MonFolder = newIssue.MonFolder
+　　│#  CurrentIssue更新
+　　〇 Set g_CurrentIssue = displayIssue
+　　│#  画面反映
+　　◎ Call SetIssueToUI(displayIssue)	Issue画面反映＜modUtility＞
+　　│#  ボタン制御更新
+　　◎ Call Button_Set_Check(displayIssue)	詳細表示ボタン制御＜modUtility＞
+▼ CleanUp:
+　　☆ On Error Resume Next
+　　│#  問診票クローズ
+　　◆ If Not xlBook Is Nothing Then xlBook.Close False
+　　│#  Excel終了
+　　◆ If Not xlApp Is Nothing Then xlApp.Quit
+　　│#  オブジェクト解放
+　　〇 Set xlBook = Nothing
+　　〇 Set xlApp = Nothing
+　　│#  読込中表示終了
+　　◎ Call StopMessageDisplay	処理中画面終了＜modProcessing＞
+　　→ Exit Sub
+▼ ErrHandler:
+　　〇 MsgBox "エラー発生: " & Err.Description, vbCritical
+　　☆ Resume CleanUp
+　　┴End Sub

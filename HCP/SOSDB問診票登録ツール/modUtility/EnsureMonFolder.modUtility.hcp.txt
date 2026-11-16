@@ -1,0 +1,18 @@
+Procedure: modUtility.EnsureMonFolder  [ 問診票保存フォルダ確認＜modUtility＞ ]
+HCP	Business
+┬
+〇│Public Function EnsureMonFolder(ByRef issue As IssueInfo) As Boolean	問診票保存フォルダ確認＜modUtility＞
+┴└┐
+　　│#  問診票保存先確認
+　　◆┐If Trim(issue.MonFolder) = "" Then
+　　││#  保存先フォルダ選択
+　　│◎ issue.MonFolder = GetSaveFolder("問処票")	保存先フォルダ選択＜modFileUtility＞
+　　││#  選択結果確認
+　　│◆┐If issue.MonFolder = "" Then
+　　││〇 EnsureMonFolder = False
+　　││→ Exit Function
+　　││┴End If
+　　│┴End If
+　　│#  保存先確認完了
+　　〇 EnsureMonFolder = True
+　　┴End Function

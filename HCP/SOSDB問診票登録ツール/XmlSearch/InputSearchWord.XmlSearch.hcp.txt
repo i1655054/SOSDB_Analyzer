@@ -1,0 +1,11 @@
+Procedure: XmlSearch.InputSearchWord  [ 検索キーワード入力＜XmlSearch＞ ]
+HCP	Business
+┬
+〇│Public Function InputSearchWord() As String	検索キーワード入力＜XmlSearch＞
+┴└┐
+　　│#  検索入力フォーム取得
+　　□ Dim uf As UF_Search
+　　〇 Set uf = UF_Search
+　　│#  検索入力フォーム表示
+　　〇 uf.Show
+　　┴End Function

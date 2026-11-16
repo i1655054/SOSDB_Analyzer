@@ -1,0 +1,16 @@
+Procedure: modProcessing.StartMessageDisplay  [ 処理中画面開始＜modProcessing＞ ]
+HCP	Business
+┬
+〇│Sub StartMessageDisplay()	処理中画面開始＜modProcessing＞
+┴└┐
+　　│#  進捗メッセージ初期化
+　　〇 messages = Split("処理中です...|まだ処理中です...|もう少しです...|完了間近...", "|")
+　　│#  メッセージ番号初期化
+　　〇 messageIndex = 0
+　　│#  処理中画面表示
+　　〇 frmProcessing.Show vbModeless
+　　│#  画面更新
+　　〇 DoEvents
+　　│#  メッセージ更新開始
+　　◎ ScheduleNextMessage	進捗メッセージ更新＜modProcessing＞
+　　┴End Sub

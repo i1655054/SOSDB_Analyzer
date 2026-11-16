@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift_jis">
+<title>UserForm_Resize</title>
+<style>
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+colgroup col:nth-of-type(1) {}
+colgroup col:nth-of-type(2) {}
+.resize {position: relative;}
+.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+</style>
+</head>
+<body>
+<h1>UserForm_Resize</h1>
+<p>Module : UF_InfoWebDisplay</p>
+<p><a href="./_INDEX.html">← Module Index</a></p>
+<table>
+<colgroup><col/><col/></colgroup>
+<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<tbody>
+<tr><td>Procedure: UF_InfoWebDisplay.UserForm_Resize  [ フォームサイズ変更＜UF_InfoWebDisplay＞ ]</td><td></td></tr>
+<tr><td>HCP</td><td>Business</td></tr>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Private Sub UserForm_Resize()</td><td>フォームサイズ変更＜UF_InfoWebDisplay＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　◆┐If Not m_IsRestoring Then</td><td></td></tr>
+<tr><td>　　││#  サイズ保存</td><td></td></tr>
+<tr><td>　　│◎ SaveCurrentSize</td><td>フォームサイズ保存＜UF_InfoWebDisplay＞</td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　│#  フォントサイズ取得</td><td></td></tr>
+<tr><td>　　〇 FontSize = SpinButton1.Value</td><td></td></tr>
+<tr><td>　　＠┐With Me.Label1</td><td></td></tr>
+<tr><td>　　│〇 .Top = margin</td><td></td></tr>
+<tr><td>　　│〇 .Left = margin</td><td></td></tr>
+<tr><td>　　│┴End With</td><td></td></tr>
+<tr><td>　　◆┐If Me.Height &lt; 9 * margin Then</td><td></td></tr>
+<tr><td>　　│→ Exit Sub</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　│#  フレーム再配置</td><td></td></tr>
+<tr><td>　　＠┐With Me.Frame1</td><td></td></tr>
+<tr><td>　　│〇 .Top = 3 * margin</td><td></td></tr>
+<tr><td>　　│〇 .Left = margin</td><td></td></tr>
+<tr><td>　　│〇 .Width = Me.Width - (3 * margin)</td><td></td></tr>
+<tr><td>　　│〇 .Height = Me.Height - (9 * margin)</td><td></td></tr>
+<tr><td>　　│┴End With</td><td></td></tr>
+<tr><td>　　│#  WebBrowser再配置</td><td></td></tr>
+<tr><td>　　＠┐With Me.WebBrowser1</td><td></td></tr>
+<tr><td>　　│〇 .Top = 1</td><td></td></tr>
+<tr><td>　　│〇 .Left = 1</td><td></td></tr>
+<tr><td>　　│〇 .Width = Me.Frame1.Width - 2</td><td></td></tr>
+<tr><td>　　│〇 .Height = Me.Frame1.Height - 2</td><td></td></tr>
+<tr><td>　　│┴End With</td><td></td></tr>
+<tr><td>　　│#  ボタン再配置</td><td></td></tr>
+<tr><td>　　＠┐With Me.CommandButton1</td><td></td></tr>
+<tr><td>　　│〇 .Top = Me.Frame1.Top + Me.Frame1.Height + margin</td><td></td></tr>
+<tr><td>　　│〇 .Left = Me.Frame1.Left + Me.Frame1.Width - btWidth</td><td></td></tr>
+<tr><td>　　│〇 .Height = btHeight          'UF_InfoDisplay内のCommandButton1の高さ 18インチ</td><td></td></tr>
+<tr><td>　　│〇 .Width = btWidth            'UF_InfoDisplay内のCommandButton1の長さ 66インチ</td><td></td></tr>
+<tr><td>　　│┴End With</td><td></td></tr>
+<tr><td>　　＠┐With Me.CommandButtonEdit</td><td></td></tr>
+<tr><td>　　│〇 .Top = Me.Frame1.Top + Me.Frame1.Height + margin</td><td></td></tr>
+<tr><td>　　│〇 .Left = Me.Frame1.Left + Me.Frame1.Width - 2 * btWidth - 10</td><td></td></tr>
+<tr><td>　　│〇 .Height = btHeight          'UF_InfoDisplay内のCommandButton1の高さ 18インチ</td><td></td></tr>
+<tr><td>　　│〇 .Width = btWidth            'UF_InfoDisplay内のCommandButton1の長さ 66インチ</td><td></td></tr>
+<tr><td>　　│┴End With</td><td></td></tr>
+<tr><td>　　＠┐With Me.CommandButton2</td><td></td></tr>
+<tr><td>　　│〇 .Top = Me.Frame1.Top + Me.Frame1.Height + margin</td><td></td></tr>
+<tr><td>　　│〇 .Left = margin</td><td></td></tr>
+<tr><td>　　│┴End With</td><td></td></tr>
+<tr><td>　　│#  フォント操作部再配置</td><td></td></tr>
+<tr><td>　　＠┐With Me.SpinButton1</td><td></td></tr>
+<tr><td>　　│〇 .Top = margin - 4</td><td></td></tr>
+<tr><td>　　│〇 .Left = Me.Frame1.Left + Me.Frame1.Width - 2 * margin</td><td></td></tr>
+<tr><td>　　│┴End With</td><td></td></tr>
+<tr><td>　　＠┐With Me.Label2</td><td></td></tr>
+<tr><td>　　│〇 .Top = margin</td><td></td></tr>
+<tr><td>　　│〇 .Left = Me.Frame1.Left + Me.Frame1.Width - (2 * margin + Me.Label2.Width + Me.SpinButton1.Width)</td><td></td></tr>
+<tr><td>　　│〇 .Caption = FontSize</td><td></td></tr>
+<tr><td>　　│┴End With</td><td></td></tr>
+<tr><td>　　＠┐With Me.Label3</td><td></td></tr>
+<tr><td>　　│〇 .Top = margin</td><td></td></tr>
+<tr><td>　　│〇 .Left = Me.Frame1.Left + Me.Frame1.Width - (2 * margin + Me.Label3.Width + Me.Label2.Width + Me.SpinButton1.Width)</td><td></td></tr>
+<tr><td>　　│〇 .Caption = "文字サイズ:"</td><td></td></tr>
+<tr><td>　　│┴End With</td><td></td></tr>
+<tr><td>　　＠┐With Label4</td><td></td></tr>
+<tr><td>　　│〇 .Top = Me.Frame1.Top + Me.Frame1.Height + margin</td><td></td></tr>
+<tr><td>　　│〇 .Left = Frame1.Width / 2 - Label4.Width / 2</td><td></td></tr>
+<tr><td>　　│┴End With</td><td></td></tr>
+<tr><td>　　┴End Sub</td><td></td></tr>
+</tbody>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function (eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function (e) {
+const styleTh = window.getComputedStyle(eleTh);
+const paddingLeft = parseFloat(styleTh.paddingLeft);
+const paddingRight = parseFloat(styleTh.paddingRight);
+const borderLeft = parseFloat(styleTh.borderLeftWidth);
+const borderRight = parseFloat(styleTh.borderRightWidth);
+startX = e.pageX;
+startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e) {
+const newWidth = startWidth + (e.pageX - startX);
+eleTh.style.width = newWidth + 'px';
+}
+function onMouseUp() {
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
+}
+});
+</script>
+</body>
+</html>

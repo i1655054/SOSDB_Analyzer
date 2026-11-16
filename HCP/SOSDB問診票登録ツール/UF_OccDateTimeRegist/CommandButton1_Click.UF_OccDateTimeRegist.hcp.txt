@@ -1,0 +1,27 @@
+Procedure: UF_OccDateTimeRegist.CommandButton1_Click  [ 発生日時登録＜UF_OccDateTimeRegist＞ ]
+HCP	Business
+┬
+〇│Private Sub CommandButton1_Click()	発生日時登録＜UF_OccDateTimeRegist＞
+┴└┐
+　　□ Dim sht As Worksheet
+　　□ Dim stProblem As String
+　　〇 Set sht = ThisWorkbook.Sheets(SheetName_Main) ' 対象のシート名を指定
+　　│#  出力文字列生成
+　　◆┐If Chk発生時分.Value = False Then
+　　││#  日付のみ設定
+　　│〇 stProblem = Me.txt問題発生日.text
+　　├┐ELSE
+　　││#  日時文字列生成
+　　│〇 stProblem = Me.txt問題発生日.text & " " & Me.txt時刻_時.text & ":" & Me.txt時刻_分.text
+　　│┴End If
+　　│#  呼出元判定
+　　◆┐If IsUserFormOpen("UF_NewInfoRegist") Then
+　　││#  フォームへ反映
+　　│〇 UF_NewInfoRegist.txt問題発生日時.Value = stProblem
+　　├┐ELSE
+　　││#  シートへ反映
+　　│〇 sht.Range(PROBLEM_YMDHM_RANG) = stProblem
+　　│┴End If
+　　│#  フォーム終了
+　　〇 Unload Me
+　　┴End Sub

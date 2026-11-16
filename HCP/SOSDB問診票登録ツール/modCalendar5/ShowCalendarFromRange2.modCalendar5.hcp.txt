@@ -1,0 +1,25 @@
+Procedure: modCalendar5.ShowCalendarFromRange2  [ セル日付選択＜modCalendar5＞ ]
+HCP	Business
+┬
+〇│Public Sub ShowCalendarFromRange2(ByRef objRange As Range,  Optional ByVal strCaption As String = g_cnsCaption)	セル日付選択＜modCalendar5＞
+┴└┐
+　　□ Dim lngLeft As Long                                             ' 横位置
+　　□ Dim lngTop As Long                                              ' 縦位置
+　　◆┐If objRange.count > 1 Then
+　　│◆→ If objRange.Address <> objRange.Cells(1).MergeArea.Address Then Exit Sub
+　　│┴End If
+　　◎ Call FP_GetFormPosition(objRange, UF_Calendar5.Width, UF_Calendar5.Height, lngLeft, lngTop)	フォーム表示位置算出＜modCalendar5＞
+　　＠┐With UF_Calendar5
+　　│〇 .prpTitle = strCaption                              ' タイトル
+　　│〇 .prpEntMode = 0                                     ' 入力モード(0=セル、1=TextBox)
+　　│〇 Set .prpRange = objRange                            ' 対象セル
+　　│◆┐If ((lngLeft <> 0) Or (lngTop <> 0)) Then
+　　││〇 .StartUpPosition = 0
+　　││〇 .Left = lngLeft
+　　││〇 .Top = lngTop
+　　│├┐ELSE
+　　││〇 .StartUpPosition = 2
+　　││┴End If
+　　│〇 .Show
+　　│┴End With
+　　┴End Sub

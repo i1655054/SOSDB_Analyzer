@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift_jis">
+<title>CreateIssueXmlFromIssue</title>
+<style>
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+colgroup col:nth-of-type(1) {}
+colgroup col:nth-of-type(2) {}
+.resize {position: relative;}
+.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+</style>
+</head>
+<body>
+<h1>CreateIssueXmlFromIssue</h1>
+<p>Module : modRegister</p>
+<p><a href="./_INDEX.html">← Module Index</a></p>
+<table>
+<colgroup><col/><col/></colgroup>
+<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<tbody>
+<tr><td>Procedure: modRegister.CreateIssueXmlFromIssue  [ 新規登録XML生成＜modRegister＞ ]</td><td></td></tr>
+<tr><td>HCP</td><td>Business</td></tr>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Public Function CreateIssueXmlFromIssue(  ByVal issue As IssueInfo) As String</td><td>新規登録XML生成＜modRegister＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　□ Dim xml As String</td><td></td></tr>
+<tr><td>　　│#  XML開始</td><td></td></tr>
+<tr><td>　　〇 xml = "&lt;?xml version=""1.0""?&gt;"</td><td></td></tr>
+<tr><td>　　〇 xml = xml &amp; "&lt;issue&gt;"</td><td></td></tr>
+<tr><td>　　│#  固定情報出力</td><td></td></tr>
+<tr><td>　　〇 xml = xml &amp; "&lt;project_id&gt;" &amp; PROJECT_ID &amp; "&lt;/project_id&gt;"</td><td></td></tr>
+<tr><td>　　〇 xml = xml &amp; "&lt;tracker_id&gt;" &amp; TRACKER_ID &amp; "&lt;/tracker_id&gt;"</td><td></td></tr>
+<tr><td>　　│#  ステータス出力</td><td></td></tr>
+<tr><td>　　◆┐If issue.Status &lt;&gt; "" Then</td><td></td></tr>
+<tr><td>　　│◎ xml = xml &amp; "&lt;status_id&gt;" &amp; GetStatusId(issue.Status) &amp; "&lt;/status_id&gt;"</td><td>ステータスID取得＜modIssueMapper＞</td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　│#  優先度出力</td><td></td></tr>
+<tr><td>　　◆┐If issue.Priority &lt;&gt; "" Then</td><td></td></tr>
+<tr><td>　　│◎ xml = xml &amp; "&lt;priority_id&gt;" &amp; GetPriorityId(issue.Priority) &amp; "&lt;/priority_id&gt;"</td><td>優先度ID取得＜modIssueMapper＞</td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　│#  作成者出力</td><td></td></tr>
+<tr><td>　　◆┐If issue.AuthorName &lt;&gt; "" Then</td><td></td></tr>
+<tr><td>　　│◎ xml = xml &amp; "&lt;author_id&gt;" &amp; GetUserId(issue.AuthorName) &amp; "&lt;/author_id&gt;"</td><td>ユーザーID取得＜modIssueMapper＞</td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　│#  担当者出力</td><td></td></tr>
+<tr><td>　　◆┐If issue.AssignedTo &lt;&gt; "" Then</td><td></td></tr>
+<tr><td>　　│◎ xml = xml &amp; "&lt;assigned_to_id&gt;" &amp; GetUserId(issue.AssignedTo) &amp; "&lt;/assigned_to_id&gt;"</td><td>ユーザーID取得＜modIssueMapper＞</td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　│#  対象バージョン出力</td><td></td></tr>
+<tr><td>　　◆┐If issue.targetVersion &lt;&gt; "" Then</td><td></td></tr>
+<tr><td>　　│◎ xml = xml &amp; "&lt;fixed_version_id&gt;" &amp; GetVersionId(issue.targetVersion) &amp; "&lt;/fixed_version_id&gt;"</td><td>対象バージョンID取得＜modIssueMapper＞</td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　│#  題名出力</td><td></td></tr>
+<tr><td>　　◆┐If issue.Subject &lt;&gt; "" Then</td><td></td></tr>
+<tr><td>　　│◎ xml = xml &amp; "&lt;subject&gt;" &amp; EscapeXML(issue.Subject) &amp; "&lt;/subject&gt;"</td><td>XMLエスケープ＜XmlLoader＞</td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　│#  説明出力</td><td></td></tr>
+<tr><td>　　◆┐If issue.Description &lt;&gt; "" Then</td><td></td></tr>
+<tr><td>　　│◎ xml = xml &amp; "&lt;description&gt;" &amp; EscapeXML(issue.Description) &amp; "&lt;/description&gt;"</td><td>XMLエスケープ＜XmlLoader＞</td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　│#  カスタムフィールド出力</td><td></td></tr>
+<tr><td>　　◎ xml = xml &amp; BuildCustomFieldsXml(issue)</td><td>カスタムフィールドXML生成＜modRegister＞</td></tr>
+<tr><td>　　│#  XML終了</td><td></td></tr>
+<tr><td>　　〇 xml = xml &amp; "&lt;/issue&gt;"</td><td></td></tr>
+<tr><td>　　│#  XML返却</td><td></td></tr>
+<tr><td>　　〇 CreateIssueXmlFromIssue = xml</td><td></td></tr>
+<tr><td>　　┴End Function</td><td></td></tr>
+</tbody>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function (eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function (e) {
+const styleTh = window.getComputedStyle(eleTh);
+const paddingLeft = parseFloat(styleTh.paddingLeft);
+const paddingRight = parseFloat(styleTh.paddingRight);
+const borderLeft = parseFloat(styleTh.borderLeftWidth);
+const borderRight = parseFloat(styleTh.borderRightWidth);
+startX = e.pageX;
+startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e) {
+const newWidth = startWidth + (e.pageX - startX);
+eleTh.style.width = newWidth + 'px';
+}
+function onMouseUp() {
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
+}
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+Procedure: Sheet1.Remarks_Button_Release  [ 備考ボタン解除＜Sheet1＞ ]
+HCP	Business
+┬
+〇│Public Sub Remarks_Button_Release()	備考ボタン解除＜Sheet1＞
+┴└┐
+　　＠┐With RemarksButton
+　　│〇 .BackColor = &H8000000F
+　　│〇 .ForeColor = &H80000012
+　　│┴End With
+　　〇 DoEvents
+　　〇 Application.ScreenUpdating = True
+　　〇 ActiveWindow.SmallScroll Down:=0
+　　┴End Sub

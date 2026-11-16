@@ -1,0 +1,7 @@
+Procedure: modAboutCalendar2.GP_GetCalendarTable1  [ 単月カレンダー生成＜modAboutCalendar2＞ ]
+HCP	Business
+┬
+〇│Public Sub GPGetCalendarTable1(ByVal lngY As Long,  ByVal lngM As Long,  ByRef tblCalendar() As g_typAboutCalendar2)	単月カレンダー生成＜modAboutCalendar2＞
+┴└┐
+　　◎ Call g_clsAboutCalendar.GetCalendarTable1(lngY, lngM, tblCalendar)	単月カレンダーテーブル生成＜clsAboutCalendar2＞
+　　┴End Sub

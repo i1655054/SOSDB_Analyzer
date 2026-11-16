@@ -1,0 +1,12 @@
+Procedure: UF_Calendar5.LBL_PREV_Click  [ 前月表示＜UF_Calendar5＞ ]
+HCP	Business
+┬
+〇│Private Sub LBL_PREV_Click()	前月表示＜UF_Calendar5＞
+┴└┐
+　　│#  年月選択非表示
+　　◎ Call GP_EraseYearMonth	年月選択非表示＜UF_Calendar5＞
+　　│#  前月設定
+　　〇 g_FormDate1 = DateSerial(g_intCurYear, g_intCurMonth - 1, 1)
+　　│#  カレンダー再生成
+　　◎ Call GP_MakeCalendar	カレンダー生成＜UF_Calendar5＞
+　　┴End Sub

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift_jis">
+<title>GP_UpdateHolidaySUB2</title>
+<style>
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+colgroup col:nth-of-type(1) {}
+colgroup col:nth-of-type(2) {}
+.resize {position: relative;}
+.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+</style>
+</head>
+<body>
+<h1>GP_UpdateHolidaySUB2</h1>
+<p>Module : clsAboutCalendar2</p>
+<p><a href="./_INDEX.html">← Module Index</a></p>
+<table>
+<colgroup><col/><col/></colgroup>
+<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<tbody>
+<tr><td>Procedure: clsAboutCalendar2.GP_UpdateHolidaySUB2  [ HappyMonday祝日設定＜clsAboutCalendar2＞ ]</td><td></td></tr>
+<tr><td>HCP</td><td>Business</td></tr>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Private Sub GPUpdateHolidaySUB2(ByVal lngSyusu As Long,  ByVal lngYobi As Long,  ByVal strName As String,  ByVal lngHoli As Long,  ByVal lngFurikaeKbn As Long,  ByVal lngCalStrIx As Long,  ByVal lngIxSyuku As Long,  ByRef lngFuriDIxMax As Long,  ByRef tblFuriDIx() As gtypFuriDIx,  ByRef tblCalendar() As g_typAboutCalendar2)</td><td>HappyMonday祝日設定＜clsAboutCalendar2＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　□ Dim lngIx As Long                                           ' テーブルINDEX</td><td></td></tr>
+<tr><td>　　〇 lngIx = lngCalStrIx</td><td></td></tr>
+<tr><td>　　│#  対象日検索</td><td></td></tr>
+<tr><td>　　＠┐Do While lngIx &lt;= UBound(tblCalendar)</td><td></td></tr>
+<tr><td>　　││#  HappyMonday該当判定</td><td></td></tr>
+<tr><td>　　│◆┐If ((tblCalendar(lngIx).HmSyusu = lngSyusu) And (tblCalendar(lngIx).Yobi = lngYobi)) Then</td><td></td></tr>
+<tr><td>　　│││#  固定日祝日設定処理呼出</td><td></td></tr>
+<tr><td>　　││◎ Call GP_UpdateHolidaySUB1(Day(tblCalendar(lngIx).Hiduke),  strName,  lngHoli,  lngFurikaeKbn,  lngCalStrIx,  lngIxSyuku,  lngFuriDIxMax,  tblFuriDIx,  tblCalendar)</td><td>固定日祝日設定＜clsAboutCalendar2＞</td></tr>
+<tr><td>　　│││</td><td>内部呼出:Day, tblCalendar</td></tr>
+<tr><td>　　││→ Exit Do</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td>　　││#  次日検索</td><td></td></tr>
+<tr><td>　　│〇 lngIx = lngIx + 1</td><td></td></tr>
+<tr><td>　　│┴Loop</td><td></td></tr>
+<tr><td>　　┴End Sub</td><td></td></tr>
+</tbody>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function (eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function (e) {
+const styleTh = window.getComputedStyle(eleTh);
+const paddingLeft = parseFloat(styleTh.paddingLeft);
+const paddingRight = parseFloat(styleTh.paddingRight);
+const borderLeft = parseFloat(styleTh.borderLeftWidth);
+const borderRight = parseFloat(styleTh.borderRightWidth);
+startX = e.pageX;
+startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e) {
+const newWidth = startWidth + (e.pageX - startX);
+eleTh.style.width = newWidth + 'px';
+}
+function onMouseUp() {
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
+}
+});
+</script>
+</body>
+</html>

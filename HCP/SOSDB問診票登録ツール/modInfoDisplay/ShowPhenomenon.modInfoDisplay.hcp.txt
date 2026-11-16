@@ -1,0 +1,77 @@
+Procedure: modInfoDisplay.ShowPhenomenon  [ 事象名表示＜modInfoDisplay＞ ]
+HCP	Business
+┬
+〇│Public Function ShowPhenomenon(ByVal issue As IssueInfo)	事象名表示＜modInfoDisplay＞
+┴└┐
+　　□ Dim bodyHTML As String
+　　│#  同一画面表示中判定
+　　◆┐If UF_InfoWebDisplay.Visible  And CallingInfoDisplay = "ShowPhenomenon" Then
+　　││#  表示状態初期化
+　　│〇 CallingInfoDisplay = ""
+　　││#  フォーム非表示
+　　│〇 UF_InfoWebDisplay.Hide
+　　│→ Exit Function
+　　│┴End If
+　　│#  現在サイズ保存
+　　◆┐If UF_InfoWebDisplay.Visible Then
+　　│◎ UF_InfoWebDisplay.SaveCurrentSize	フォームサイズ保存＜UF_InfoWebDisplay＞
+　　│┴End If
+　　│#  表示種別設定
+　　〇 CallingInfoDisplay = "ShowPhenomenon"
+　　│#  事象名取得
+　　〇 bodyHTML = issue.Phenomenon
+　　│#  情報表示フォーム取得
+　　□ Dim uf As UF_InfoWebDisplay
+　　〇 Set uf = UF_InfoWebDisplay
+　　│#  画面部品配置
+　　＠┐With uf
+　　│┴End With
+　　│#  タイトルラベル設定
+　　＠┐With uf.Label1
+　　│〇 .Top = margin
+　　│〇 .Left = margin
+　　│〇 .Caption = "事象名"
+　　│┴End With
+　　│#  スクロールラベル非表示
+　　＠┐With uf.Label4
+　　│〇 .Top = uf.Frame1.Top + uf.Frame1.Height + margin
+　　│〇 .Left = uf.Frame1.Width / 2 - uf.Label4.Width / 2
+　　│〇 .Visible = False             ' ラベルを非表示に設定
+　　│┴End With
+　　│#  表示フレーム設定
+　　＠┐With uf.Frame1
+　　│〇 .Top = 3 * margin
+　　│〇 .Left = margin
+　　│〇 .Width = uf.Width - (3 * margin)
+　　│〇 .Height = uf.Height - (9 * margin)
+　　│┴End With
+　　│#  HTML表示領域設定
+　　＠┐With uf.WebBrowser1
+　　│〇 .Top = 1
+　　│〇 .Left = 1
+　　│〇 .Width = uf.Frame1.Width - 2
+　　│〇 .Height = uf.Frame1.Height - 2
+　　│┴End With
+　　│#  変更フラグ初期化
+　　〇 PhenomenonChangFlg = False
+　　│#  閉じるボタン設定
+　　＠┐With uf.CommandButton1
+　　│〇 .Top = uf.Frame1.Top + uf.Frame1.Height + margin
+　　│〇 .Left = uf.Frame1.Left + uf.Frame1.Width - btWidth
+　　│〇 .Height = btHeight          'UF_InfoWebDisplay内のCommandButton1の高さ 18インチ
+　　│〇 .Width = btWidth            'UF_InfoWebDisplay内のCommandButton1の長さ 66インチ
+　　│〇 .Caption = "閉じる"
+　　│〇 .Visible = True ' コマンドボタンを表示に設定
+　　│┴End With
+　　│#  編集ボタン非表示
+　　〇 uf.CommandButtonEdit.Visible = False        ' コマンドボタンを非表示に設定
+　　│#  補助ボタン非表示
+　　〇 uf.CommandButton2.Visible = False            ' コマンドボタンを表示に設定
+　　│#  HTML生成
+　　＠┐With uf
+　　│〇 .ScrollEnabled = False  ' ← ここでスクロールバーの非表示を指定
+　　│◎ .BuildHTMLContent bodyHTML	HTML本文生成＜UF_InfoWebDisplay＞
+　　│┴End With
+　　│#  フォーム表示
+　　◎ Call ShowInfoDisplay(uf)	情報表示フォーム表示＜modInfoDisplay＞
+　　┴End Function

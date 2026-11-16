@@ -1,0 +1,8 @@
+Procedure: Sheet1.PhenomenonButton_Click  [ 事象名表示＜Sheet1＞ ]
+HCP	Business
+┬
+〇│Public Sub PhenomenonButton_Click()	事象名表示＜Sheet1＞
+┴└┐
+　　◆→ If g_CurrentIssue Is Nothing Then Exit Sub
+　　◎ Call modInfoDisplay.ShowPhenomenon(g_CurrentIssue)	事象名表示＜modInfoDisplay＞
+　　┴End Sub

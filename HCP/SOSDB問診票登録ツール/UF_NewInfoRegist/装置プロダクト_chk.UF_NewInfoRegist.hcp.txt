@@ -1,0 +1,16 @@
+Procedure: UF_NewInfoRegist.装置プロダクト_chk  [ 装置プロダクト確認＜UF_NewInfoRegist＞ ]
+HCP	Business
+┬
+〇│Private Function 装置プロダクト_chk() As Boolean	装置プロダクト確認＜UF_NewInfoRegist＞
+┴└┐
+　　〇 装置プロダクト_chk = True
+　　│#  入力有無確認
+　　◆┐If Trim(Me.cmb装置プロダクト.Value) = "装置を選択して下さい" Then
+　　││#  エラー表示
+　　│〇 装置プロダクト_chk = False
+　　│〇 Me.cmb装置プロダクト.BackColor = &HC0C0FF
+　　├┐ELSE
+　　││#  表示復元
+　　│〇 Me.cmb装置プロダクト.BackColor = &H80000005
+　　│┴End If
+　　┴End Function

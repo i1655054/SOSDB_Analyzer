@@ -1,0 +1,8 @@
+Procedure: modUtility.chk_Eq_Product  [ 装置プロダクト確認＜modUtility＞ ]
+HCP	Business
+┬
+〇│Function chk_Eq_Product(ByVal issue As IssueInfo) As Boolean	装置プロダクト確認＜modUtility＞
+┴└┐
+　　│#  装置プロダクト入力確認
+　　◎ chk_Eq_Product = ValidateAndHighlight(  issue.EqProduct,  EQ_PRODUCT_RANG,  COLOR_REQUIRED) ' 赤系	入力確認強調表示＜modUtility＞
+　　┴End Sub

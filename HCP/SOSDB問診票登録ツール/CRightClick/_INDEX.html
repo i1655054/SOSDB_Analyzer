@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift_jis">
+<title>CRightClick</title>
+<style>
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.5;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+colgroup col:nth-of-type(1) {}
+colgroup col:nth-of-type(2) {}
+.resize {position: relative;}
+.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+</style>
+</head>
+<body>
+<p><a href="../_INDEX.html">← Tool Index</a></p>
+<h1>CRightClick</h1>
+<p>Procedure Count : 9</p>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Status</th><th>Updated</th></tr>
+<tr><td><a href="BAll_Click.CRightClick.hcp.html">BAll_Click</a></td><td>全選択実行</td><td>[OK]</td><td>2026/11/13 17:16:58</td></tr>
+<tr><td><a href="BCopy_Click.CRightClick.hcp.html">BCopy_Click</a></td><td>コピー実行</td><td>[OK]</td><td>2026/11/13 17:17:01</td></tr>
+<tr><td><a href="BCut_Click.CRightClick.hcp.html">BCut_Click</a></td><td>切り取り実行</td><td>[OK]</td><td>2026/11/13 17:17:04</td></tr>
+<tr><td><a href="BDelete_Click.CRightClick.hcp.html">BDelete_Click</a></td><td>選択文字削除</td><td>[OK]</td><td>2026/11/13 17:17:07</td></tr>
+<tr><td><a href="BPaste_Click.CRightClick.hcp.html">BPaste_Click</a></td><td>貼り付け実行</td><td>[OK]</td><td>2026/11/13 17:17:10</td></tr>
+<tr><td><a href="Cb_MouseUp.CRightClick.hcp.html">Cb_MouseUp</a></td><td>コンボボックス右クリック</td><td>[OK]</td><td>2026/11/13 17:17:12</td></tr>
+<tr><td><a href="Tb_MouseUp.CRightClick.hcp.html">Tb_MouseUp</a></td><td>テキストボックス右クリック</td><td>[OK]</td><td>2026/11/13 17:17:15</td></tr>
+<tr><td><a href="Initialize.CRightClick.hcp.html">Initialize</a></td><td>右クリック機能初期化</td><td>[OK]</td><td>2026/11/13 17:17:20</td></tr>
+<tr><td><a href="pCopyPaste.CRightClick.hcp.html">pCopyPaste</a></td><td>編集メニュー表示</td><td>[OK]</td><td>2026/11/13 17:17:23</td></tr>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function (eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function (e) {
+const styleTh = window.getComputedStyle(eleTh);
+const paddingLeft = parseFloat(styleTh.paddingLeft);
+const paddingRight = parseFloat(styleTh.paddingRight);
+const borderLeft = parseFloat(styleTh.borderLeftWidth);
+const borderRight = parseFloat(styleTh.borderRightWidth);
+startX = e.pageX;
+startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e) {
+const newWidth = startWidth + (e.pageX - startX);
+eleTh.style.width = newWidth + 'px';
+}
+function onMouseUp() {
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
+}
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+Procedure: UF_InfoWebDisplay.BuildHTMLContent  [ HTML本文生成＜UF_InfoWebDisplay＞ ]
+HCP	Business
+┬
+〇│Public Sub BuildHTMLContent(ByVal bodyContent As String)	HTML本文生成＜UF_InfoWebDisplay＞
+┴└┐
+　　│#  本文保持
+　　〇 bodyText = bodyContent
+　　│#  HTML生成
+　　◎ htmlText = "<html><head>" &  "<meta http-equiv='X-UA-Compatible' content='IE=edge'>" &  "</head><body>" & ConvertNewLinesToHTML(bodyText) & "</body></html>"	改行HTML変換＜UF_InfoWebDisplay＞
+　　┴End Sub

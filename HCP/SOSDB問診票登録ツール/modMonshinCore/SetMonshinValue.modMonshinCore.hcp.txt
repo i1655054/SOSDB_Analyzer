@@ -1,0 +1,61 @@
+Procedure: modMonshinCore.SetMonshinValue  [ 問診情報設定＜modMonshinCore＞ ]
+HCP	Business
+┬
+〇│Private Sub SetMonshinValue(  ByRef info As MonshinInfoType,  ByVal Key As String,  ByVal Value As String)	問診情報設定＜modMonshinCore＞
+┴└┐
+　　◆┐Select Case Key
+　　│├┐Case "MonShinNum"          ' 問診票管理番号
+　　││〇 info.MonShinNum = Value
+　　│├┐Case "FaultRepNum"           ' 故障票番号
+　　││〇 info.faultRepNum = Value
+　　│├┐Case "UnKanNum"              ' 運管管理番号
+　　││〇 info.unKanNum = Value
+　　│├┐Case "TitleLine"             ' 題名（1行目）
+　　││〇 info.TitleLine = Value
+　　│├┐Case "Phenomenon"            ' 事象／問合せ内容
+　　││〇 info.Phenomenon = Value
+　　│├┐Case "Request_Client"
+　　││〇 info.Request_Client = Value
+　　│├┐Case "OccurrenceDate"        ' 発生日
+　　││〇 info.occurrenceDate = Format(Value, "yyyy-mm-dd")
+　　│├┐Case "OccurrenceTime"        ' 発生時間
+　　││〇 info.occurrenceTime = Format(Value, "hh:mm")
+　　│├┐Case "ProblemBuilding"       ' 問題発生ビル
+　　││〇 info.ProblemBuilding = Value
+　　│├┐Case "Equipment"             ' 装置詳細
+　　││〇 info.Equipment = Value
+　　│├┐Case "HostName"              ' ホスト名
+　　││〇 info.HostName = Value
+　　│├┐Case "FileVer"               ' ファイル版数
+　　││〇 info.FileVer = Value
+　　│├┐Case "AlarmInfo"             ' アラーム表示内容
+　　││〇 info.AlarmInfo = Value
+　　│├┐Case "OccurrenceStatus"      ' 発生状況
+　　││〇 info.OccurrenceStatus = Value
+　　│├┐Case "ResponseStatus"        ' 対応状況
+　　││〇 info.ResponseStatus = Value
+　　│├┐Case "Req0": info.RequestContents(0) = Value
+　　│├┐Case "Req1": info.RequestContents(1) = Value
+　　│├┐Case "Req2": info.RequestContents(2) = Value
+　　│├┐Case "Req3": info.RequestContents(3) = Value
+　　│├┐Case "Req4": info.RequestContents(4) = Value
+　　│├┐Case "Req5": info.RequestContents(5) = Value
+　　│├┐Case "Req6": info.RequestContents(6) = Value
+　　│├┐Case "Req7": info.RequestContents(7) = Value
+　　│├┐Case "CollectedData"         ' 収集データ
+　　││〇 info.CollectedData = Value
+　　│├┐Case "CauseDetail"           ' 原因
+　　││〇 info.CauseDetail = Value
+　　│├┐Case "Countermeasure"        ' 対処
+　　││〇 info.Countermeasure = Value
+　　│├┐Case "AnswerDate"            ' 回答日
+　　││〇 info.AnswerDate = Value
+　　│├┐Case "AnswerPerson"          ' 回答者
+　　││〇 info.AnswerPerson = Value
+　　│├┐Case "AnswerInfo"            ' 解析結果・対処方法
+　　││〇 info.AnswerInfo = Value
+　　│├┐Case "Key_Word"              ' キーワード
+　　││〇 info.Key_Word = Value
+　　│├┐Case Else
+　　│┴End Select
+　　┴End Sub

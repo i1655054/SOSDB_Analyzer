@@ -1,0 +1,26 @@
+Procedure: modUtility.ReleaseMultiLineAlert  [ 複数行注意表示解除個別＜modUtility＞ ]
+HCP	Business
+┬
+〇│Public Sub ReleaseMultiLineAlert(ByVal TargetRange As String)	複数行注意表示解除個別＜modUtility＞
+┴└┐
+　　☆ On Error GoTo ErrHandler
+　　│#  セル取得
+　　＠┐With Range(TargetRange)
+　　││#  背景色復元
+　　│◎ Call RestoreColor(TargetRange)	セル色復元＜modUtility＞
+　　││#  強調表示解除
+　　│〇 .Font.Bold = False
+　　│☆ On Error Resume Next
+　　││#  コメント削除
+　　│〇 .ClearComments
+　　│〇 .ClearCommentsThreaded
+　　│☆ On Error GoTo 0
+　　│┴End With
+　　→ Exit Sub
+▼ ErrHandler:
+　　│#  エラー情報出力
+　　〇 Debug.Print "ReleaseMultiLineAlert Error"
+　　〇 Debug.Print "Range=" & TargetRange
+　　〇 Debug.Print "Err=" & Err.Number
+　　〇 Debug.Print "Desc=" & Err.Description
+　　┴End Sub

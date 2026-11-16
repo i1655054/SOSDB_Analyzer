@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift_jis">
+<title>Normalize</title>
+<style>
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+colgroup col:nth-of-type(1) {}
+colgroup col:nth-of-type(2) {}
+.resize {position: relative;}
+.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+</style>
+</head>
+<body>
+<h1>Normalize</h1>
+<p>Module : modIssueMapper</p>
+<p><a href="./_INDEX.html">← Module Index</a></p>
+<table>
+<colgroup><col/><col/></colgroup>
+<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<tbody>
+<tr><td>Procedure: modIssueMapper.Normalize  [ 文字列正規化＜modIssueMapper＞ ]</td><td></td></tr>
+<tr><td>HCP</td><td>Business</td></tr>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Private Function Normalize(V As Variant) As String</td><td>文字列正規化＜modIssueMapper＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　│#  文字列化</td><td></td></tr>
+<tr><td>　　□ Dim s As String</td><td></td></tr>
+<tr><td>　　◆┐If IsNull(V) Or isEmpty(V) Then</td><td></td></tr>
+<tr><td>　　│〇 s = ""</td><td></td></tr>
+<tr><td>　　├┐ELSE</td><td></td></tr>
+<tr><td>　　│〇 s = CStr(V)</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　│#  改行コード統一</td><td></td></tr>
+<tr><td>　　〇 s = Replace(s, vbCrLf, vbLf)</td><td></td></tr>
+<tr><td>　　〇 s = Replace(s, vbCr, vbLf)</td><td></td></tr>
+<tr><td>　　│#  タブ変換(タブ→空白)</td><td></td></tr>
+<tr><td>　　〇 s = Replace(s, vbTab, " ")</td><td></td></tr>
+<tr><td>　　│#  全角スペース変換(全角スペース→半角)</td><td></td></tr>
+<tr><td>　　〇 s = Replace(s, "　", " ")</td><td></td></tr>
+<tr><td>　　│#  行単位トリム</td><td></td></tr>
+<tr><td>　　□ Dim arr, i As Long</td><td></td></tr>
+<tr><td>　　〇 arr = Split(s, vbLf)</td><td></td></tr>
+<tr><td>　　＠┐For i = 0 To UBound(arr)</td><td></td></tr>
+<tr><td>　　│〇 arr(i) = Trim(arr(i))</td><td></td></tr>
+<tr><td>　　│┴Next i</td><td></td></tr>
+<tr><td>　　│#  行結合</td><td></td></tr>
+<tr><td>　　〇 s = Join(arr, vbLf)</td><td></td></tr>
+<tr><td>　　│#  連続改行圧縮</td><td></td></tr>
+<tr><td>　　＠┐Do While InStr(s, vbLf &amp; vbLf &amp; vbLf) &gt; 0</td><td></td></tr>
+<tr><td>　　│〇 s = Replace(s, vbLf &amp; vbLf &amp; vbLf, vbLf &amp; vbLf)</td><td></td></tr>
+<tr><td>　　│┴Loop</td><td></td></tr>
+<tr><td>　　│#  前後空白除去</td><td></td></tr>
+<tr><td>　　〇 s = Trim(s)</td><td></td></tr>
+<tr><td>　　│#  正規化結果返却</td><td></td></tr>
+<tr><td>　　〇 Normalize = s</td><td></td></tr>
+<tr><td>　　┴End Function</td><td></td></tr>
+</tbody>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function (eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function (e) {
+const styleTh = window.getComputedStyle(eleTh);
+const paddingLeft = parseFloat(styleTh.paddingLeft);
+const paddingRight = parseFloat(styleTh.paddingRight);
+const borderLeft = parseFloat(styleTh.borderLeftWidth);
+const borderRight = parseFloat(styleTh.borderRightWidth);
+startX = e.pageX;
+startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e) {
+const newWidth = startWidth + (e.pageX - startX);
+eleTh.style.width = newWidth + 'px';
+}
+function onMouseUp() {
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
+}
+});
+</script>
+</body>
+</html>

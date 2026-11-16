@@ -1,0 +1,89 @@
+Procedure: clsAboutCalendar2.SumEigyoBi  [ 営業日加算日付計算＜clsAboutCalendar2＞ ]
+HCP	Business
+┬
+〇│Friend Sub SumEigyoBi(ByVal dteDateF As Date,  ByVal lngCntKeika As Long,  ByRef dteDateT As Date)	営業日加算日付計算＜clsAboutCalendar2＞
+┴└┐
+　　│#  起算日設定
+　　〇 dteDateT = dteDateF                                         ' 一旦、起算日とする
+　　│#  経過日数確認
+　　◆→ If lngCntKeika = 0 Then Exit Sub
+　　□ Dim lngSign As Long                                             ' ループ時の加算日数
+　　□ Dim lngCntKeikaABS As Long                                      ' 経過日数の絶対値
+　　□ Dim dteTmp As Date                                              ' 作業日
+　　□ Dim currY As Long                                               ' 現在年
+　　□ Dim currM As Long                                               ' 現在月
+　　□ Dim prevY As Long                                               ' 直前年
+　　□ Dim prevM As Long                                               ' 直前月
+　　□ Dim lngCntEigyo As Long                                         ' 営業日数
+　　□ Dim swSyuku As Boolean                                          ' 祝日判定
+　　□ Dim lngIxS As Long                                              ' カレンダーテーブルINDEX
+　　□ Dim lngIxSMax As Long                                           ' カレンダーテーブルINDEX上限
+　　□ Dim tblCalendar() As g_typAboutCalendar2                        ' カレンダーテーブル
+　　〇 dteTmp = dteDateF
+　　│#  加算方向判定
+　　◆┐If lngCntKeika > 0 Then
+　　││#  前方検索設定
+　　│〇 lngSign = 1
+　　│〇 dteTmp = dteTmp + 1
+　　├┐ELSE
+　　││#  後方検索設定
+　　│〇 lngSign = -1
+　　│〇 dteTmp = dteTmp - 1
+　　│┴End If
+　　〇 lngCntKeikaABS = lngCntKeika * lngSign
+　　〇 currY = Year(dteTmp)
+　　〇 currM = Month(dteTmp)
+　　│#  営業日算出開始
+　　＠┐Do While lngCntEigyo < lngCntKeikaABS
+　　│〇 prevY = currY
+　　│〇 prevM = currM
+　　│〇 lngIxSMax = -1
+　　│〇 ReDim tblCalendar(0)
+　　││#  月次カレンダー生成
+　　│◎ Call GP_GetCalendarSub(prevY, prevM, lngIxSMax, tblCalendar)	単月カレンダー生成内部処理＜clsAboutCalendar2＞
+　　│◆┐If lngCntKeika > 0 Then
+　　││〇 lngIxS = 0
+　　│││#  前方営業日検索
+　　││＠┐Do While ((lngCntEigyo < lngCntKeikaABS) And (currY = prevY) And (currM = prevM))
+　　│││〇 swSyuku = False
+　　│││＠┐Do While lngIxS <= lngIxSMax
+　　││││◆┐If tblCalendar(lngIxS).Hiduke = dteTmp Then
+　　││││││#  祝日判定
+　　│││││〇 swSyuku = tblCalendar(lngIxS).Syuku <> 0
+　　│││││→ Exit Do
+　　│││││┴End If
+　　│││││#  営業日判定
+　　││││〇 lngIxS = lngIxS + 1
+　　││││┴Loop
+　　│││◆┐If ((Weekday(dteTmp) <> vbSunday) And  (Weekday(dteTmp) <> vbSaturday) And  (Not swSyuku)) Then
+　　││││〇 lngCntEigyo = lngCntEigyo + 1               ' 営業日数を加算
+　　││││〇 dteDateT = dteTmp                           ' 現在日をセット
+　　││││┴End If
+　　│││〇 dteTmp = dteTmp + 1
+　　│││〇 currY = Year(dteTmp)
+　　│││〇 currM = Month(dteTmp)
+　　│││┴Loop
+　　│├┐ELSE
+　　││〇 lngIxS = lngIxSMax
+　　││＠┐Do While ((lngCntEigyo < lngCntKeikaABS) And (currY = prevY) And (currM = prevM))
+　　│││◆┐If ((Weekday(dteTmp) <> vbSunday) And  (Weekday(dteTmp) <> vbSaturday) And  (Not swSyuku)) Then
+　　││││〇 lngCntEigyo = lngCntEigyo + 1               ' 営業日数を加算
+　　││││〇 dteDateT = dteTmp                           ' 現在日をセット
+　　││││┴End If
+　　││││#  営業日判定
+　　│││〇 dteTmp = dteTmp - 1
+　　│││〇 currY = Year(dteTmp)
+　　│││〇 currM = Month(dteTmp)
+　　│││┴Loop
+　　││〇 swSyuku = False
+　　││＠┐Do While lngIxS >= 0
+　　│││〇 lngIxS = lngIxS - 1
+　　│││┴Loop
+　　││◆┐If tblCalendar(lngIxS).Hiduke = dteTmp Then
+　　││││#  祝日判定
+　　│││〇 swSyuku = tblCalendar(lngIxS).Syuku <> 0
+　　│││→ Exit Do
+　　│││┴End If
+　　││┴End If
+　　│┴Loop
+　　┴End Sub

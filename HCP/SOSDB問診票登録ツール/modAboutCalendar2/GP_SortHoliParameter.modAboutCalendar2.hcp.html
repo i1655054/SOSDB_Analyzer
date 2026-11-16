@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift_jis">
+<title>GP_SortHoliParameter</title>
+<style>
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+colgroup col:nth-of-type(1) {}
+colgroup col:nth-of-type(2) {}
+.resize {position: relative;}
+.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+</style>
+</head>
+<body>
+<h1>GP_SortHoliParameter</h1>
+<p>Module : modAboutCalendar2</p>
+<p><a href="./_INDEX.html">← Module Index</a></p>
+<table>
+<colgroup><col/><col/></colgroup>
+<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<tbody>
+<tr><td>Procedure: modAboutCalendar2.GP_SortHoliParameter  [ 祝日パラメータ並替＜modAboutCalendar2＞ ]</td><td></td></tr>
+<tr><td>HCP</td><td>Business</td></tr>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Public Sub GP_SortHoliParameter(ByRef objParaSheet As Worksheet)</td><td>祝日パラメータ並替＜modAboutCalendar2＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　□ Dim lngRow As Long                                              ' 行INDEX</td><td></td></tr>
+<tr><td>　　□ Dim lngRowMax As Long                                           ' 行INDEX上限</td><td></td></tr>
+<tr><td>　　＠┐With objParaSheet</td><td></td></tr>
+<tr><td>　　│◆ If .FilterMode Then .ShowAllData</td><td></td></tr>
+<tr><td>　　│〇 lngRowMax = .Range("$A$" &amp; .Rows.count).End(xlUp).row</td><td></td></tr>
+<tr><td>　　│〇 .Columns("$K").ClearContents</td><td></td></tr>
+<tr><td>　　│〇 lngRow = 3</td><td></td></tr>
+<tr><td>　　│＠┐Do While lngRow &lt;= lngRowMax</td><td></td></tr>
+<tr><td>　　││◆┐Select Case .Cells(lngRow, 2).Value</td><td></td></tr>
+<tr><td>　　│││├┐Case 0, 2                                   ' 固定日</td><td></td></tr>
+<tr><td>　　││││〇 .Cells(lngRow, 11).Value = .Cells(lngRow, 3).Value</td><td></td></tr>
+<tr><td>　　│││├┐Case 1                                      ' HappyMonday</td><td></td></tr>
+<tr><td>　　││││〇 .Cells(lngRow, 11).Value = .Cells(lngRow, 5).Value * 7</td><td></td></tr>
+<tr><td>　　│││├┐Case Else                                   ' 特殊</td><td></td></tr>
+<tr><td>　　││││◆┐If .Cells(lngRow, 1).Value = 3 Then</td><td></td></tr>
+<tr><td>　　│││││〇 .Cells(lngRow, 11).Value = 20</td><td></td></tr>
+<tr><td>　　││││├┐ELSE</td><td></td></tr>
+<tr><td>　　│││││〇 .Cells(lngRow, 11).Value = 23</td><td></td></tr>
+<tr><td>　　│││││┴End If</td><td></td></tr>
+<tr><td>　　│││┴End Select</td><td></td></tr>
+<tr><td>　　││〇 lngRow = lngRow + 1</td><td></td></tr>
+<tr><td>　　││┴Loop</td><td></td></tr>
+<tr><td>　　│〇 .Range("$A$3:$K$" &amp; lngRowMax).Sort  Key1:=.Range("$A$3"), Order1:=xlAscending,  Key2:=.Range("$K$3"), Order1:=xlAscending,  header:=xlNo, Orientation:=xlTopToBottom, SortMethod:=xlCodePage</td><td></td></tr>
+<tr><td>　　│〇 .Columns("$K").ClearContents</td><td></td></tr>
+<tr><td>　　│┴End With</td><td></td></tr>
+<tr><td>　　┴End Sub</td><td></td></tr>
+</tbody>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function (eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function (e) {
+const styleTh = window.getComputedStyle(eleTh);
+const paddingLeft = parseFloat(styleTh.paddingLeft);
+const paddingRight = parseFloat(styleTh.paddingRight);
+const borderLeft = parseFloat(styleTh.borderLeftWidth);
+const borderRight = parseFloat(styleTh.borderRightWidth);
+startX = e.pageX;
+startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e) {
+const newWidth = startWidth + (e.pageX - startX);
+eleTh.style.width = newWidth + 'px';
+}
+function onMouseUp() {
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
+}
+});
+</script>
+</body>
+</html>

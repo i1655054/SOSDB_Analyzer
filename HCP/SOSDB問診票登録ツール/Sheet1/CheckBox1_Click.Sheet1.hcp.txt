@@ -1,0 +1,11 @@
+Procedure: Sheet1.CheckBox1_Click  [ 問診票モード切替＜Sheet1＞ ]
+HCP	Business
+┬
+〇│Private Sub CheckBox1_Click()	問診票モード切替＜Sheet1＞
+┴└┐
+　　◆┐If CheckBox1.Value = True Then
+　　│〇 新規問診票情報取り出し.Caption = "新規問診票を開く"
+　　├┐ELSE
+　　│〇 新規問診票情報取り出し.Caption = "新規簡易入力を開く"
+　　│┴End If
+　　┴End Sub

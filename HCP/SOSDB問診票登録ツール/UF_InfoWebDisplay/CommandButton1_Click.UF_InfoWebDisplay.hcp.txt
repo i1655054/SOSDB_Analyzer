@@ -1,0 +1,29 @@
+Procedure: UF_InfoWebDisplay.CommandButton1_Click  [ 情報表示終了＜UF_InfoWebDisplay＞ ]
+HCP	Business
+┬
+〇│Private Sub CommandButton1_Click()	情報表示終了＜UF_InfoWebDisplay＞
+┴└┐
+　　□ Dim flgChange As Boolean
+　　□ Dim stCaption As String
+　　□ Dim stMessage, stTitle As String
+　　□ Dim rtn As Integer
+　　〇 stCaption = Me.Label1.Caption
+　　〇 stMessage = "テキストボックスの内容を保存しますか？"
+　　〇 stTitle = stCaption & "確認"
+　　〇 flgChange = Sheet1.CheckBox1.Value
+　　◆┐Select Case stCaption
+　　│├┐Case "事象名"
+　　│├┐Case "依頼元管理番号"
+　　│├┐Case "依頼者"
+　　│├┐Case "説明"
+　　│├┐Case "備考"
+　　│├┐Case "原因詳細"
+　　│├┐Case "対処内容"
+　　│├┐Case "キーワード"
+　　│├┐Case Else
+　　│┴End Select
+　　│#  表示状態初期化
+　　〇 CallingInfoDisplay = ""
+　　│#  フォーム終了
+　　〇 Unload Me
+　　┴End Sub

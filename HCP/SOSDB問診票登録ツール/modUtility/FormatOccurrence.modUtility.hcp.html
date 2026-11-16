@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift_jis">
+<title>FormatOccurrence</title>
+<style>
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+colgroup col:nth-of-type(1) {}
+colgroup col:nth-of-type(2) {}
+.resize {position: relative;}
+.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+</style>
+</head>
+<body>
+<h1>FormatOccurrence</h1>
+<p>Module : modUtility</p>
+<p><a href="./_INDEX.html">← Module Index</a></p>
+<table>
+<colgroup><col/><col/></colgroup>
+<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<tbody>
+<tr><td>Procedure: modUtility.FormatOccurrence  [ 発生日時整形＜modUtility＞ ]</td><td></td></tr>
+<tr><td>HCP</td><td>Business</td></tr>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Public Function FormatOccurrence(  ByVal occurrenceDate As Variant,  ByVal occurrenceTime As Variant) As String</td><td>発生日時整形＜modUtility＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　□ Dim dt As Date</td><td></td></tr>
+<tr><td>　　□ Dim dateStr As String</td><td></td></tr>
+<tr><td>　　□ Dim timeStr As String</td><td></td></tr>
+<tr><td>　　│#  発生日形式判定</td><td></td></tr>
+<tr><td>　　◆┐If IsDate(occurrenceDate) Then</td><td></td></tr>
+<tr><td>　　││#  発生日変換</td><td></td></tr>
+<tr><td>　　│〇 dt = CDate(occurrenceDate)</td><td></td></tr>
+<tr><td>　　││#  日付文字列生成</td><td></td></tr>
+<tr><td>　　│〇 dateStr = Format(dt, "yyyy-mm-dd")</td><td></td></tr>
+<tr><td>　　││#  時刻取得</td><td></td></tr>
+<tr><td>　　│◆┐If Hour(dt) &lt;&gt; 0 Or Minute(dt) &lt;&gt; 0 Then</td><td></td></tr>
+<tr><td>　　││〇 timeStr = Format(dt, "hh:mm")</td><td></td></tr>
+<tr><td>　　│├┐ELSE</td><td></td></tr>
+<tr><td>　　│││#  時刻引数確認</td><td></td></tr>
+<tr><td>　　││◆┐If IsDate(occurrenceTime) Then</td><td></td></tr>
+<tr><td>　　│││〇 timeStr = Format(occurrenceTime, "hh:mm")</td><td></td></tr>
+<tr><td>　　││├┐ELSE</td><td></td></tr>
+<tr><td>　　│││〇 timeStr = ""</td><td></td></tr>
+<tr><td>　　│││┴End If</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td>　　├┐ELSE</td><td></td></tr>
+<tr><td>　　││#  文字列形式処理</td><td></td></tr>
+<tr><td>　　│〇 dateStr = Trim(CStr(occurrenceDate))</td><td></td></tr>
+<tr><td>　　│◆┐If IsDate(occurrenceTime) Then</td><td></td></tr>
+<tr><td>　　││〇 timeStr = Format(occurrenceTime, "hh:mm")</td><td></td></tr>
+<tr><td>　　│├┐ELSE</td><td></td></tr>
+<tr><td>　　││〇 timeStr = Trim(CStr(occurrenceTime))</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　│#  発生日時文字列生成</td><td></td></tr>
+<tr><td>　　◆┐If dateStr = "" Then</td><td></td></tr>
+<tr><td>　　│〇 FormatOccurrence = "-"</td><td></td></tr>
+<tr><td>　　├┐ElseIf timeStr = "" Then</td><td></td></tr>
+<tr><td>　　│〇 FormatOccurrence = dateStr</td><td></td></tr>
+<tr><td>　　├┐ELSE</td><td></td></tr>
+<tr><td>　　│〇 FormatOccurrence = dateStr &amp; " " &amp; timeStr</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　┴End Function</td><td></td></tr>
+</tbody>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function (eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function (e) {
+const styleTh = window.getComputedStyle(eleTh);
+const paddingLeft = parseFloat(styleTh.paddingLeft);
+const paddingRight = parseFloat(styleTh.paddingRight);
+const borderLeft = parseFloat(styleTh.borderLeftWidth);
+const borderRight = parseFloat(styleTh.borderRightWidth);
+startX = e.pageX;
+startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e) {
+const newWidth = startWidth + (e.pageX - startX);
+eleTh.style.width = newWidth + 'px';
+}
+function onMouseUp() {
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
+}
+});
+</script>
+</body>
+</html>

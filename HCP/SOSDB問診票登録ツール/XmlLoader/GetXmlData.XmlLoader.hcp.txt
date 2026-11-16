@@ -1,0 +1,25 @@
+Procedure: XmlLoader.GetXmlData  [ XML取得＜XmlLoader＞ ]
+HCP	Business
+┬
+〇│Public Function GetXmlData(  url As String) As Object	XML取得＜XmlLoader＞
+┴└┐
+　　│#  XMLドキュメント生成
+　　□ Dim dom As Object
+　　〇 Set dom = CreateObject("MSXML2.DOMDocument")
+　　│#  同期モード設定
+　　〇 dom.async = False
+　　│#  XML読込
+　　◆┐If Not (dom.Load(url)) Then
+　　││#  XML読込エラー情報生成
+　　│□ Dim text As String
+　　│＠┐With dom.parseError
+　　││〇 text = "XML ドキュメントの読み込みに失敗しました。" & vbCrLf &  "次のエラーが原因です :" & vbCrLf &  vbCrLf &  "エラー番号 # : " & .ErrorCode & vbCrLf &  "エラー原因 # : " & .reason & vbCrLf &  "行 # : " & .line & vbCrLf &  "行位置 : " & .linepos & vbCrLf &  "ファイル内の位置 : " & .filepos & vbCrLf &  "ソーステキスト : " & .srcText & vbCrLf &  "ドキュメントURL : " & .url
+　　││┴End With
+　　││#  エラーメッセージ表示
+　　│〇 MsgBox text, vbExclamation
+　　││#  強制終了
+　　│〇 End
+　　│┴End If
+　　│#  XMLノード返却
+　　〇 Set GetXmlData = dom.ChildNodes.Item(1)
+　　┴End Function

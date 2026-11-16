@@ -1,0 +1,21 @@
+Procedure: modCalendar5.GP_GetScreenPos  [ 画面有効領域取得＜modCalendar5＞ ]
+HCP	Business
+┬
+〇│Private Sub GPGetScreenPos(ByRef lngScreenLeft As Long,  ByRef lngScreenTop As Long,  ByRef lngScreenRight As Long,  ByRef lngScreenBottom As Long)	画面有効領域取得＜modCalendar5＞
+┴└┐
+　　□ Dim lngWidth As Long                                            ' スクリーンの幅
+　　□ Dim lngHeight As Long                                           ' スクリーンの高さ①
+　　□ Dim lngHeight2 As Long                                          ' スクリーンの高さ②
+　　□ Dim lngHeight3 As Long                                          ' スクリーンの高さ③
+　　□ Dim objRect As g_typRect                                        ' Rect
+　　〇 lngScreenLeft = GetSystemMetrics(SM_XVIRTUALSCREEN)         ' 左端
+　　〇 lngScreenTop = GetSystemMetrics(SM_YVIRTUALSCREEN)          ' 上端
+　　〇 lngWidth = GetSystemMetrics(SM_CXVIRTUALSCREEN)             ' 幅(仮想スクリーン域)
+　　〇 lngHeight = GetSystemMetrics(SM_CYVIRTUALSCREEN)            ' 高さ(仮想スクリーン域)
+　　〇 lngHeight2 = GetSystemMetrics(SM_CYSCREEN)                  ' 高さ(メインスクリーンのみ)
+　　〇 Call SystemParametersInfo(SPI_GETWORKAREA, 0, objRect, 0)
+　　〇 lngHeight3 = objRect.Bottom - objRect.Top                   ' 高さ(メインのタスクバー以外の分)
+　　〇 lngHeight = lngHeight - (lngHeight2 - lngHeight3)
+　　〇 lngScreenRight = lngWidth - lngScreenLeft
+　　〇 lngScreenBottom = lngHeight - lngScreenTop
+　　┴End Sub

@@ -1,0 +1,71 @@
+Procedure: UF_OccDateTimeRegist.Chk発生時分_Click  [ 発生時刻入力切替＜UF_OccDateTimeRegist＞ ]
+HCP	Business
+┬
+〇│Private Sub Chk発生時分_Click()	発生時刻入力切替＜UF_OccDateTimeRegist＞
+┴└┐
+　　│#  時刻入力有無判定
+　　◆┐If Chk発生時分.Value = False Then
+　　││#  時刻入力無効化
+　　│＠┐With txt時刻_時
+　　││〇 .Enabled = False
+　　││〇 .BackColor = &H80000005
+　　││〇 .SpecialEffect = fmSpecialEffectSunken
+　　││〇 .BorderColor = &H80000006
+　　││〇 .BorderStyle = fmBorderStyleNone
+　　││〇 .text = ""
+　　││┴End With
+　　│＠┐With txt時刻_分
+　　││〇 .Enabled = False
+　　││〇 .BackColor = &H80000005
+　　││〇 .SpecialEffect = fmSpecialEffectSunken
+　　││〇 .BorderColor = &H80000006
+　　││〇 .BorderStyle = fmBorderStyleNone
+　　││〇 .text = ""
+　　││┴End With
+　　│＠┐With txt時刻_コロン
+　　││〇 .Enabled = False
+　　││〇 .BackColor = &H8000000F
+　　││〇 .SpecialEffect = fmSpecialEffectEtched
+　　││〇 .BorderColor = &H8000000F
+　　││〇 .BorderStyle = fmBorderStyleSingle
+　　││┴End With
+　　││#  表示状態変更
+　　│＠┐With Chk発生時分
+　　││〇 .ForeColor = &H80000010
+　　││〇 .BackStyle = fmBackStyleTransparent
+　　││┴End With
+　　││#  スピンボタン無効化
+　　│〇 SpinButton1.Enabled = False
+　　│＠┐With txt時刻_分
+　　││〇 .Enabled = True
+　　││〇 .BackColor = &H80000005
+　　││〇 .SpecialEffect = fmSpecialEffectSunken
+　　││〇 .BorderColor = &H80000006
+　　││〇 .BorderStyle = fmBorderStyleNone
+　　││〇 .text = Format(datTime, "nn")
+　　││┴End With
+　　│＠┐With txt時刻_コロン
+　　││〇 .Enabled = True
+　　││〇 .text = "："
+　　││┴End With
+　　││#  表示状態変更
+　　│＠┐With Chk発生時分
+　　││〇 .ForeColor = &H80000012
+　　││〇 .BackStyle = fmBackStyleOpaque
+　　││┴End With
+　　││#  スピンボタン有効化
+　　│〇 SpinButton1.Enabled = True
+　　├┐ELSE
+　　││#  現在日時取得
+　　│〇 datTime = Now
+　　││#  時刻入力有効化
+　　│＠┐With txt時刻_時
+　　││┴End With
+　　│〇 .Enabled = True
+　　│〇 .BackColor = &H80000005
+　　│〇 .SpecialEffect = fmSpecialEffectSunken
+　　│〇 .BorderColor = &H80000006
+　　│〇 .BorderStyle = fmBorderStyleNone
+　　│〇 .text = Format(datTime, "hh")
+　　│┴End If
+　　┴End Sub

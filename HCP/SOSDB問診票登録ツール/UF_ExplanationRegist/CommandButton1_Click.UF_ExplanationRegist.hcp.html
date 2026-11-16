@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift_jis">
+<title>CommandButton1_Click</title>
+<style>
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+colgroup col:nth-of-type(1) {}
+colgroup col:nth-of-type(2) {}
+.resize {position: relative;}
+.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+</style>
+</head>
+<body>
+<h1>CommandButton1_Click</h1>
+<p>Module : UF_ExplanationRegist</p>
+<p><a href="./_INDEX.html">← Module Index</a></p>
+<table>
+<colgroup><col/><col/></colgroup>
+<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<tbody>
+<tr><td>Procedure: UF_ExplanationRegist.CommandButton1_Click  [ 説明文生成登録＜UF_ExplanationRegist＞ ]</td><td></td></tr>
+<tr><td>HCP</td><td>Business</td></tr>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Private Sub CommandButton1_Click()</td><td>説明文生成登録＜UF_ExplanationRegist＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　□ Dim Description As String</td><td></td></tr>
+<tr><td>　　□ Dim Operational As Control '現状の運用系</td><td></td></tr>
+<tr><td>　　□ Dim Alarm As Control    'アラームの発生</td><td></td></tr>
+<tr><td>　　□ Dim Kei As String   '系</td><td></td></tr>
+<tr><td>　　□ Dim Existence As String '有無</td><td></td></tr>
+<tr><td>　　□ Dim AlarmContent     'アラーム表示内容</td><td></td></tr>
+<tr><td>　　□ Dim OccurrenceStatus '発生状況</td><td></td></tr>
+<tr><td>　　□ Dim StatusDetails    '対応状況詳細</td><td></td></tr>
+<tr><td>　　□ Dim ImplementationWork     '実施していた作業</td><td></td></tr>
+<tr><td>　　□ Dim CollectedData    '収集データ</td><td></td></tr>
+<tr><td>　　│#  運用系取得</td><td></td></tr>
+<tr><td>　　＠┐For Each Operational In fr現状の運用系.Controls</td><td></td></tr>
+<tr><td>　　│◆┐If Operational.Value = True Then</td><td></td></tr>
+<tr><td>　　││〇 Kei = Operational.Caption</td><td></td></tr>
+<tr><td>　　││→ Exit For</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td>　　│〇 Kei = "不明"</td><td></td></tr>
+<tr><td>　　│┴Next</td><td></td></tr>
+<tr><td>　　│#  アラーム有無取得</td><td></td></tr>
+<tr><td>　　＠┐For Each Alarm In frアラームの発生.Controls</td><td></td></tr>
+<tr><td>　　│◆┐If Alarm.Value = True Then</td><td></td></tr>
+<tr><td>　　││〇 Existence = Alarm.Caption</td><td></td></tr>
+<tr><td>　　││→ Exit For</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td>　　│〇 Existence = "不明"</td><td></td></tr>
+<tr><td>　　│┴Next</td><td></td></tr>
+<tr><td>　　│#  アラーム内容取得</td><td></td></tr>
+<tr><td>　　◆┐If frアラーム表示内容.Controls("txtアラーム") &lt;&gt; "" Then</td><td></td></tr>
+<tr><td>　　│〇 AlarmContent = frアラーム表示内容.Controls("txtアラーム")</td><td></td></tr>
+<tr><td>　　├┐ELSE</td><td></td></tr>
+<tr><td>　　│〇 AlarmContent = "―"</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　│#  発生状況取得</td><td></td></tr>
+<tr><td>　　◆┐If fr発生状況.Controls("txt発生状況") &lt;&gt; "" Then</td><td></td></tr>
+<tr><td>　　│〇 OccurrenceStatus = fr発生状況.Controls("txt発生状況")</td><td></td></tr>
+<tr><td>　　├┐ELSE</td><td></td></tr>
+<tr><td>　　│〇 OccurrenceStatus = "―"</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　│#  対応状況取得</td><td></td></tr>
+<tr><td>　　◆┐If fr対応状況詳細.Controls("txt対応状況") &lt;&gt; "" Then</td><td></td></tr>
+<tr><td>　　│〇 StatusDetails = fr対応状況詳細.Controls("txt対応状況")</td><td></td></tr>
+<tr><td>　　├┐ELSE</td><td></td></tr>
+<tr><td>　　│〇 StatusDetails = "―"</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　│#  作業内容取得</td><td></td></tr>
+<tr><td>　　◆┐If fr実施していた作業.Controls("txt作業") &lt;&gt; "" Then</td><td></td></tr>
+<tr><td>　　│〇 ImplementationWork = fr実施していた作業.Controls("txt作業")</td><td></td></tr>
+<tr><td>　　├┐ELSE</td><td></td></tr>
+<tr><td>　　│〇 ImplementationWork = "―"</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　│#  収集データ取得</td><td></td></tr>
+<tr><td>　　◆┐If fr収集データ.Controls("txtデータ") &lt;&gt; "" Then</td><td></td></tr>
+<tr><td>　　│〇 CollectedData = fr収集データ.Controls("txtデータ")</td><td></td></tr>
+<tr><td>　　├┐ELSE</td><td></td></tr>
+<tr><td>　　│〇 CollectedData = "―"</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　☆ On Error GoTo エラー処理</td><td></td></tr>
+<tr><td>　　│#  説明文生成</td><td></td></tr>
+<tr><td>　　〇 Description = "＝＝＝＜故障発生状況＞＝＝＝" &amp; vbCrLf &amp;  "＝＝＝【現状の運用系】＝＝＝" &amp; vbCrLf &amp;  Kei &amp; vbCrLf &amp;  "＝＝＝【アラーム発生の有無】＝＝＝" &amp; vbCrLf &amp;  Existence &amp; vbCrLf &amp;  "＝＝＝【アラーム表示内容】＝＝＝" &amp; vbCrLf &amp;  AlarmContent &amp; vbCrLf &amp;  "＝＝＝【発生状況】＝＝＝" &amp; vbCrLf &amp;  OccurrenceStatus &amp; vbCrLf &amp;  "＝＝＝【対応状況詳細】＝＝＝" &amp; vbCrLf &amp;  StatusDetails &amp; vbCrLf &amp;  "＝＝＝【実施していた作業】＝＝＝" &amp; vbCrLf &amp;  ImplementationWork &amp; vbCrLf &amp;  "＝＝＝【収集データ】＝＝＝" &amp; vbCrLf &amp;  CollectedData</td><td></td></tr>
+<tr><td>　　│#  内容確認表示</td><td></td></tr>
+<tr><td>　　〇 MsgBox Description, , "設定内容"</td><td></td></tr>
+<tr><td>　　│#  説明欄反映</td><td></td></tr>
+<tr><td>　　〇 UF_NewInfoRegist.txt説明 = Description</td><td></td></tr>
+<tr><td>　　│#  フォーム終了</td><td></td></tr>
+<tr><td>　　〇 Unload Me</td><td></td></tr>
+<tr><td>　　→ Exit Sub</td><td></td></tr>
+<tr><td>▼ エラー処理:</td><td></td></tr>
+<tr><td>　　│#  入力エラー通知</td><td></td></tr>
+<tr><td>　　〇 MsgBox "ボタンを選択してください。"</td><td></td></tr>
+<tr><td>　　┴End Sub</td><td></td></tr>
+</tbody>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function (eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function (e) {
+const styleTh = window.getComputedStyle(eleTh);
+const paddingLeft = parseFloat(styleTh.paddingLeft);
+const paddingRight = parseFloat(styleTh.paddingRight);
+const borderLeft = parseFloat(styleTh.borderLeftWidth);
+const borderRight = parseFloat(styleTh.borderRightWidth);
+startX = e.pageX;
+startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e) {
+const newWidth = startWidth + (e.pageX - startX);
+eleTh.style.width = newWidth + 'px';
+}
+function onMouseUp() {
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
+}
+});
+</script>
+</body>
+</html>

@@ -5,16 +5,18 @@ Option Explicit
 ' 開発者モード
 ' True : デバッグ機能有効
 ' False: 本番モード
-'Public Const DEV_MODE As Boolean = True
-'Public Const DEV_MODE As Boolean = False
-
 Public gDevMode As Boolean
+
+' PROCトレース出力
+Public gTraceProc As Boolean
+
+' STACKトレース出力
+Public gTraceStack As Boolean
+
 
 ' ノード範囲
 Public Const DEBUG_NODE_RANGE As Long = 50
 
-' デバッグノード出力シート
-Public Const SHEET_DEBUG_NODES As String = "DBG_NODES"
 '==================================================
 
 '==================================================
@@ -117,6 +119,12 @@ Public Const SHEET_HCP_NODES As String = "HCPNodes"
 
 ' HCPChartシート名
 Public Const SHEET_HCP_CHART As String = "HCPChart"
+
+' デバッグノード出力シート
+Public Const SHEET_DEBUG_NODES As String = "DBG_NODES"
+
+' HCPChart化TARGETシート名
+Public Const SHEET_HCP_TARGETS As String = "HCP_TARGETS"
 
 '==================================================
 ' ProcListシート のヘッダカラム
@@ -683,7 +691,7 @@ End Function
 '==================================================
 ' Tool情報取得
 '==================================================
-
+'
 ' @JPName
 ' ツール情報取得
 '

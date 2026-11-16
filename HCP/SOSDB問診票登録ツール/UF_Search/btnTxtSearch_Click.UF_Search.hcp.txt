@@ -1,0 +1,18 @@
+Procedure: UF_Search.btnTxtSearch_Click  [ Redmine検索実行＜UF_Search＞ ]
+HCP	Business
+┬
+〇│Private Sub btnTxtSearch_Click()	Redmine検索実行＜UF_Search＞
+┴└┐
+　　□ Dim KeyWord As String
+　　│#  検索キーワード取得
+　　〇 KeyWord = txt検索ワード.text
+　　│#  入力有無確認
+　　◆┐If KeyWord <> "" Then
+　　││#  進捗表示有効化
+　　│〇 lbl状況.Visible = True
+　　│〇 lbl進捗率.Visible = True
+　　│〇 lblパーセント.Visible = True
+　　││#  Redmine検索実行
+　　│◎ Call XmlSearch.DbSearch(KeyWord)	Redmine検索実行＜XmlSearch＞
+　　│┴End If
+　　┴End Sub

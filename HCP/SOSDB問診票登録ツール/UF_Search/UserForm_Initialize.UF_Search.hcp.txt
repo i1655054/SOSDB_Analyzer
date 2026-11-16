@@ -1,0 +1,18 @@
+Procedure: UF_Search.UserForm_Initialize  [ 検索フォーム初期化＜UF_Search＞ ]
+HCP	Business
+┬
+〇│Private Sub UserForm_Initialize()	検索フォーム初期化＜UF_Search＞
+┴└┐
+　　│#  入力項目初期化
+　　〇 txt検索ワード.text = ""
+　　│#  進捗表示初期化
+　　〇 lbl状況.Visible = False
+　　〇 lbl進捗状況.Visible = False
+　　〇 lbl進捗率.Visible = False
+　　〇 lblパーセント.Visible = False
+　　│#  IME有効化
+　　〇 Me.txt検索ワード.IMEMode = fmIMEModeOn
+　　│#  右クリック機能初期化
+　　〇 Static dcp As New CRightClick
+　　◎ dcp.Initialize Me	右クリック機能初期化＜CRightClick＞
+　　┴End Sub

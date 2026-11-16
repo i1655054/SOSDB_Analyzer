@@ -1,0 +1,47 @@
+Procedure: modMonshinCore.FormatDescriptionForDisplay  [ 説明文表示整形＜modMonshinCore＞ ]
+HCP	Business
+┬
+〇│Public Function FormatDescriptionForDisplay(  ByVal text As String) As String	説明文表示整形＜modMonshinCore＞
+┴└┐
+　　│#  末尾改行補完
+　　◆┐If Right(text, 1) <> vbLf Then
+　　│〇 text = text & vbLf
+　　│┴End If
+　　│#  問診票大見出し装飾
+　　◎ text = WrapHeader(  text,  "＝＝＝＜問合せ種別＞＝＝＝",  "hdr1")	見出し装飾設定＜modMonshinCore＞
+　　◎ text = WrapHeader(  text,  "＝＝＝＜問合せ内容＞＝＝＝",  "hdr1")	見出し装飾設定＜modMonshinCore＞
+　　◎ text = WrapHeader(  text,  "＝＝＝＜故障発生状況＞＝＝＝",  "hdr1")	見出し装飾設定＜modMonshinCore＞
+　　│#  問診票中見出し装飾
+　　◎ text = WrapHeader(  text,  "＝＝＝【現状の運用系】＝＝＝",  "hdr2")	見出し装飾設定＜modMonshinCore＞
+　　◎ text = WrapHeader(  text,  "＝＝＝【アラーム発生の有無】＝＝＝",  "hdr2")	見出し装飾設定＜modMonshinCore＞
+　　◎ text = WrapHeader(  text,  "＝＝＝【アラーム表示内容】＝＝＝",  "hdr2")	見出し装飾設定＜modMonshinCore＞
+　　◎ text = WrapHeader(  text,  "＝＝＝【発生状況】＝＝＝",  "hdr2")	見出し装飾設定＜modMonshinCore＞
+　　◎ text = WrapHeader(  text,  "===【対応状況】===",  "hdr2")	見出し装飾設定＜modMonshinCore＞
+　　◎ text = WrapHeader(  text,  "＝＝＝【対応状況詳細】＝＝＝",  "hdr2")	見出し装飾設定＜modMonshinCore＞
+　　◎ text = WrapHeader(  text,  "＝＝＝【実施していた作業】＝＝＝",  "hdr2")	見出し装飾設定＜modMonshinCore＞
+　　◎ text = WrapHeader(  text,  "===【収集データ】===",  "hdr2")	見出し装飾設定＜modMonshinCore＞
+　　◎ text = WrapHeader(  text,  "＝＝＝【収集データ】＝＝＝",  "hdr2")	見出し装飾設定＜modMonshinCore＞
+　　│#  回答情報大見出し装飾
+　　◎ text = WrapHeader(  text,  "【解析結果/対処方法】",  "hdr1")	見出し装飾設定＜modMonshinCore＞
+　　│#  回答情報中見出し装飾
+　　◎ text = WrapHeader(  text,  "■発生原因",  "hdr2")	見出し装飾設定＜modMonshinCore＞
+　　◎ text = WrapHeader(  text,  "■対処要否",  "hdr2")	見出し装飾設定＜modMonshinCore＞
+　　◎ text = WrapHeader(  text,  "■対処方法",  "hdr2")	見出し装飾設定＜modMonshinCore＞
+　　◎ text = WrapHeader(  text,  "■次回発生時の対応",  "hdr2")	見出し装飾設定＜modMonshinCore＞
+　　◎ text = WrapHeader(  text,  "■同件判断方法",  "hdr2")	見出し装飾設定＜modMonshinCore＞
+　　◎ text = WrapHeader(  text,  "■問処票発行要否",  "hdr2")	見出し装飾設定＜modMonshinCore＞
+　　◎ text = WrapHeader(  text,  "■その他",  "hdr2")	見出し装飾設定＜modMonshinCore＞
+　　│#  回答情報強調項目装飾
+　　◎ text = WrapHeader(  text,  "発生原因" & vbLf,  "hdr2")	見出し装飾設定＜modMonshinCore＞
+　　◎ text = WrapHeader(  text,  "対処要否" & vbLf,  "hdr2")	見出し装飾設定＜modMonshinCore＞
+　　◎ text = WrapHeader(  text,  "対処方法" & vbLf,  "hdr2")	見出し装飾設定＜modMonshinCore＞
+　　◎ text = WrapHeader(  text,  "次回発生時の" & vbLf & "対応" & vbLf,  "hdr2")	見出し装飾設定＜modMonshinCore＞
+　　◎ text = WrapHeader(  text,  "同件判断方法" & vbLf,  "hdr2")	見出し装飾設定＜modMonshinCore＞
+　　◎ text = WrapHeader(  text,  "問処票発行要否" & vbLf,  "hdr2")	見出し装飾設定＜modMonshinCore＞
+　　◎ text = WrapHeader(  text,  "その他",  "hdr2")	見出し装飾設定＜modMonshinCore＞
+　　│#  回答情報強調項目装飾
+　　◎ text = WrapHeader(  text,  "回答日：",  "hdr3")	見出し装飾設定＜modMonshinCore＞
+　　◎ text = WrapHeader(  text,  "研開C担当者名、連絡先：",  "hdr3")	見出し装飾設定＜modMonshinCore＞
+　　│#  装飾後文字列返却
+　　〇 FormatDescriptionForDisplay = text
+　　┴End Function

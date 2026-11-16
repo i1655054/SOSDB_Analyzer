@@ -1,0 +1,8 @@
+Procedure: UF_ExplanationRegist.CommandButton2_Click  [ 説明入力取消＜UF_ExplanationRegist＞ ]
+HCP	Business
+┬
+〇│Private Sub CommandButton2_Click()	説明入力取消＜UF_ExplanationRegist＞
+┴└┐
+　　│#  入力取消
+　　〇 Unload Me
+　　┴End Sub

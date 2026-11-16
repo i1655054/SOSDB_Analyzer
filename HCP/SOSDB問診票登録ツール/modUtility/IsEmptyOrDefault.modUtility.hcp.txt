@@ -1,0 +1,24 @@
+Procedure: modUtility.IsEmptyOrDefault  [ 未入力判定＜modUtility＞ ]
+HCP	Business
+┬
+〇│Public Function IsEmptyOrDefault(  ByVal val As Variant,  ParamArray defaults() As Variant) As Boolean	未入力判定＜modUtility＞
+┴└┐
+　　□ Dim V As Variant
+　　□ Dim s As String
+　　│#  文字列変換
+　　〇 s = Trim(CStr(val))
+　　│#  空文字判定
+　　◆┐If s = "" Then
+　　│〇 IsEmptyOrDefault = True
+　　│→ Exit Function
+　　│┴End If
+　　│#  初期値判定
+　　＠┐For Each V In defaults
+　　│◆┐If s = Trim(CStr(V)) Then
+　　││〇 IsEmptyOrDefault = True
+　　││→ Exit Function
+　　││┴End If
+　　│┴Next
+　　│#  入力値あり
+　　〇 IsEmptyOrDefault = False
+　　┴End Function

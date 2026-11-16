@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift_jis">
+<title>BuildCustomFieldsXmlDiff</title>
+<style>
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+colgroup col:nth-of-type(1) {}
+colgroup col:nth-of-type(2) {}
+.resize {position: relative;}
+.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+</style>
+</head>
+<body>
+<h1>BuildCustomFieldsXmlDiff</h1>
+<p>Module : modRegister</p>
+<p><a href="./_INDEX.html">← Module Index</a></p>
+<table>
+<colgroup><col/><col/></colgroup>
+<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<tbody>
+<tr><td>Procedure: modRegister.BuildCustomFieldsXmlDiff  [ 差分カスタムフィールドXML生成＜modRegister＞ ]</td><td></td></tr>
+<tr><td>HCP</td><td>Business</td></tr>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Public Function BuildCustomFieldsXmlDiff(  ByVal issue As IssueInfo,  ByVal flags As Long) As String</td><td>差分カスタムフィールドXML生成＜modRegister＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　□ Dim body As String</td><td></td></tr>
+<tr><td>　　│#  差分カスタムフィールド生成開始</td><td></td></tr>
+<tr><td>　　〇 body = ""</td><td></td></tr>
+<tr><td>　　│#  問診情報差分出力</td><td></td></tr>
+<tr><td>　　◆┐If (flags And flg_OccurrenceDateTime) &lt;&gt; 0 Then</td><td></td></tr>
+<tr><td>　　│◎ body = body &amp; BuildCustomFieldXmlEx("発生時間", CF_OCCURRENCE_DATETIME, issue.OccurrenceDateTime)</td><td>カスタムフィールドXML要素生成＜modRegister＞</td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　◆┐If (flags And flg_ProblemBuilding) &lt;&gt; 0 Then</td><td></td></tr>
+<tr><td>　　│◎ body = body &amp; BuildCustomFieldXmlEx("ビル(収容局)", CF_PROBLEM_BUILDING, issue.ProblemBuilding)</td><td>カスタムフィールドXML要素生成＜modRegister＞</td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　◆┐If (flags And flg_HostName) &lt;&gt; 0 Then</td><td></td></tr>
+<tr><td>　　│◎ body = body &amp; BuildCustomFieldXmlEx("ホスト名", CF_HOSTNAME, issue.HostName)</td><td>カスタムフィールドXML要素生成＜modRegister＞</td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　◆┐If (flags And flg_Phenomenon) &lt;&gt; 0 Then</td><td></td></tr>
+<tr><td>　　│◎ body = body &amp; BuildCustomFieldXmlEx("事象詳細", CF_PHENOMENON, issue.Phenomenon)</td><td>カスタムフィールドXML要素生成＜modRegister＞</td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　◆┐If (flags And flg_Cause) &lt;&gt; 0 Then</td><td></td></tr>
+<tr><td>　　│◎ body = body &amp; BuildCustomFieldXmlEx("詳細原因", CF_CAUSE, issue.CauseDetail)</td><td>カスタムフィールドXML要素生成＜modRegister＞</td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　│#  管理情報差分出力</td><td></td></tr>
+<tr><td>　　◆┐If (flags And flg_Mondainum_Pro) &lt;&gt; 0 Then</td><td></td></tr>
+<tr><td>　　│◎ body = body &amp; BuildCustomFieldXmlEx("問処番号", CF_MONDAINUM, issue.Mondainum_Pro)</td><td>カスタムフィールドXML要素生成＜modRegister＞</td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　◆┐If (flags And flg_Remarks) &lt;&gt; 0 Then</td><td></td></tr>
+<tr><td>　　│◎ body = body &amp; BuildCustomFieldXmlEx("備考", CF_REMARKS, issue.Remarks)</td><td>カスタムフィールドXML要素生成＜modRegister＞</td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　◆┐If (flags And flg_Esukare_Date) &lt;&gt; 0 Then</td><td></td></tr>
+<tr><td>　　│◎ body = body &amp; BuildCustomFieldXmlEx("発生日(トラバス)", CF_ESUKARE_DATE, issue.Esukare_Date)</td><td>カスタムフィールドXML要素生成＜modRegister＞</td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　◆┐If (flags And flg_Close_Date) &lt;&gt; 0 Then</td><td></td></tr>
+<tr><td>　　│◎ body = body &amp; BuildCustomFieldXmlEx("完了日(トラバス)", CF_CLOSE_DATE, issue.Close_Date)</td><td>カスタムフィールドXML要素生成＜modRegister＞</td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　│#  業務情報差分出力</td><td></td></tr>
+<tr><td>　　◆┐If (flags And flg_Requester_Pro) &lt;&gt; 0 Then</td><td></td></tr>
+<tr><td>　　│◎ body = body &amp; BuildCustomFieldXmlEx("問合せ者", CF_REQUESTER_PRO, issue.Requester_Pro)</td><td>カスタムフィールドXML要素生成＜modRegister＞</td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　◆┐If (flags And flg_ServiceImpact) &lt;&gt; 0 Then</td><td></td></tr>
+<tr><td>　　│◎ body = body &amp; BuildCustomFieldXmlEx("サービス影響", CF_SERVICE_IMPACT, issue.ServiceImpact)</td><td>カスタムフィールドXML要素生成＜modRegister＞</td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　◆┐If (flags And flg_TroubleNum) &lt;&gt; 0 Then</td><td></td></tr>
+<tr><td>　　│◎ body = body &amp; BuildCustomFieldXmlEx("管理番号", CF_TROUBLE_NUM, issue.TroubleNum)</td><td>カスタムフィールドXML要素生成＜modRegister＞</td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　◆┐If (flags And flg_Equipment) &lt;&gt; 0 Then</td><td></td></tr>
+<tr><td>　　│◎ body = body &amp; BuildCustomFieldXmlEx("対象装置", CF_EQUIPMENT, issue.Equipment)</td><td>カスタムフィールドXML要素生成＜modRegister＞</td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　◆┐If (flags And flg_Cope) &lt;&gt; 0 Then</td><td></td></tr>
+<tr><td>　　│◎ body = body &amp; BuildCustomFieldXmlEx("対処内容", CF_COUNTERMEASURE, issue.Countermeasure)</td><td>カスタムフィールドXML要素生成＜modRegister＞</td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　│#  拡張情報差分出力</td><td></td></tr>
+<tr><td>　　◆┐If (flags And flg_RequesterNum) &lt;&gt; 0 Then</td><td></td></tr>
+<tr><td>　　│◎ body = body &amp; BuildCustomFieldXmlEx("依頼元管理番号", CF_REQUESTER_NUM, issue.RequesterNum)</td><td>カスタムフィールドXML要素生成＜modRegister＞</td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　◆┐If (flags And flg_ProductTantou) &lt;&gt; 0 Then</td><td></td></tr>
+<tr><td>　　│◎ body = body &amp; BuildCustomFieldXmlEx("プロダクト担当者", CF_PRODUCT_TANTOU, issue.ProductTantou)</td><td>カスタムフィールドXML要素生成＜modRegister＞</td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　◆┐If (flags And flg_KihensinName_Date) &lt;&gt; 0 Then</td><td></td></tr>
+<tr><td>　　│◎ body = body &amp; BuildCustomFieldXmlEx("規変審名/開催日", CF_KIHENSIN, issue.KihensinName_Date)</td><td>カスタムフィールドXML要素生成＜modRegister＞</td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　◆┐If (flags And flg_Key_Word) &lt;&gt; 0 Then</td><td></td></tr>
+<tr><td>　　│◎ body = body &amp; BuildCustomFieldXmlEx("キーワード", CF_KEYWORD, issue.Key_Word)</td><td>カスタムフィールドXML要素生成＜modRegister＞</td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　◆┐If (flags And flg_EqProduct) &lt;&gt; 0 Then</td><td></td></tr>
+<tr><td>　　│◎ body = body &amp; BuildCustomFieldXmlEx("プロダクト装置／サービス", CF_EQ_PRODUCT, issue.EqProduct)</td><td>カスタムフィールドXML要素生成＜modRegister＞</td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　│#  カスタムフィールドタグ生成</td><td></td></tr>
+<tr><td>　　◆┐If body &lt;&gt; "" Then</td><td></td></tr>
+<tr><td>　　│〇 BuildCustomFieldsXmlDiff = "&lt;custom_fields type=""array""&gt;" &amp;  body &amp;  "&lt;/custom_fields&gt;"</td><td></td></tr>
+<tr><td>　　├┐ELSE</td><td></td></tr>
+<tr><td>　　│〇 BuildCustomFieldsXmlDiff = ""</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　┴End Function</td><td></td></tr>
+</tbody>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function (eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function (e) {
+const styleTh = window.getComputedStyle(eleTh);
+const paddingLeft = parseFloat(styleTh.paddingLeft);
+const paddingRight = parseFloat(styleTh.paddingRight);
+const borderLeft = parseFloat(styleTh.borderLeftWidth);
+const borderRight = parseFloat(styleTh.borderRightWidth);
+startX = e.pageX;
+startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e) {
+const newWidth = startWidth + (e.pageX - startX);
+eleTh.style.width = newWidth + 'px';
+}
+function onMouseUp() {
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
+}
+});
+</script>
+</body>
+</html>

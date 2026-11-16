@@ -20,6 +20,18 @@ Public Sub Trace( _
                 ByVal Message As String)
     
     If Not gDevMode Then Exit Sub
+    
+    If Category = "PROC" Then
+
+        If Not gTraceProc Then Exit Sub
+
+    End If
+
+    If Category = "STACK" Then
+
+        If Not gTraceStack Then Exit Sub
+
+    End If
 
     Debug.Print _
         Format$(Now, "hh:nn:ss") & _

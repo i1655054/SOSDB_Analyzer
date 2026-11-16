@@ -1,0 +1,75 @@
+Procedure: UF_NewInfoRegist.UserForm_Initialize  [ 問診票なし登録フォーム初期化＜UF_NewInfoRegist＞ ]
+HCP	Business
+┬
+〇│Private Sub UserForm_Initialize()	問診票なし登録フォーム初期化＜UF_NewInfoRegist＞
+┴└┐
+　　□ Dim Rng As Range
+　　□ Dim cell As Range
+　　□ Dim result As String
+　　□ Dim DefName As String
+　　□ Dim sht As Worksheet
+　　〇 DefName = "年度"
+　　〇 Set sht = ThisWorkbook.Sheets(SheetName_Main) ' 対象のシート名を指定
+　　☆ On Error Resume Next
+　　〇 Set Rng = ThisWorkbook.Names(DefName).RefersToRange
+　　☆ On Error GoTo 0
+　　◆┐If Rng Is Nothing Then
+　　│〇 MsgBox "名前付き範囲 " & DefName & "が見つかりません。", vbExclamation
+　　│→ Exit Sub
+　　│┴End If
+　　〇 Set Rng = Rng.Resize(Rng.Rows.count - 1).offset(1, 0)
+　　＠┐For Each cell In Rng.Columns(1).Cells
+　　│〇 cmb年度.AddItem cell.Value
+　　│┴Next cell
+　　〇 cmb年度.Value = sht.Range(TARGET_VER_RANG)
+　　〇 DefName = "Status"
+　　☆ On Error Resume Next
+　　〇 Set Rng = ThisWorkbook.Names(DefName).RefersToRange
+　　☆ On Error GoTo 0
+　　◆┐If Rng Is Nothing Then
+　　│〇 MsgBox "名前付き範囲 " & DefName & "が見つかりません。", vbExclamation
+　　│→ Exit Sub
+　　│┴End If
+　　〇 Set Rng = Rng.Resize(Rng.Rows.count).offset(0, 0)
+　　＠┐For Each cell In Rng.Columns(1).Cells
+　　│〇 cmbステータス.AddItem cell.Value
+　　│┴Next cell
+　　〇 cmbステータス.Value = "新規"
+　　│#  優先度マスタ読込
+　　〇 DefName = "優先度"
+　　☆ On Error Resume Next
+　　〇 Set Rng = ThisWorkbook.Names(DefName).RefersToRange
+　　☆ On Error GoTo 0
+　　◆┐If Rng Is Nothing Then
+　　│〇 MsgBox "名前付き範囲 " & DefName & "が見つかりません。", vbExclamation
+　　│→ Exit Sub
+　　│┴End If
+　　〇 Set Rng = Rng.Resize(Rng.Rows.count - 1).offset(1, 0)
+　　＠┐For Each cell In Rng.Columns(1).Cells
+　　│〇 cmb優先度.AddItem cell.Value
+　　│┴Next cell
+　　〇 cmb優先度.Value = "通常"
+　　│#  装置種別マスタ読込
+　　〇 DefName = "装置等種別"
+　　☆ On Error Resume Next
+　　〇 Set Rng = ThisWorkbook.Names(DefName).RefersToRange
+　　☆ On Error GoTo 0
+　　◆┐If Rng Is Nothing Then
+　　│〇 MsgBox "名前付き範囲 " & DefName & "が見つかりません。", vbExclamation
+　　│→ Exit Sub
+　　│┴End If
+　　〇 Set Rng = Rng.Resize(Rng.Rows.count - 0).offset(0, 0)
+　　〇 cmb装置種別.Value = "装置等種別を選択して下さい"
+　　＠┐For Each cell In Rng.Columns(1).Cells
+　　│〇 cmb装置種別.AddItem cell.Value
+　　│┴Next cell
+　　│#  IME設定
+　　〇 txt管理番号_子番号.IMEMode = fmIMEModeOff
+　　〇 txtプロダクト担当者.IMEMode = fmIMEModeOn
+　　〇 txtビル.IMEMode = fmIMEModeOn
+　　〇 txt説明.IMEMode = fmIMEModeOn
+　　〇 txt備考.IMEMode = fmIMEModeOn
+　　│#  右クリック機能初期化
+　　〇 Static dcp As New CRightClick
+　　◎ dcp.Initialize Me	右クリック機能初期化＜CRightClick＞
+　　┴End Sub

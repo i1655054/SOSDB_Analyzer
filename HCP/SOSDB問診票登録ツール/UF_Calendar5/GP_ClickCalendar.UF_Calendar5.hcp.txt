@@ -1,0 +1,20 @@
+Procedure: UF_Calendar5.GP_ClickCalendar  [ 日付確定＜UF_Calendar5＞ ]
+HCP	Business
+┬
+〇│Friend Sub GP_ClickCalendar(ByVal lngPos As Long)	日付確定＜UF_Calendar5＞
+┴└┐
+　　│#  選択日取得
+　　〇 g_FormDate1 = g_tblDateLabel(lngPos).Hiduke
+　　│#  年月選択非表示
+　　◎ Call GP_EraseYearMonth	年月選択非表示＜UF_Calendar5＞
+　　│#  反映先判定
+　　◆┐If g_intEntMode = 1 Then
+　　││#  TextBox反映
+　　│〇 g_objTextBox.text = Format(g_FormDate1, g_strDateFormat)
+　　├┐ELSE
+　　││#  セル反映
+　　│〇 g_objRange.Value = g_FormDate1
+　　│┴End If
+　　│#  フォーム非表示
+　　〇 Me.Hide
+　　┴End Sub

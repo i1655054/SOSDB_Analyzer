@@ -1,0 +1,8 @@
+Procedure: UF_RequesterNumRegist.CommandButton2_Click  [ 依頼元管理番号取消＜UF_RequesterNumRegist＞ ]
+HCP	Business
+┬
+〇│Private Sub CommandButton2_Click()	依頼元管理番号取消＜UF_RequesterNumRegist＞
+┴└┐
+　　│#  入力取消
+　　〇 Unload Me
+　　┴End Sub

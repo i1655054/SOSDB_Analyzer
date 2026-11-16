@@ -1,0 +1,12 @@
+Procedure: IssueInfo.Clone  [ Issue情報複製＜IssueInfo＞ ]
+HCP	Business
+┬
+〇│Public Function Clone() As IssueInfo	Issue情報複製＜IssueInfo＞
+┴└┐
+　　│#  複製オブジェクト生成
+　　□ Dim obj As New IssueInfo
+　　│#  Issue情報コピー
+　　◎ obj.CopyFrom Me	Issue情報コピー＜IssueInfo＞
+　　│#  複製オブジェクト返却
+　　〇 Set Clone = obj
+　　┴End Function

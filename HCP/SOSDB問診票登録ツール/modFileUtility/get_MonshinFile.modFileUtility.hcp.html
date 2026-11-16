@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift_jis">
+<title>get_MonshinFile</title>
+<style>
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+colgroup col:nth-of-type(1) {}
+colgroup col:nth-of-type(2) {}
+.resize {position: relative;}
+.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+</style>
+</head>
+<body>
+<h1>get_MonshinFile</h1>
+<p>Module : modFileUtility</p>
+<p><a href="./_INDEX.html">← Module Index</a></p>
+<table>
+<colgroup><col/><col/></colgroup>
+<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<tbody>
+<tr><td>Procedure: modFileUtility.get_MonshinFile  [ 問診票ファイル選択＜modFileUtility＞ ]</td><td></td></tr>
+<tr><td>HCP</td><td>Business</td></tr>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Function get_MonshinFile()</td><td>問診票ファイル選択＜modFileUtility＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　│#  問診票選択用フィルタ準備</td><td></td></tr>
+<tr><td>　　□ Dim strFileName As String</td><td></td></tr>
+<tr><td>　　□ Dim tblFilter(2, 1) As String</td><td></td></tr>
+<tr><td>　　〇 tblFilter(0, 0) = "Excelワークブック"</td><td></td></tr>
+<tr><td>　　〇 tblFilter(0, 1) = "*.xls;*.xlsx;*.xlsm"</td><td></td></tr>
+<tr><td>　　〇 tblFilter(1, 0) = "Excelテンプレート"</td><td></td></tr>
+<tr><td>　　〇 tblFilter(1, 1) = "*.xlt;*.xltx;*.xltm"</td><td></td></tr>
+<tr><td>　　〇 tblFilter(2, 0) = "全てのファイル"</td><td></td></tr>
+<tr><td>　　〇 tblFilter(2, 1) = "*.*"</td><td></td></tr>
+<tr><td>　　│#  ファイル選択ダイアログ表示</td><td></td></tr>
+<tr><td>　　◎ strFileName = OpenDialog(  g_cnsTitle2,  tblFilter,  False,  GetTargetPath(g_CurrentIssue.targetVersion),  g_cnsFixRootPath,  CurDir,  "選択")</td><td>ファイル選択ダイアログ表示＜modFileUtility＞</td></tr>
+<tr><td>　　│</td><td>内部呼出:GetTargetPath</td></tr>
+<tr><td>　　│#  選択結果返却</td><td></td></tr>
+<tr><td>　　〇 get_MonshinFile = strFileName</td><td></td></tr>
+<tr><td>　　┴End Sub</td><td></td></tr>
+</tbody>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function (eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function (e) {
+const styleTh = window.getComputedStyle(eleTh);
+const paddingLeft = parseFloat(styleTh.paddingLeft);
+const paddingRight = parseFloat(styleTh.paddingRight);
+const borderLeft = parseFloat(styleTh.borderLeftWidth);
+const borderRight = parseFloat(styleTh.borderRightWidth);
+startX = e.pageX;
+startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e) {
+const newWidth = startWidth + (e.pageX - startX);
+eleTh.style.width = newWidth + 'px';
+}
+function onMouseUp() {
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
+}
+});
+</script>
+</body>
+</html>

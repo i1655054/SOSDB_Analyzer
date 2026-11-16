@@ -1,0 +1,17 @@
+Procedure: modMonshinCore.BuildRemarks  [ 備考生成＜modMonshinCore＞ ]
+HCP	Business
+┬
+〇│Private Function BuildRemarks(ByRef info As MonshinInfoType) As String	備考生成＜modMonshinCore＞
+┴└┐
+　　│#  回答日入力確認
+　　◆┐If Trim(info.AnswerDate) = "" Or info.AnswerDate = "0:00:00" Then
+　　││#  備考なし返却
+　　│〇 BuildRemarks = ""
+　　│→ Exit Function
+　　│┴End If
+　　│#  備考文字列生成
+　　□ Dim result As String
+　　〇 result = "回答日：" & info.AnswerDate & vbCrLf &  "研開C担当者名、連絡先：" & info.AnswerPerson & vbCrLf &  "【解析結果/対処方法】" & vbCrLf &  info.AnswerInfo & vbCrLf
+　　│#  備考返却
+　　〇 BuildRemarks = result
+　　┴End Function

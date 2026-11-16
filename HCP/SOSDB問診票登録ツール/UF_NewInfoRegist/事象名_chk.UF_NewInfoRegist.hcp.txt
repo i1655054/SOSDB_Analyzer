@@ -1,0 +1,16 @@
+Procedure: UF_NewInfoRegist.事象名_chk  [ 事象名入力確認＜UF_NewInfoRegist＞ ]
+HCP	Business
+┬
+〇│Private Function 事象名_chk() As Boolean	事象名入力確認＜UF_NewInfoRegist＞
+┴└┐
+　　〇 事象名_chk = True
+　　│#  入力有無確認
+　　◆┐If Trim(Me.txt事象名.Value) = "" Then
+　　││#  エラー表示
+　　│〇 事象名_chk = False
+　　│〇 Me.txt事象名.BackColor = &HC0C0FF
+　　├┐ELSE
+　　││#  表示復元
+　　│〇 Me.txt事象名.BackColor = &H80000005
+　　│┴End If
+　　┴End Function

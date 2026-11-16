@@ -1,0 +1,17 @@
+Procedure: UF_RequesterNumRegist.UserForm_Initialize  [ 依頼元管理番号フォーム初期化＜UF_RequesterNumRegist＞ ]
+HCP	Business
+┬
+〇│Private Sub UserForm_Initialize()	依頼元管理番号フォーム初期化＜UF_RequesterNumRegist＞
+┴└┐
+　　│#  コントロール初期化
+　　〇 TextBox1.Enabled = False
+　　〇 OptionButton1.Value = False
+　　〇 OptionButton1.ForeColor = &H80000010
+　　〇 OptionButton2.Value = True
+　　〇 OptionButton2.ForeColor = &H80000012
+　　│#  依頼元管理番号解析
+　　◎ RequesterNumDivision	依頼元管理番号解析＜UF_RequesterNumRegist＞
+　　│#  右クリック機能初期化
+　　〇 Static dcp As New CRightClick
+　　◎ dcp.Initialize Me	右クリック機能初期化＜CRightClick＞
+　　┴End Sub

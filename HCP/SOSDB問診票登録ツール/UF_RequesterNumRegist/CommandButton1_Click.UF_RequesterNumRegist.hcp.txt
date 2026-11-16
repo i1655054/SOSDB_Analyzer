@@ -1,0 +1,36 @@
+Procedure: UF_RequesterNumRegist.CommandButton1_Click  [ 依頼元管理番号登録＜UF_RequesterNumRegist＞ ]
+HCP	Business
+┬
+〇│Private Sub CommandButton1_Click()	依頼元管理番号登録＜UF_RequesterNumRegist＞
+┴└┐
+　　□ Dim RequesterNum As String
+　　□ Dim MonShinNum As String
+　　□ Dim faultRepNum As String
+　　□ Dim tmp As Variant
+　　□ Dim position As Long
+　　│#  入力内容確認
+　　◆┐If TextBox1.text <> "" And TextBox2.text <> "" Then
+　　││#  管理番号取得
+　　│〇 MonShinNum = TextBox1.text
+　　│〇 faultRepNum = TextBox2.text
+　　││#  依頼元管理番号生成
+　　│〇 RequesterNum = "問診票管理番号=" & MonShinNum & "  / 故障票番号=" & faultRepNum
+　　││#  呼出元判定
+　　│◆┐If CallingForm.name = "UF_NewInfoRegist" Then
+　　│││#  呼出元フォーム反映
+　　││〇 UF_NewInfoRegist.txt依頼元管理番号.Value = RequesterNum
+　　│├┐ELSE
+　　│││#  Issue情報反映
+　　││◆┐If Not TargetIssue Is Nothing Then
+　　│││〇 TargetIssue.RequesterNum = RequesterNum
+　　│││┴End If
+　　││┴End If
+　　├┐ELSE
+　　││#  Issue情報反映
+　　│◆┐If Not TargetIssue Is Nothing Then
+　　││〇 TargetIssue.RequesterNum = RequesterNum
+　　││┴End If
+　　│┴End If
+　　│#  フォーム終了
+　　〇 Unload Me
+　　┴End Sub

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift_jis">
+<title>DbSearch</title>
+<style>
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+colgroup col:nth-of-type(1) {}
+colgroup col:nth-of-type(2) {}
+.resize {position: relative;}
+.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+</style>
+</head>
+<body>
+<h1>DbSearch</h1>
+<p>Module : XmlSearch</p>
+<p><a href="./_INDEX.html">← Module Index</a></p>
+<table>
+<colgroup><col/><col/></colgroup>
+<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<tbody>
+<tr><td>Procedure: XmlSearch.DbSearch  [ Redmine検索実行＜XmlSearch＞ ]</td><td></td></tr>
+<tr><td>HCP</td><td>Business</td></tr>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Sub DbSearch(SearchKey As String)</td><td>Redmine検索実行＜XmlSearch＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　□ Dim Author_Name As String</td><td></td></tr>
+<tr><td>　　□ Dim apiKey As String</td><td></td></tr>
+<tr><td>　　□ Dim SearchUrl As String</td><td></td></tr>
+<tr><td>　　□ Dim url As String</td><td></td></tr>
+<tr><td>　　□ Dim ResultMsg As String</td><td></td></tr>
+<tr><td>　　☆ On Error GoTo ErrorHandler</td><td></td></tr>
+<tr><td>　　│#  担当者取得</td><td></td></tr>
+<tr><td>　　〇 Author_Name = Range(TANTOU_NAME_RANG).Value</td><td></td></tr>
+<tr><td>　　│#  APIキー取得</td><td></td></tr>
+<tr><td>　　◎ apiKey = GetApiKey(Author_Name)</td><td>APIキー取得＜modIssueMapper＞</td></tr>
+<tr><td>　　│#  APIキー補完</td><td></td></tr>
+<tr><td>　　◆┐If (apiKey = "") Then</td><td></td></tr>
+<tr><td>　　│〇 apiKey = Read_API_Key</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　│#  APIキー確認</td><td></td></tr>
+<tr><td>　　◆┐If apiKey = "" Then</td><td></td></tr>
+<tr><td>　　│〇 MsgBox "APIキーの取得に失敗しました。", vbCritical</td><td></td></tr>
+<tr><td>　　│→ Exit Sub</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　│#  検索URL生成</td><td></td></tr>
+<tr><td>　　◎ SearchUrl = MakeSearchUrl(SearchKey)</td><td>検索URL生成＜XmlSearch＞</td></tr>
+<tr><td>　　│#  検索結果CSV生成</td><td></td></tr>
+<tr><td>　　◎ Call ExportRedmineIDsToCSV(SearchKey, SearchUrl, apiKey)</td><td>検索結果CSV生成＜XmlSearch＞</td></tr>
+<tr><td>　　→ Exit Sub</td><td></td></tr>
+<tr><td>▼ ErrorHandler:</td><td></td></tr>
+<tr><td>　　│#  エラーメッセージ表示</td><td></td></tr>
+<tr><td>　　〇 MsgBox "検索中にエラーが発生しました。" &amp; vbCrLf &amp;  "エラー番号: " &amp; Err.Number &amp; vbCrLf &amp;  "内容: " &amp; Err.Description, vbCritical, "DbtotalCount"</td><td></td></tr>
+<tr><td>　　┴End Sub</td><td></td></tr>
+</tbody>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function (eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function (e) {
+const styleTh = window.getComputedStyle(eleTh);
+const paddingLeft = parseFloat(styleTh.paddingLeft);
+const paddingRight = parseFloat(styleTh.paddingRight);
+const borderLeft = parseFloat(styleTh.borderLeftWidth);
+const borderRight = parseFloat(styleTh.borderRightWidth);
+startX = e.pageX;
+startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e) {
+const newWidth = startWidth + (e.pageX - startX);
+eleTh.style.width = newWidth + 'px';
+}
+function onMouseUp() {
+document.removeEventListener('mousemove', onMouseMove);
+document.removeEventListener('mouseup', onMouseUp);
+}
+});
+</script>
+</body>
+</html>

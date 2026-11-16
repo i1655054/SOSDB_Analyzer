@@ -1,0 +1,12 @@
+Procedure: modAboutCalendar2.FP_SumEigyoBi  [ 営業日加算日付計算＜modAboutCalendar2＞ ]
+HCP	Business
+┬
+〇│Public Function FPSumEigyoBi(ByVal dteDateF As Date,  ByVal lngCntKeika As Long,  ByRef dteDateT As Date,  Optional ByVal blnOmitCheck As Boolean = False) As Boolean	営業日加算日付計算＜modAboutCalendar2＞
+┴└┐
+　　◆┐If Not FP_InitAboutCalendar(blnOmitCheck) Then
+　　│〇 FP_SumEigyoBi = False
+　　│→ Exit Function
+　　│┴End If
+　　◎ Call g_clsAboutCalendar.SumEigyoBi(dteDateF, lngCntKeika, dteDateT)	営業日加算日付計算＜clsAboutCalendar2＞
+　　〇 FP_SumEigyoBi = True
+　　┴End Function

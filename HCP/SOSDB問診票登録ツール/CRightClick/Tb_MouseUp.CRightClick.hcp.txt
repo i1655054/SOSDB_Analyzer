@@ -1,0 +1,9 @@
+Procedure: CRightClick.Tb_MouseUp  [ テキストボックス右クリック＜CRightClick＞ ]
+HCP	Business
+┬
+〇│Private Sub TbMouseUp(ByVal Button As Integer, ByVal Shift As Integer,  ByVal X As Single, ByVal Y As Single)	テキストボックス右クリック＜CRightClick＞
+┴└┐
+　　│#  右クリック判定
+　　│#  編集メニュー表示
+　　◆ If Button = 2 Then pCopyPaste Tb
+　　┴End Sub

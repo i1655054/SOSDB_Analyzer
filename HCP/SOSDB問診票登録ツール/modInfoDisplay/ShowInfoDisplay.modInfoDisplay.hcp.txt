@@ -1,0 +1,21 @@
+Procedure: modInfoDisplay.ShowInfoDisplay  [ 情報表示フォーム表示＜modInfoDisplay＞ ]
+HCP	Business
+┬
+〇│Private Sub ShowInfoDisplay(ByVal uf As UF_InfoWebDisplay)	情報表示フォーム表示＜modInfoDisplay＞
+┴└┐
+　　☆ On Error Resume Next
+　　│#  フォームサイズ復元
+　　◎ uf.RestoreCurrentSize	フォームサイズ復元＜UF_InfoWebDisplay＞
+　　│#  編集モード解除
+　　◆┐If Not uf.CommandButtonEdit.Visible Then
+　　│◎ uf.ResetEditMode	編集モード解除＜UF_InfoWebDisplay＞
+　　│┴End If
+　　│#  表示中フォーム再描画
+　　◆┐If uf.Visible Then
+　　│◎ uf.RenderHTML	HTML表示＜UF_InfoWebDisplay＞
+　　│〇 uf.Repaint
+　　├┐ELSE
+　　││#  フォーム表示
+　　│〇 uf.Show vbModeless
+　　│┴End If
+　　┴End Sub

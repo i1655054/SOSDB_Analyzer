@@ -1,0 +1,8 @@
+Procedure: modUtility.HighlightCell  [ セル強調表示＜modUtility＞ ]
+HCP	Business
+┬
+〇│Public Sub HighlightCell(rngName As String, color As Long)	セル強調表示＜modUtility＞
+┴└┐
+　　│#  セル強調表示
+　　〇 Range(rngName).Interior.color = color
+　　┴End Sub

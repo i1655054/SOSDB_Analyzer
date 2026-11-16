@@ -1,0 +1,96 @@
+Procedure: UF_Calendar5.UserForm_Initialize  [ カレンダー初期化＜UF_Calendar5＞ ]
+HCP	Business
+┬
+〇│Private Sub UserForm_Initialize()	カレンダー初期化＜UF_Calendar5＞
+┴└┐
+　　□ Dim lngIx As Long                                               ' テーブルINDEX
+　　□ Dim lngIx2 As Long                                              ' テーブルINDEX
+　　□ Dim lngIxC As Long                                              ' カレンダーテーブルINDEX
+　　□ Dim dteDate As Date                                             ' 日付WORK
+　　□ Dim tblTodayNm As Variant                                       ' 昨日､今日､明日の名称
+　　□ Dim tblCalendar() As g_typAboutCalendar2                        ' カレンダーテーブル
+　　│#  日付ラベル初期化
+　　＠┐For lngIx = 0 To 44
+　　│◎ Call g_tblDateLabel(lngIx).NewClass(Me.Controls("LBL_" & Format((lngIx + 1), "00")), lngIx)
+　　││	内部呼出:g_tblDateLabel, Controls, Format
+　　│┴Next lngIx
+　　│#  固定ラベル初期化
+　　◎ Call g_tblFixLabel(0).NewClass(LBL_SUN, cnsDefaultGuide)        ' 日
+　　│	内部呼出:g_tblFixLabel
+　　◎ Call g_tblFixLabel(1).NewClass(LBL_MON, cnsDefaultGuide)        ' 月
+　　│	内部呼出:g_tblFixLabel
+　　◎ Call g_tblFixLabel(2).NewClass(LBL_TUE, cnsDefaultGuide)        ' 火
+　　│	内部呼出:g_tblFixLabel
+　　◎ Call g_tblFixLabel(3).NewClass(LBL_WED, cnsDefaultGuide)        ' 水
+　　│	内部呼出:g_tblFixLabel
+　　◎ Call g_tblFixLabel(4).NewClass(LBL_THU, cnsDefaultGuide)        ' 木
+　　│	内部呼出:g_tblFixLabel
+　　◎ Call g_tblFixLabel(5).NewClass(LBL_FRI, cnsDefaultGuide)        ' 金
+　　│	内部呼出:g_tblFixLabel
+　　◎ Call g_tblFixLabel(6).NewClass(LBL_SAT, cnsDefaultGuide)        ' 土
+　　│	内部呼出:g_tblFixLabel
+　　◎ Call g_tblFixLabel(7).NewClass(LBL_PREV, "前月に戻ります(PageUp)") ' ←
+　　│	内部呼出:g_tblFixLabel
+　　◎ Call g_tblFixLabel(8).NewClass(LBL_NEXT, "翌月に進みます(PageDown)") ' →
+　　│	内部呼出:g_tblFixLabel
+　　◎ Call g_tblFixLabel(9).NewClass(LBL_YM, "年か月を選択します。")  ' 年月
+　　│	内部呼出:g_tblFixLabel
+　　◎ Call g_tblFixLabel(10).NewClass(LBL_YEAR, "年が選択できます。") ' 年
+　　│	内部呼出:g_tblFixLabel
+　　◎ Call g_tblFixLabel(11).NewClass(LBL_MONTH, "月が選択できます。") ' 月
+　　│	内部呼出:g_tblFixLabel
+　　│#  曜日配置設定
+　　◆┐If g_cnsStartYobi = 2 Then
+　　│〇 LBL_MON.Left = 3
+　　│〇 LBL_MON.Width = 16.75
+　　│〇 LBL_TUE.Left = 20.5
+　　│〇 LBL_WED.Left = 38
+　　│〇 LBL_WED.Width = 17
+　　│〇 LBL_THU.Left = 55.5
+　　│〇 LBL_THU.Width = 16.75
+　　│〇 LBL_FRI.Left = 73
+　　│〇 LBL_SAT.Left = 90.5
+　　│〇 LBL_SUN.Left = 108
+　　│〇 LBL_SUN.Width = 17
+　　├┐ELSE
+　　│〇 LBL_SUN.Left = 3
+　　│〇 LBL_SUN.Width = 16.75
+　　│〇 LBL_MON.Left = 20.5
+　　│〇 LBL_TUE.Left = 38
+　　│〇 LBL_TUE.Width = 17
+　　│〇 LBL_WED.Left = 55.5
+　　│〇 LBL_WED.Width = 16.75
+　　│〇 LBL_THU.Left = 73
+　　│〇 LBL_FRI.Left = 90.5
+　　│〇 LBL_SAT.Left = 108
+　　│〇 LBL_SAT.Width = 17
+　　│┴End If
+　　│#  曜日テーブル生成
+　　〇 g_tblYobi = Array(
+　　│ "(日)", "(月)", "(火)", "(水)", "(木)", "(金)", "(土)")
+　　│#  昨日今日明日情報生成
+　　〇 dteDate = Date              ' 今日
+　　◆→ If Not modAboutCalendar2.FP_GetCalendarTable3(Year(dteDate),  Month(dteDate),  tblCalendar) Then Exit Sub
+　　〇 dteDate = dteDate - 1
+　　〇 lngIxC = 0
+　　＠┐Do While lngIxC <= UBound(tblCalendar)
+　　│◆→ If tblCalendar(lngIxC).Hiduke = dteDate Then Exit Do
+　　│〇 lngIxC = lngIxC + 1
+　　│┴Loop
+　　〇 tblTodayNm = Array("[昨日]", "[今日]", "[明日]")
+　　〇 lngIx2 = 0
+　　＠┐For lngIx = 42 To 44
+　　│〇 dteDate = tblCalendar(lngIxC).Hiduke
+　　│＠┐With g_tblDateLabel(lngIx)
+　　││〇 .Hiduke = dteDate
+　　││〇 .Yobi = tblCalendar(lngIxC).Yobi
+　　││〇 .Syuku = tblCalendar(lngIxC).Syuku
+　　││〇 .StsGuide = tblTodayNm(lngIx2) & Format(dteDate, g_cnsDateFormat) & g_tblYobi(.Yobi)
+　　││◆┐If .Syuku <> 0 Then
+　　│││〇 .StsGuide = .StsGuide & " " & tblCalendar(lngIxC).SyukuNm
+　　│││┴End If
+　　││┴End With
+　　│〇 lngIxC = lngIxC + 1
+　　│〇 lngIx2 = lngIx2 + 1
+　　│┴Next lngIx
+　　┴End Sub

@@ -1,0 +1,24 @@
+Procedure: modUtility.ValidateForMonshin  [ 問診票処理入力確認＜modUtility＞ ]
+HCP	Business
+┬
+〇│Public Function ValidateForMonshin(issue As IssueInfo) As Boolean	問診票処理入力確認＜modUtility＞
+┴└┐
+　　□ Dim errMsg As String
+　　│#  担当者確認
+　　◆┐If Not chk_Person(issue) Then
+　　│〇 errMsg = errMsg & "・担当者" & vbCrLf
+　　│┴End If
+　　│#  対象バージョン確認
+　　◆┐If Not chk_Target(issue) Then
+　　│〇 errMsg = errMsg & "・対象バージョン" & vbCrLf
+　　│┴End If
+　　│#  入力エラー確認
+　　◆┐If errMsg <> "" Then
+　　││#  エラーメッセージ表示
+　　│〇 MsgBox "処理に必要な情報が未入力です。" & vbCrLf & vbCrLf &  "以下を入力してください：" & vbCrLf & vbCrLf & errMsg
+　　│〇 ValidateForMonshin = False
+　　│→ Exit Function
+　　│┴End If
+　　│#  入力確認完了
+　　〇 ValidateForMonshin = True
+　　┴End Function

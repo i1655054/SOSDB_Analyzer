@@ -1,0 +1,144 @@
+Procedure: XmlLoader.ExecuteRedmineRequest  [ Redmine通信実行＜XmlLoader＞ ]
+HCP	Business
+┬
+〇│Private Function ExecuteRedmineRequest(  ByVal method As String,  ByVal url As String,  ByVal body As String,  ByVal IssueId As String,  ByVal TroubleNum As String,  ByVal MonFolder As String) As Variant	Redmine通信実行＜XmlLoader＞
+┴└┐
+　　□ Dim xmlHttp As Object
+　　□ Dim id As String
+　　□ Dim writeFileName As String
+　　│#  リトライ回数初期化
+　　□ Dim retryCount As Integer
+　　□ Dim maxRetry As Integer
+　　〇 maxRetry = 3
+▼ RetryStart:
+　　│#  エラーハンドラ設定
+　　☆ On Error GoTo ErrHandler
+　　│#  デバッグ情報出力
+　　◆┐If glbdbgflg Then
+　　│〇 Debug.Print "==== START ===="
+　　│〇 Debug.Print "METHOD:", method
+　　│〇 Debug.Print "URL:", url
+　　│〇 Debug.Print "ISSUEID:", IssueId
+　　│〇 Debug.Print "TROUBLE:", TroubleNum
+　　│〇 Debug.Print "MonFolder:", MonFolder
+　　│┴End If
+　　│#  XML内容確認
+　　◆┐If Trim(body) = "" Then
+　　│◆ If glbdbgflg Then Debug.Print "ERROR: BODY EMPTY"
+　　│〇 ExecuteRedmineRequest = Array("", "")
+　　│→ Exit Function
+　　│┴End If
+　　│#  HTTPオブジェクト生成
+　　〇 Set xmlHttp = CreateObject("MSXML2.ServerXMLHTTP.6.0")
+　　│#  タイムアウト設定
+　　〇 xmlHttp.setTimeouts 5000, 5000, 5000, 5000
+　　│#  Redmine接続開始
+　　〇 xmlHttp.Open method, url, False
+　　│#  HTTPヘッダ設定
+　　〇 xmlHttp.setRequestHeader "Content-Type", "application/xml"
+　　〇 xmlHttp.setRequestHeader "Accept", "application/xml"
+　　│#  XML送信
+　　◆ If glbdbgflg Then Debug.Print "SENDING..."
+　　〇 xmlHttp.send body
+　　│#  応答確認
+　　◆┐If glbdbgflg Then
+　　│〇 Debug.Print "STATUS:", xmlHttp.Status
+　　│┴End If
+　　│#  新規登録処理
+　　◆┐If method = "POST" Then
+　　││#  登録成功確認
+　　│◆┐If xmlHttp.Status = 201 Then
+　　││□ Dim doc As Object
+　　│││#  応答XML解析
+　　││〇 Set doc = CreateObject("MSXML2.DOMDocument")
+　　│││#  XML解析確認
+　　││◆┐If Not doc.LoadXML(xmlHttp.responseText) Then
+　　│││◆ If glbdbgflg Then Debug.Print "XML PARSE ERROR"
+　　│││〇 ExecuteRedmineRequest = Array("", "")
+　　│││→ Exit Function
+　　│││┴End If
+　　│││#  IssueID取得
+　　││〇 id = Trim(doc.SelectSingleNode("issue/id").text)
+　　│││#  登録完了表示
+　　││＠┐With UF_RedminDbRegist
+　　│││〇 .TextBox2.text = id
+　　│││〇 .TextBox5.Visible = False
+　　│││＠┐With .TextBox6
+　　││││〇 .Visible = True
+　　││││〇 .text = " 登録完了 "
+　　││││〇 .Left = 115
+　　││││〇 .ForeColor = RGB(0, 0, 255)
+　　││││〇 .BackColor = &H8000000B
+　　││││〇 .BorderColor = &H8000000B
+　　││││┴End With
+　　│││〇 .CommandButton1.Visible = False
+　　│││〇 .CommandButton2.Caption = "閉じる"
+　　│││〇 .Repaint
+　　│││┴End With
+　　│├┐ELSE
+　　││◆ If glbdbgflg Then Debug.Print "POST ERROR:", xmlHttp.Status
+　　││〇 ExecuteRedmineRequest = Array("", "")
+　　││→ Exit Function
+　　││┴End If
+　　├┐ELSE
+　　││#  更新成功確認
+　　│◆┐If xmlHttp.Status = 200 Or  xmlHttp.Status = 204 Or  xmlHttp.Status = 1223 Then
+　　│││#  IssueID設定
+　　││〇 id = IssueId
+　　││◆ If glbdbgflg Then Debug.Print "PUT SUCCESS:", id
+　　│││#  更新完了表示
+　　││＠┐With UF_RedminDbRegist
+　　│││〇 .TextBox5.Visible = False
+　　│││＠┐With .TextBox6
+　　││││〇 .Visible = True
+　　││││〇 .text = " 更新完了 "
+　　││││〇 .Left = 115
+　　││││〇 .ForeColor = RGB(0, 0, 255)
+　　││││〇 .BackColor = &H8000000B
+　　││││〇 .BorderColor = &H8000000B
+　　││││┴End With
+　　│││〇 .CommandButton1.Visible = False
+　　│││〇 .CommandButton2.Caption = "閉じる"
+　　│││〇 .Repaint
+　　│││┴End With
+　　│├┐ELSE
+　　││◆ If glbdbgflg Then Debug.Print "PUT ERROR:", xmlHttp.Status
+　　││〇 ExecuteRedmineRequest = Array("", "")
+　　││→ Exit Function
+　　││┴End If
+　　│┴End If
+　　│#  更新XML保存
+　　◎ writeFileName = AutomaticTextOutput(  body,  id & "_" & TroubleNum,  MonFolder)	XMLファイル出力＜modFileUtility＞
+　　◆┐If glbdbgflg Then
+　　│〇 Debug.Print "FILE:", writeFileName
+　　│〇 Debug.Print "==== END ===="
+　　│┴End If
+　　│#  実行結果返却
+　　〇 ExecuteRedmineRequest = Array(id, writeFileName)
+　　→ Exit Function
+▼ ErrHandler:
+　　◆ If glbdbgflg Then Debug.Print "EXCEPTION:", Err.Number, Err.Description
+　　│#  通信エラー確認
+　　◆┐If Err.Number = -2147483638 Then
+　　││#  リトライ回数更新
+　　│〇 retryCount = retryCount + 1
+　　││#  リトライ回数表示
+　　│〇 UF_RedminDbRegist.TextBox6.text = retryCount & " / " & maxRetry
+　　│〇 UF_RedminDbRegist.Repaint
+　　││#  リトライ判定
+　　│◆┐If retryCount < maxRetry Then
+　　││◆ If glbdbgflg Then Debug.Print "RETRYING... (" & retryCount & "/" & maxRetry & ")"
+　　││◎ Err.Clear	Issue情報初期化＜IssueInfo＞
+　　│││#  リトライ待機
+　　││□ Dim t As Double
+　　││〇 t = Timer + 1
+　　││＠┐Do While Timer < t
+　　│││〇 DoEvents
+　　│││┴Loop
+　　│││#  通信再実行
+　　││→ GoTo RetryStart
+　　││┴End If
+　　│┴End If
+　　│#  異常終了
+　　〇 ExecuteRedmineRequest = Array("", "")
+　　┴End Function

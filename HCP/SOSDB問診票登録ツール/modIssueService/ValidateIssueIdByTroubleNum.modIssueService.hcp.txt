@@ -1,0 +1,33 @@
+Procedure: modIssueService.ValidateIssueIdByTroubleNum  [ 管理番号一致確認＜modIssueService＞ ]
+HCP	Business
+┬
+〇│Public Function ValidateIssueIdByTroubleNum(  ByVal AuthorName As String,  ByVal TroubleNum As String,  ByVal IssueId As String)	管理番号一致確認＜modIssueService＞
+┴└┐
+　　□ Dim issue As Object
+　　│#  Redmine接続先取得
+　　□ Dim RedmineDB As String
+　　◎ RedmineDB = GetServerURL(Range(RedmineDbSev_RANG).Value)	RedmineサーバURL取得＜modIssueMapper＞
+　　│	内部呼出:Range
+　　□ Dim api As String
+　　□ Dim apiKey As String
+　　〇 api = RedmineDB + "redmine/issues/"
+　　□ Dim baseUrl As String
+　　│#  戻り値初期化
+　　〇 ValidateIssueIdByTroubleNum = ""
+　　〇 baseUrl = RedmineDB + "redmine/"
+　　│#  APIキー取得
+　　◎ apiKey = GetApiKey(Author_Name)	APIキー取得＜modIssueMapper＞
+　　│#  APIキー補完
+　　◆┐If (apiKey = "") Then
+　　│〇 apiKey = Read_API_Key
+　　│┴End If
+　　☆ On Error GoTo 0
+　　│#  XML取得
+　　◎ Set issue = GetXmlData(api + IssueId + ".xml?key=" + apiKey)	XML取得＜XmlLoader＞
+　　☆ On Error Resume Next
+　　│#  管理番号一致確認
+　　◆┐If (TroubleNum = issue.getElementsByTagName("custom_field").Item(11).text) Then
+　　││#  IssueID返却
+　　│〇 ValidateIssueIdByTroubleNum = IssueId
+　　│┴End If
+　　┴End Function

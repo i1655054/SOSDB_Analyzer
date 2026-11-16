@@ -1,0 +1,66 @@
+Procedure: modCalendar5.FP_GetFormPosition  [ フォーム表示位置算出＜modCalendar5＞ ]
+HCP	Business
+┬
+〇│Private Function FPGetFormPosition(ByRef objRange As Range,  ByVal lngFormWidth As Long,  ByVal lngFormHeight As Long,  ByRef lngFormLeft As Long,  ByRef lngFormTop As Long) As Boolean	フォーム表示位置算出＜modCalendar5＞
+┴└┐
+　　□ Dim objTarget As Range                                          ' 対象セル(先頭セル)
+　　□ Dim objAW As Window                                             ' ActiveWindow
+　　□ Dim lngPaneIx As Long                                           ' PaneIndex(0～4)
+　　□ Dim lngIx As Long                                               ' ループ用INDEX(Work)
+　　□ Dim lngR1C1Left As Long                                         ' 起点セル左端位置
+　　□ Dim lngR1C1Top As Long                                          ' 起点セル上端位置
+　　□ Dim lngTargetLeft As Long                                       ' 対象セル左端位置
+　　□ Dim lngTargetTop As Long                                        ' 対象セル上端位置
+　　□ Dim lngScreenRight As Long                                      ' スクリーン右端位置
+　　□ Dim lngScreenBottom As Long                                     ' スクリーン下端位置
+　　□ Dim lngDPIX As Long                                             ' Dots Per Inch(水平)
+　　□ Dim lngDPIY As Long                                             ' Dots Per Inch(垂直)
+　　□ Dim lngPPI As Long                                              ' Pixels Per Inch
+　　〇 FP_GetFormPosition = False
+　　〇 lngFormLeft = 0
+　　〇 lngFormTop = 0
+　　〇 lngPaneIx = 0
+　　〇 Set objTarget = objRange.Cells(1).MergeArea
+　　〇 Set objAW = ActiveWindow
+　　◆┐If Not objAW.FreezePanes And Not objAW.Split Then
+　　│◆→ If Intersect(objAW.VisibleRange, objTarget) Is Nothing Then Exit Function
+　　│〇 Else            ' 分割あり
+　　│◆┐If objAW.FreezePanes Then
+　　││＠┐For lngIx = 1 To objAW.Panes.count
+　　│││◆┐If Not Intersect(objAW.Panes(lngIx).VisibleRange, objTarget) Is Nothing Then
+　　││││〇 lngPaneIx = lngIx
+　　││││→ Exit For
+　　││││┴End If
+　　│││┴Next lngIx
+　　││◆→ If lngPaneIx = 0 Then Exit Function
+　　│├┐ELSE
+　　││◆┐If Not Intersect(objAW.ActivePane.VisibleRange, objTarget) Is Nothing Then
+　　│││〇 lngPaneIx = objAW.ActivePane.index
+　　││├┐ELSE
+　　│││→ Exit Function
+　　│││┴End If
+　　││┴End If
+　　│┴End If
+　　〇 lngDPIX = FP_GetDPIX
+　　〇 lngDPIY = FP_GetDPIY
+　　〇 lngPPI = FP_GetPPI
+　　◆┐If lngPaneIx = 0 Then
+　　│〇 lngR1C1Left = objAW.PointsToScreenPixelsX(0)
+　　│〇 lngR1C1Top = objAW.PointsToScreenPixelsY(0)
+　　├┐ELSE
+　　│〇 lngR1C1Left = objAW.Panes(lngPaneIx).PointsToScreenPixelsX(0)
+　　│〇 lngR1C1Top = objAW.Panes(lngPaneIx).PointsToScreenPixelsY(0)
+　　│┴End If
+　　〇 lngTargetLeft = ((objTarget.Left * (lngDPIX / lngPPI)) * (objAW.Zoom / 100)) + lngR1C1Left
+　　〇 lngTargetTop = (((objTarget.Top + objTarget.Height) * (lngDPIY / lngPPI)) * (objAW.Zoom / 100)) + lngR1C1Top
+　　〇 lngFormLeft = lngTargetLeft * (lngPPI / lngDPIX)
+　　〇 lngFormTop = lngTargetTop * (lngPPI / lngDPIY)
+　　◎ Call GP_GetScreenPos(0, 0, lngScreenRight, lngScreenBottom)	画面有効領域取得＜modCalendar5＞
+　　◆┐If (lngFormLeft + lngFormWidth) * (lngDPIX / lngPPI) > lngScreenRight Then
+　　│〇 lngFormLeft = lngScreenRight * (lngPPI / lngDPIX) - lngFormWidth + 3
+　　│┴End If
+　　◆┐If (lngFormTop + lngFormHeight) * (lngDPIY / lngPPI) > lngScreenBottom Then
+　　│〇 lngFormTop = lngFormTop - (objRange.Height + lngFormHeight)
+　　│┴End If
+　　〇 FP_GetFormPosition = True
+　　┴End Function
