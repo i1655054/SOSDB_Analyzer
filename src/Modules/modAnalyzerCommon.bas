@@ -817,69 +817,31 @@ Public Function IsFunctionCall( _
     RegEx.Pattern = _
         "^\s*" & FuncName & "\s*$"
 
+    If RegEx.Test(LineText) Then
+
+        IsFunctionCall = True
+
+        Exit Function
+
+    End If
+    
+    ' Function参照
+    RegEx.Pattern = _
+        "(^|\s)(Not\s+)?" & _
+        FuncName & _
+        "(\s+Then|\s+And|\s+Or|\)|$)"
+
+    If RegEx.Test(LineText) Then
+
+        IsFunctionCall = True
+
+        Exit Function
+
+    End If
+    
     
     IsFunctionCall = RegEx.Test(LineText)
 
 End Function
 
-' @JPName
-' Procedure名完全一致判定
-'
-' @Category
-' Analyze
-'
-' @Input
-' Text(String)
-' ProcName(String)
-'
-' @Output
-' Boolean
-'
-' @Summary
-' Procedure名が完全一致するか判定する
-'
-' @Remarks
-' Procedure名の後続文字が
-' 英数字またはアンダースコアの場合は
-' 不一致とする
-'
-'------------------------------------------------
-' 現在未使用
-'
-' Procedure名完全一致判定用
-'
-' IsFunctionCall強化のために追加したが
-' 現在は未適用
-'------------------------------------------------
-Private Function IsExactProcedureName( _
-                ByVal Text As String, _
-                ByVal ProcName As String) _
-                As Boolean
-
-    '# Procedure名先頭一致確認
-    If Left$(Text, Len(ProcName)) <> ProcName Then
-        Exit Function
-    End If
-
-    '# 完全一致判定
-    If Len(Text) = Len(ProcName) Then
-
-        IsExactProcedureName = True
-        Exit Function
-
-    End If
-
-    '# 後続文字判定
-    Select Case Mid$( _
-                    Text, _
-                    Len(ProcName) + 1, _
-                    1)
-
-        Case " ", "(", vbTab
-
-            IsExactProcedureName = True
-
-    End Select
-
-End Function
 

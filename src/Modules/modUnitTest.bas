@@ -184,5 +184,108 @@ Public Sub Test4()
 
 End Sub
 
+Public Sub Test_For()
+
+    '# FOR開始コメント
+
+    For i = 1 To 3
+
+        '# FOR内コメント
+
+        Debug.Print i
+
+    Next i
+
+End Sub
+
+Public Sub Test_If()
+
+    '# IF前コメント
+
+    If A Then
+
+        '# TRUEコメント
+
+        Call Proc1
+
+    Else
+
+        '# FALSEコメント
+
+        Call Proc2
+
+    End If
+
+End Sub
+
+Public Sub Test_Do()
+
+    Do While A
+
+        '# DOコメント
+
+        Call Proc1
+
+    Loop
+
+End Sub
+
+Public Sub Test_With()
+
+    With Obj
+
+        '# WITHコメント
+
+        .Name = "ABC"
+
+    End With
+
+End Sub
+
+Public Sub Test_While()
+
+    While A
+
+        '# WHILEコメント
+
+        Call Proc1
+
+    Wend
+
+End Sub
+
+Public Sub Test_Select()
+
+    Select Case x
+
+        Case 1
+
+            '# CASE1
+
+            Call Proc1
+
+        Case 2
+
+            '# CASE2
+
+            Call Proc2
+
+    End Select
+
+End Sub
+
+Public Sub Test_Compile()
+
+#If VBA7 Then
+
+    '# COMPILEコメント
+
+    Call Proc1
+
+#End If
+
+End Sub
+
+
 
 

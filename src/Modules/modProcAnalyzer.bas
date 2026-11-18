@@ -104,6 +104,9 @@ Public Const NODE_COMPILE_ELSE As String = "COMPILE_ELSE"
 ' コンパイル条件終了(#End If)
 Public Const NODE_COMPILE_ENDIF As String = "COMPILE_ENDIF"
 
+' コメントノード
+Public Const NODE_COMMENT = "COMMENT"
+
 ' 分岐なし
 Public Const BRANCH_NONE As String = ""
 
@@ -572,9 +575,6 @@ Public Function AnalyzeProcedure( _
     ' Procedure宣言部
     Dim ProcHeader As String
 
-    ' HCPコメント保持
-    Dim PendingComment As String
-
     ' 内部呼出一覧保持
     Dim InternalCalls As String
 
@@ -632,20 +632,37 @@ Public Function AnalyzeProcedure( _
         '# HCPコメント取得
         If Left$(Trim$(CStr(LineText)), 2) = "'#" Then
 
-            If PendingComment <> "" Then
-        
-                PendingComment = _
-                    PendingComment & vbCrLf & _
-                    Mid$(Trim$(CStr(LineText)), 3)
-            Else
-                PendingComment = _
-                    Mid$(Trim$(CStr(LineText)), 3)
-            End If
+            Set Node = New clsProcNode
+
+            Node.NodeID = NodeID
+
+            Node.ParentID = _
+                GetCurrentParentID(ParentStack)
+
+            Node.Level = Level
+
+            Node.BranchType = CurrentBranch
+
+            Node.ProcName = ProcName
+
+            Node.ModuleName = ModuleName
+
+            Node.NodeType = NODE_COMMENT
+
+            Node.NodeText = _
+                Mid$(Trim$(CStr(LineText)), 3)
+
+            AddProcNode _
+                Nodes, _
+                Node, _
+                PrevNode, _
+                LastNodeID
+
+            NodeID = NodeID + 1
 
             GoTo NextLine
 
         End If
-
 
         '# Procedure宣言除外
         If IsProcedureLine(Trim$(CStr(LineText))) Then
@@ -859,10 +876,6 @@ Public Function AnalyzeProcedure( _
             Node.NodeText = _
                 Trim$(CStr(LineText))
 
-            Node.CommentText = PendingComment
-            
-            PendingComment = ""
-
             Node.LineNo = i
 
             '# 制御構造ノード追加
@@ -974,10 +987,6 @@ Public Function AnalyzeProcedure( _
             Node.SourceLine = _
                 Trim$(CStr(LineText))
 
-            Node.CommentText = PendingComment
-
-            PendingComment = ""
-
             Node.LineNo = i
 
             ' 主呼出
@@ -1025,9 +1034,6 @@ Public Function AnalyzeProcedure( _
             Node.SourceLine = _
                 Trim$(CStr(LineText))
 
-            Node.CommentText = PendingComment
-            PendingComment = ""
-
             '# REFERENCEノード追加
             AddProcNode _
                 Nodes, _
@@ -1065,10 +1071,6 @@ Public Function AnalyzeProcedure( _
 
             Node.SourceLine = _
                 Trim$(CStr(LineText))
-
-            Node.CommentText = PendingComment
-            
-            PendingComment = ""
 
             Node.LineNo = i
 
@@ -1850,158 +1852,6 @@ Private Sub AddProcNode( _
 
 End Sub
 
-' @JPName
-' 呼出関数名取得
-'
-' @Category
-' ProcAnalyzer
-'
-' @Input
-' SourceLine(String)
-'
-' @Output
-' ProcedureName(String)
-'
-' @Summary
-' 呼出文からProcedure名を取得する
-'
-' @Remarks
-' 代入文およびモジュール名付き呼出に対応し
-' Procedure名のみを抽出する
-'
-'------------------------------------------------
-' 現在未使用
-'
-' 呼出文からProcedure名を抽出する
-' ユーティリティとして作成したが
-' 現在は参照箇所なし
-'
-' 将来的なFunctionTrace改善時の
-' 利用候補として保持する
-'------------------------------------------------
-Public Function ExtractCalledProcedureName( _
-                ByVal SourceLine As String) _
-                As String
-
-    ' "="位置
-    Dim PosEqual As Long
-    
-    ' 空白位置
-    Dim PosSpace As Long
-    
-    ' "("位置
-    Dim PosParen As Long
-
-    '# 呼出文整形
-    SourceLine = Trim$(SourceLine)
-
-    If SourceLine = "" Then Exit Function
-
-    '# 代入文補正
-    PosEqual = InStr(SourceLine, "=")
-
-    If PosEqual > 0 Then
-
-        SourceLine = _
-            Trim$(Mid$( _
-                SourceLine, _
-                PosEqual + 1))
-
-    End If
-
-    ' モジュール名付き
-    If InStr(SourceLine, " ") > 0 _
-    And InStr(SourceLine, "(") > 0 Then
-
-        PosSpace = InStr(SourceLine, " ")
-        PosParen = InStr(SourceLine, "(")
-
-        '# Sub呼出判定
-        If PosSpace < PosParen Then
-
-            ExtractCalledProcedureName = _
-                Left$(SourceLine, PosSpace - 1)
-
-            GoTo NormalizeName
-
-        End If
-
-    End If
-
-    PosParen = InStr(SourceLine, "(")
-
-    '# Function呼出判定
-    If PosParen > 1 Then
-
-        ExtractCalledProcedureName = _
-            Left$(SourceLine, PosParen - 1)
-
-    Else
-
-        PosSpace = InStr(SourceLine, " ")
-
-        If PosSpace > 0 Then
-
-            ExtractCalledProcedureName = _
-                Left$(SourceLine, PosSpace - 1)
-
-        Else
-
-            ExtractCalledProcedureName = _
-                SourceLine
-
-        End If
-
-    End If
-
-NormalizeName:
-
-    '# モジュール名除去
-    If InStrRev( _
-            ExtractCalledProcedureName, _
-            ".") > 0 Then
-
-        '# Procedure名返却
-        ExtractCalledProcedureName = _
-            Mid$( _
-                ExtractCalledProcedureName, _
-                InStrRev( _
-                    ExtractCalledProcedureName, _
-                    ".") + 1)
-
-    End If
-
-End Function
-
-'
-' @JPName
-' 内部呼出一覧作成
-'
-Private Function BuildInternalCallList( _
-                ByVal CallNames As Collection) _
-                As String
-
-    Dim Result As String
-    Dim i As Long
-
-    If CallNames.Count <= 1 Then
-        Exit Function
-    End If
-
-    For i = 2 To CallNames.Count
-
-        If Result <> "" Then
-            Result = Result & ", "
-        End If
-
-        Result = Result & _
-            CStr(CallNames(i))
-
-    Next i
-
-    BuildInternalCallList = Result
-
-End Function
 
 '
 ' @JPName

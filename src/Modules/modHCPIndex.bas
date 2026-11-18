@@ -286,6 +286,8 @@ End Sub
 ' @Remarks
 ' modHCPIndex用
 '===================================================================
+' 未使用
+' 将来のINDEX整合性確認機能で再利用予定
 Public Function ExistsModuleIndex( _
                 ByVal ModuleName As String) _
                 As Boolean
@@ -323,6 +325,8 @@ End Function
 ' @Remarks
 ' _INDEX.html確認用
 '===================================================================
+' 未使用
+' 将来のINDEX整合性確認機能で再利用予定
 Public Function ExistsToolIndex() _
                 As Boolean
 
@@ -337,209 +341,6 @@ Public Function ExistsToolIndex() _
         (Dir(IndexPath) <> "")
 
 End Function
-
-
-'===================================================================
-' @JPName
-' INDEX整合性確認
-'
-' @Category
-' HCP
-'
-' @Input
-' なし
-'
-' @Output
-' なし
-'
-' @Summary
-' モジュールINDEXの存在を確認する
-'
-' @Remarks
-' INDEX欠落時はWARNINGを出力する
-'===================================================================
-Public Sub CheckHCPIndexes()
-
-    Dim ws As Worksheet
-    Dim LastRow As Long
-    Dim r As Long
-
-    Dim ModuleName As String
-    
-    Dim Checked As Object
-
-    Set ws = _
-        gContext.ManagementBook.Worksheets( _
-            SHEET_HCP_TARGETS)
-    
-    Set Checked = _
-        CreateObject( _
-            "Scripting.Dictionary")
-
-    LastRow = _
-        ws.Cells( _
-            ws.Rows.Count, _
-            COL_HCP_MODULE).End(xlUp).row
-
-    For r = 2 To LastRow
-
-        ModuleName = _
-            Trim$( _
-                ws.Cells( _
-                    r, _
-                    COL_HCP_MODULE).Value)
-
-        If ModuleName <> "" Then
-
-            If Not Checked.Exists( _
-                    ModuleName) Then
-                
-                Checked.Add _
-                    ModuleName, _
-                    True
-                
-                If Not ExistsModuleIndex( _
-                    ModuleName) Then
-
-                    Trace "WARNING", _
-                        "Missing Index : " & _
-                        ModuleName
-
-                End If
-            
-            End If
-
-        End If
-
-    Next r
-
-End Sub
-
-
-'===================================================================
-' @JPName
-' INDEX自動修復
-'
-' @Category
-' HCP
-'
-' @Input
-' なし
-'
-' @Output
-' なし
-'
-' @Summary
-' 不足しているINDEXを再生成する
-'
-' @Remarks
-' HCP_TARGETSを走査し
-' 欠落モジュールINDEXおよび
-' ツールINDEXを再生成する
-'===================================================================
-Public Sub RepairHCPIndexes()
-
-    '# HCP_TARGETS
-    Dim ws As Worksheet
-
-    '# 最終行
-    Dim LastRow As Long
-
-    '# 行番号
-    Dim r As Long
-
-    '# モジュール名
-    Dim ModuleName As String
-
-    '# 重複防止
-    Dim Checked As Object
-
-    '# 修復件数
-    Dim RepairCount As Long
-
-    Trace "INDEX", _
-        "RepairHCPIndexes Start"
-
-    Set Checked = _
-        CreateObject( _
-            "Scripting.Dictionary")
-
-    Set ws = _
-        gContext.ManagementBook.Worksheets( _
-            SHEET_HCP_TARGETS)
-
-    LastRow = _
-        ws.Cells( _
-            ws.Rows.Count, _
-            COL_HCP_MODULE).End(xlUp).row
-
-    '# INDEX存在確認
-    For r = 2 To LastRow
-
-        ModuleName = _
-            Trim$( _
-                ws.Cells( _
-                    r, _
-                    COL_HCP_MODULE).Value)
-
-        If ModuleName <> "" Then
-
-            If Not Checked.Exists( _
-                    ModuleName) Then
-
-                Checked.Add _
-                    ModuleName, _
-                    True
-
-                If Not ExistsModuleIndex( _
-                        ModuleName) Then
-
-                    Trace "INDEX", _
-                        "Missing ModuleIndex : " & _
-                        ModuleName
-
-                    RebuildModuleIndex _
-                        ModuleName
-
-                    Trace "INDEX", _
-                        "Repaired ModuleIndex : " & _
-                        ModuleName
-
-                    RepairCount = _
-                        RepairCount + 1
-
-                End If
-
-            End If
-
-        End If
-
-    Next r
-
-    '# ツールINDEX再生成
-    If Not ExistsToolIndex Then
-
-        Trace "INDEX", _
-            "Missing ToolIndex"
-
-    Else
-
-        Trace "INDEX", _
-            "ToolIndex Exists"
-
-    End If
-
-    RebuildToolIndex
-
-    Trace "INDEX", _
-        "Repaired ToolIndex"
-
-    Trace "INDEX", _
-        "RepairHCPIndexes End" & _
-        " ModuleRepair=" & _
-        RepairCount
-
-End Sub
 
 '--------------------------------------------------
 ' Index HTML生成
@@ -874,158 +675,289 @@ Private Sub WriteToolIndexHtml( _
 
 End Sub
 
-' 共通ヘッダ
+'===================================================================
+' @JPName
+' HTMLヘッダ出力
+'
+' @Category
+' HCP
+'
+' @Input
+' FileNo         : 出力ファイル番号
+' Title          : HTMLタイトル
+' Line_Height    : 行間
+' EnableResize   : 列幅変更有無
+'
+' @Output
+' なし
+'
+' @Summary
+' HTML共通ヘッダを出力する
+'
+' @Remarks
+' EnableResize=True時は
+' 列幅変更用CSSを出力する
+'===================================================================
 Public Sub WriteHtmlHeader( _
                 ByVal FileNo As Integer, _
                 ByVal Title As String, _
-                Optional ByVal Line_Height As Single = 1.5)
-                
+                Optional ByVal Line_Height As Single = 1.5, _
+                Optional ByVal EnableResize As Boolean = False)
+
+    '# HTML開始
     Print #FileNo, "<!DOCTYPE html>"
     Print #FileNo, "<html>"
 
+    '# HEAD開始
     Print #FileNo, "<head>"
 
+    '# 文字コード
     Print #FileNo, _
         "<meta charset=""shift_jis"">"
 
+    '# タイトル
     Print #FileNo, _
         "<title>" & _
         Title & _
         "</title>"
 
+    '# CSS開始
     Print #FileNo, _
         "<style>"
 
+    '# Body
     Print #FileNo, _
         "body{font-family:Meiryo;font-size:9pt;}"
 
+    '# Table
     Print #FileNo, _
         "table{border-collapse:collapse;}"
 
-    'Print #FileNo, _
-    '    "th,td{border:1px solid #cccccc;" & _
-    '    "padding:1px 4px;}"
-
+    '# Cell
     Print #FileNo, _
         "th,td{border:1px solid #cccccc;" & _
-        "padding:1px 4px;line-height: " & Line_Height & ";}"
+        "padding:1px 4px;" & _
+        "line-height:" & _
+        Line_Height & ";}"
 
+    '# DataCell
     Print #FileNo, _
         "td{vertical-align:top;}"
 
+    '# HeaderCell
     Print #FileNo, _
         "th{background:#e8f0fe;}"
-    
-    ' --- 追加 ここから ---
-    Print #FileNo, _
-        "colgroup col:nth-of-type(1) {}"
 
-    Print #FileNo, _
-        "colgroup col:nth-of-type(2) {}"
+    '# 列幅変更CSS
+    If EnableResize Then
 
-    Print #FileNo, _
-        ".resize {position: relative;}"
-    
-    Print #FileNo, _
-        ".resizer {" & _
-            "position: absolute;" & _
-            "right: -10px;" & _
-            "top: 0;" & _
-            "width: 20px;" & _
-            "height: 100%;" & _
-            "cursor: col-resize;" & _
-            "user-select: none;" & _
-            "z-index: 100;}"
-    
-    ' --- 追加 ここから ---
-    
+        WriteColumnResizerCss _
+            FileNo
+
+    End If
+
+    '# CSS終了
     Print #FileNo, _
         "</style>"
 
+    '# HEAD終了
     Print #FileNo, _
         "</head>"
 
+    '# BODY開始
     Print #FileNo, _
         "<body>"
 
 End Sub
 
 ' 共通フッタ
+'===================================================================
+' @JPName
+' HTMLフッタ出力
+'
+' @Category
+' HCP
+'
+' @Input
+' FileNo       : 出力ファイル番号
+' EnableResize : 列幅変更有無
+'
+' @Output
+' なし
+'
+' @Summary
+' HTML共通フッタを出力する
+'
+' @Remarks
+' EnableResize=True時は
+' 列幅変更用JavaScriptを出力する
+'===================================================================
 Public Sub WriteHtmlFooter( _
-                ByVal FileNo As Integer)
+                ByVal FileNo As Integer, _
+                Optional ByVal EnableResize As Boolean = False)
 
-    ' --- 修正 追加 ここから ---
-    Print #FileNo, _
-        "<script>"
-    
-    Print #FileNo, _
-        "document.querySelectorAll('.resize').forEach(function (eleTh) {"
+    '# 列幅変更Script
+    If EnableResize Then
 
-    Print #FileNo, _
-        "let startX;"
-    Print #FileNo, _
-        "let startWidth;"
-        
-    Print #FileNo, _
-        "const eleResizer = document.createElement('div');"
-    Print #FileNo, _
-        "eleResizer.classList.add('resizer');"
-    Print #FileNo, _
-        "eleResizer.addEventListener('mousedown', function (e) {"
-    Print #FileNo, _
-        "const styleTh = window.getComputedStyle(eleTh);"
-    Print #FileNo, _
-        "const paddingLeft = parseFloat(styleTh.paddingLeft);"
-    Print #FileNo, _
-        "const paddingRight = parseFloat(styleTh.paddingRight);"
-    Print #FileNo, _
-        "const borderLeft = parseFloat(styleTh.borderLeftWidth);"
-    Print #FileNo, _
-        "const borderRight = parseFloat(styleTh.borderRightWidth);"
-    Print #FileNo, _
-        "startX = e.pageX;"
-    Print #FileNo, _
-        "startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);"
-    Print #FileNo, _
-        "document.addEventListener('mousemove', onMouseMove);"
-    Print #FileNo, _
-        "document.addEventListener('mouseup', onMouseUp);"
-    Print #FileNo, _
-        "});"
-    Print #FileNo, _
-        "eleTh.appendChild(eleResizer);"
-    
-    Print #FileNo, _
-        "function onMouseMove(e) {"
-    Print #FileNo, _
-        "const newWidth = startWidth + (e.pageX - startX);"
-    Print #FileNo, _
-        "eleTh.style.width = newWidth + 'px';"
-    Print #FileNo, _
-        "}"
-    
-    Print #FileNo, _
-        "function onMouseUp() {"
-    Print #FileNo, _
-        "document.removeEventListener('mousemove', onMouseMove);"
-    Print #FileNo, _
-        "document.removeEventListener('mouseup', onMouseUp);"
-    Print #FileNo, _
-        "}"
-    Print #FileNo, _
-        "});"
+        WriteColumnResizerScript _
+            FileNo
 
-    
-    Print #FileNo, _
-        "</script>"
-    
-    ' --- 修正 追加 ここまで ---
-    
+    End If
+
+    '# BODY終了
     Print #FileNo, _
         "</body>"
 
+    '# HTML終了
     Print #FileNo, _
         "</html>"
 
 End Sub
+
+'===================================================================
+' @JPName
+' 列幅変更CSS出力
+'
+' @Category
+' HCP
+'
+' @Input
+' FileNo : 出力ファイル番号
+'
+' @Output
+' なし
+'
+' @Summary
+' テーブル列幅変更用CSSを出力する
+'
+' @Remarks
+' resizeクラスおよび
+' resizerクラスを定義する
+'===================================================================
+Public Sub WriteColumnResizerCss( _
+                ByVal FileNo As Integer)
+
+    '# resizeクラス
+    Print #FileNo, _
+        ".resize{position:relative;}"
+
+    '# リサイズハンドル
+    Print #FileNo, _
+        ".resizer{" & _
+        "position:absolute;" & _
+        "right:-10px;" & _
+        "top:0;" & _
+        "width:20px;" & _
+        "height:100%;" & _
+        "cursor:col-resize;" & _
+        "user-select:none;" & _
+        "z-index:100;}"
+
+End Sub
+
+'===================================================================
+' @JPName
+' 列幅変更Script出力
+'
+' @Category
+' HCP
+'
+' @Input
+' FileNo : 出力ファイル番号
+'
+' @Output
+' なし
+'
+' @Summary
+' テーブル列幅変更用JavaScriptを
+' 出力する
+'
+' @Remarks
+' resizeクラスを持つ
+' TH要素に対して
+' ドラッグによる列幅変更を
+' 有効化する
+'===================================================================
+Public Sub WriteColumnResizerScript( _
+                ByVal FileNo As Integer)
+
+    '# Script開始
+    Print #FileNo, _
+        "<script>"
+
+    '# resize対象取得
+    Print #FileNo, _
+        "document.querySelectorAll('.resize').forEach(function(eleTh) {"
+
+    '# 開始位置
+    Print #FileNo, _
+        "let startX;"
+
+    '# 開始幅
+    Print #FileNo, _
+        "let startWidth;"
+
+    '# リサイズハンドル生成
+    Print #FileNo, _
+        "const eleResizer = document.createElement('div');"
+
+    Print #FileNo, _
+        "eleResizer.classList.add('resizer');"
+
+    '# ドラッグ開始
+    Print #FileNo, _
+        "eleResizer.addEventListener('mousedown', function(e) {"
+
+    Print #FileNo, _
+        "startX = e.pageX;"
+
+    Print #FileNo, _
+        "startWidth = eleTh.offsetWidth;"
+
+    Print #FileNo, _
+        "document.addEventListener('mousemove', onMouseMove);"
+
+    Print #FileNo, _
+        "document.addEventListener('mouseup', onMouseUp);"
+
+    Print #FileNo, _
+        "});"
+
+    '# ハンドル追加
+    Print #FileNo, _
+        "eleTh.appendChild(eleResizer);"
+
+    '# ドラッグ中
+    Print #FileNo, _
+        "function onMouseMove(e){"
+
+    Print #FileNo, _
+        "eleTh.style.width=" & _
+        "(startWidth+(e.pageX-startX))+'px';"
+
+    Print #FileNo, _
+        "}"
+
+    '# ドラッグ終了
+    Print #FileNo, _
+        "function onMouseUp(){"
+
+    Print #FileNo, _
+        "document.removeEventListener('mousemove',onMouseMove);"
+
+    Print #FileNo, _
+        "document.removeEventListener('mouseup',onMouseUp);"
+
+    Print #FileNo, _
+        "}"
+
+    Print #FileNo, _
+        "});"
+
+    '# Script終了
+    Print #FileNo, _
+        "</script>"
+
+End Sub
+
 

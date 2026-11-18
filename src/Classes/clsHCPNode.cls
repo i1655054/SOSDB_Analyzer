@@ -56,11 +56,14 @@ Public SourceText As String
 ' ソース行番号
 Public SourceLine As String
 
-' HCPコメント
-Public CommentText As String
-
 ' 内部呼出一覧
 Public InternalCalls As String
+
+' 呼出先プロシージャ名
+Public CallName As String
+
+' HCP描画文字列
+Public RenderText As String
 
 '--------------------------------
 ' 業務説明用

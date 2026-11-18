@@ -43,9 +43,6 @@ Public NextNodeID As Long
 ' プロシージャ名
 Public ProcName As String
 
-' 呼出先プロシージャ名
-Public CallName As String
-
 ' モジュール名
 Public ModuleName As String
 
@@ -67,8 +64,8 @@ Public BranchType As String
 ' ソースコード行
 Public SourceLine As String
 
-' HCP出力用コメント
-Public CommentText As String
+' 呼出先プロシージャ名
+Public CallName As String
 
 ' 内部呼出一覧
 Public InternalCalls As String
