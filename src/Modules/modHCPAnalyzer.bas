@@ -21,18 +21,37 @@ Private Const BUSINESS_COL_WIDTH As Double = 40
 ' @JPName
 ' デバッグシート作成
 '
+' @Category
+' Debug
+'
+' @Input
+' なし
+'
+' @Output
+' DBG_NODESシート
+'
+' @Summary
+' HCP解析確認用の
+' デバッグシートを生成する
+'
+' @Remarks
+' ProcNodeおよびHCPNodeの
+' 構造確認で使用する
+'
 Public Sub CreateDebugSheet()
 
     Dim ws As Worksheet
 
     On Error Resume Next
 
+    '# DBG_NODES取得
     Set ws = _
         gContext.ManagementBook.Worksheets( _
             SHEET_DEBUG_NODES)
 
     On Error GoTo 0
 
+    '# DBG_NODES作成
     If ws Is Nothing Then
 
         Set ws = _
@@ -65,12 +84,25 @@ Public Sub CreateDebugSheet()
 
 End Sub
 
-'
 ' @JPName
 ' DBG_NODES出力行取得
 '
+' @Category
+' Debug
+'
+' @Input
+' なし
+'
+' @Output
+' Row(Long)
+'
 ' @Summary
-' DBG_NODESシートの次出力行を返却する
+' DBG_NODESシートの
+' 次出力行を取得する
+'
+' @Remarks
+' デバッグ情報追記位置を
+' 算出する
 '
 Private Function GetDebugRow() As Long
 
@@ -87,12 +119,22 @@ Private Function GetDebugRow() As Long
 
 End Function
 
+' @Category
+' Debug
 '
-' @JPName
-' ProcNode一覧ダンプ
+' @Input
+' Title(String)
+' Nodes(Collection)
+'
+' @Output
+' DBG_NODESシート
 '
 ' @Summary
-' ProcNode一覧をDBG_NODESシートへ出力する
+' ProcNode一覧を
+' デバッグシートへ出力する
+'
+' @Remarks
+' ProcNode構造の確認で使用する
 '
 Public Sub DumpProcNodes( _
                 ByVal Title As String, _
@@ -102,12 +144,15 @@ Public Sub DumpProcNodes( _
     Dim RowOut As Long
     Dim Node As clsProcNode
 
+    '# DBG_NODES取得
     Set ws = _
         gContext.ManagementBook.Worksheets( _
             SHEET_DEBUG_NODES)
 
+    '# 出力開始行取得
     RowOut = GetDebugRow()
 
+    '# ProcNode一覧出力
     For Each Node In Nodes
 
         ws.Cells(RowOut, 1).Value = Title
@@ -125,6 +170,23 @@ Public Sub DumpProcNodes( _
 
 End Sub
 
+' @Category
+' Debug
+'
+' @Input
+' Title(String)
+' Nodes(Collection)
+'
+' @Output
+' DBG_NODESシート
+'
+' @Summary
+' HCPNode一覧を
+' デバッグシートへ出力する
+'
+' @Remarks
+' HCP変換後の構造確認で使用する
+'
 Public Sub DumpHCPNodes( _
                 ByVal Title As String, _
                 ByVal Nodes As Collection)
@@ -133,12 +195,15 @@ Public Sub DumpHCPNodes( _
     Dim RowOut As Long
     Dim Node As clsHCPNode
 
+    '# DBG_NODES取得
     Set ws = _
         gContext.ManagementBook.Worksheets( _
             SHEET_DEBUG_NODES)
 
+    '# 出力開始行取得
     RowOut = GetDebugRow()
     
+    '# HCPNode一覧出力
     For Each Node In Nodes
 
         ws.Cells(RowOut, 1).Value = Title
@@ -156,12 +221,21 @@ Public Sub DumpHCPNodes( _
 
 End Sub
 
+' @Category
+' Debug
 '
-' @JPName
-' ProcNode範囲ダンプ
+' @Input
+' Title(String)
+' Nodes(Collection)
+' StartID(Long)
+' EndID(Long)
+'
+' @Output
+' DBG_NODESシート
 '
 ' @Summary
-' 指定NodeID範囲をDBG_NODESシートへ出力する
+' 指定NodeID範囲の
+' ProcNodeを出力する
 '
 Public Sub DumpProcNodeRange( _
                 ByVal Title As String, _
@@ -202,12 +276,21 @@ Public Sub DumpProcNodeRange( _
 End Sub
 
 
+' @Category
+' Debug
 '
-' @JPName
-' HCPNode範囲ダンプ
+' @Input
+' Title(String)
+' Nodes(Collection)
+' StartID(Long)
+' EndID(Long)
+'
+' @Output
+' DBG_NODESシート
 '
 ' @Summary
-' 指定NodeID範囲をDBG_NODESシートへ出力する
+' 指定NodeID範囲の
+' HCPNodeを出力する
 '
 Public Sub DumpHCPNodeRange( _
                 ByVal Title As String, _
@@ -636,7 +719,7 @@ Public Function ConvertProcToHCP( _
         End If
 
         '-----------------------------
-        '# ELSE変換
+        '# ELSEノード変換
         '-----------------------------
         If ProcNode.NodeType = NODE_ELSE Then
 
@@ -958,6 +1041,7 @@ Private Function IsMergeNode( _
                 ByVal NodeType As String) _
                 As Boolean
 
+    '# マージ対象判定
     Select Case NodeType
 
         Case NODE_IF, _
@@ -1106,7 +1190,7 @@ Private Function GetMergeParentID( _
     ' 分解文字列
     Dim Parts() As String
 
-    '# スタック情報分解
+    '# NodeType:NodeID分解
     Parts = Split(StackValue, ":")
 
     If UBound(Parts) <> 1 Then
@@ -1152,7 +1236,7 @@ Private Function GetBusinessText( _
     '# CALLノード以外除外
     If ProcNode.NodeType <> NODE_CALL Then Exit Function
 
-    '# 呼出先Procedure解決
+    '# Procedure情報取得
     Set Info = _
         ResolveProcedure( _
             ProcNode.ModuleName, _
@@ -1160,7 +1244,7 @@ Private Function GetBusinessText( _
 
     If Info Is Nothing Then Exit Function
 
-    '# JPName優先表示
+    '# JPName優先返却
     If Trim$(Info.JPName) <> "" Then
 
         GetBusinessText = _
@@ -1187,6 +1271,7 @@ End Function
 ' HCP構造補正
 '--------------------------------------------------
 
+'===================================================================
 ' @JPName
 ' 親子関係再構築
 '
@@ -1201,14 +1286,15 @@ End Function
 ' HCPNodes
 '
 ' @Summary
-' ParentIDをHCPノードIDへ
-' 再マッピングする
+' ProcNodeIDから
+' HCPNodeIDへParentIDを変換する
 '
 ' @Remarks
-' ProcNode時点のParentIDを
-' HCPNode採番後のNodeIDへ変換する
-' MERGEノードは補正対象外とする
+' Proc解析時のParentIDを
+' HCPノード採番後のParentIDへ
+' 再構築する
 '
+'===================================================================
 Private Sub RebuildParentID( _
                 ByVal HCPNodes As Collection, _
                 ByVal IDMap As Object)
@@ -1219,12 +1305,14 @@ Private Sub RebuildParentID( _
     ' ProcNode時点の親ID
     Dim OldParentID As Long
 
-    '# ParentID再マッピング
+    '# ParentID変換開始
     For Each Node In HCPNodes
 
-        ' MERGEはすでに正しいParentIDを持つ
+        '# MERGE除外
         If Node.NodeType = NODE_MERGE Then
+        
             GoTo ContinueLoop
+        
         End If
 
         If Node.ParentID <> 0 Then
@@ -1251,6 +1339,7 @@ ContinueLoop:
 
 End Sub
 
+'===================================================================
 ' @JPName
 ' ノードリンク再構築
 '
@@ -1264,13 +1353,14 @@ End Sub
 ' HCPNodes
 '
 ' @Summary
-' PrevNodeIDおよびNextNodeIDを
-' 再設定する
+' PrevNodeIDおよび
+' NextNodeIDを再構築する
 '
 ' @Remarks
-' HCPNodesの格納順を基準に
-' PrevNodeIDおよびNextNodeIDを再設定する
+' HCPNodes格納順から
+' 前後リンクを再設定する
 '
+'===================================================================
 Private Sub RebuildLinks( _
                 ByVal HCPNodes As Collection)
 
@@ -1311,8 +1401,9 @@ Private Sub RebuildLinks( _
 
 End Sub
 
+'===================================================================
 ' @JPName
-' レベル再計算
+' HCPレベル再計算
 '
 ' @Category
 ' HCP
@@ -1324,13 +1415,14 @@ End Sub
 ' HCPNodes
 '
 ' @Summary
-' 親子関係を基に
-' HCPレベルを再計算する
+' ParentIDを基準に
+' HCP階層レベルを再計算する
 '
 ' @Remarks
-' ParentIDの階層を辿り
-' HCP表示用のLevelを再計算する
+' ノード親子関係から
+' 階層深度を再算出する
 '
+'===================================================================
 Private Sub RebuildHCPLevel( _
                 ByVal HCPNodes As Collection)
 
@@ -1368,8 +1460,9 @@ Private Sub RebuildHCPLevel( _
 
 End Sub
 
+'===================================================================
 ' @JPName
-' レベル算出
+' HCPレベル算出
 '
 ' @Category
 ' HCP
@@ -1382,14 +1475,16 @@ End Sub
 ' Level(Long)
 '
 ' @Summary
-' ノード階層レベルを算出する
+' 指定ノードの
+' 階層レベルを算出する
 '
 ' @Remarks
-' ParentIDを再帰的に辿り
-' 階層深度を算出する
+' ParentIDを遡り
+' HCP階層を計算する
 ' 無限ループ防止のため
 ' 100階層で探索を打ち切る
 '
+'===================================================================
 Private Function CalcLevel( _
                 ByVal Node As clsHCPNode, _
                 ByVal NodeMap As Object) _
@@ -1437,6 +1532,7 @@ Private Function CalcLevel( _
 
 End Function
 
+'===================================================================
 ' @JPName
 ' TRUE枝補正
 '
@@ -1454,13 +1550,14 @@ End Function
 ' ParentIDを補正する
 '
 ' @Remarks
-' TRUEノード配下の枝に対して
-' ParentIDをTRUEノードへ付け替える
-' IFブロックの階層構造を補正する
+' IFノード直下のTRUEノードへ
+' TRUEブランチ配下ノードを
+' 再配置する
 '
+'===================================================================
 Private Sub FixTrueBranch( _
                 ByVal HCPNodes As Collection)
-
+                
     ' HCPNodes走査Index
     Dim i As Long
     
@@ -1541,6 +1638,7 @@ ContinueJ:
 
 End Sub
 
+'===================================================================
 ' @JPName
 ' FALSE枝補正
 '
@@ -1558,10 +1656,10 @@ End Sub
 ' ParentIDを補正する
 '
 ' @Remarks
-' FALSEブランチ配下のノードへ
-' FALSEノードを親として設定する
-' MERGE到達時に補正を終了する
+' ELSEノード配下へ
+' FALSEブランチを再配置する
 '
+'===================================================================
 Private Sub FixFalseBranch( _
                 ByVal HCPNodes As Collection)
 
@@ -1612,7 +1710,6 @@ End Sub
 '--------------------------------------------------
 ' HCP描画
 '--------------------------------------------------
-
 ' @JPName
 ' HCP出力
 '
@@ -1640,49 +1737,51 @@ Public Sub ExportHCPText( _
                 ByVal ModuleName As String, _
                 ByVal ProcName As String)
 
-
-
     ' 出力先シート
     Dim ws As Worksheet
-    
+
     ' 出力行
     Dim RowOut As Long
-    
+
     ' HCPノード
     Dim Node As clsHCPNode
-    
+
+    ' 開始ノード
+    Dim StartNode As clsHCPNode
+
     ' Procedure情報
     Dim ProcInfo As clsProcInfo
-    
+
     ' 開始表示文字列
     Dim StartText As String
 
     On Error Resume Next
 
     '# HCPチャートシート取得
-    Set ws = gContext.ManagementBook.Worksheets( _
-                SHEET_HCP_CHART)
-    
+    Set ws = _
+        gContext.ManagementBook.Worksheets( _
+            SHEET_HCP_CHART)
+
     On Error GoTo 0
 
     '# Procedure情報取得
     Set ProcInfo = _
-            ResolveProcedure( _
-                ModuleName, _
-                ProcName)
-    
+        ResolveProcedure( _
+            ModuleName, _
+            ProcName)
+
     '# HCPチャートシート作成
     If ws Is Nothing Then
 
         Set ws = _
             gContext.ManagementBook.Worksheets.Add( _
                 After:=gContext.ManagementBook.Worksheets( _
-                gContext.ManagementBook.Worksheets.Count))
+                    gContext.ManagementBook.Worksheets.Count))
 
         ws.Name = SHEET_HCP_CHART
 
     End If
-    
+
     StartText = ProcName
 
     '# 開始ノード検索
@@ -1690,12 +1789,14 @@ Public Sub ExportHCPText( _
 
         If Node.NodeType = NODE_START Then
 
+            Set StartNode = Node
+
             StartText = Node.Text
-            
+
             Node.RenderText = _
                 "〇│" & _
                 StartText
-            
+
             Exit For
 
         End If
@@ -1705,11 +1806,16 @@ Public Sub ExportHCPText( _
     '# HCPチャート初期化
     ws.Cells.Clear
 
-    '# Procedure情報出力
-    ws.Cells(1, 1).Value = "Procedure: " & _
+    '# Procedureヘッダ出力
+    ws.Cells(1, 1).Value = _
+        "Procedure: " & _
         ModuleName & "." & ProcName & _
-        "  [ " & ProcInfo.JPName & "＜" & ProcInfo.ModuleName & "＞ ]"
-    
+        "  [ " & _
+        ProcInfo.JPName & _
+        "＜" & _
+        ProcInfo.ModuleName & _
+        "＞ ]"
+
     '# HCPヘッダ出力
     ws.Cells(2, 1).Value = "HCP"
     ws.Cells(2, 2).Value = "Business"
@@ -1718,22 +1824,25 @@ Public Sub ExportHCPText( _
 
     '# 開始ノード出力
     ws.Cells(RowOut, 1).Value = "┬"
+
     RowOut = RowOut + 1
 
     ws.Cells(RowOut, 1).Value = _
-        "〇│" & StartText
-    
+        "〇│" & _
+        StartText
+
     '# 開始Procedure業務説明出力
-    If Not ProcInfo Is Nothing Then
-        'Debug.Print "Stert:" & ProcInfo.JPName
+    If Not StartNode Is Nothing Then
 
         ws.Cells(RowOut, 2).Value = _
-            ProcInfo.JPName & "＜" & ProcInfo.ModuleName & "＞"
+            StartNode.BusinessText
+
     End If
-    
+
     RowOut = RowOut + 1
 
     ws.Cells(RowOut, 1).Value = "┴└┐"
+
     RowOut = RowOut + 1
 
     '# HCP描画開始
@@ -1746,31 +1855,33 @@ Public Sub ExportHCPText( _
 
     '# HCPチャート体裁設定
     ws.Columns("A:B").AutoFit
-    
-    ws.Columns("A").ColumnWidth = HCP_COL_WIDTH
-    
-    ws.Columns("B").ColumnWidth = BUSINESS_COL_WIDTH
-    
+
+    ws.Columns("A").ColumnWidth = _
+        HCP_COL_WIDTH
+
+    ws.Columns("B").ColumnWidth = _
+        BUSINESS_COL_WIDTH
+
     ws.Columns("A").WrapText = True
-    
+
     gContext.ManagementBook.Activate
-    
+
     '# HCPチャート表示
     ws.Activate
-    
+
     ws.Range("B1").Select
-    
+
     With ActiveWindow
-        
+
         .FreezePanes = False
-        
+
         .SplitRow = 0
         .SplitColumn = 1
-    
+
     End With
-    
+
     ActiveWindow.Zoom = 85
-    
+
 End Sub
 
 ' @JPName
@@ -2714,6 +2825,7 @@ Private Sub RenderSelectBlock( _
 
 End Sub
 
+'===================================================================
 ' @JPName
 ' 条件コンパイル描画
 '
@@ -2731,12 +2843,21 @@ End Sub
 ' RowOut(Long)
 '
 ' @Summary
-' 条件コンパイル構造をHCP形式で描画する
+' 条件コンパイル構造を
+' HCP形式で描画する
 '
 ' @Remarks
-' #If～#End If配下のノードを出力し
-' MERGEノードを条件コンパイル終端として描画する
+' #If～#End If構造を
+' IF構造と同等に扱い描画する
 '
+' 配下ノードを再帰的に出力し
+' MERGEノードを
+' #End Ifとして表示する
+'
+' 表示記号は
+' 通常のIF構造と同じ
+' 「◆┐」を使用する
+'===================================================================
 Private Sub RenderCompileBlock( _
                 ByVal HCPNodes As Collection, _
                 ByVal CompileNode As clsHCPNode, _
@@ -2750,10 +2871,13 @@ Private Sub RenderCompileBlock( _
     ' 終端MERGEノード
     Dim MergeNode As clsHCPNode
 
+    '-----------------------------
     '# 条件コンパイル開始出力
+    ' IF構造として描画
+    '-----------------------------
     CompileNode.RenderText = _
         Prefix & _
-        "＃┐" & _
+        "◆┐" & _
         GetDisplayText(CompileNode, Prefix)
 
     ws.Cells(RowOut, 1).Value = _
@@ -2819,15 +2943,13 @@ End Sub
 ' RowOut(Long)
 '
 ' @Summary
-' コメントノードを
+' HCPコメントノードを
 ' HCPチャートへ出力する
 '
 ' @Remarks
-' NODE_COMMENT用描画処理
-' 「│#」形式で出力し
-' RenderTextへ保持する
-' TXT出力およびHTML出力で
-' 共通利用する
+' NODE_COMMENTを
+' 「│#」形式で描画する
+'
 '===================================================================
 Private Sub RenderCommentNode( _
                 ByVal Node As clsHCPNode, _

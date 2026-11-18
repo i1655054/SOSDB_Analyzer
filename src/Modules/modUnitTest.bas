@@ -142,11 +142,26 @@ End Sub
 
 Public Sub Test()
 
+    '# áC EXITån
+    If A Then
+
+        Exit Sub
+
+    End If
+
 End Sub
 
 Public Sub TestSub()
 
-    Test
+'# Public Sub Test_Goto()
+
+Retry:
+
+    If A Then
+
+        GoTo Retry
+
+    End If
 
 End Sub
 
@@ -162,13 +177,44 @@ End Sub
 
 Public Sub Test2()
 
-    'Test()
+    '# áB FOR Å® SELECT Å® IF
+    For i = 1 To 3
+
+        Select Case x
+
+            Case 1
+
+                If A Then
+
+                    Call Proc1
+
+                End If
+
+        End Select
+
+    Next i
 
 End Sub
 
 Public Sub Test3()
 
-    Call Test
+    '# áA CASEÇÃíÜÇ…IF
+
+    Select Case x
+
+        Case 1
+
+            If A Then
+
+                Call Proc1
+
+            End If
+
+        Case 2
+
+            Call Proc2
+
+    End Select
 
 End Sub
 
@@ -178,9 +224,21 @@ End Function
 
 Public Sub Test4()
 
-    Dim x As Long
+    '# á@ FOR Å~ IF Å~ ELSEÅiç≈óDêÊÅj
+    '# Public Sub Test_ForIf()
+    For i = 1 To 3
 
-    x = FuncA()
+        If A Then
+
+            Call Proc1
+
+        Else
+
+            Call Proc2
+
+        End If
+
+    Next i
 
 End Sub
 
@@ -283,6 +341,24 @@ Public Sub Test_Compile()
     Call Proc1
 
 #End If
+
+End Sub
+
+Public Sub Test_IfElseIf()
+
+    If A Then
+
+        Call Proc1
+
+    ElseIf B Then
+
+        Call Proc2
+
+    Else
+
+        Call Proc3
+
+    End If
 
 End Sub
 

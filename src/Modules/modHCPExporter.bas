@@ -27,7 +27,10 @@ Option Explicit
 ' HCPテキストファイルを出力する
 '
 ' @Remarks
-' 出力処理は
+' モジュール別出力フォルダへ
+' .hcp.txt を生成する
+'
+' 実出力処理は
 ' WriteHCPTextFileへ委譲する
 '===================================================================
 Public Sub ExportHCPTextFile( _
@@ -72,7 +75,10 @@ End Sub
 ' HCPHTMLファイルを出力する
 '
 ' @Remarks
-' 出力処理は
+' モジュール別出力フォルダへ
+' .hcp.html を生成する
+'
+' 実出力処理は
 ' WriteHCPHtmlFileへ委譲する
 '===================================================================
 Public Sub ExportHCPHtmlFile( _
@@ -223,16 +229,18 @@ End Sub
 ' HTML形式で出力する
 '
 ' @Remarks
+' HCPNodesを走査し
 ' RenderTextを利用して
-' HCPチャートをHTMLへ出力する
+' HCPチャートをHTML化する
 '
 ' CALLノードは
-' GetCallNodeHtmlにより
 ' Procedureリンクへ変換する
 '
 ' Business列が複数行の場合は
-' TXT出力と同様に
 ' 複数<tr>へ展開する
+'
+' STARTノードは
+' HCP先頭として出力する
 '===================================================================
 Private Sub WriteHCPHtmlFile( _
                 ByVal FilePath As String, _
@@ -450,12 +458,31 @@ End Sub
 '--------------------------------------------------
 ' HTML補助
 '--------------------------------------------------
-
-
+'===================================================================
+' @JPName
+' HTMLエンコード
+'
+' @Category
+' HTML
+'
+' @Input
+' Text(String)
+'
+' @Output
+' HtmlText(String)
+'
+' @Summary
+' HTML表示用に文字列を
+' エンコードする
+'
+' @Remarks
+' &, <, > をHTMLエンティティへ変換し
+' 改行は<br>へ変換する
+'===================================================================
 Private Function HtmlEncode( _
                 ByVal Text As String) _
                 As String
-
+                
     HtmlEncode = Text
 
     HtmlEncode = _
@@ -632,8 +659,11 @@ End Function
 ' CALLノード用HTML文字列を返却する
 '
 ' @Remarks
-' CallNameに対応する
-' Procedureリンクを生成する
+' CallNameが設定されている場合は
+' Procedureリンクへ変換する
+'
+' CallName未設定時は
+' RenderTextをそのまま出力する
 '===================================================================
 Private Function GetCallNodeHtml( _
                 ByVal Node As clsHCPNode) _
@@ -701,7 +731,7 @@ End Function
 
 '===================================================================
 ' @JPName
-' Business継続行プレフィックス取得
+' Business継続プレフィックス取得
 '
 ' @Category
 ' HTML
@@ -717,27 +747,10 @@ End Function
 ' HCP継続行プレフィックスを取得する
 '
 ' @Remarks
-' HTML出力時にBusiness列が
-' 複数行となる場合に利用する
+' HCP表示記号位置を基準に
+' 継続行表示用の
+' 「││」プレフィックスを生成する
 '
-' 1行目
-'   │◎ CallProc      業務説明
-'
-' 2行目以降
-'   ││               内部呼出:XXX
-'
-' の形式で表示するため
-' HCP表示行から継続行用の
-' HCPプレフィックスを生成する
-'
-' RenderText:
-'   "　　│◎ CallProc"
-'
-' 戻り値:
-'   "　　││"
-'
-' TXT出力とHTML出力の
-' 表示形式を一致させるために使用する
 '===================================================================
 Private Function GetBusinessPrefix( _
                 ByVal RenderText As String) _

@@ -1,6 +1,25 @@
 Attribute VB_Name = "modPathChartText"
 Option Explicit
 
+'===================================================================
+' @JPName
+' TextPathChart生成
+'
+' @Category
+' PathChart
+'
+' @Summary
+' PathChart情報を
+' テキストツリー形式へ変換する
+'
+' @Remarks
+' TreeNode生成
+' Tree構造生成
+' Treeシート出力
+'
+' を提供する
+'===================================================================
+
 ' 出力用TreeNode一覧
 Private gTreeNodes As Collection
 
@@ -69,6 +88,10 @@ Public Sub ExportPathChartToText( _
                 ByVal StartProc As String, _
                 ByVal MaxDepth As Long)
 
+    '------------------------------------
+    '# TreeNode生成
+    '------------------------------------
+
     '# TreeNode一覧初期化
     Set gTreeNodes = New Collection
 
@@ -82,7 +105,9 @@ Public Sub ExportPathChartToText( _
             1, _
             MaxDepth
 
+    '------------------------------------
     '# Treeシート出力
+    '------------------------------------
     OutputTreeNodeList
 
 End Sub
@@ -114,6 +139,10 @@ End Sub
 Private Sub AddRootNode( _
                 ByVal StartProc As String)
 
+    '--------------------------
+    '# TreeNode生成
+    '--------------------------
+    
     ' ルートTreeNode
     Dim Node As clsTreeNode
 
@@ -124,6 +153,10 @@ Private Sub AddRootNode( _
                     0, _
                     StartProc)
 
+    '--------------------------
+    '# 表示情報設定
+    '--------------------------
+    
     '# モジュール名表示設定
     If Trim$(Node.ModuleName) <> "" Then
 
@@ -148,6 +181,10 @@ Private Sub AddRootNode( _
 
     End If
 
+    '--------------------------
+    '# TreeNode登録
+    '--------------------------
+    
     '# ルートノード登録
     gTreeNodes.Add Node
 
@@ -252,6 +289,10 @@ Private Sub BuildTreeText( _
 
     End If
 
+    '---------------------------
+    '# 子ノード取得
+    '---------------------------
+    
     '# 子ノード取得
     Set Children = GetChildrenList(ParentProc)
 
@@ -312,7 +353,9 @@ Private Sub BuildTreeText( _
 
         End If
 
+        '---------------------------
         '# TreeNode生成
+        '---------------------------
         Set Node = _
             CreateTreeNode( _
                 ChildProc, _
@@ -320,6 +363,9 @@ Private Sub BuildTreeText( _
                 Level, _
                 TreeText)
 
+        '---------------------------
+        '# 表示情報設定
+        '---------------------------
         '# モジュール名表示設定
         If Len(Node.ModuleName) > 0 Then
 
@@ -364,7 +410,9 @@ Private Sub BuildTreeText( _
 
         Node.JPLine = JPText
 
+        '---------------------------
         '# TreeNode登録
+        '---------------------------
         gTreeNodes.Add Node
 
         '# 子ノード再帰展開
@@ -426,6 +474,10 @@ Public Sub OutputTreeNodeList()
 
     On Error Resume Next
 
+    '------------------------------------
+    '# Treeシート準備
+    '------------------------------------
+    
     '# Treeシート取得
     Set ws = _
         gContext.ManagementBook.Worksheets( _
@@ -433,7 +485,7 @@ Public Sub OutputTreeNodeList()
 
     On Error GoTo 0
 
-    '# Treeシート作成
+    '# Treeシート取得
     If ws Is Nothing Then
 
         Set ws = _
@@ -522,8 +574,10 @@ Public Sub OutputTreeNodeList()
         TREE_FONT_NAME
 
     '------------------------------------
-    '# オートフィルタ範囲取得
+    '# フィルタ設定
     '------------------------------------
+    
+    '# オートフィルタ範囲取得
     LastRow = ws.Cells( _
                 ws.Rows.Count, _
                 1).End(xlUp).row

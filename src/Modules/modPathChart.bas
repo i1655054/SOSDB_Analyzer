@@ -262,6 +262,9 @@ Public Sub CreatePathChart_V3( _
     ' ルート表示文字列
     Dim RootCaption As String
 
+    '------------------------------------
+    '# 状態初期化
+    '------------------------------------
     '# PathChart状態初期化
     gNodeNo = 0
 
@@ -276,13 +279,18 @@ Public Sub CreatePathChart_V3( _
     gCurrentParentWithChildren = ""
     gCurrentChildIndex = 0
 
+    '------------------------------------
     '# 親子関係管理初期化
+    '------------------------------------
     Set gParentMap = _
             CreateObject("Scripting.Dictionary")
 
     Set gChildMap = _
             CreateObject("Scripting.Dictionary")
 
+    '------------------------------------
+    '# シート準備
+    '------------------------------------
     '# PathChartシート取得
     Set ws = gContext.ManagementBook.Worksheets(SHEET_PATH_CHART)
 
@@ -306,7 +314,9 @@ Public Sub CreatePathChart_V3( _
     '# 出力タイムスタンプ生成
     gExportTimeStamp = GetTimeStamp()
 
+    '------------------------------------
     '# PathChart初期化
+    '------------------------------------
     Call ClearChartShapes(ws)
 
     RootLeft = ws.Range(ROOT_CELL).Left
@@ -349,6 +359,9 @@ Public Sub CreatePathChart_V3( _
 
     ActiveWindow.Zoom = DEFAULT_ZOOM
 
+    '------------------------------------
+    '# 出力処理
+    '------------------------------------
     '# PowerPoint出力
     If gPowerPoint Then
 
@@ -590,6 +603,9 @@ Private Sub DrawCallTreeShape( _
 
             End If
 
+            '====================
+            '# 子ノード配置座標計算
+            '====================
             '# 分岐サイズ取得
             BranchSize = _
                 GetBranchSize(ChildFunc)
@@ -764,7 +780,9 @@ Private Function GetBranchSize( _
             wsDep.Rows.Count, _
             "A").End(xlUp).row
 
+    '====================
     '# 子孫ノード数集計
+    '====================
     For r = 2 To LastRow
 
         If wsDep.Cells(r, 1).Value = ParentFunc Then
@@ -2063,6 +2081,10 @@ Public Sub MoveToChildNode()
     Ary = Split( _
             gChildMap(gCurrentParentWithChildren), _
             "|")
+    
+    '--------------------------
+    '# 子ノード巡回
+    '--------------------------
 
     '# 次子ノード選択
     gCurrentChildIndex = gCurrentChildIndex + 1
@@ -2073,12 +2095,16 @@ Public Sub MoveToChildNode()
 
     End If
 
+    '--------------------------
     '# 子ノード取得
+    '--------------------------
     Set shp = _
         ws.Shapes( _
         Ary(gCurrentChildIndex - 1))
     
+    '--------------------------
     '# 現在ノード更新
+    '--------------------------
     gCurrentShapeName = shp.Name
 
     gCurrentNodeText = _
@@ -2237,8 +2263,10 @@ Public Sub MoveToSiblingNode()
         MsgBox "兄弟ノードが見つかりません。"
         Exit Sub
     End If
-
+    
+    '-------------------------
     '# 次兄弟ノード選択
+    '-------------------------
     CurrentPos = CurrentPos + 1
 
     If CurrentPos > UBound(Ary) Then
@@ -2247,9 +2275,14 @@ Public Sub MoveToSiblingNode()
 
     End If
 
+    '-------------------------
     '# 兄弟ノード取得
+    '-------------------------
     Set shp = ws.Shapes(Ary(CurrentPos))
 
+    '--------------------------
+    '# 現在ノード更新
+    '--------------------------
     gCurrentShapeName = shp.Name
 
     gCurrentNodeText = shp.TextFrame.Characters.Text

@@ -1,9 +1,25 @@
 Attribute VB_Name = "modPathChartCommon"
 Option Explicit
 
-'====================================================
-' 子Procedure一覧取得
-'====================================================
+'===================================================================
+' @JPName
+' TextPathChart生成
+'
+' @Category
+' PathChart
+'
+' @Summary
+' PathChart情報をツリー形式テキストへ変換し
+' PathChartTreeシートへ出力する
+'
+' @Remarks
+' TreeNode生成
+' 英語Tree生成
+' 日本語Tree生成
+' Treeシート出力
+'
+' を提供する
+'===================================================================
 
 ' @JPName
 ' 子関数一覧取得
@@ -49,9 +65,15 @@ Public Function GetChildrenList( _
     ' 呼出先モジュール
     Dim ChildModule As String
 
+    '-----------------------------
+    '# 初期化
+    '-----------------------------
     '# 子Procedure一覧初期化
     Set Col = New Collection
 
+    '-----------------------------
+    '# 関数依存関係取得
+    '-----------------------------
     '# 関数依存関係シート取得
     Set wsDep = _
         gContext.ManagementBook.Worksheets( _
@@ -63,7 +85,9 @@ Public Function GetChildrenList( _
             wsDep.Rows.Count, _
             "A").End(xlUp).row
 
+    '-----------------------------
     '# 子Procedure探索
+    '-----------------------------
     For r = 2 To LastRow
 
         '# 親Procedure一致判定
@@ -138,6 +162,10 @@ Public Function IsTargetRelation( _
                 ByVal ChildModule As String) _
                 As Boolean
 
+    '------------------------------
+    '# 初期状態
+    '------------------------------
+    
     '# 出力対象初期設定
     IsTargetRelation = True
 
@@ -223,7 +251,9 @@ End Function
 Public Function IsCommonFunction( _
                 ByVal ProcName As String) As Boolean
 
+    '------------------------------
     '# 共通関数判定
+    '------------------------------
     Select Case UCase$(ProcName)
 
         Case "CHK_PERSON", _
@@ -283,9 +313,14 @@ Public Function CreateTreeNode( _
     ' Procedure情報
     Dim Proc As clsProcInfo
 
+    '--------------------------
     '# TreeNode生成
+    '--------------------------
     Set Node = New clsTreeNode
 
+    '--------------------------
+    '# TreeNode基本情報
+    '--------------------------
     '# TreeNode基本情報設定
     Node.Level = Level
     Node.ProcName = ProcName

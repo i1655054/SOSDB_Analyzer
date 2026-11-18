@@ -25,8 +25,18 @@ Option Explicit
 ' 関数トレースシートを作成する
 '
 ' @Remarks
-' 呼出元、呼出先、モジュール、
-' Category、Summaryを出力する
+' 全標準モジュールを解析し
+' 呼出元Procedure
+' 呼出先Procedure
+' 呼出元モジュール
+' 呼出先モジュール
+' Category
+' Summary
+'
+' をFunctionTraceシートへ出力する
+'
+' 出力後は確認支援用の
+' 入力規則および条件付き書式を設定する
 '
 Public Sub FunctionTrace()
        
@@ -94,7 +104,7 @@ Public Sub FunctionTrace()
     Set FuncList = CreateObject("Scripting.Dictionary")
 
     '======================
-    ' 関数一覧取得
+    '# 関数一覧取得
     '======================
     '# 解析対象モジュール数取得
     TotalModuleCount = _
@@ -126,7 +136,7 @@ Public Sub FunctionTrace()
     Next
 
     '======================
-    ' 呼出関係取得
+    '# 呼出関係取得
     '======================
 
     RowOut = 2
@@ -203,12 +213,17 @@ End Sub
 ' 関数情報を収集する
 '
 ' @Remarks
-' プロシージャ定義行を検出し
-' ProcInfoオブジェクトを生成する
-' JPName、Category、Summaryなどの
-' コメントタグ情報も併せて取得する
-' 同名プロシージャが登録済みの場合は
-' 重複登録を行わない
+' Procedure定義を走査し
+' FuncListへ登録する
+'
+' JPName
+' Category
+' Summary
+'
+' のタグ情報を取得する
+'
+' 同名Procedureは
+' 重複登録しない
 '
 Public Function GetFunctions( _
             ByVal CodeText As String, _
@@ -316,9 +331,15 @@ End Function
 ' 関数トレースシートへ出力する
 '
 ' @Remarks
-' 呼出元プロシージャと呼出先プロシージャを判定し
-' 呼出関係をFuncListへ登録するとともに
-' 関数トレースシートへ詳細情報を出力する
+' モジュール単位で
+' FunctionCallを解析する
+'
+' 呼出元Procedureおよび
+' 呼出先Procedureを特定し
+'
+' FunctionTraceシートへ
+' 呼出関係を出力する
+'
 ' 自己呼出は出力対象外とする
 '
 Private Function TraceModule( _
@@ -489,8 +510,15 @@ End Function
 ' 入力規則と条件付き書式を設定する
 '
 ' @Remarks
-' 確認列(K列)に入力規則を設定し
-' 判定結果に応じた色付けを行う
+' K列へ確認結果入力規則を設定する
+'
+' ○ 正常
+' × 誤検出
+' △ 要確認
+' 除外
+'
+' の選択を可能とし
+' 条件付き書式による色分けを行う
 '
 Private Sub SetupTraceValidation(ByVal ws As Worksheet)
 
@@ -586,8 +614,11 @@ End Sub
 ' 条件成立時の背景色を設定する
 '
 ' @Remarks
-' 条件式は数式形式で指定する
-' 既存の条件付き書式は削除しない
+' 条件付き書式を追加し
+' 条件成立時の背景色を設定する
+'
+' 既存条件付き書式は
+' 削除せず追加する
 '
 Private Sub AddConditionColor( _
             ByVal rng As Range, _

@@ -8,20 +8,24 @@ Option Explicit
 '===================================================================
 
 ' 標準モジュール (*.bas)
-' VBComponent.Type : vbext_ct_StdModule
+' VBComponent.Type
+' vbext_ct_StdModule
 Const VBEXT_CT_STDMODULE As Long = 1
 
 ' クラスモジュール (*.cls)
-' VBComponent.Type : vbext_ct_ClassModule
+' VBComponent.Type
+' vbext_ct_ClassModule
 Const VBEXT_CT_CLASSMODULE As Long = 2
 
 ' ユーザーフォーム (*.frm)
-' VBComponent.Type : vbext_ct_MSForm
+' VBComponent.Type
+' vbext_ct_MSForm
 Const VBEXT_CT_MSFORM As Long = 3
 
 ' ドキュメントモジュール
 ' (ThisWorkbook、Sheet1 など)
-' VBComponent.Type : vbext_ct_Document
+' VBComponent.Type
+' vbext_ct_Document
 Const VBEXT_CT_DOCUMENT As Long = 100
 
 '**************************************
@@ -49,9 +53,16 @@ Const VBEXT_CT_DOCUMENT As Long = 100
 ' GitHub管理用フォルダへ出力する
 '
 ' @Remarks
-' 標準モジュール、クラスモジュール、
-' フォーム、ドキュメントモジュールを
+' 標準モジュール(.bas)
+' クラスモジュール(.cls)
+' フォーム(.frm)
+' ドキュメントモジュール(.cls)
+'
+' をGit管理用フォルダへ
 ' 種別毎に出力する
+'
+' 既存ファイルが存在する場合は
+' 上書き出力する
 '
 Public Sub ExportVBABook( _
                 ByVal TargetBook As Workbook, _
@@ -231,8 +242,17 @@ End Function
 ' PowerShellを起動する
 '
 ' @Remarks
-' 起動後のPowerShellは
-' 指定フォルダをカレントディレクトリとする
+' PowerShellを
+' -NoExit オプションで起動する
+'
+' 起動後のカレントディレクトリを
+' Git管理フォルダへ変更する
+'
+' Git Add
+' Git Commit
+' Git Push
+'
+' 等の実行支援として利用する
 '
 Public Sub OpenGitPowerShell( _
                     ByVal RootPath As String)

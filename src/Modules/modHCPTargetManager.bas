@@ -2,7 +2,25 @@ Attribute VB_Name = "modHCPTargetManager"
 Option Explicit
 
 '===================================================================
-'@JPName      HCP_TARGETS管理
+' @JPName
+' HCP_TARGETS管理
+'
+' @Category
+' HCP
+'
+' @Summary
+' HCP_TARGETSシートの作成、
+' 更新および一括生成機能を提供する
+'
+' @Remarks
+' ProcListから対象Procedureを抽出し
+' HCP生成対象管理を行う
+'
+' HCP_TARGETS作成
+' HCP_TARGETS更新
+' HCP一括生成
+'
+' を管理する
 '===================================================================
 
 Private Const COL_PROCLIST_MODULE As Long = 1
@@ -13,13 +31,28 @@ Private Const COL_PROCLIST_NAME As Long = 3
 ' 作成・更新
 '--------------------------------------------------
 
-'
 ' @JPName
 ' HCP_TARGETS作成
+'
+' @Category
+' HCP
+'
+' @Input
+' なし
+'
+' @Output
+' HCP_TARGETSシート
 '
 ' @Summary
 ' ProcListから
 ' HCP_TARGETSを再作成する
+'
+' @Remarks
+' HCP_TARGETSを初期化後
+' ProcList全件を登録する
+'
+' 処理完了後に
+' INDEXを再生成する
 '
 Public Sub CreateHCPTargets()
 
@@ -38,11 +71,17 @@ Public Sub CreateHCPTargets()
     Trace "HCP", _
         "CreateHCPTargets"
 
+    '-----------------------------
+    '# シート取得
+    '-----------------------------
     '# ProcList取得
     Set wsProc = _
         gContext.ManagementBook.Worksheets( _
             SHEET_PROC_LIST)
 
+    '-----------------------------
+    '# 初期化
+    '-----------------------------
     '# HCP_TARGETS取得
     On Error Resume Next
 
@@ -76,6 +115,9 @@ Public Sub CreateHCPTargets()
 
     RowOut = 2
 
+    '-----------------------------
+    '# ProcList走査
+    '-----------------------------
     '# ProcList → HCP_TARGETS
     For r = 2 To LastRow
 
@@ -116,9 +158,15 @@ Public Sub CreateHCPTargets()
         "CreateHCPTargets Count=" & _
         CreateCount
   
+    '-----------------------------
+    '# INDEX再生成
+    '-----------------------------
     '# INDEX更新
     RebuildAllIndexes
  
+    '-----------------------------
+    '# 完了通知
+    '-----------------------------
     MsgBox _
         "HCP_TARGETSを作成しました。" & vbCrLf & _
         "対象件数 : " & CreateCount, _
@@ -126,13 +174,29 @@ Public Sub CreateHCPTargets()
 
 End Sub
 
-'
 ' @JPName
 ' HCP_TARGETS更新
+'
+' @Category
+' HCP
+'
+' @Input
+' Silent(Boolean)
+'
+' @Output
+' HCP_TARGETSシート
 '
 ' @Summary
 ' ProcListとの差分を
 ' HCP_TARGETSへ追加する
+'
+' @Remarks
+' Module名および
+' Procedure名をキーとして
+' 未登録項目のみ追加する
+'
+' Silent=True時は
+' 完了メッセージを表示しない
 '
 Public Sub UpdateHCPTargets( _
                 Optional ByVal Silent As Boolean = False)
@@ -158,9 +222,15 @@ Public Sub UpdateHCPTargets( _
     Trace "HCP", _
         "UpdateHCPTargets"
 
+    '-----------------------------
+    '# Dictionary初期化
+    '-----------------------------
     Set Dict = _
         CreateObject("Scripting.Dictionary")
 
+    '-----------------------------
+    '# シート取得
+    '-----------------------------
     '# ProcList取得
     Set wsProc = _
         gContext.ManagementBook.Worksheets( _
@@ -177,6 +247,9 @@ Public Sub UpdateHCPTargets( _
             wsTarget.Rows.Count, _
             2).End(xlUp).row
 
+    '-----------------------------
+    '# HCP_TARGETS読込
+    '-----------------------------
     '# 既存登録情報取得
     For r = 2 To LastTargetRow
 
@@ -197,6 +270,9 @@ Public Sub UpdateHCPTargets( _
 
     RowOut = LastTargetRow + 1
 
+    '-----------------------------
+    '# ProcListとの差分抽出
+    '-----------------------------
     '# 差分追加
     For r = 2 To LastProcRow
 
@@ -239,6 +315,10 @@ Public Sub UpdateHCPTargets( _
 
     Next r
 
+    '-----------------------------
+    '# 表示更新
+    '-----------------------------
+    
     '# 体裁設定
     wsTarget.Columns("A:E").AutoFit
 
@@ -246,6 +326,9 @@ Public Sub UpdateHCPTargets( _
         "UpdateHCPTargets AddCount=" & _
         AddCount
 
+    '-----------------------------
+    '# 完了通知
+    '-----------------------------
     If Not Silent Then
     
         MsgBox _
@@ -257,6 +340,29 @@ Public Sub UpdateHCPTargets( _
     
 End Sub
 
+'===================================================================
+' @JPName
+' HCP_TARGETS初期化
+'
+' @Category
+' HCP
+'
+' @Input
+' ws(Worksheet)
+'
+' @Output
+' HCP_TARGETSシート
+'
+' @Summary
+' HCP_TARGETSシートを
+' 初期状態へ設定する
+'
+' @Remarks
+' ヘッダ生成、
+' 入力規則設定、
+' 条件付き書式設定、
+' オートフィルタ設定を行う
+'===================================================================
 Private Sub InitializeHCPTargetSheet( _
                 ByVal ws As Worksheet)
 
@@ -313,9 +419,17 @@ End Sub
 ' 一括生成
 '--------------------------------------------------
 
-'
 ' @JPName
 ' HCP一括生成
+'
+' @Category
+' HCP
+'
+' @Input
+' なし
+'
+' @Output
+' HCPファイル
 '
 ' @Summary
 ' HCP_TARGETSをもとに
@@ -323,8 +437,15 @@ End Sub
 '
 ' @Remarks
 ' Exec=Y かつ
-' Status<>"Done" のものを
-' 順次処理する
+' Status<>"Done"
+'
+' のProcedureを対象とする
+'
+' HCP生成後に
+' INDEXを再生成する
+'
+' エラー発生時は
+' StatusへErrorを設定する
 '
 Public Sub GenerateHCPBatch()
 
@@ -345,9 +466,15 @@ Public Sub GenerateHCPBatch()
     Trace "HCP", _
         "GenerateHCPBatch Start"
 
+    '-----------------------------
+    '# 生成対象最新化
+    '-----------------------------
     '# HCP_TARGETS更新
     UpdateHCPTargets True
 
+    '-----------------------------
+    '# HCP_TARGETS取得
+    '-----------------------------
     Set ws = _
         gContext.ManagementBook.Worksheets( _
             SHEET_HCP_TARGETS)
@@ -377,7 +504,9 @@ Public Sub GenerateHCPBatch()
 
     Next r
 
+    '-----------------------------
     '# 初期表示
+    '-----------------------------
     frmHCPGenerator.lblProgress.Caption = _
         "0 / " & TargetCount
 
@@ -417,6 +546,9 @@ Public Sub GenerateHCPBatch()
 
                 On Error GoTo ProcError
 
+                '-----------------------------
+                '# HCP生成実行
+                '-----------------------------
                 '# HCP生成
                 CreateHCP _
                     ModuleName, _
@@ -447,6 +579,9 @@ Public Sub GenerateHCPBatch()
 
 ProcError:
 
+                '-----------------------------
+                '# HCP生成失敗
+                '-----------------------------
                 ws.Cells(r, 4).Value = _
                     "Error"
 
@@ -481,7 +616,9 @@ ContinueLoop:
 
     Next r
 
+    '-----------------------------
     '# 完了表示
+    '-----------------------------
     frmHCPGenerator.lblProgress.Caption = _
         CurrentCount & _
         " / " & _
@@ -490,8 +627,10 @@ ContinueLoop:
     frmHCPGenerator.lblCurrentProc.Caption = _
         "完了"
 
+    '-----------------------------
     '# INDEX再生成
-        Trace "HCP", _
+    '-----------------------------
+    Trace "HCP", _
             "RebuildAllIndexes"
 
     RebuildAllIndexes
@@ -502,6 +641,9 @@ ContinueLoop:
         " Error=" & _
         ErrorCount
 
+    '-----------------------------
+    '# 完了通知
+    '-----------------------------
     MsgBox _
         "HCP一括生成完了" & vbCrLf & _
         "成功 : " & CreateCount & vbCrLf & _
@@ -510,15 +652,30 @@ ContinueLoop:
 
 End Sub
 
-'
 ' @JPName
 ' HCP一括生成確認メッセージ作成
 '
-' @Summary
-' HCP_TARGETSから
-' 一括生成対象一覧を取得し
-' 確認メッセージを作成する
+' @Category
+' HCP
 '
+' @Input
+' なし
+'
+' @Output
+' Message(String)
+'
+' @Summary
+' HCP一括生成対象一覧の
+' 確認メッセージを生成する
+'
+' @Remarks
+' Exec=Y かつ
+' Status<>"Done"
+'
+' のProcedureを対象とする
+'
+' 表示件数は
+' 先頭20件までとする
 '
 Public Function BuildHCPBatchMessage() _
                 As String
@@ -532,6 +689,9 @@ Public Function BuildHCPBatchMessage() _
 
     Dim Message As String
 
+    '-----------------------------
+    '# HCP_TARGETS取得
+    '-----------------------------
     Set ws = _
         gContext.ManagementBook.Worksheets( _
             SHEET_HCP_TARGETS)
@@ -541,6 +701,9 @@ Public Function BuildHCPBatchMessage() _
             ws.Rows.Count, _
             2).End(xlUp).row
 
+    '-----------------------------
+    '# 対象一覧作成
+    '-----------------------------
     For r = 2 To LastRow
 
         If UCase$(Trim$( _
@@ -569,6 +732,9 @@ Public Function BuildHCPBatchMessage() _
 
     Next r
 
+    '-----------------------------
+    '# 確認メッセージ生成
+    '-----------------------------
     BuildHCPBatchMessage = _
         "HCP一括生成を実行します。" & _
         vbCrLf & vbCrLf & _

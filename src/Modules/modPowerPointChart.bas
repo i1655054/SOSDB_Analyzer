@@ -1,5 +1,25 @@
 Attribute VB_Name = "modPowerPointChart"
 Option Explicit
+'===================================================================
+' @JPName
+' PathChart PowerPoint出力
+'
+' @Category
+' PathChart
+'
+' @Summary
+' PathChartをPowerPointおよびPNG形式で
+' 出力する機能を提供する
+'
+' @Remarks
+' PathChartシートを画像として取得し
+'
+' ・PowerPoint出力
+' ・PNG出力
+' ・出力ファイル管理
+'
+' を行う
+'===================================================================
 
 '==================================================
 ' PowerPointレイアウト定数
@@ -193,6 +213,10 @@ Public Sub CreatePowerPointPathChart( _
             PPT_SIDE_MARGIN, _
             PPT_TITLE_HEIGHT)
 
+    '=================================
+    '# タイトル設定
+    '=================================
+    
     '# スライドタイトル設定
     pptTitle.TextFrame.TextRange.Text = _
         StartProc & _
@@ -213,7 +237,9 @@ Public Sub CreatePowerPointPathChart( _
     '=================================
     pptSlide.Shapes.Paste
 
+    '=================================
     '# 貼付図形取得
+    '=================================
     Set pptShape = _
         pptSlide.Shapes( _
             pptSlide.Shapes.Count)
@@ -378,7 +404,9 @@ Public Sub ExportPathChartToPNG( _
     '=================================
     pptSlide.Shapes.Paste
 
+    '=================================
     '# 貼付図形取得
+    '=================================
     Set pptShape = _
         pptSlide.Shapes( _
             pptSlide.Shapes.Count)
@@ -396,8 +424,14 @@ Public Sub ExportPathChartToPNG( _
     
     On Error Resume Next
 
+    '=================================
     '# PNG保存
+    '=================================
     pptShape.Export PngFile, 2
+    
+    '=================================
+    '# 後処理
+    '=================================
     
     '# PowerPoint終了
     pptPres.Close
@@ -411,6 +445,10 @@ Public Sub ExportPathChartToPNG( _
     Set pptPres = Nothing
     Set pptApp = Nothing
 
+    '=================================
+    '# 結果通知
+    '=================================
+    
     '# PNG保存結果通知
     If Err.Number <> 0 Then
 
@@ -459,12 +497,18 @@ Public Function GetOutputFolder() As String
     ' 出力フォルダ
     Dim Folder As String
 
+    '--------------------------
     '# 出力フォルダ生成
+    '--------------------------
     Folder = _
         Environ$("USERPROFILE") & _
         "\OneDrive - east.ntt.co.jp\" & _
         "ドキュメント\GitHub\SOSDB_Analyzer\"
 
+    '--------------------------
+    '# フォルダ存在確認
+    '--------------------------
+    
     '# 出力フォルダ存在確認
     If Dir(Folder, vbDirectory) = "" Then
 
@@ -473,7 +517,9 @@ Public Function GetOutputFolder() As String
 
     End If
 
+    '--------------------------
     '# 出力フォルダ返却
+    '--------------------------
     GetOutputFolder = Folder
 
 End Function
@@ -494,8 +540,11 @@ End Function
 ' ファイル名用タイムスタンプを取得する
 '
 ' @Remarks
-' 出力ファイル名の重複を防止するため
-' 現在日時を文字列形式で返却する
+' 出力ファイル名生成時に利用する
+'
+' yyyymmdd_hhnnss
+'
+' 形式で返却する
 '
 Public Function GetTimeStamp() As String
 

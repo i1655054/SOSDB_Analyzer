@@ -1,5 +1,26 @@
 Attribute VB_Name = "modToolManager"
 Option Explicit
+'===================================================================
+' @JPName
+' グローバル定義
+'
+' @Category
+' Common
+'
+' @Summary
+' システム共通定数、
+' グローバル状態、
+' Workbook管理機能を提供する
+'
+' @Remarks
+' Window状態管理
+' Tool管理
+' Workbook管理
+' Context管理
+'
+' で共通利用する定数および
+' グローバル変数を保持する
+'===================================================================
 
 '==================================================
 ' 開発者モード
@@ -77,7 +98,9 @@ Public Const BOOK_ANALYZER As String = "SOSDB解析ツール.xlsm"
 ' シート名
 '==================================================
 
+'--------------------------------------------------
 ' ツールファイル
+'--------------------------------------------------
 ' Mainシート名
 Public Const SHEET_MAIN As String = "Main"
 
@@ -87,7 +110,9 @@ Public Const SHEET_TOOL_MANAGER As String = "ToolManager"
 ' PathChartConfigシート名
 Public Const SHEET_PATH_CHART_CONFIG As String = "PathChartConfig"
 
+'--------------------------------------------------
 ' 管理ファイル
+'--------------------------------------------------
 ' ProcListシート名
 Public Const SHEET_PROC_LIST As String = "ProcList"
 
@@ -477,13 +502,17 @@ Public Function GetManagementWorkbookByToolID( _
 
     On Error Resume Next
 
+    '--------------------------
     '# 管理ブック取得
+    '--------------------------
     Set GetManagementWorkbookByToolID = _
         Workbooks(Tool.ManagementFile)
 
     On Error GoTo 0
 
-    '# 管理ブック存在確認
+    '--------------------------
+    '# 管理ブック未存在時処理
+    '--------------------------
     If GetManagementWorkbookByToolID Is Nothing Then
 
         '# 管理ファイルパス取得
@@ -493,7 +522,9 @@ Public Function GetManagementWorkbookByToolID( _
         '# 管理ファイル存在確認
         If Dir(FullPath) = "" Then
 
+            '--------------------------
             '# 管理ブック作成
+            '--------------------------
             Set GetManagementWorkbookByToolID = _
                 CreateManagementWorkbook(FullPath, Tool.ToolName)
             
@@ -506,7 +537,9 @@ Public Function GetManagementWorkbookByToolID( _
 
         Else
         
+            '--------------------------
             '# 管理ブックオープン
+            '--------------------------
             Set GetManagementWorkbookByToolID = _
                 Workbooks.Open(FullPath)
             
@@ -635,9 +668,14 @@ Public Function CreateManagementWorkbook( _
 
     On Error GoTo ErrHandler
     
+    '--------------------------
     '# 管理ブック生成
+    '--------------------------
     Set wb = Workbooks.Add
 
+    '--------------------------
+    '# 管理シート生成
+    '--------------------------
     '# ProcListシート作成
     wb.Worksheets(1).Name = SHEET_PROC_LIST
 
@@ -656,7 +694,9 @@ Public Function CreateManagementWorkbook( _
     '# 保存確認抑止
     Application.DisplayAlerts = False
 
+    '--------------------------
     '# 管理ブック保存
+    '--------------------------
     wb.SaveAs FilePath
 
     '# 保存確認復元
@@ -680,7 +720,9 @@ Public Function CreateManagementWorkbook( _
     
 ErrHandler:
 
-    '# 管理ブック作成エラー通知
+    '--------------------------
+    '# 完了通知
+    '--------------------------
     MsgBox _
         "管理ファイル作成失敗" & vbCrLf & _
         Err.Number & " : " & _
@@ -735,12 +777,16 @@ Public Function GetToolInfo( _
         ws.Cells(ws.Rows.Count, "A") _
           .End(xlUp).row
 
-    '# ツール情報検索
+    '--------------------------
+    '# ToolManager検索
+    '--------------------------
     For r = 2 To LastRow
 
         If ws.Cells(r, "A").Value = ToolID Then
 
-            '# ツール情報生成
+            '--------------------------
+            '# Tool情報生成
+            '--------------------------
             Set Tool = New clsToolInfo
 
             Tool.ToolID = ToolID
@@ -873,7 +919,9 @@ Public Function ValidateTargetBook( _
     ' 現在選択中ツール情報
     Dim Tool As clsToolInfo
 
+    '--------------------------
     '# 対象ブック存在確認
+    '--------------------------
     If Not gContext.TargetBook Is Nothing Then
 
         ValidateTargetBook = True
@@ -884,7 +932,9 @@ Public Function ValidateTargetBook( _
 
     Set Tool = GetCurrentToolInfo()
 
-    '# ツール情報存在確認
+    '--------------------------
+    '# ツール情報取得
+    '--------------------------
     If Tool Is Nothing Then
 
         '# 対象ブック未オープン通知
@@ -897,7 +947,9 @@ Public Function ValidateTargetBook( _
 
     End If
 
-    '# 対象ブック未オープン通知
+    '--------------------------
+    '# エラー通知
+    '--------------------------
     MsgBox _
         "解析対象ブックが開かれていません。" & _
         vbCrLf & vbCrLf & _

@@ -55,8 +55,9 @@ Private Const PROC_UNKNOWN As String = "(Unknown)"
 ' ProcListシートへ出力する
 '
 ' @Remarks
-' UsageCountおよび使用状況を
-' あわせて出力する
+' ProcListシートを生成する
+' 使用状況判定結果を出力する
+' UsageCountに応じ色付けする
 '
 Public Sub ProcedureList()
 ' "ProcList"シートが追加される
@@ -148,7 +149,7 @@ Public Sub ProcedureList()
     row = 2
     
     '------------------------------------
-    ' 関数総数を数える
+    '# 関数総数を数える
     '------------------------------------
     TotalProcCount = 0
 
@@ -170,7 +171,7 @@ Public Sub ProcedureList()
     Next VBComp
     
     '------------------------------------
-    ' 関数抽出
+    '# 関数抽出
     '------------------------------------
     '# Procedure情報抽出開始
     For Each VBComp In gContext.TargetBook.VBProject.VBComponents
@@ -256,7 +257,7 @@ Public Sub ProcedureList()
     Next VBComp
     
     '------------------------------------
-    ' 色付け
+    '# 色付け
     '------------------------------------
     LastRow = ws.Cells(ws.Rows.Count, 1).End(xlUp).row
     
@@ -373,7 +374,7 @@ Public Function ExportNoCallerProcedureList() As Long
             .End(xlUp).row
 
     '------------------------------------
-    ' 呼出元なし関数抽出
+    '# 呼出元なし関数抽出
     '------------------------------------
     '# 呼出元なしProcedure抽出
     For r = 2 To LastRow
@@ -666,12 +667,14 @@ End Function
 ' Status(String)
 '
 ' @Summary
-' 使用回数およびイベント種別から
+' 使用回数および特殊種別から
 ' 使用状況を判定する
 '
 ' @Remarks
-' イベント関数は使用回数に関係なく
-' 「イベント」を返す
+' イベントProcedureおよび
+' 特殊Procedureは
+' UsageCountに関係なく
+' 使用中判定とする
 '
 Private Function GetUsageStatus(ProcName As String, usage As Long) As String
 

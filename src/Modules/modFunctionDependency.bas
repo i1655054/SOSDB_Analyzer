@@ -17,15 +17,28 @@ Option Explicit
 ' なし
 '
 ' @Output
-' 関数依存関係シート
+' FunctionDependencyシート
 '
 ' @Summary
-' 関数トレースシートを集計し
+' FunctionTraceシートを集計し
 ' 関数依存関係シートを作成する
 '
 ' @Remarks
-' 呼出元・呼出先単位で集計し
-' 呼出回数および付帯情報を出力する
+' 呼出元Procedureと
+' 呼出先Procedureの組み合わせ毎に
+' 呼出回数を集計する
+'
+' 同一呼出関係は集約し
+' 呼出回数として出力する
+'
+' 呼出元JPName
+' 呼出先JPName
+' 呼出元モジュール
+' 呼出先モジュール
+' Category
+' Summary
+'
+' をあわせて出力する
 '
 Public Sub FunctionDependency()
     
@@ -104,7 +117,7 @@ Public Sub FunctionDependency()
     wsDep.Name = SHEET_FUNCTION_DEPENDENCY
 
     '=========================
-    ' ヘッダ
+    '# ヘッダ
     '=========================
     '# FunctionDependencyヘッダ出力
     wsDep.Range("A1") = "呼出元"
@@ -127,7 +140,7 @@ Public Sub FunctionDependency()
                     "A").End(xlUp).row
 
     '=========================
-    ' 集計
+    '# 集計
     '=========================
     '# 呼出関係集計
     For r = 2 To LastRow
@@ -176,7 +189,7 @@ Public Sub FunctionDependency()
     Next r
 
     '=========================
-    ' 出力
+    '# 出力
     '=========================
     r = 2
 

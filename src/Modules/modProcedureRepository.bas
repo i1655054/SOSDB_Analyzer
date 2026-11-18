@@ -1,12 +1,24 @@
 Attribute VB_Name = "modProcedureRepository"
 Option Explicit
 
-'==================================================
+'===================================================================
+' @JPName
 ' ProcedureRepository
 '
-' ProcListシートからProcedure情報を読み込み
-' Procedure検索用Dictionaryを管理する
-'==================================================
+' @Category
+' ProcedureRepository
+'
+' @Summary
+' ProcListシートからProcedure情報を読込み
+' Procedure検索用Repositoryを管理する
+'
+' @Remarks
+' Procedure辞書管理
+' Procedure索引管理
+' Procedure解決
+'
+' を提供する
+'===================================================================
 
 ' @JPName
 ' ProcedureRepository初期化
@@ -24,17 +36,29 @@ Option Explicit
 ' ProcedureRepositoryを初期化する
 '
 ' @Remarks
-' Procedure情報未読込時のみ
-' ProcInfo辞書を生成する
+' 呼出元モジュールを優先して
+' Procedure候補を決定する
+'
+' 同名Procedureが複数存在する場合は
+' Procedure索引を利用して解決する
+'
+' 解決不能時はNothingを返却する
+'
 '
 Public Sub InitializeProcedureRepository()
 
+    '--------------------------
+    '# 初期化状態確認
+    '--------------------------
     '# Context存在確認
     If gContext Is Nothing Then Exit Sub
     
     '# ProcedureRepository初期化済確認
     If gContext.ProcInfoLoaded Then Exit Sub
 
+    '--------------------------
+    '# ProcedureRepository生成
+    '--------------------------
     '# Procedure辞書生成
     BuildProcInfoDictionary
 
@@ -104,13 +128,19 @@ Public Sub BuildProcInfoDictionary()
 
     End If
 
+    '--------------------------
     '# Procedure管理辞書初期化
+    '--------------------------
     Set gContext.ProcInfoDic = _
         CreateObject("Scripting.Dictionary")
 
     '# Procedure索引辞書初期化
     Set gContext.ProcIndexDic = _
         CreateObject("Scripting.Dictionary")
+
+    '--------------------------
+    '# ProcList読込
+    '--------------------------
 
     '# ProcList最終行取得
     LastRow = _
@@ -207,7 +237,9 @@ Private Sub BuildProcIndex( _
     ' モジュール名一覧
     Dim Col As Collection
 
+    '--------------------------
     '# Procedure索引取得
+    '--------------------------
     If gContext.ProcIndexDic.Exists( _
             Info.ProcName) Then
 
@@ -226,6 +258,10 @@ Private Sub BuildProcIndex( _
 
     End If
 
+    '--------------------------
+    '# モジュール索引登録
+    '--------------------------
+    
     '# モジュール重複確認
     If Not ExistsModule(Col, Info.ModuleName) Then
     
@@ -416,6 +452,9 @@ Private Function ExistsModule( _
         End If
 
     Next V
+    
+    '# モジュール未存在
+    ExistsModule = False
 
 End Function
 

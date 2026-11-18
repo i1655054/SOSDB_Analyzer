@@ -1,5 +1,24 @@
 Attribute VB_Name = "modProcAnalyzer"
 Option Explicit
+'===================================================================
+' @JPName
+' Proc解析エンジン
+'
+' @Category
+' ProcAnalyzer
+'
+' @Summary
+' Procedureソースコードを解析し
+' ProcNode一覧を生成する
+'
+' @Remarks
+' ノード種別判定
+' 呼出関数解析
+' 論理行生成
+' ProcNode生成
+'
+' を行う
+'===================================================================
 
 ' 開始ノード
 Public Const NODE_START As String = "START"
@@ -219,8 +238,13 @@ Private Function GetNodeType( _
     LineText = Trim$(LineText)
 
     '# ノード種別判定
+    
+    '--------------------------
+    '# 条件コンパイル判定
+    '--------------------------
     If StartsWithKeyword(LineText, "#ElseIf") Then
 
+        '# #ElseIf
         GetNodeType = NODE_COMPILE_ELSEIF
 
     ElseIf StrComp( _
@@ -228,6 +252,7 @@ Private Function GetNodeType( _
                 "#Else", _
                 vbTextCompare) = 0 Then
 
+        '# #Else
         GetNodeType = NODE_COMPILE_ELSE
 
     ElseIf StrComp( _
@@ -235,32 +260,46 @@ Private Function GetNodeType( _
                 "#End If", _
                 vbTextCompare) = 0 Then
 
+        '# #End If
         GetNodeType = NODE_COMPILE_ENDIF
 
     ElseIf StartsWithKeyword(LineText, "#If") Then
 
+        '# #If
         GetNodeType = NODE_COMPILE_IF
     
+    '--------------------------
+    '# 宣言・制御判定
+    '--------------------------
     ElseIf StartsWithKeyword(LineText, "Dim") Then
 
+        '# 変数宣言
         GetNodeType = NODE_DECLARE
 
     ElseIf StartsWithKeyword(LineText, "Const") Then
 
+        '# 定数宣言
         GetNodeType = NODE_DECLARE
 
     ElseIf StartsWithKeyword(LineText, "On Error") Then
 
+        '# エラー制御
         GetNodeType = NODE_CONTROL
 
+    '--------------------------
+    '# IF構造判定
+    '--------------------------
     ElseIf StartsWithKeyword(LineText, "If") Then
 
+        '# 1行If判定
         If IsInlineIf(LineText) Then
 
+            '# インラインIf
             GetNodeType = NODE_INLINE_IF
 
         Else
 
+            '# ブロックIf
             GetNodeType = NODE_IF
 
         End If
@@ -269,86 +308,126 @@ Private Function GetNodeType( _
                    "End If", _
                    vbTextCompare) = 0 Then
 
+        '# End If
         GetNodeType = NODE_ENDIF
 
     ElseIf StartsWithKeyword(LineText, "ElseIf") Then
 
+        '# ElseIf
         GetNodeType = NODE_ELSEIF
 
     ElseIf StrComp(LineText, _
                    "Else", _
                    vbTextCompare) = 0 Then
 
+        '# Else
         GetNodeType = NODE_ELSE
 
+    '--------------------------
+    '# FOR構造判定
+    '--------------------------
     ElseIf StartsWithKeyword(LineText, "For") Then
 
+        '# For
         GetNodeType = NODE_FOR
 
     ElseIf StartsWithKeyword(LineText, "Next") Then
 
+        '# Next
         GetNodeType = NODE_NEXT
 
+    '--------------------------
+    '# DO構造判定
+    '--------------------------
     ElseIf StartsWithKeyword(LineText, "Do") Then
 
+        '# Do
         GetNodeType = NODE_DO
 
     ElseIf StartsWithKeyword(LineText, "Loop") Then
 
+        '# Loop
         GetNodeType = NODE_LOOP
 
+    '--------------------------
+    '# WHILE構造判定
+    '--------------------------
     ElseIf StartsWithKeyword(LineText, "While") Then
 
+        '# While
         GetNodeType = NODE_WHILE
 
     ElseIf StrComp(LineText, _
                    "Wend", _
                    vbTextCompare) = 0 Then
 
+        '# Wend
         GetNodeType = NODE_WEND
 
+    '--------------------------
+    '# WITH構造判定
+    '--------------------------
     ElseIf StartsWithKeyword(LineText, "With") Then
 
+        '# With
         GetNodeType = NODE_WITH
 
     ElseIf StrComp(LineText, _
                    "End With", _
                    vbTextCompare) = 0 Then
 
+        '# End With
         GetNodeType = NODE_ENDWITH
 
+    '--------------------------
+    '# SELECT構造判定
+    '--------------------------
     ElseIf StartsWithKeyword(LineText, "Select Case") Then
 
+        '# Select Case
         GetNodeType = NODE_SELECT
 
     ElseIf StartsWithKeyword(LineText, "Case") Then
 
+        '# Case
         GetNodeType = NODE_CASE
 
     ElseIf StrComp(LineText, _
                    "End Select", _
                    vbTextCompare) = 0 Then
 
+        '# End Select
         GetNodeType = NODE_ENDSELECT
 
+    '--------------------------
+    '# ジャンプ構造判定
+    '--------------------------
     ElseIf StartsWithKeyword(LineText, "Resume") Then
 
+        '# Resume
         GetNodeType = NODE_RESUME
 
     ElseIf StartsWithKeyword(LineText, "GoTo") Then
 
+        '# GoTo
         GetNodeType = NODE_GOTO
 
     ElseIf right$(LineText, 1) = ":" Then
 
+        '# ラベル定義
         GetNodeType = NODE_LABEL
 
     ElseIf StartsWithKeyword(LineText, "Exit") Then
 
+        '# Exit文
         GetNodeType = NODE_EXIT
 
+    '--------------------------
+    '# 通常処理判定
+    '--------------------------
     Else
 
+        '# 通常処理
         GetNodeType = NODE_NORMAL
 
     End If
@@ -508,7 +587,22 @@ End Function
 '
 ' @Remarks
 ' STARTノードおよびENDノードを生成する
-' 制御構造を解析してProcNode一覧を作成する
+'
+' IF
+' ELSEIF
+' ELSE
+' FOR
+' DO
+' WITH
+' WHILE
+' SELECT CASE
+' #IF
+' COMMENT
+'
+' を解析しProcNode一覧を生成する
+'
+' CALLノードについては
+' 内部呼出情報も取得する
 '
 '
 Public Function AnalyzeProcedure( _
@@ -545,9 +639,6 @@ Public Function AnalyzeProcedure( _
     ' 現在行のノード種別
     Dim NodeType As String
 
-    ' コンパイル条件階層
-    Dim CompileLevel As Long
-
     ' 制御構造階層
     Dim Level As Long
 
@@ -582,9 +673,6 @@ Public Function AnalyzeProcedure( _
     Set Nodes = New Collection
     Set ParentStack = New Collection
     Set BranchStack = New Collection
-
-    '# 解析状態初期化
-    CompileLevel = 0
 
     NodeID = 1
     Level = 0
@@ -680,44 +768,6 @@ Public Function AnalyzeProcedure( _
         NodeType = _
             GetNodeType(CStr(LineText))
 
-        '# 条件コンパイル解析
-        Select Case NodeType
-
-            Case NODE_COMPILE_IF
-
-                CompileLevel = _
-                   CompileLevel + 1
-
-                GoTo NextLine
-
-            Case NODE_COMPILE_ELSEIF
-
-                GoTo NextLine
-
-            Case NODE_COMPILE_ELSE
-
-                GoTo NextLine
-
-            Case NODE_COMPILE_ENDIF
-
-                If CompileLevel > 0 Then
-
-                    CompileLevel = _
-                        CompileLevel - 1
-
-                End If
-
-                GoTo NextLine
-
-        End Select
-        
-        '# 条件コンパイル範囲除外
-        If CompileLevel > 0 Then
-
-            GoTo NextLine
-
-        End If
-
         '# 呼出関数解析
         Set CallNames = _
             ExtractCallNames( _
@@ -769,8 +819,9 @@ Public Function AnalyzeProcedure( _
         Or NodeType = NODE_NEXT _
         Or NodeType = NODE_LOOP _
         Or NodeType = NODE_ENDWITH _
-        Or NodeType = NODE_WEND Then
-
+        Or NodeType = NODE_WEND _
+        Or NodeType = NODE_COMPILE_ENDIF Then
+        
             If Level > 0 Then
                 Level = Level - 1
             End If
@@ -953,6 +1004,12 @@ Public Function AnalyzeProcedure( _
                     Node.NodeText = _
                         Trim$(CStr(LineText))
 
+                Case NODE_COMPILE_IF
+
+                    ParentStack.Add NodeID
+
+                    Level = Level + 1
+        
                 Case Else
 
             End Select
@@ -1696,11 +1753,17 @@ Public Function BuildFuncList() _
     ' モジュールソースコード
     Dim CodeText As String
 
+    '--------------------------
+    '# Procedure一覧初期化
+    '--------------------------
+
     '# Procedure一覧生成
     Set FuncList = _
         CreateObject("Scripting.Dictionary")
 
+    '--------------------------
     '# VBAモジュール走査
+    '--------------------------
     For Each VBComp In _
         gContext.TargetBook.VBProject.VBComponents
         
@@ -1758,7 +1821,9 @@ Public Function GetProcedureCode( _
     ' コードモジュール
     Dim CodeMod As Object
 
+    '--------------------------
     '# モジュール探索
+    '--------------------------
     For Each VBComp In _
         gContext.TargetBook.VBProject.VBComponents
 
@@ -1790,7 +1855,9 @@ Public Function GetProcedureCode( _
 
     End If
 
+    '--------------------------
     '# Procedureソース取得
+    '--------------------------
     GetProcedureCode = _
         CodeMod.Lines( _
             CodeMod.ProcStartLine( _
@@ -1853,10 +1920,31 @@ Private Sub AddProcNode( _
 End Sub
 
 
-'
+'===================================================================
 ' @JPName
 ' 内部呼出一覧取得
 '
+' @Category
+' ProcAnalyzer
+'
+' @Input
+' SourceLine(String)
+' MainCall(String)
+'
+' @Output
+' InternalCalls(String)
+'
+' @Summary
+' 呼出文に含まれる
+' 内部関数呼出一覧を取得する
+'
+' @Remarks
+' 正規表現で関数呼出を抽出し
+' 主呼出(MainCall)を除外して返却する
+'
+' 複数存在する場合は
+' カンマ区切りで返却する
+'===================================================================
 Private Function GetInternalCallList( _
                 ByVal SourceLine As String, _
                 ByVal MainCall As String) _

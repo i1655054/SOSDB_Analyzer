@@ -2,14 +2,30 @@ Attribute VB_Name = "modHCPInfo"
 Option Explicit
 
 '===================================================================
-'@JPName      JPName・Proc情報取得
+' @JPName
+' Procedure情報取得
+'
+' @Category
+' HCP
+'
+' @Summary
+' Procedure情報、
+' JPName、
+' 呼出元情報の取得機能を提供する
+'
+' @Remarks
+' ProcList、
+' FunctionDependency、
+' HCP_TARGETS
+'
+' を参照して
+' Procedure関連情報を取得する
 '===================================================================
 
 '--------------------------------------------------
 ' Procedure情報
 '--------------------------------------------------
 ' 将来的に以下を実装予定
-'   GetProcedureInfo
 '   GetProcedureStatus
 '   BuildHCPInfo
 
@@ -31,7 +47,16 @@ Option Explicit
 ' HCP HTML相対パスを返却する
 '
 ' @Remarks
-' ProcListからModule名を検索する
+' ProcListからModule名を取得し
+'
+' ../ModuleName/
+' ProcName.ModuleName.hcp.html
+'
+' 形式の相対パスを返却する
+'
+' Procedure未登録時は
+' 空文字列を返却する
+'
 '===================================================================
 Public Function GetProcedureHtmlPath( _
                 ByVal ProcName As String) _
@@ -105,7 +130,12 @@ End Function
 ' ProcListからProcedure情報を取得する
 '
 ' @Remarks
-' Procedure未存在時はNothingを返却する
+' ProcListシートを検索し
+' ModuleNameおよびProcName一致行を取得する
+'
+' Procedure未存在時は
+' Nothingを返却する
+'
 '===================================================================
 Public Function GetProcedureInfo( _
                 ByVal ModuleName As String, _
@@ -170,7 +200,7 @@ Public Function GetProcedureInfo( _
 End Function
 
 '===================================================================
-' @JPNameF
+' @JPName
 ' ProcedureJPName取得
 '
 ' @Category
@@ -410,8 +440,13 @@ End Function
 ' Procedure一覧を取得する
 '
 ' @Remarks
-' ProcListおよび解析結果を
-' 利用して呼出元を収集する
+' FunctionDependencyシートを検索し
+' 指定Procedureを呼び出している
+' Procedure一覧を返却する
+'
+' 呼出元が存在しない場合は
+' 空Collectionを返却する
+'
 '===================================================================
 Public Function GetCalledByList( _
                 ByVal ProcName As String) _

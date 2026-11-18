@@ -2,9 +2,25 @@ Attribute VB_Name = "modHCPIndex"
 Option Explicit
 
 '===================================================================
-'@JPName      _INDEX.html 生成
+' @JPName
+' HCP INDEX生成
+'
+' @Category
+' HCP
+'
+' @Summary
+' モジュール単位INDEXおよび
+' ツール単位INDEXの生成機能を提供する
+'
+' @Remarks
+' HCP出力フォルダを走査し
+' _INDEX.html を生成する
+'
+' Module INDEX
+' Tool INDEX
+'
+' の両方を管理する
 '===================================================================
-
 '==================================================
 ' HCP_TARGETS列定義
 '==================================================
@@ -45,7 +61,12 @@ Public Const STATUS_UNKNOWN = "[UNKNOWN]"
 ' _INDEX.html を再生成する
 '
 ' @Remarks
-' HCPファイルを走査し毎回再構築する
+' 指定モジュールフォルダ配下の
+' HCPファイル一覧を取得し
+' _INDEX.html を再生成する
+'
+' 既存INDEXは上書き作成する
+'
 '===================================================================
 Public Sub RebuildModuleIndex( _
                 ByVal ModuleName As String)
@@ -100,8 +121,16 @@ End Sub
 ' _INDEX.html を再生成する
 '
 ' @Remarks
-' モジュールフォルダを走査して
-' 毎回再構築する
+' HCPルート配下の
+' モジュールフォルダを走査し
+'
+' Procedure数
+' 生成済数
+' 未生成数
+'
+' を集計して
+' Tool INDEXを再生成する
+'
 '===================================================================
 Public Sub RebuildToolIndex()
 
@@ -186,8 +215,12 @@ End Sub
 ' ツールINDEXを再生成する
 '
 ' @Remarks
-' HCP_TARGETSを利用して
+' HCP_TARGETSシートから
 ' モジュール一覧を取得する
+'
+' 各Module INDEX生成後に
+' Tool INDEXを再生成する
+'
 '===================================================================
 Public Sub RebuildAllIndexes()
 
@@ -285,6 +318,11 @@ End Sub
 '
 ' @Remarks
 ' modHCPIndex用
+'
+' 現在未使用
+' 将来的なINDEX整合性確認機能で
+' 利用予定
+'
 '===================================================================
 ' 未使用
 ' 将来のINDEX整合性確認機能で再利用予定
@@ -323,7 +361,11 @@ End Function
 ' ツールINDEXの存在有無を返却する
 '
 ' @Remarks
-' _INDEX.html確認用
+' 現在未使用
+'
+' Tool INDEX整合性確認機能で
+' 利用予定
+'
 '===================================================================
 ' 未使用
 ' 将来のINDEX整合性確認機能で再利用予定
@@ -695,8 +737,11 @@ End Sub
 ' HTML共通ヘッダを出力する
 '
 ' @Remarks
-' EnableResize=True時は
-' 列幅変更用CSSを出力する
+' 共通CSSを出力する
+'
+' EnableResize=Trueの場合は
+' 列幅変更用CSSも出力する
+'
 '===================================================================
 Public Sub WriteHtmlHeader( _
                 ByVal FileNo As Integer, _
@@ -789,8 +834,12 @@ End Sub
 ' HTML共通フッタを出力する
 '
 ' @Remarks
-' EnableResize=True時は
+' EnableResize=Trueの場合は
 ' 列幅変更用JavaScriptを出力する
+'
+' BODYおよびHTMLタグを
+' 閉じる
+'
 '===================================================================
 Public Sub WriteHtmlFooter( _
                 ByVal FileNo As Integer, _

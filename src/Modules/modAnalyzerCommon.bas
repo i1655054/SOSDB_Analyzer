@@ -91,12 +91,16 @@ End Function
 ' なし
 '
 ' @Summary
-' ProcList、関数トレース、
-' 関数依存関係の解析を実行する
+' ProcList、NoCallerProcList、
+' FunctionTrace、
+' FunctionDependencyを生成する
 '
 ' @Remarks
-' gContextの妥当性確認後に
+' 解析コンテキスト確認後に
 ' 各解析処理を順次実行する
+'
+' 処理中は
+' StatusBarへ進捗を表示する
 '
 Public Sub AnalyzeAll()
 
@@ -243,12 +247,26 @@ Public Function CheckTargetBook( _
 End Function
 
 '===================================================================
-'@JPName     クリップボードコピー
-'@Category   UI支援
-'@Input      Text(String)
-'@Output     なし
-'@Summary    指定文字列をクリップボードへコピーする
-'@Remarks    Unicode形式でコピーする
+' @JPName
+' クリップボードコピー
+'
+' @Category
+' Utility
+'
+' @Input
+' Text(String)
+'
+' @Output
+' なし
+'
+' @Summary
+' 指定文字列を
+' クリップボードへコピーする
+'
+' @Remarks
+' Unicode形式で
+' コピーを行う
+'
 '===================================================================
 Public Sub CopyTextToClipboard(Text As String)
 
@@ -333,7 +351,7 @@ Public Function GetTagValue( _
         txt = Trim$(txt)
 
         '==========================
-        ' 旧形式
+        '# 旧形式タグ取得
         ' '@JPName 〇〇
         '==========================
         '# 旧形式タグ検索
@@ -355,7 +373,7 @@ Public Function GetTagValue( _
             End If
 
             '==========================
-            ' 新形式
+            '# 新形式タグ
             ' @JPName
             ' ○○○
             '==========================
@@ -421,8 +439,17 @@ End Function
 ' 指定タグの値を取得する
 '
 ' @Remarks
-' 指定Procedure宣言部直前の
-' コメントタグを検索する
+' Procedure宣言直前の
+' コメントブロックを検索する
+'
+' 新形式コメント
+'   '@JPName
+'   '説明
+'
+' に対応する
+'
+' 該当タグが存在しない場合は
+' 空文字列を返す
 '
 Public Function GetTagValueFromCode( _
         ByVal CodeText As String, _
@@ -511,7 +538,19 @@ End Function
 ' 指定プロシージャの情報を取得する
 '
 ' @Remarks
-' 情報が存在しない場合はNothingを返す
+' ProcListシートを検索し
+' JPName
+' Category
+' Input
+' Output
+' Summary
+' Remarks
+'
+' を取得する
+'
+' 一致するProcedureが
+' 存在しない場合は
+' Nothingを返却する
 '
 Public Function GetProcInfo( _
                 ByVal ProcName As String) _
@@ -638,10 +677,23 @@ End Function
 ' 呼出構文が存在するか判定する
 '
 ' @Remarks
-' Call文
-' Function呼出
-' Sub単独呼出
-' に対応する
+' 以下の呼出形式を判定対象とする
+'
+' Call Proc()
+' Proc()
+' Proc Arg1
+' Module.Proc()
+' Object.Method()
+' Not Proc
+' If Proc Then
+'
+' Procedure宣言行および
+' コメント行は除外する
+'
+' Function戻り値代入
+'   Proc = Value
+'
+' は呼出対象外とする
 '
 Public Function IsFunctionCall( _
         ByVal LineText As String, _
