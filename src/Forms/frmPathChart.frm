@@ -136,7 +136,10 @@ Private Sub cmbStartProc_Change()
     If ProcName = "" Then Exit Sub
 
     '# Procedureî•ñæ“¾
-    Set Proc = GetProcInfo(ProcName)
+    Set Proc = _
+        ResolveProcedure( _
+            "", _
+            ProcName)
     
     '# Procedureî•ñ•\¦
     If Not Proc Is Nothing Then

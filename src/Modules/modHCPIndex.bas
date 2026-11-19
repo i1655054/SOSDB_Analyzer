@@ -770,6 +770,15 @@ Public Sub WriteHtmlHeader( _
     Print #FileNo, _
         "<style>"
 
+    '# コメント色付け
+    Print #FileNo, _
+        ".hcp-comment{" & _
+        "color:#008000;" & _
+        "font-style:italic;" & _
+        "white-space:pre;" & _
+        "}"
+
+
     '# Body
     Print #FileNo, _
         "body{font-family:Meiryo;font-size:9pt;}"

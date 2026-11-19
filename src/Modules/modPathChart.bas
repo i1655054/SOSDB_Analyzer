@@ -625,7 +625,9 @@ Private Sub DrawCallTreeShape( _
             '# Procedureî•ñæ“¾
             '====================
             Set Proc = _
-                GetProcInfo(ChildFunc)
+                ResolveProcedure( _
+                    ParentModule, _
+                    ChildFunc)
 
             If Not Proc Is Nothing Then
 
@@ -956,7 +958,10 @@ Private Function BuildCaptionText( _
     Dim CaptionText As String
 
     '# Procedureî•ñæ“¾
-    Set Proc = GetProcInfo(ProcName)
+    Set Proc = _
+        ResolveProcedure( _
+            "", _
+            ProcName)
 
     '# ƒm[ƒh•\¦•¶š—ñ‰Šú‰»
     CaptionText = ProcName
@@ -1854,7 +1859,10 @@ Public Sub UpdateCurrentNodeInfo( _
     Dim Proc As clsProcInfo
 
     '# Procedureî•ñæ“¾
-    Set Proc = GetProcInfo(ProcName)
+    Set Proc = _
+        ResolveProcedure( _
+            "", _
+            ProcName)
     
     On Error Resume Next
 

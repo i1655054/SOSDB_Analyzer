@@ -3642,3 +3642,113 @@ Public Sub DeleteSheetIfExists( _
     Application.DisplayAlerts = True
 
 End Sub
+
+'===================================================================
+' @JPName
+' RenderText生成
+'
+' @Category
+' HCP
+'
+' @Input
+' HCPNodes(Collection)
+'
+' @Output
+' Node.RenderText
+'
+' @Summary
+' HCPノードの表示文字列を生成する
+'
+' @Remarks
+' TXT出力、
+' HTML出力、
+' HCPChart出力で共通利用する
+'
+' ノード種別に応じて
+' RenderTextを生成する
+'===================================================================
+Public Sub BuildRenderText( _
+                ByVal HCPNodes As Collection)
+
+    '# RenderText生成開始
+    BuildRenderNode _
+        HCPNodes, _
+        0, _
+        "　　"
+
+End Sub
+
+'===================================================================
+' @JPName
+' RenderNode生成
+'
+' @Category
+' HCP
+'
+' @Input
+' HCPNodes(Collection)
+' ParentID(Long)
+' Prefix(String)
+'
+' @Output
+' Node.RenderText
+'
+' @Summary
+' HCP表示文字列を生成する
+'
+' @Remarks
+' シート出力は行わない
+'
+' RenderTextのみ生成する
+'===================================================================
+Private Sub BuildRenderNode( _
+                ByVal HCPNodes As Collection, _
+                ByVal ParentID As Long, _
+                ByVal Prefix As String)
+
+    Dim Node As clsHCPNode
+
+    For Each Node In HCPNodes
+
+        If Node.ParentID = ParentID Then
+
+            Select Case Node.NodeType
+
+                Case NODE_START
+
+                    Node.RenderText = _
+                        "〇│" & _
+                        Node.Text
+
+                Case NODE_COMMENT
+
+                    Node.RenderText = _
+                        Prefix & _
+                        "│#  " & _
+                        Node.Text
+
+                Case NODE_DECLARE
+
+                    Node.RenderText = _
+                        Prefix & _
+                        "□ " & _
+                        GetDisplayText( _
+                            Node, _
+                            Prefix)
+
+                Case Else
+
+                    BuildRenderControlNode _
+                        HCPNodes, _
+                        Node, _
+                        Prefix
+
+            End Select
+
+        End If
+
+    Next Node
+
+End Sub
+
+

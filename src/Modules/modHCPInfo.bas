@@ -422,6 +422,7 @@ Public Function GetModuleProcedureList( _
 
 End Function
 
+
 '===================================================================
 ' @JPName
 ' 呼出元一覧取得
@@ -441,12 +442,12 @@ End Function
 '
 ' @Remarks
 ' FunctionDependencyシートを検索し
-' 指定Procedureを呼び出している
-' Procedure一覧を返却する
+' 呼出元Procedure一覧を返却する
+'
+' 同一Procedureは重複除外する
 '
 ' 呼出元が存在しない場合は
 ' 空Collectionを返却する
-'
 '===================================================================
 Public Function GetCalledByList( _
                 ByVal ProcName As String) _
@@ -455,7 +456,10 @@ Public Function GetCalledByList( _
     '# 結果
     Dim Result As Collection
 
-    '# ProcList
+    '# 重複除外用
+    Dim Dic As Object
+
+    '# FunctionDependency
     Dim ws As Worksheet
 
     '# 最終行
@@ -467,38 +471,175 @@ Public Function GetCalledByList( _
     '# 呼出元
     Dim Caller As String
 
+    '# Dictionary走査用
+    Dim V As Variant
+
     Set Result = New Collection
 
+    Set Dic = _
+        CreateObject("Scripting.Dictionary")
+
+    '# FunctionDependency取得
     Set ws = _
         gContext.ManagementBook.Worksheets( _
             SHEET_FUNCTION_DEPENDENCY)
 
+    '# 最終行取得
     LastRow = _
         ws.Cells( _
             ws.Rows.Count, _
             1).End(xlUp).row
 
+    '# 呼出元探索
     For r = 2 To LastRow
 
+        '# 呼出先一致確認
         If StrComp( _
-                Trim$(ws.Cells(r, 2).Value), _
+                Trim$(ws.Cells(r, 3).Value), _
                 ProcName, _
                 vbTextCompare) = 0 Then
 
+            '# 呼出元取得
             Caller = _
-                Trim$( _
-                    ws.Cells(r, 1).Value)
+                Trim$(ws.Cells(r, 1).Value)
 
-            Result.Add _
-                Caller
+            If Caller <> "" Then
+
+                '# 重複除外登録
+                If Not Dic.Exists(Caller) Then
+
+                    Dic.Add _
+                        Caller, _
+                        True
+
+                End If
+
+            End If
 
         End If
 
     Next r
 
-    Set GetCalledByList = _
-        Result
+    '# Collectionへ変換
+    For Each V In Dic.Keys
+
+        Result.Add CStr(V)
+
+    Next V
+
+    '# 呼出元一覧返却
+    Set GetCalledByList = Result
 
 End Function
+
+'===================================================================
+' @JPName
+' 呼出先一覧取得
+'
+' @Category
+' HCP
+'
+' @Input
+' ProcName : Procedure名
+'
+' @Output
+' Collection
+'
+' @Summary
+' 指定Procedureが呼び出している
+' Procedure一覧を取得する
+'
+' @Remarks
+' FunctionDependencyシートを検索し
+' 呼出先Procedure一覧を返却する
+'
+' 同一Procedureは重複除外する
+'
+' 呼出先が存在しない場合は
+' 空Collectionを返却する
+'===================================================================
+Public Function GetCallList( _
+                ByVal ProcName As String) _
+                As Collection
+
+    '# 結果
+    Dim Result As Collection
+
+    '# 重複除外
+    Dim Dic As Object
+
+    '# FunctionDependency
+    Dim ws As Worksheet
+
+    '# 最終行
+    Dim LastRow As Long
+
+    '# 行番号
+    Dim r As Long
+
+    '# 呼出先
+    Dim Callee As String
+
+    '# Dictionary走査用
+    Dim V As Variant
+
+    Set Result = New Collection
+
+    Set Dic = _
+        CreateObject("Scripting.Dictionary")
+
+    '# FunctionDependency取得
+    Set ws = _
+        gContext.ManagementBook.Worksheets( _
+            SHEET_FUNCTION_DEPENDENCY)
+
+    '# 最終行取得
+    LastRow = _
+        ws.Cells( _
+            ws.Rows.Count, _
+            1).End(xlUp).row
+
+    '# 呼出先探索
+    For r = 2 To LastRow
+
+        '# 呼出元一致確認
+        If StrComp( _
+                Trim$(ws.Cells(r, 1).Value), _
+                ProcName, _
+                vbTextCompare) = 0 Then
+
+            '# 呼出先取得
+            Callee = _
+                Trim$(ws.Cells(r, 3).Value)
+
+            If Callee <> "" Then
+
+                '# 重複除外登録
+                If Not Dic.Exists(Callee) Then
+
+                    Dic.Add _
+                        Callee, _
+                        True
+
+                End If
+
+            End If
+
+        End If
+
+    Next r
+
+    '# Collection化
+    For Each V In Dic.Keys
+
+        Result.Add CStr(V)
+
+    Next V
+
+    '# 呼出先一覧返却
+    Set GetCallList = Result
+
+End Function
+
 
 

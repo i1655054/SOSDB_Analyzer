@@ -521,93 +521,63 @@ End Function
 ' ProcList参照
 '==================================================
 
+'===================================================================
 ' @JPName
-' 関数情報取得
+' Procedure情報取得
 '
 ' @Category
-' Analyze
+' ProcedureRepository
 '
 ' @Input
+' ModuleName(String)
 ' ProcName(String)
 '
 ' @Output
-' clsProcInfo
+' ProcInfo(clsProcInfo)
 '
 ' @Summary
-' ProcListシートから
-' 指定プロシージャの情報を取得する
+' ModuleNameおよびProcNameから
+' Procedure情報を取得する
 '
 ' @Remarks
-' ProcListシートを検索し
-' JPName
-' Category
-' Input
-' Output
-' Summary
-' Remarks
+' ProcedureRepositoryを利用して
+' Procedure情報を取得する
 '
-' を取得する
-'
-' 一致するProcedureが
-' 存在しない場合は
+' Procedure未登録時は
 ' Nothingを返却する
-'
+'===================================================================
+' 削除予定
 Public Function GetProcInfo( _
+                ByVal ModuleName As String, _
                 ByVal ProcName As String) _
                 As clsProcInfo
-    
-    ' ProcListシート
-    Dim ws As Worksheet
-    
-    ' 最終行
-    Dim LastRow As Long
-    
-    ' 行Index
-    Dim r As Long
 
-    ' Procedure情報
-    Dim Proc As clsProcInfo
+    ' Procedure検索キー
+    Dim Key As String
 
+    '# Context確認
     If gContext Is Nothing Then Exit Function
-    
-    '# ProcListシート取得
-    Set ws = gContext.ManagementBook.Worksheets(SHEET_PROC_LIST)
 
-    LastRow = ws.Cells(ws.Rows.Count, "C").End(xlUp).row
+    '# Procedure名確認
+    If Trim$(ProcName) = "" Then Exit Function
 
-    '# ProcList走査
-    For r = 2 To LastRow
+    '# Repository初期化
+    InitializeProcedureRepository
 
-        '# Procedure一致確認
-        If StrComp( _
-                Trim$(ws.Cells(r, COL_PROC).Value), _
-                ProcName, _
-                vbTextCompare) = 0 Then
+    If gContext.ProcInfoDic Is Nothing Then Exit Function
 
-            '# Procedure情報生成
-            Set Proc = New clsProcInfo
-            
-            Proc.ModuleName = ws.Cells(r, COL_MODULE).Value
+    '# Procedure検索キー生成
+    Key = _
+        ModuleName & "|" & _
+        ProcName
 
-            Proc.ProcName = ProcName
+    '# Procedure情報取得
+    If gContext.ProcInfoDic.Exists(Key) Then
 
-            Proc.JPName = ws.Cells(r, COL_JPNAME).Value
-            Proc.Category = ws.Cells(r, COL_CATEGORY).Value
+        Set GetProcInfo = _
+            gContext.ProcInfoDic(Key)
 
-            Proc.InputText = ws.Cells(r, COL_INPUT).Value
-            Proc.OutputText = ws.Cells(r, COL_OUTPUT).Value
-
-            Proc.Summary = ws.Cells(r, COL_SUMMARY).Value
-            Proc.Remarks = ws.Cells(r, COL_REMARKS).Value
-
-            '# Procedure情報返却
-            Set GetProcInfo = Proc
-
-            Exit Function
-
-        End If
-
-    Next r
+    End If
 
 End Function
 

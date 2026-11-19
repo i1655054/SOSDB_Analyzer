@@ -331,7 +331,10 @@ Public Function CreateTreeNode( _
     ' Procedureî•ñ
     '--------------------------
     '# Procedureî•ñæ“¾
-    Set Proc = GetProcInfo(ProcName)
+    Set Proc = _
+        ResolveProcedure( _
+            "", _
+            ProcName)
 
     '# ProcedureÚ×î•ñİ’è
     If Not Proc Is Nothing Then
