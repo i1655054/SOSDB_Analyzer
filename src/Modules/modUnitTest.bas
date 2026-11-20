@@ -143,7 +143,7 @@ End Sub
 Public Sub Test()
 
     '# ④ EXIT系
-    If A Then
+    If FuncA Then
 
         Exit Sub
 
@@ -157,7 +157,7 @@ Public Sub TestSub()
 
 Retry:
 
-    If A Then
+    If FuncA Then
 
         GoTo Retry
 
@@ -177,6 +177,9 @@ End Sub
 
 Public Sub Test2()
 
+     Dim i As Integer
+     Dim x As Integer
+
     '# ③ FOR → SELECT → IF
     For i = 1 To 3
 
@@ -184,9 +187,9 @@ Public Sub Test2()
 
             Case 1
 
-                If A Then
+                If FuncA Then
 
-                    Call Proc1
+                    Call FuncA
 
                 End If
 
@@ -198,21 +201,23 @@ End Sub
 
 Public Sub Test3()
 
+     Dim x As Integer
+    
     '# ② CASEの中にIF
 
     Select Case x
 
         Case 1
 
-            If A Then
+            If FuncA Then
 
-                Call Proc1
+                Call FuncA
 
             End If
 
         Case 2
 
-            Call Proc2
+            Call FuncA
 
     End Select
 
@@ -226,15 +231,19 @@ Public Sub Test4()
 
     '# ① FOR × IF × ELSE（最優先）
     '# Public Sub Test_ForIf()
+    
+    Dim i As Integer
+    Dim A As String
+    
     For i = 1 To 3
 
         If A Then
 
-            Call Proc1
+            Call FuncA
 
         Else
 
-            Call Proc2
+            Call FuncA
 
         End If
 
@@ -244,6 +253,8 @@ End Sub
 
 Public Sub Test_For()
 
+     Dim i As Integer
+    
     '# FOR開始コメント
 
     For i = 1 To 3
@@ -258,31 +269,32 @@ End Sub
 
 Public Sub Test_If()
 
+    Dim A As String
     '# IF前コメント
 
     If A Then
 
         '# TRUEコメント
 
-        Call Proc1
+        Call FuncA
 
     Else
 
         '# FALSEコメント
 
-        Call Proc2
-
+        Call FuncA
     End If
 
 End Sub
 
 Public Sub Test_Do()
 
+    Dim A As String
     Do While A
 
         '# DOコメント
 
-        Call Proc1
+        Call FuncA
 
     Loop
 
@@ -290,6 +302,7 @@ End Sub
 
 Public Sub Test_With()
 
+    Dim Obj
     With Obj
 
         '# WITHコメント
@@ -302,11 +315,12 @@ End Sub
 
 Public Sub Test_While()
 
+    Dim A As String
     While A
 
         '# WHILEコメント
 
-        Call Proc1
+        Call FuncA
 
     Wend
 
@@ -314,19 +328,20 @@ End Sub
 
 Public Sub Test_Select()
 
+     Dim x As Integer
     Select Case x
 
         Case 1
 
             '# CASE1
 
-            Call Proc1
+            Call FuncA
 
         Case 2
 
             '# CASE2
 
-            Call Proc2
+            Call FuncA
 
     End Select
 
@@ -338,7 +353,7 @@ Public Sub Test_Compile()
 
     '# COMPILEコメント
 
-    Call Proc1
+    Call FuncA
 
 #End If
 
@@ -346,19 +361,108 @@ End Sub
 
 Public Sub Test_IfElseIf()
 
-    If A Then
+    Dim Value As Long
 
-        Call Proc1
+    If Value = 1 Then
 
-    ElseIf B Then
+        Call ProcA
 
-        Call Proc2
+    ElseIf Value = 2 Then
+
+        Call ProcB
 
     Else
 
-        Call Proc3
+        Call ProcC
 
     End If
+
+End Sub
+
+Public Sub Test_ForIf()
+
+    Dim i As Long
+
+    For i = 1 To 10
+
+        If i Mod 2 = 0 Then
+
+            Call ProcA
+
+        Else
+
+            Call ProcB
+
+        End If
+
+    Next i
+
+End Sub
+
+Public Sub Test_SelectIf()
+
+    Dim Value As Long
+
+    Select Case Value
+
+        Case 1
+
+            If Value > 0 Then
+
+                Call ProcA
+
+            End If
+
+        Case 2
+
+            Call ProcB
+
+        Case Else
+
+            Call ProcC
+
+    End Select
+
+End Sub
+
+Public Sub Test_Do2()
+
+    Dim Value As Long
+
+    Do While Value < 10
+
+        Call ProcA
+
+        Value = Value + 1
+
+    Loop
+
+End Sub
+
+Public Sub Test_With2()
+
+    With ActiveSheet
+
+        .Name = "TEST"
+
+        Call ProcA
+
+    End With
+
+End Sub
+
+
+Public Sub Test_Compile2()
+
+#If VBA7 Then
+
+    Call ProcA
+
+#Else
+
+    Call ProcB
+
+#End If
 
 End Sub
 

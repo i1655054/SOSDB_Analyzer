@@ -9,6 +9,12 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Explicit
 
+' HCP表示列幅
+Private Const HCP_COL_WIDTH As Double = 120
+
+' 業務説明列幅
+Private Const BUSINESS_COL_WIDTH As Double = 40
+
 '===================================================================
 ' @JPName
 ' Excelレンダラ
@@ -62,13 +68,31 @@ Public Sub Export( _
     ' HCPノード
     Dim Node As clsHCPNode
 
+    ' 開始ノード
+    Dim StartNode As clsHCPNode
+
     ' Procedure情報
     Dim ProcInfo As clsProcInfo
+
+    On Error Resume Next
 
     '# HCPChart取得
     Set mWorksheet = _
         gContext.ManagementBook.Worksheets( _
             SHEET_HCP_CHART)
+
+    On Error GoTo 0
+
+    '# HCPChart作成
+    If mWorksheet Is Nothing Then
+
+        Set mWorksheet = _
+            gContext.ManagementBook.Worksheets.Add
+
+        mWorksheet.Name = _
+            SHEET_HCP_CHART
+
+    End If
 
     '# Procedure情報取得
     Set ProcInfo = _
@@ -76,37 +100,93 @@ Public Sub Export( _
             ModuleName, _
             ProcName)
 
+    '# STARTノード取得
+    For Each Node In HCPNodes
+
+        If Node.NodeType = NODE_START Then
+
+            Set StartNode = Node
+
+            Exit For
+
+        End If
+
+    Next Node
+
     '# HCPChart初期化
     mWorksheet.Cells.Clear
 
-    '# ヘッダ出力
-    mWorksheet.Cells(1, 1).Value = _
-        "Procedure: " & _
-        ModuleName & "." & _
-        ProcName
+    '# Procedureヘッダ出力
+    If Not ProcInfo Is Nothing Then
 
-    mWorksheet.Cells(2, 1).Value = _
-        "HCP"
+        mWorksheet.Cells(1, 1).Value = _
+            "Procedure: " & _
+            ModuleName & "." & _
+            ProcName & _
+            "  [ " & _
+            ProcInfo.JPName & _
+            "＜" & _
+            ProcInfo.ModuleName & _
+            "＞ ]"
 
-    mWorksheet.Cells(2, 2).Value = _
-        "Business"
+    Else
+
+        mWorksheet.Cells(1, 1).Value = _
+            "Procedure: " & _
+            ModuleName & "." & _
+            ProcName
+
+    End If
+
+    '# HCPヘッダ出力
+    mWorksheet.Cells(2, 1).Value = "HCP"
+    mWorksheet.Cells(2, 2).Value = "Business"
 
     mRowOut = 3
 
-    '# START記号出力
+    '# 開始記号出力
     mWorksheet.Cells(mRowOut, 1).Value = "┬"
 
     mRowOut = mRowOut + 1
 
-    '# HCPNode出力
+    '# STARTノード出力
+    If Not StartNode Is Nothing Then
+
+        Call OutputNode(StartNode)
+
+    End If
+
+    '# HCP開始終了
+    mWorksheet.Cells(mRowOut, 1).Value = "┴└┐"
+
+    mRowOut = mRowOut + 1
+
+    '# HCPノード出力
     For Each Node In HCPNodes
+
+        '# STARTノードは出力済
+        If Node.NodeType = NODE_START Then
+
+            GoTo ContinueLoop
+
+        End If
 
         Call OutputNode(Node)
 
+ContinueLoop:
+
     Next Node
 
-    '# 書式設定
+    '# HCPChart体裁設定
     mWorksheet.Columns("A:B").AutoFit
+
+    mWorksheet.Columns("A").ColumnWidth = _
+        HCP_COL_WIDTH
+
+    mWorksheet.Columns("B").ColumnWidth = _
+        BUSINESS_COL_WIDTH
+
+    mWorksheet.Columns("A").WrapText = True
 
 End Sub
 

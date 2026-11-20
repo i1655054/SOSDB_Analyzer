@@ -496,17 +496,6 @@ Private Function ExtractCallNames( _
     End If
 
     '----------------------------------
-    '# CALL‰ğÍ‘ÎÛ”»’è
-    '----------------------------------
-    If GetNodeType(LineText) <> NODE_NORMAL Then
-
-        Set ExtractCallNames = Names
-
-        Exit Function
-
-    End If
-
-    '----------------------------------
     '# “o˜^Procedure’Tõ
     '----------------------------------
     For Each Key In FuncList.Keys
@@ -774,6 +763,20 @@ Public Function AnalyzeProcedure( _
                 CStr(LineText), _
                 FuncList)
 
+If InStr(1, _
+        CStr(LineText), _
+        "FP_InitAboutCalendar", _
+        vbTextCompare) > 0 Then
+
+    Debug.Print _
+        "Line=" & CStr(LineText)
+
+    Debug.Print _
+        "CallNames.Count=" & _
+        CallNames.Count
+
+End If
+
         InternalCalls = ""
 
         If CallNames.Count > 0 Then
@@ -920,6 +923,13 @@ Public Function AnalyzeProcedure( _
             Node.ProcName = ProcName
             Node.ModuleName = ModuleName
             Node.NodeType = NodeType
+
+            If CallNames.Count > 0 Then
+
+                Node.InternalCalls = _
+                    JoinCollection(CallNames)
+
+            End If
 
             Node.SourceLine = _
                 Trim$(CStr(LineText))
@@ -1172,6 +1182,62 @@ NextLine:
 
     '# ProcNodeˆê——•Ô‹p
     Set AnalyzeProcedure = Nodes
+
+End Function
+
+'===================================================================
+' @JPName
+' Collection˜AŒ‹
+'
+' @Category
+' ProcAnalyzer
+'
+' @Input
+' Values(Collection)
+'
+' @Output
+' Text(String)
+'
+' @Summary
+' Collection—v‘f‚ğ
+' ƒJƒ“ƒ}‹æØ‚è•¶š—ñ‚Ö•ÏŠ·‚·‚é
+'
+' @Remarks
+' Collection“à‚Ì—v‘f‚ğ
+' ’Ç‰Á‡‚É˜AŒ‹‚µ‚Ä•Ô‹p‚·‚é
+'
+' ‹óCollection‚Ìê‡‚Í
+' ‹ó•¶š—ñ‚ğ•Ô‹p‚·‚é
+'===================================================================
+Private Function JoinCollection( _
+                ByVal Values As Collection) _
+                As String
+
+    ' Collection—v‘f
+    Dim V As Variant
+
+    ' ˜AŒ‹Œ‹‰Ê
+    Dim Result As String
+
+    '# Collection‘–¸
+    For Each V In Values
+
+        If Result <> "" Then
+
+            Result = _
+                Result & ","
+
+        End If
+
+        Result = _
+            Result & _
+            CStr(V)
+
+    Next V
+
+    '# ˜AŒ‹Œ‹‰Ê•Ô‹p
+    JoinCollection = _
+        Result
 
 End Function
 

@@ -751,7 +751,9 @@ Public Sub WriteHtmlHeader( _
 
     '# HTML開始
     Print #FileNo, "<!DOCTYPE html>"
-    Print #FileNo, "<html>"
+    
+    '# 日本語ページ指定
+    Print #FileNo, "<html lang=""ja"">"
 
     '# HEAD開始
     Print #FileNo, "<head>"
@@ -759,6 +761,18 @@ Public Sub WriteHtmlHeader( _
     '# 文字コード
     Print #FileNo, _
         "<meta charset=""shift_jis"">"
+    
+    '# Google翻訳抑止
+    Print #FileNo, _
+        "<meta name=""google"" content=""notranslate"">"
+
+    '# 電話番号リンク化抑止
+    Print #FileNo, _
+        "<meta name=""format-detection"" content=""telephone=no"">"
+    
+    '# ブラウザ言語指定
+    Print #FileNo, _
+        "<meta http-equiv=""Content-Language"" content=""ja"">"
 
     '# タイトル
     Print #FileNo, _
@@ -769,6 +783,12 @@ Public Sub WriteHtmlHeader( _
     '# CSS開始
     Print #FileNo, _
         "<style>"
+
+    '# 翻訳抑止
+    Print #FileNo, _
+        ".notranslate{" & _
+        "translate:no;" & _
+        "}"
 
     '# コメント色付け
     Print #FileNo, _
@@ -820,7 +840,7 @@ Public Sub WriteHtmlHeader( _
 
     '# BODY開始
     Print #FileNo, _
-        "<body>"
+        "<body translate=""no"">"
 
 End Sub
 

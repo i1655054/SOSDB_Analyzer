@@ -25,7 +25,8 @@ Option Explicit
 ' 関数トレースシートを作成する
 '
 ' @Remarks
-' 全標準モジュールを解析し
+' 解析対象モジュールを走査し
+'
 ' 呼出元Procedure
 ' 呼出先Procedure
 ' 呼出元モジュール
@@ -34,6 +35,13 @@ Option Explicit
 ' Summary
 '
 ' をFunctionTraceシートへ出力する
+'
+' 標準モジュール
+' クラスモジュール
+' UserForm
+' シートモジュール
+'
+' を解析対象とする
 '
 ' 出力後は確認支援用の
 ' 入力規則および条件付き書式を設定する
@@ -115,9 +123,8 @@ Public Sub FunctionTrace()
     '# Procedure一覧収集
     For Each VBComp In gContext.TargetBook.VBProject.VBComponents
 
-        '# 標準モジュールのみ解析
-        ' VBEXT_CT_STDMODULE = 1
-        If VBComp.Type = 1 Then
+        '# FunctionTrace対象判定
+        If IsTraceTargetModule(VBComp) Then
 
             If VBComp.CodeModule.CountOfLines > 0 Then
 
@@ -158,9 +165,8 @@ Public Sub FunctionTrace()
 
         DoEvents
         
-        ' 標準モジュールのみ対象
-        ' VBEXT_CT_STDMODULE = 1
-        If VBComp.Type = 1 Then
+        '# FunctionTrace対象判定
+        If IsTraceTargetModule(VBComp) Then
             
             If VBComp.CodeModule.CountOfLines > 0 Then
         
@@ -189,6 +195,79 @@ Public Sub FunctionTrace()
     wsOut.Columns.AutoFit
 
 End Sub
+
+
+'===================================================================
+' @JPName
+' FunctionTrace対象判定
+'
+' @Category
+' FunctionTrace
+'
+' @Input
+' VBComp(Object)
+'
+' @Output
+' Boolean
+'
+' @Summary
+' FunctionTrace解析対象の
+' VBAコンポーネントか判定する
+'
+' @Remarks
+' ProcListと同一対象とするため
+'
+' 標準モジュール
+' クラスモジュール
+' UserForm
+' シートモジュール
+'
+' を解析対象とする
+'===================================================================
+Private Function IsTraceTargetModule( _
+                ByVal VBComp As Object) _
+                As Boolean
+
+    '-----------------------------
+    '# コンポーネント種別判定
+    '-----------------------------
+    Select Case VBComp.Type
+
+        '-------------------------
+        '# 標準モジュール
+        '-------------------------
+        ' vbext_ct_StdModule = 1
+        Case 1
+
+            IsTraceTargetModule = True
+
+        '-------------------------
+        '# クラスモジュール
+        '-------------------------
+        ' vbext_ct_ClassModule = 2
+        Case 2
+
+            IsTraceTargetModule = True
+
+        '-------------------------
+        '# UserForm
+        '-------------------------
+        ' vbext_ct_MSForm = 3
+        Case 3
+
+            IsTraceTargetModule = True
+
+        '-------------------------
+        '# シート/ThisWorkbook
+        '-------------------------
+        ' vbext_ct_Document = 100
+        Case 100
+
+            IsTraceTargetModule = True
+
+    End Select
+
+End Function
 
 '==================================================
 ' 関数一覧取得
@@ -637,5 +716,4 @@ Private Sub AddConditionColor( _
     fc.Interior.Color = FillColor
 
 End Sub
-
 

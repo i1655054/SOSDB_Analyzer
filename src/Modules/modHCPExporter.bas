@@ -317,7 +317,7 @@ Private Sub WriteHCPHtmlFile( _
 
     '# テーブル開始
     Print #FileNo, _
-        "<table>"
+        "<table class=""notranslate"">"
 
     '# 列定義
     Print #FileNo, _
@@ -484,103 +484,9 @@ End Sub
 '--------------------------------------------------
 ' HTML補助
 '--------------------------------------------------
-'===================================================================
-' @JPName
-' HTMLエンコード
-'
-' @Category
-' HTML
-'
-' @Input
-' Text(String)
-'
-' @Output
-' HtmlText(String)
-'
-' @Summary
-' HTML表示用に文字列を
-' エンコードする
-'
-' @Remarks
-' &, <, > をHTMLエンティティへ変換し
-' 改行は<br>へ変換する
-'===================================================================
-Private Function HtmlEncode( _
-                ByVal Text As String) _
-                As String
-                
-    HtmlEncode = Text
 
-    HtmlEncode = _
-        Replace(HtmlEncode, "&", "&amp;")
 
-    HtmlEncode = _
-        Replace(HtmlEncode, "<", "&lt;")
 
-    HtmlEncode = _
-        Replace(HtmlEncode, ">", "&gt;")
-
-    HtmlEncode = _
-        Replace(HtmlEncode, vbCrLf, "<br>")
-
-End Function
-
-'===================================================================
-' @JPName
-' ノードHTML文字列取得
-'
-' @Category
-' HCP
-'
-' @Input
-' Node : HCPノード
-'
-' @Output
-' HtmlText
-'
-' @Summary
-' ノード種別に応じた
-' HTML文字列を返却する
-'
-' @Remarks
-' HCP記号付与および
-' Procedureリンク化を行う
-'===================================================================
-Private Function GetNodeHtmlText( _
-                ByVal Node As clsHCPNode) _
-                As String
-
-    '# 描画対象ではないノードを除外
-    If Trim$(Node.RenderText) = "" Then
-
-        GetNodeHtmlText = ""
-
-        Exit Function
-
-    End If
-
-    Select Case Node.NodeType
-
-        Case NODE_CALL
-
-            GetNodeHtmlText = _
-                GetCallNodeHtml(Node)
-
-        Case NODE_COMMENT
-
-            GetNodeHtmlText = _
-                "<span class=""hcp-comment"">" & _
-                HtmlEncode(Node.RenderText) & _
-                "</span>"
-        
-        Case Else
-
-            GetNodeHtmlText = _
-                GetNormalNodeHtml(Node)
-
-    End Select
-
-End Function
 
 '===================================================================
 ' @JPName
@@ -611,7 +517,7 @@ End Function
 ' Procedure未登録時は
 ' Procedure名をそのまま返却する
 '===================================================================
-Private Function BuildProcedureLink( _
+Public Function BuildProcedureLink( _
                 ByVal ProcName As String) _
                 As String
 
@@ -652,296 +558,6 @@ Private Function BuildProcedureLink( _
 
 End Function
 
-'===================================================================
-' @JPName
-' CALLノードHTML取得
-'
-' @Category
-' HCP
-'
-' @Input
-' Node : HCPノード
-'
-' @Output
-' HtmlText
-'
-' @Summary
-' CALLノード用HTML文字列を返却する
-'
-' @Remarks
-' CallNameが設定されている場合は
-' Procedureリンクへ変換する
-'
-' CallName未設定時は
-' RenderTextをそのまま出力する
-'===================================================================
-Private Function GetCallNodeHtml( _
-                ByVal Node As clsHCPNode) _
-                As String
-
-    '# HTMLリンク
-    Dim LinkText As String
-
-    '# CallName未設定
-    If Trim$(Node.CallName) = "" Then
-
-        GetCallNodeHtml = _
-            HtmlEncode( _
-                Node.RenderText)
-
-        Exit Function
-
-    End If
-
-    '# Procedureリンク生成
-    LinkText = _
-        BuildProcedureLink( _
-            Node.CallName)
-
-    '# CALLノードHTML生成
-    GetCallNodeHtml = _
-        Replace( _
-            HtmlEncode( _
-                Node.RenderText), _
-            Node.CallName, _
-            LinkText)
-
-End Function
-
-'===================================================================
-' @JPName
-' 通常ノードHTML取得
-'
-' @Category
-' HCP
-'
-' @Input
-' Node : HCPノード
-'
-' @Output
-' HtmlText
-'
-' @Summary
-' 通常ノードのHTML文字列を返却する
-'
-' @Remarks
-' HCP記号を付与して返却する
-'===================================================================
-Private Function GetNormalNodeHtml( _
-                ByVal Node As clsHCPNode) _
-                As String
-
-
-        GetNormalNodeHtml = _
-            HtmlEncode( _
-                Node.RenderText)
-
-
-End Function
-
-'===================================================================
-' @JPName
-' Business継続プレフィックス取得
-'
-' @Category
-' HTML
-'
-' @Input
-' RenderText(String)
-'
-' @Output
-' Prefix(String)
-'
-' @Summary
-' Business複数行出力時の
-' HCP継続行プレフィックスを取得する
-'
-' @Remarks
-' HCP表示記号位置を基準に
-' 継続行表示用の
-' 「││」プレフィックスを生成する
-'
-'===================================================================
-Private Function GetBusinessPrefix( _
-                ByVal RenderText As String) _
-                As String
-
-    Dim Pos As Long
-
-    '# CALL記号検索
-    Pos = InStr( _
-                RenderText, _
-                "◎")
-
-    If Pos > 0 Then
-
-        GetBusinessPrefix = _
-            Left$( _
-                RenderText, _
-                Pos - 1) & _
-            "│"
-
-        Exit Function
-
-    End If
-
-    '# REFERENCE記号検索
-    Pos = InStr( _
-                RenderText, _
-                "◇")
-
-    If Pos > 0 Then
-
-        GetBusinessPrefix = _
-            Left$( _
-                RenderText, _
-                Pos - 1) & _
-            "│"
-
-        Exit Function
-
-    End If
-
-    '# NORMAL記号検索
-    Pos = InStr( _
-                RenderText, _
-                "〇")
-
-    If Pos > 0 Then
-
-        GetBusinessPrefix = _
-            Left$( _
-                RenderText, _
-                Pos - 1) & _
-            "│"
-
-        Exit Function
-
-    End If
-
-    '# DECLARE記号検索
-    Pos = InStr( _
-                RenderText, _
-                "□")
-
-    If Pos > 0 Then
-
-        GetBusinessPrefix = _
-            Left$( _
-                RenderText, _
-                Pos - 1) & _
-            "│"
-
-        Exit Function
-
-    End If
-
-    '# IF記号検索
-    Pos = InStr( _
-                RenderText, _
-                "◆")
-
-    If Pos > 0 Then
-
-        GetBusinessPrefix = _
-            Left$( _
-                RenderText, _
-                Pos - 1) & _
-            "│"
-
-        Exit Function
-
-    End If
-
-    '# FOR記号検索
-    Pos = InStr( _
-                RenderText, _
-                "＠")
-
-    If Pos > 0 Then
-
-        GetBusinessPrefix = _
-            Left$( _
-                RenderText, _
-                Pos - 1) & _
-            "│"
-
-        Exit Function
-
-    End If
-
-    '# 継続行生成不可
-    GetBusinessPrefix = "│"
-
-End Function
-
-'===================================================================
-' @JPName
-' Business HTML取得
-'
-' @Category
-' HTML
-'
-' @Input
-' Node(clsHCPNode)
-' BusinessText(String)
-'
-' @Output
-' HtmlText(String)
-'
-' @Summary
-' Business列用HTMLを生成する
-'
-' @Remarks
-' CALLノードは
-' Business列もProcedureリンク化する
-'===================================================================
-Private Function GetBusinessHtml( _
-                ByVal Node As clsHCPNode, _
-                ByVal BusinessText As String) _
-                As String
-
-    Dim HtmlPath As String
-
-    If Node.NodeType <> NODE_CALL Then
-
-        GetBusinessHtml = _
-            HtmlEncode(BusinessText)
-
-        Exit Function
-
-    End If
-
-    If Trim$(Node.CallName) = "" Then
-
-        GetBusinessHtml = _
-            HtmlEncode(BusinessText)
-
-        Exit Function
-
-    End If
-
-    HtmlPath = _
-        GetProcedureHtmlPath( _
-            Node.CallName)
-
-    If HtmlPath = "" Then
-
-        GetBusinessHtml = _
-            HtmlEncode(BusinessText)
-
-        Exit Function
-
-    End If
-
-    GetBusinessHtml = _
-        "<a href=""" & _
-        HtmlPath & _
-        """>" & _
-        HtmlEncode(BusinessText) & _
-        "</a>"
-
-End Function
 
 '===================================================================
 ' @JPName
@@ -1064,7 +680,7 @@ End Sub
 ' 呼出元が存在しない場合は
 ' 「呼出元なし」を出力する
 '===================================================================
-Private Sub WriteCalledByHtml( _
+Public Sub WriteCalledByHtml( _
                 ByVal FileNo As Integer, _
                 ByVal ProcName As String)
 
@@ -1284,7 +900,7 @@ End Sub
 ' 呼出先が存在しない場合は
 ' 「呼出先なし」を出力する
 '===================================================================
-Private Sub WriteCallsHtml( _
+Public Sub WriteCallsHtml( _
                 ByVal FileNo As Integer, _
                 ByVal ProcName As String)
 
@@ -1382,5 +998,231 @@ Private Sub WriteCallsHtml( _
     Print #FileNo, "</table>"
 
 End Sub
+
+
+'===================================================================
+' @JPName
+' ノードHTML文字列取得
+'
+' @Category
+' HCP
+'
+' @Input
+' Node : HCPノード
+'
+' @Output
+' HtmlText
+'
+' @Summary
+' ノード種別に応じた
+' HTML文字列を返却する
+'
+' @Remarks
+' HCP記号付与および
+' Procedureリンク化を行う
+'===================================================================
+Public Function GetNodeHtmlText( _
+                ByVal Node As clsHCPNode) _
+                As String
+
+    '# 描画対象ではないノードを除外
+    If Trim$(Node.RenderText) = "" Then
+
+        GetNodeHtmlText = ""
+
+        Exit Function
+
+    End If
+
+    Select Case Node.NodeType
+
+        Case NODE_CALL
+
+            GetNodeHtmlText = _
+                GetCallNodeHtml(Node)
+
+        Case NODE_COMMENT
+
+            GetNodeHtmlText = _
+                "<span class=""hcp-comment"">" & _
+                HtmlEncode(Node.RenderText) & _
+                "</span>"
+        
+        Case Else
+
+            GetNodeHtmlText = _
+                GetNormalNodeHtml(Node)
+
+    End Select
+
+End Function
+
+
+'===================================================================
+' @JPName
+' HTMLエンコード
+'
+' @Category
+' HTML
+'
+' @Input
+' Text(String)
+'
+' @Output
+' HtmlText(String)
+'
+' @Summary
+' HTML表示用に文字列を
+' エンコードする
+'
+' @Remarks
+' &, <, > をHTMLエンティティへ変換し
+' 改行は<br>へ変換する
+'===================================================================
+Private Function HtmlEncode( _
+                ByVal Text As String) _
+                As String
+                
+    HtmlEncode = Text
+
+    HtmlEncode = _
+        Replace(HtmlEncode, "&", "&amp;")
+
+    HtmlEncode = _
+        Replace(HtmlEncode, "<", "&lt;")
+
+    HtmlEncode = _
+        Replace(HtmlEncode, ">", "&gt;")
+
+    HtmlEncode = _
+        Replace(HtmlEncode, vbCrLf, "<br>")
+
+End Function
+
+
+'===================================================================
+' @JPName
+' CALLノードHTML取得
+'
+' @Category
+' HCP
+'
+' @Input
+' Node : HCPノード
+'
+' @Output
+' HtmlText
+'
+' @Summary
+' CALLノード用HTML文字列を返却する
+'
+' @Remarks
+' CallNameが設定されている場合は
+' Procedureリンクへ変換する
+'
+' CallName未設定時は
+' RenderTextをそのまま出力する
+'===================================================================
+Private Function GetCallNodeHtml( _
+                ByVal Node As clsHCPNode) _
+                As String
+
+    '# HTMLリンク
+    Dim LinkText As String
+
+    '# CallName未設定
+    If Trim$(Node.CallName) = "" Then
+
+        GetCallNodeHtml = _
+            HtmlEncode( _
+                Node.RenderText)
+
+        Exit Function
+
+    End If
+
+    '# Procedureリンク生成
+    LinkText = _
+        BuildProcedureLink( _
+            Node.CallName)
+
+    '# CALLノードHTML生成
+    GetCallNodeHtml = _
+        Replace( _
+            HtmlEncode( _
+                Node.RenderText), _
+            Node.CallName, _
+            LinkText)
+
+End Function
+
+
+'===================================================================
+' @JPName
+' Business HTML取得
+'
+' @Category
+' HTML
+'
+' @Input
+' Node(clsHCPNode)
+' BusinessText(String)
+'
+' @Output
+' HtmlText(String)
+'
+' @Summary
+' Business列用HTMLを生成する
+'
+' @Remarks
+' CALLノードは
+' Business列もProcedureリンク化する
+'===================================================================
+Private Function GetBusinessHtml( _
+                ByVal Node As clsHCPNode, _
+                ByVal BusinessText As String) _
+                As String
+
+    Dim HtmlPath As String
+
+    If Node.NodeType <> NODE_CALL Then
+
+        GetBusinessHtml = _
+            HtmlEncode(BusinessText)
+
+        Exit Function
+
+    End If
+
+    If Trim$(Node.CallName) = "" Then
+
+        GetBusinessHtml = _
+            HtmlEncode(BusinessText)
+
+        Exit Function
+
+    End If
+
+    HtmlPath = _
+        GetProcedureHtmlPath( _
+            Node.CallName)
+
+    If HtmlPath = "" Then
+
+        GetBusinessHtml = _
+            HtmlEncode(BusinessText)
+
+        Exit Function
+
+    End If
+
+    GetBusinessHtml = _
+        "<a href=""" & _
+        HtmlPath & _
+        """>" & _
+        HtmlEncode(BusinessText) & _
+        "</a>"
+
+End Function
 
 

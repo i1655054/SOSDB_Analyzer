@@ -562,6 +562,9 @@ Public Function GetCallList( _
                 ByVal ProcName As String) _
                 As Collection
 
+Debug.Print
+Debug.Print "GetCallList ProcName=" & ProcName
+
     '# Œ‹‰Ê
     Dim Result As Collection
 
@@ -607,6 +610,12 @@ Public Function GetCallList( _
                 Trim$(ws.Cells(r, 1).Value), _
                 ProcName, _
                 vbTextCompare) = 0 Then
+Debug.Print _
+            "Match:" & _
+            ws.Cells(r, 1).Value & _
+            " -> " & _
+            ws.Cells(r, 3).Value
+
 
             '# ŒÄoææ“¾
             Callee = _
