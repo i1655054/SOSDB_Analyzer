@@ -1,6 +1,6 @@
 # SOSDB Analyzer
 
-Current Version : v1.0.0
+Current Version : v2.0.0
 
 ---
 ## 概要
@@ -19,6 +19,10 @@ SOSDB問診票登録ツールのVBAソースコードを解析し、 プロシ�
 - PowerPoint出力
 - PNG出力
 - HCPチャート生成
+- HCP_TARGETS管理
+- HCP一括生成
+- hcp.txt出力
+- hcp.html出力
 
 ## Procedure一覧生成
 
@@ -122,7 +126,22 @@ PathChartをPowerPointファイルとして出力します。
 
 ## HCPチャート生成
 
-Procedure内部を解析し、業務フローチャート生成用データを構築します。
+Procedure内部を解析し、 HCP(Hierarchical Control Process)形式の 業務仕様書を生成します。
+
+生成物
+
+- hcp.txt
+- hcp.html
+- HCPChartシート
+
+対応機能
+
+- Calls一覧生成
+- Called By一覧生成
+- Procedureリンク生成
+- Business説明出力
+- HCP_TARGETS管理
+- HCP一括生成
 
 対応ノード
 
@@ -164,7 +183,11 @@ Class
 ├─ clsProcNode
 ├─ clsTreeNode
 ├─ clsHCPNode
-└─ clsToolInfo
+├─ clsToolInfo
+├─ clsTextRenderer
+├─ clsHtmlRenderer
+├─ clsExcelRenderer
+└─ clsHCPRenderBuilder
 ```
 
 # 処理フロー
@@ -211,6 +234,7 @@ PPTX / PNG
 ProcList
 関数トレース
 関数依存関係
+NoCallerProcList
 
 PathChart
 PathChartTree
@@ -218,7 +242,57 @@ PathChartTree
 ProcNodes
 HCPNodes
 HCPChart
+HCP_TARGETS (HCP一括生成管理)
 ```
+---
+## HCP_TARGETS管理
+
+HCP生成対象Procedureを管理します。
+
+機能
+
+- ProcListとの同期
+- Procedure追加
+- Procedure削除同期
+- HCP生成対象管理
+- HCP一括生成管理
+
+管理項目
+
+- Exec
+- ModuleName
+- ProcName
+- Status
+- LastUpdate
+- ErrorNo
+- ErrorMessage
+
+整合性確認
+
+- CheckHCPTargetIntegrity
+---
+## HCP生成手順
+
+単体生成
+
+解析実行 ↓ Procedure選択 ↓ HCP生成
+
+一括生成
+
+解析実行
+ ↓ 
+HCP_TARGETS更新
+ ↓ 
+Exec列へ Y 設定
+ ↓ 
+HCP一括生成
+
+生成結果は HCP_TARGETSへ記録される
+
+- Status
+- LastUpdate
+- ErrorNo
+- ErrorMessage
 
 ---
 
@@ -232,6 +306,34 @@ HCPChart
 - ManagementBook
 - ToolInfo
 - ProcedureRepository
+
+## HCPアーキテクチャ
+
+Procedure
+ ↓ 
+AnalyzeProcedure
+ ↓ 
+ProcNodes
+ ↓ 
+ConvertProcToHCP
+ ↓ 
+HCPNodes
+ ↓ 
+clsHCPRenderBuilder
+ ↓ 
+RenderText
+ ↓ 
+Renderer
+
+├─ clsTextRenderer
+├─ clsHtmlRenderer
+└─ clsExcelRenderer
+
+出力
+
+├─ hcp.txt
+├─ hcp.html
+└─ HCPChart
 
 ---
 
@@ -279,6 +381,25 @@ ProcListシートからProcedure情報をキャッシュし、高速検索を提
 - モデルクラス整理
 - コメント整備
 - 保守性改善
+
+## v2.0.0
+
+HCP生成機能の全面リファクタリング
+
+Renderer分離により Text / HTML / Excel出力をクラス化し 保守性および拡張性を改善
+
+主な変更点
+
+- clsTextRenderer追加
+- clsHtmlRenderer追加
+- clsExcelRenderer追加
+- clsHCPRenderBuilder追加
+- modHCPExporter廃止
+- HCP_TARGETS同期改善
+- CheckHCPTargetIntegrity追加
+- HCP一括生成安定化
+- 回帰テスト整備
+
 
 ---
 
