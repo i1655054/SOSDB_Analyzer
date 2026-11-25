@@ -1,144 +1,152 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
 <meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
 <title>GetUpdateCheckResult</title>
 <style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
 body{font-family:Meiryo;font-size:9pt;}
 table{border-collapse:collapse;}
-th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
 td{vertical-align:top;}
 th{background:#e8f0fe;}
-colgroup col:nth-of-type(1) {}
-colgroup col:nth-of-type(2) {}
-.resize {position: relative;}
-.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
 </style>
 </head>
-<body>
+<body translate="no">
 <h1>GetUpdateCheckResult</h1>
 <p>Module : modIssueMapper</p>
-<p><a href="./_INDEX.html">← Module Index</a></p>
 <table>
-<colgroup><col/><col/></colgroup>
-<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
 <tbody>
-<tr><td>Procedure: modIssueMapper.GetUpdateCheckResult  [ 更新差分判定＜modIssueMapper＞ ]</td><td></td></tr>
-<tr><td>HCP</td><td>Business</td></tr>
 <tr><td>┬</td><td></td></tr>
 <tr><td>〇│Public Function GetUpdateCheckResult(  ByVal newIssue As IssueInfo,  ByVal oldIssue As IssueInfo) As Long</td><td>更新差分判定＜modIssueMapper＞</td></tr>
 <tr><td>┴└┐</td><td></td></tr>
-<tr><td>　　│#  判定結果初期化</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   判定結果初期化</span></td><td></td></tr>
 <tr><td>　　□ Dim result As Long</td><td></td></tr>
 <tr><td>　　〇 result = 0</td><td></td></tr>
-<tr><td>　　│#  基本情報差分判定</td><td></td></tr>
-<tr><td>　　◆┐If IsChanged(newIssue.Subject, oldIssue.Subject) Then</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   基本情報差分判定</span></td><td></td></tr>
+<tr><td>　　◆┐If <a href="../modIssueMapper/IsChanged.modIssueMapper.hcp.html">IsChanged</a>(newIssue.Subject, oldIssue.Subject) Then</td><td>内部呼出:<a href="../modIssueMapper/IsChanged.modIssueMapper.hcp.html">IsChanged</a></td></tr>
 <tr><td>　　│〇 result = result Or flg_Subject_Name</td><td></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
-<tr><td>　　◆┐If IsChangedDescription(newIssue.Description, oldIssue.Description) Then</td><td></td></tr>
+<tr><td>　　◆┐If <a href="../modIssueMapper/IsChangedDescription.modIssueMapper.hcp.html">IsChangedDescription</a>(newIssue.Description, oldIssue.Description) Then</td><td>内部呼出:<a href="../modIssueMapper/IsChangedDescription.modIssueMapper.hcp.html">IsChangedDescription</a></td></tr>
 <tr><td>　　│〇 result = result Or flg_Description</td><td></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
-<tr><td>　　◆┐If IsChanged(newIssue.Status, oldIssue.Status) Then</td><td></td></tr>
+<tr><td>　　◆┐If <a href="../modIssueMapper/IsChanged.modIssueMapper.hcp.html">IsChanged</a>(newIssue.Status, oldIssue.Status) Then</td><td>内部呼出:<a href="../modIssueMapper/IsChanged.modIssueMapper.hcp.html">IsChanged</a></td></tr>
 <tr><td>　　│〇 result = result Or flg_Status_Name</td><td></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
-<tr><td>　　◆┐If IsChanged(newIssue.Priority, oldIssue.Priority) Then</td><td></td></tr>
+<tr><td>　　◆┐If <a href="../modIssueMapper/IsChanged.modIssueMapper.hcp.html">IsChanged</a>(newIssue.Priority, oldIssue.Priority) Then</td><td>内部呼出:<a href="../modIssueMapper/IsChanged.modIssueMapper.hcp.html">IsChanged</a></td></tr>
 <tr><td>　　│〇 result = result Or flg_Priority_Name</td><td></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
-<tr><td>　　◆┐If IsChanged(newIssue.AssignedTo, oldIssue.AssignedTo) Then</td><td></td></tr>
+<tr><td>　　◆┐If <a href="../modIssueMapper/IsChanged.modIssueMapper.hcp.html">IsChanged</a>(newIssue.AssignedTo, oldIssue.AssignedTo) Then</td><td>内部呼出:<a href="../modIssueMapper/IsChanged.modIssueMapper.hcp.html">IsChanged</a></td></tr>
 <tr><td>　　│〇 result = result Or flg_Assigned_to_Name</td><td></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
-<tr><td>　　◆┐If IsChanged(newIssue.targetVersion, oldIssue.targetVersion) Then</td><td></td></tr>
+<tr><td>　　◆┐If <a href="../modIssueMapper/IsChanged.modIssueMapper.hcp.html">IsChanged</a>(newIssue.targetVersion, oldIssue.targetVersion) Then</td><td>内部呼出:<a href="../modIssueMapper/IsChanged.modIssueMapper.hcp.html">IsChanged</a></td></tr>
 <tr><td>　　│〇 result = result Or flg_Target_Version</td><td></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
-<tr><td>　　│#  問診情報差分判定</td><td></td></tr>
-<tr><td>　　◆┐If IsChanged(newIssue.OccurrenceDateTime, oldIssue.OccurrenceDateTime) Then</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   問診情報差分判定</span></td><td></td></tr>
+<tr><td>　　◆┐If <a href="../modIssueMapper/IsChanged.modIssueMapper.hcp.html">IsChanged</a>(newIssue.OccurrenceDateTime, oldIssue.OccurrenceDateTime) Then</td><td>内部呼出:<a href="../modIssueMapper/IsChanged.modIssueMapper.hcp.html">IsChanged</a></td></tr>
 <tr><td>　　│〇 result = result Or flg_OccurrenceDateTime</td><td></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
-<tr><td>　　◆┐If IsChanged(newIssue.ProblemBuilding, oldIssue.ProblemBuilding) Then</td><td></td></tr>
+<tr><td>　　◆┐If <a href="../modIssueMapper/IsChanged.modIssueMapper.hcp.html">IsChanged</a>(newIssue.ProblemBuilding, oldIssue.ProblemBuilding) Then</td><td>内部呼出:<a href="../modIssueMapper/IsChanged.modIssueMapper.hcp.html">IsChanged</a></td></tr>
 <tr><td>　　│〇 result = result Or flg_ProblemBuilding</td><td></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
-<tr><td>　　◆┐If IsChanged(newIssue.HostName, oldIssue.HostName) Then</td><td></td></tr>
+<tr><td>　　◆┐If <a href="../modIssueMapper/IsChanged.modIssueMapper.hcp.html">IsChanged</a>(newIssue.HostName, oldIssue.HostName) Then</td><td>内部呼出:<a href="../modIssueMapper/IsChanged.modIssueMapper.hcp.html">IsChanged</a></td></tr>
 <tr><td>　　│〇 result = result Or flg_HostName</td><td></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
-<tr><td>　　◆┐If IsChanged(newIssue.Phenomenon, oldIssue.Phenomenon) Then</td><td></td></tr>
+<tr><td>　　◆┐If <a href="../modIssueMapper/IsChanged.modIssueMapper.hcp.html">IsChanged</a>(newIssue.Phenomenon, oldIssue.Phenomenon) Then</td><td>内部呼出:<a href="../modIssueMapper/IsChanged.modIssueMapper.hcp.html">IsChanged</a></td></tr>
 <tr><td>　　│〇 result = result Or flg_Phenomenon</td><td></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
-<tr><td>　　◆┐If IsChanged(newIssue.CauseDetail, oldIssue.CauseDetail) Then</td><td></td></tr>
+<tr><td>　　◆┐If <a href="../modIssueMapper/IsChanged.modIssueMapper.hcp.html">IsChanged</a>(newIssue.CauseDetail, oldIssue.CauseDetail) Then</td><td>内部呼出:<a href="../modIssueMapper/IsChanged.modIssueMapper.hcp.html">IsChanged</a></td></tr>
 <tr><td>　　│〇 result = result Or flg_Cause</td><td></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
-<tr><td>　　◆┐If IsChanged(newIssue.Mondainum_Pro, oldIssue.Mondainum_Pro) Then</td><td></td></tr>
+<tr><td>　　◆┐If <a href="../modIssueMapper/IsChanged.modIssueMapper.hcp.html">IsChanged</a>(newIssue.Mondainum_Pro, oldIssue.Mondainum_Pro) Then</td><td>内部呼出:<a href="../modIssueMapper/IsChanged.modIssueMapper.hcp.html">IsChanged</a></td></tr>
 <tr><td>　　│〇 result = result Or flg_Mondainum_Pro</td><td></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
-<tr><td>　　◆┐If IsChanged(newIssue.Remarks, oldIssue.Remarks) Then</td><td></td></tr>
+<tr><td>　　◆┐If <a href="../modIssueMapper/IsChanged.modIssueMapper.hcp.html">IsChanged</a>(newIssue.Remarks, oldIssue.Remarks) Then</td><td>内部呼出:<a href="../modIssueMapper/IsChanged.modIssueMapper.hcp.html">IsChanged</a></td></tr>
 <tr><td>　　│〇 result = result Or flg_Remarks</td><td></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
-<tr><td>　　◆┐If IsChanged(newIssue.Esukare_Date, oldIssue.Esukare_Date) Then</td><td></td></tr>
+<tr><td>　　◆┐If <a href="../modIssueMapper/IsChanged.modIssueMapper.hcp.html">IsChanged</a>(newIssue.Esukare_Date, oldIssue.Esukare_Date) Then</td><td>内部呼出:<a href="../modIssueMapper/IsChanged.modIssueMapper.hcp.html">IsChanged</a></td></tr>
 <tr><td>　　│〇 result = result Or flg_Esukare_Date</td><td></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
-<tr><td>　　◆┐If IsChanged(newIssue.Close_Date, oldIssue.Close_Date) Then</td><td></td></tr>
+<tr><td>　　◆┐If <a href="../modIssueMapper/IsChanged.modIssueMapper.hcp.html">IsChanged</a>(newIssue.Close_Date, oldIssue.Close_Date) Then</td><td>内部呼出:<a href="../modIssueMapper/IsChanged.modIssueMapper.hcp.html">IsChanged</a></td></tr>
 <tr><td>　　│〇 result = result Or flg_Close_Date</td><td></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
-<tr><td>　　◆┐If IsChanged(newIssue.Requester_Pro, oldIssue.Requester_Pro) Then</td><td></td></tr>
+<tr><td>　　◆┐If <a href="../modIssueMapper/IsChanged.modIssueMapper.hcp.html">IsChanged</a>(newIssue.Requester_Pro, oldIssue.Requester_Pro) Then</td><td>内部呼出:<a href="../modIssueMapper/IsChanged.modIssueMapper.hcp.html">IsChanged</a></td></tr>
 <tr><td>　　│〇 result = result Or flg_Requester_Pro</td><td></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
-<tr><td>　　◆┐If IsChanged(newIssue.ServiceImpact, oldIssue.ServiceImpact) Then</td><td></td></tr>
+<tr><td>　　◆┐If <a href="../modIssueMapper/IsChanged.modIssueMapper.hcp.html">IsChanged</a>(newIssue.ServiceImpact, oldIssue.ServiceImpact) Then</td><td>内部呼出:<a href="../modIssueMapper/IsChanged.modIssueMapper.hcp.html">IsChanged</a></td></tr>
 <tr><td>　　│〇 result = result Or flg_ServiceImpact</td><td></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
-<tr><td>　　◆┐If IsChanged(newIssue.TroubleNum, oldIssue.TroubleNum) Then</td><td></td></tr>
+<tr><td>　　◆┐If <a href="../modIssueMapper/IsChanged.modIssueMapper.hcp.html">IsChanged</a>(newIssue.TroubleNum, oldIssue.TroubleNum) Then</td><td>内部呼出:<a href="../modIssueMapper/IsChanged.modIssueMapper.hcp.html">IsChanged</a></td></tr>
 <tr><td>　　│〇 result = result Or flg_TroubleNum</td><td></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
-<tr><td>　　◆┐If IsChanged(newIssue.Equipment, oldIssue.Equipment) Then</td><td></td></tr>
+<tr><td>　　◆┐If <a href="../modIssueMapper/IsChanged.modIssueMapper.hcp.html">IsChanged</a>(newIssue.Equipment, oldIssue.Equipment) Then</td><td>内部呼出:<a href="../modIssueMapper/IsChanged.modIssueMapper.hcp.html">IsChanged</a></td></tr>
 <tr><td>　　│〇 result = result Or flg_Equipment</td><td></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
-<tr><td>　　◆┐If IsChanged(newIssue.Countermeasure, oldIssue.Countermeasure) Then</td><td></td></tr>
+<tr><td>　　◆┐If <a href="../modIssueMapper/IsChanged.modIssueMapper.hcp.html">IsChanged</a>(newIssue.Countermeasure, oldIssue.Countermeasure) Then</td><td>内部呼出:<a href="../modIssueMapper/IsChanged.modIssueMapper.hcp.html">IsChanged</a></td></tr>
 <tr><td>　　│〇 result = result Or flg_Cope</td><td></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
-<tr><td>　　◆┐If IsChanged(newIssue.RequesterNum, oldIssue.RequesterNum) Then</td><td></td></tr>
+<tr><td>　　◆┐If <a href="../modIssueMapper/IsChanged.modIssueMapper.hcp.html">IsChanged</a>(newIssue.RequesterNum, oldIssue.RequesterNum) Then</td><td>内部呼出:<a href="../modIssueMapper/IsChanged.modIssueMapper.hcp.html">IsChanged</a></td></tr>
 <tr><td>　　│〇 result = result Or flg_RequesterNum</td><td></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
-<tr><td>　　│#  拡張情報差分判定</td><td></td></tr>
-<tr><td>　　◆┐If IsChanged(newIssue.ProductTantou, oldIssue.ProductTantou) Then</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   拡張情報差分判定</span></td><td></td></tr>
+<tr><td>　　◆┐If <a href="../modIssueMapper/IsChanged.modIssueMapper.hcp.html">IsChanged</a>(newIssue.ProductTantou, oldIssue.ProductTantou) Then</td><td>内部呼出:<a href="../modIssueMapper/IsChanged.modIssueMapper.hcp.html">IsChanged</a></td></tr>
 <tr><td>　　│〇 result = result Or flg_ProductTantou</td><td></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
-<tr><td>　　◆┐If IsChanged(newIssue.KihensinName_Date, oldIssue.KihensinName_Date) Then</td><td></td></tr>
+<tr><td>　　◆┐If <a href="../modIssueMapper/IsChanged.modIssueMapper.hcp.html">IsChanged</a>(newIssue.KihensinName_Date, oldIssue.KihensinName_Date) Then</td><td>内部呼出:<a href="../modIssueMapper/IsChanged.modIssueMapper.hcp.html">IsChanged</a></td></tr>
 <tr><td>　　│〇 result = result Or flg_KihensinName_Date</td><td></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
-<tr><td>　　◆┐If IsChanged(newIssue.Key_Word, oldIssue.Key_Word) Then</td><td></td></tr>
+<tr><td>　　◆┐If <a href="../modIssueMapper/IsChanged.modIssueMapper.hcp.html">IsChanged</a>(newIssue.Key_Word, oldIssue.Key_Word) Then</td><td>内部呼出:<a href="../modIssueMapper/IsChanged.modIssueMapper.hcp.html">IsChanged</a></td></tr>
 <tr><td>　　│〇 result = result Or flg_Key_Word</td><td></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
-<tr><td>　　◆┐If IsChanged(newIssue.EqProduct, oldIssue.EqProduct) Then</td><td></td></tr>
+<tr><td>　　◆┐If <a href="../modIssueMapper/IsChanged.modIssueMapper.hcp.html">IsChanged</a>(newIssue.EqProduct, oldIssue.EqProduct) Then</td><td>内部呼出:<a href="../modIssueMapper/IsChanged.modIssueMapper.hcp.html">IsChanged</a></td></tr>
 <tr><td>　　│〇 result = result Or flg_EqProduct</td><td></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
-<tr><td>　　│#  判定結果返却</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   判定結果返却</span></td><td></td></tr>
 <tr><td>　　〇 GetUpdateCheckResult = result</td><td></td></tr>
 <tr><td>　　┴End Function</td><td></td></tr>
 </tbody>
 </table>
+<hr>
+<h2>Calls (2)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modIssueMapper/IsChanged.modIssueMapper.hcp.html">IsChanged</a></td><td>変更判定</td><td>modIssueMapper</td></tr>
+<tr><td><a href="../modIssueMapper/IsChangedDescription.modIssueMapper.hcp.html">IsChangedDescription</a></td><td>説明文変更判定</td><td>modIssueMapper</td></tr>
+</table>
+<hr>
+<h2>Called By (1)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modIssueService/UpdateExistingIssue.modIssueService.hcp.html">UpdateExistingIssue</a></td><td>Issue更新登録</td><td>modIssueService</td></tr>
+</table>
 <script>
-document.querySelectorAll('.resize').forEach(function (eleTh) {
+document.querySelectorAll('.resize').forEach(function(eleTh) {
 let startX;
 let startWidth;
 const eleResizer = document.createElement('div');
 eleResizer.classList.add('resizer');
-eleResizer.addEventListener('mousedown', function (e) {
-const styleTh = window.getComputedStyle(eleTh);
-const paddingLeft = parseFloat(styleTh.paddingLeft);
-const paddingRight = parseFloat(styleTh.paddingRight);
-const borderLeft = parseFloat(styleTh.borderLeftWidth);
-const borderRight = parseFloat(styleTh.borderRightWidth);
+eleResizer.addEventListener('mousedown', function(e) {
 startX = e.pageX;
-startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+startWidth = eleTh.offsetWidth;
 document.addEventListener('mousemove', onMouseMove);
 document.addEventListener('mouseup', onMouseUp);
 });
 eleTh.appendChild(eleResizer);
-function onMouseMove(e) {
-const newWidth = startWidth + (e.pageX - startX);
-eleTh.style.width = newWidth + 'px';
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
 }
-function onMouseUp() {
-document.removeEventListener('mousemove', onMouseMove);
-document.removeEventListener('mouseup', onMouseUp);
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
 }
 });
 </script>

@@ -1,0 +1,38 @@
+┬
+〇│Private Sub ResetChartHighlight()	強調解除＜modPathChart＞
+┴└┐
+　　□ Dim ws As Worksheet
+　　□ Dim shp As Shape
+　　〇 Set ws = gContext.ManagementBook.Worksheets(
+　　│ SHEET_PATH_CHART)
+　　│#   強調表示初期化
+　　＠┐For Each shp In ws.Shapes
+　　││#   ノード書式初期化
+　　│◆┐If Left$(shp.Name, 2) = "N_" Then
+　　││〇 shp.line.ForeColor.RGB = NODE_LINE_COLOR
+　　││〇 shp.line.Weight = NODE_LINE_WEIGHT
+　　││〇 shp.Fill.ForeColor.RGB = NODE_FILL_COLOR
+　　││〇 shp.TextFrame.Characters.Font.Color = NODE_FONT_COLOR
+　　││┴End If
+　　││#   接続線書式初期化
+　　│◆┐If Left$(shp.Name, 2) = "C_" Then
+　　││〇 shp.line.ForeColor.RGB = CONNECTOR_LINE_COLOR
+　　││〇 shp.line.Weight = CONNECTOR_LINE_WEIGHT
+　　││┴End If
+　　│┴Next shp
+　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+HighlightNode	ノード強調表示	modPathChart
+ClearHighlight	強調表示解除	modPathChart

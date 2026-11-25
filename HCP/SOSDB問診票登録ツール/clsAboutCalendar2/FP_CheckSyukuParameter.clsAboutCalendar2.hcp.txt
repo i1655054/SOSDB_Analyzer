@@ -1,5 +1,3 @@
-Procedure: clsAboutCalendar2.FP_CheckSyukuParameter  [ 祝日パラメータ検証＜clsAboutCalendar2＞ ]
-HCP	Business
 ┬
 〇│Friend Function FPCheckSyukuParameter(ByRef objParaSheet As Worksheet,  Optional ByRef lngParaRowMax As Long = 0) As Boolean	祝日パラメータ検証＜clsAboutCalendar2＞
 ┴└┐
@@ -11,33 +9,33 @@ HCP	Business
 　　□ Dim strMSG As String                                            ' エラーメッセージ
 　　〇 FP_CheckSyukuParameter = False
 　　〇 lngRow = 3                                                  ' データ先頭行
-　　│#  パラメータシート準備
+　　│#   パラメータシート準備
 　　＠┐With objParaSheet
-　　││#  保護解除
+　　││#   保護解除
 　　│〇 .Unprotect
-　　││#  フィルタ解除
+　　││#   フィルタ解除
 　　│◆ If .FilterMode Then .ShowAllData
-　　││#  最終行取得
+　　││#   最終行取得
 　　│〇 lngParaRowMax = .Range("$A$" & .Rows.count).End(xlUp).row
-　　││#  登録内容確認
+　　││#   登録内容確認
 　　│◆┐If lngParaRowMax < 3 Then
-　　│││#  エラー表示
+　　│││#   エラー表示
 　　││〇 strMSG = "「" & g_cnsParaSheet & "」シートに有効内容が登録されていません。"
 　　││〇 MsgBox strMSG, vbCritical, g_cnsTitle
 　　││→ Exit Function
 　　││┴End If
-　　││#  行単位検証
+　　││#   行単位検証
 　　│＠┐Do While lngRow <= lngParaRowMax
 　　││◎ Call GP_CheckSyukuParameterSUB(objParaSheet, lngRow, lngPrevM, strMSG)	祝日パラメータ行検証＜clsAboutCalendar2＞
 　　││〇 lngRow = lngRow + 1
 　　││┴Loop
-　　││#  検証結果確認
+　　││#   検証結果確認
 　　│◆┐If strMSG <> "" Then
 　　││〇 MsgBox strMSG, vbCritical, g_cnsTitle
 　　││→ Exit Function
 　　││┴End If
 　　│〇 lngRow = 3                                              ' データ先頭行
-　　││#  有効期間重複確認
+　　││#   有効期間重複確認
 　　│＠┐Do While lngRow <= lngParaRowMax
 　　││〇 lngRow2 = lngRow + 1
 　　││◆┐If .Cells(lngRow2, 1).Value = .Cells(lngRow, 1).Value Then
@@ -54,13 +52,30 @@ HCP	Business
 　　│││┴End If
 　　││〇 lngRow = lngRow + 1
 　　││┴Loop
-　　││#  保護再設定
+　　││#   保護再設定
 　　│〇 .Protect UserInterfaceOnly:=True
 　　│┴End With
-　　│#  検証結果返却
+　　│#   検証結果返却
 　　◆┐If strMSG <> "" Then
 　　│〇 MsgBox strMSG, vbCritical, g_cnsTitle
 　　├┐ELSE
 　　│〇 FP_CheckSyukuParameter = True
 　　│┴End If
 　　┴End Function
+
+========================================
+Calls (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GP_CheckSyukuParameterSUB	祝日パラメータ行検証	clsAboutCalendar2
+GP_AppendMessage	メッセージ追加	clsAboutCalendar2
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+FP_GetHoliParameter	祝日パラメータ読込	clsAboutCalendar2

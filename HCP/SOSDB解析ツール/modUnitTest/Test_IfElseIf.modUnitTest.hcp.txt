@@ -1,0 +1,28 @@
+┬
+〇│Public Sub Test_IfElseIf()	＜modUnitTest＞
+┴└┐
+　　□ Dim Value As Long
+　　◆┐If Value = 1 Then
+　　│◎ Call ProcA	ProcA＜modUnitTest＞
+　　├┐ElseIf Value = 2 Then
+　　│◎ Call ProcB	ProcB＜modUnitTest＞
+　　├┐ELSE
+　　│◎ Call ProcC	ProcC＜modUnitTest＞
+　　│┴End If
+　　┴End Sub
+
+========================================
+Calls (3)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ProcA		modUnitTest
+ProcB		modUnitTest
+ProcC		modUnitTest
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

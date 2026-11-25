@@ -1,0 +1,79 @@
+┬
+〇│Private Sub UserForm_Initialize()	オプション初期化＜frmPathChartOption＞
+┴└┐
+　　│#   制限値設定読込
+　　◆┐If gMaxNode = 0 Then
+　　│〇 txtMaxNode.Text = "1000"
+　　│〇 txtMaxEdge.Text = "3000"
+　　├┐ELSE
+　　│〇 txtMaxNode.Text = gMaxNode
+　　│〇 txtMaxEdge.Text = gMaxEdge
+　　│┴End If
+　　│#   解析対象設定読込
+　　〇 chkProperty.Value = gProperty
+　　〇 chkPrivate.Value = gPrivate
+　　〇 chkPublic.Value = gPublic
+　　│#   モジュール種別設定読込
+　　〇 chkStdModule.Value = gStdModule
+　　〇 chkUserForm.Value = gUserForm
+　　〇 chkClassModule.Value = gClassModule
+　　│#   除外条件設定読込
+　　〇 chkIgnoreAPI.Value = gIgnoreAPI
+　　〇 chkIgnoreExcel.Value = gIgnoreExcel
+　　〇 chkIgnoreSelf.Value = gIgnoreSelf
+　　〇 chkSameModuleOnly.Value = gSameModuleOnly
+　　│#   PathChart表示設定読込
+　　〇 chkSkipCommon.Value = gSkipCommon
+　　〇 chkShowCount.Value = gShowCount
+　　│#   出力設定読込
+　　〇 chkPowerPoint.Value = gPowerPoint
+　　│#   PowerPoint向き設定読込
+　　◆┐Select Case gPptOrientation
+　　│├┐Case PPT_ORIENT_PORTRAIT
+　　││〇 optPptPortrait.Value = True
+　　│├┐Case PPT_ORIENT_LANDSCAPE
+　　││〇 optPptLandscape.Value = True
+　　│├┐Case Else
+　　││〇 optPptAuto.Value = True
+　　│┴End Select
+　　〇 chkPngOutput.Value = gPngOutput
+　　│#   モジュール表示設定読込
+　　〇 chkShowModule.Value = gShowModule
+　　〇 chkColorModule.Value = gColorModule
+　　│#   テーマ候補設定
+　　〇 cmbColorTheme.Clear
+　　〇 cmbColorTheme.AddItem "標準"
+　　〇 cmbColorTheme.AddItem "明るい"
+　　〇 cmbColorTheme.AddItem "ダーク"
+　　│#   テーマ設定反映
+　　◆┐If gColorTheme = "" Then
+　　│〇 cmbColorTheme.ListIndex = 0
+　　├┐ELSE
+　　│〇 cmbColorTheme.Value = gColorTheme
+　　│┴End If
+　　│#   出力方向設定状態反映
+　　◎ Call chkPowerPoint_Click	PowerPoint出力切替＜frmPathChartOption＞
+　　┴End Sub
+
+========================================
+Calls (10)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+LoadPathChartConfig	PathChart設定読込	modPathChartConfig
+GetDefaultMaxDepth	既定深度取得	modPathChartConfig
+LoadStartProcedure	開始関数読込	modPathChart
+GetDefaultStartProcedure	開始関数取得	modPathChartConfig
+chkPowerPoint_Click	PowerPoint出力切替	frmPathChartOption
+SetupListView	ListView初期化	frmExportTool
+LoadToolList
+LoadSearchHistory	検索履歴読込	modPathChart
+GetCurrentToolInfo	現在ツール情報取得	modToolManager
+LoadModuleList	モジュール一覧読込	frmHCPGenerator
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

@@ -1,0 +1,62 @@
+┬
+〇│Private Sub UserForm_Initialize()	PathChart画面初期化＜frmPathChart＞
+┴└┐
+　　□ Dim i As Long
+　　□ Dim DefaultProc As String
+　　□ Dim Found As Boolean
+　　│#   PathChart設定読込
+　　◎ LoadPathChartConfig	PathChart設定読込＜modPathChartConfig＞
+　　│#   呼出条件設定反映
+　　〇 chkExternal.Value = gExternal
+　　│#   再帰表示設定反映
+　　〇 chkRecursive.Value = gRecursive
+　　│#   最大深度初期設定
+　　◎ txtMaxDepth.Text = GetDefaultMaxDepth()	既定深度取得＜modPathChartConfig＞
+　　│#   開始関数候補読込
+　　◎ LoadStartProcedure cmbStartProc	開始関数読込＜modPathChart＞
+　　│#   既定開始関数取得
+　　◎ DefaultProc = GetDefaultStartProcedure()	開始関数取得＜modPathChartConfig＞
+　　│#   保存済み開始関数選択
+　　＠┐For i = 0 To cmbStartProc.ListCount - 1
+　　│◆┐If cmbStartProc.List(i) = DefaultProc Then
+　　││〇 cmbStartProc.ListIndex = i
+　　││〇 Found = True
+　　││→ Exit For
+　　││┴End If
+　　│┴Next i
+　　│#   開始関数既定設定
+　　◆┐If Not Found Then
+　　│◆┐If cmbStartProc.ListCount > 0 Then
+　　││〇 cmbStartProc.ListIndex = 0
+　　││┴End If
+　　│┴End If
+　　◆┐If cmbStartProc.ListIndex < 0  And cmbStartProc.ListCount > 0 Then
+　　│〇 cmbStartProc.ListIndex = 0
+　　│┴End If
+　　│#   初期画面状態設定
+　　〇 lblStatus.Caption = "状態： 待機中"
+　　〇 lblElapsed.Caption = "解析時間： 0.00 秒"
+　　┴End Sub
+
+========================================
+Calls (10)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+LoadPathChartConfig	PathChart設定読込	modPathChartConfig
+GetDefaultMaxDepth	既定深度取得	modPathChartConfig
+LoadStartProcedure	開始関数読込	modPathChart
+GetDefaultStartProcedure	開始関数取得	modPathChartConfig
+chkPowerPoint_Click	PowerPoint出力切替	frmPathChartOption
+SetupListView	ListView初期化	frmExportTool
+LoadToolList
+LoadSearchHistory	検索履歴読込	modPathChart
+GetCurrentToolInfo	現在ツール情報取得	modToolManager
+LoadModuleList	モジュール一覧読込	frmHCPGenerator
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

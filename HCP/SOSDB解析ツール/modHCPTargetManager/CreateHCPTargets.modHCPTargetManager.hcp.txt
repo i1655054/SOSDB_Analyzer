@@ -1,0 +1,76 @@
+┬
+〇│Public Sub CreateHCPTargets()	HCP_TARGETS作成＜modHCPTargetManager＞
+┴└┐
+　　□ Dim wsProc As Worksheet
+　　□ Dim wsTarget As Worksheet
+　　□ Dim LastRow As Long
+　　□ Dim RowOut As Long
+　　□ Dim r As Long
+　　□ Dim CreateCount As Long
+　　□ Dim ProcModule As String
+　　□ Dim ProcName As String
+　　◎ Trace "HCP",  "CreateHCPTargets"	トレース出力＜modDebug＞
+　　│#   シート取得
+　　│#   ProcList取得
+　　〇 Set wsProc =  gContext.ManagementBook.Worksheets(
+　　│   SHEET_PROC_LIST)
+　　│#   初期化
+　　│#   HCP_TARGETS取得
+　　☆ On Error Resume Next
+　　〇 Set wsTarget =  gContext.ManagementBook.Worksheets(
+　　│   SHEET_HCP_TARGETS)
+　　☆ On Error GoTo 0
+　　│#   HCP_TARGETS未存在なら作成
+　　◆┐If wsTarget Is Nothing Then
+　　│〇 Set wsTarget =  gContext.ManagementBook.Worksheets.Add(
+　　││   After:=gContext.ManagementBook.Worksheets(
+　　││   gContext.ManagementBook.Worksheets.Count))
+　　│〇 wsTarget.Name =  SHEET_HCP_TARGETS
+　　│┴End If
+　　│#   HCP_TARGETS初期化
+　　◎ Call InitializeHCPTargetSheet(wsTarget)	HCP_TARGETS初期化＜modHCPTargetManager＞
+　　│#   ProcList最終行取得
+　　〇 LastRow =  wsProc.Cells(  wsProc.Rows.Count,  COL_PROCLIST_MODULE).End(xlUp).row
+　　〇 RowOut = 2
+　　│#   ProcList走査
+　　│#   ProcList → HCP_TARGETS
+　　＠┐For r = 2 To LastRow
+　　││#   Module名取得
+　　│〇 ProcModule =  Trim$(wsProc.Cells(  r,  COL_PROCLIST_MODULE).Value)
+　　││#   Procedure名取得
+　　│〇 ProcName =  Trim$(wsProc.Cells(  r,  COL_PROCLIST_NAME).Value)
+　　││#   Procedure名未設定は除外
+　　│◆┐If ProcModule <> ""  And ProcName <> "" Then
+　　││〇 wsTarget.Cells(RowOut, 2).Value =  ProcModule
+　　││〇 wsTarget.Cells(RowOut, 3).Value =  ProcName
+　　││〇 RowOut = RowOut + 1
+　　││〇 CreateCount = CreateCount + 1
+　　││┴End If
+　　│┴Next r
+　　│#   体裁設定
+　　〇 wsTarget.Columns("A:E").AutoFit
+　　◎ Trace "HCP",  "CreateHCPTargets Count=" &  CreateCount	トレース出力＜modDebug＞
+　　│#   INDEX再生成
+　　│#   INDEX更新
+　　◎ RebuildAllIndexes	INDEX一括再生成＜modHCPIndex＞
+　　│#   完了通知
+　　〇 MsgBox  "HCP_TARGETSを作成しました。" & vbCrLf &  "対象件数 : " & CreateCount,  vbInformation
+　　┴End Sub
+
+========================================
+Calls (3)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+Trace	トレース出力	modDebug
+InitializeHCPTargetSheet	HCP_TARGETS初期化	modHCPTargetManager
+RebuildAllIndexes	INDEX一括再生成	modHCPIndex
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+cmdHCPTargets_Click	HCP_TARGETS更新	frmHCPGenerator

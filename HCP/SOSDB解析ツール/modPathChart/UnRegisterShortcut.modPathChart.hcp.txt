@@ -1,0 +1,25 @@
+┬
+〇│Public Sub UnRegisterShortcut()	ショートカット解除＜modPathChart＞
+┴└┐
+　　│#   PathChartショートカット解除
+　　〇 Application.OnKey "^+F"
+　　〇 Application.OnKey "^+N"
+　　〇 Application.OnKey "^+P"
+　　〇 Application.OnKey "^+C"
+　　〇 Application.OnKey "^+S"
+　　〇 Application.OnKey "^+H"
+　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+Workbook_BeforeClose	Workbook終了	ThisWorkbook

@@ -1,0 +1,140 @@
+┬
+〇│Private Sub DrawCallTreeShape(  ByVal ParentFunc As String,  ByVal ParentShapeName As String,  ByVal Level As Long,  ByVal TopPos As Double,  ByVal LeftPos As Double,  Optional ByVal PathText As String = "")	ノード再帰描画＜modPathChart＞
+┴└┐
+　　□ Dim wsDep As Worksheet
+　　□ Dim LastRow As Long
+　　□ Dim r As Long
+　　□ Dim BranchOffset As Long
+　　□ Dim BranchSize As Long
+　　│#   再帰判定用パス生成
+　　◆┐If PathText = "" Then
+　　│〇 PathText =  "|" & UCase$(ParentFunc) & "|"
+　　│┴End If
+　　│#   探索深度上限制御
+　　◆→ If Level >= gMaxLevel Then Exit Sub
+　　│#   最大深度更新
+　　◆┐If Level > MaxDepthFound Then
+　　│〇 MaxDepthFound = Level
+　　│┴End If
+　　│#   ノード数上限制御
+　　◆┐If gMaxNode > 0 Then
+　　│◆→ If gNodeNo >= gMaxNode Then Exit Sub
+　　│┴End If
+　　│#   接続線数上限制御
+　　◆┐If gMaxEdge > 0 Then
+　　│◆→ If EdgeCount >= gMaxEdge Then Exit Sub
+　　│┴End If
+　　│#   関数依存関係取得
+　　〇 Set wsDep =  gContext.ManagementBook.Worksheets(
+　　│ SHEET_FUNCTION_DEPENDENCY)
+　　〇 LastRow =  wsDep.Cells(  wsDep.Rows.Count,  "A").End(xlUp).row
+　　〇 BranchOffset = 0
+　　│#   呼出先探索
+　　＠┐For r = 2 To LastRow
+　　│◆┐If wsDep.Cells(r, 1).Value = ParentFunc Then
+　　││□ Dim ChildFunc As String
+　　││□ Dim CallCount As Long
+　　││□ Dim ParentModule As String
+　　││□ Dim ChildModule As String
+　　││□ Dim ModuleName As String
+　　││□ Dim Proc As clsProcInfo
+　　││□ Dim CaptionText As String
+　　││□ Dim ChildTop As Double
+　　││□ Dim ChildLeft As Double
+　　││□ Dim FillColor As Long
+　　││□ Dim shpChild As Shape
+　　│││#   呼出先情報取得
+　　││〇 ChildFunc =  Trim$(wsDep.Cells(r, 3).Value)
+　　│││#   再帰ループ防止
+　　││◆┐If InStr(  1,  PathText,  "|" & UCase$(ChildFunc) & "|",  vbTextCompare) > 0 Then
+　　│││→ GoTo NextChild
+　　│││┴End If
+　　│││#   再帰呼出除外
+　　││◆┐If Not gRecursive Then
+　　│││◆┐If StrComp(  ParentFunc,  ChildFunc,  vbTextCompare) = 0 Then
+　　││││→ GoTo NextChild
+　　││││┴End If
+　　│││┴End If
+　　││〇 CallCount =  Val(wsDep.Cells(r, 5).Value)
+　　││〇 ParentModule =  Trim$(wsDep.Cells(r, 6).Value)
+　　││〇 ChildModule =  Trim$(wsDep.Cells(r, 7).Value)
+　　││〇 ModuleName = ChildModule
+　　│││#   外部呼出除外
+　　││◆┐If Not gExternal Then
+　　│││◆┐If StrComp(  ParentModule,  ChildModule,  vbTextCompare) <> 0 Then
+　　││││→ GoTo NextChild
+　　││││┴End If
+　　│││┴End If
+　　│││#   共通関数除外
+　　││◆┐If gSkipCommon Then
+　　│││◆┐If IsCommonFunction(ChildFunc) Then	内部呼出:IsCommonFunction
+　　││││→ GoTo NextChild
+　　││││┴End If
+　　│││┴End If
+　　│││#   子ノード配置座標計算
+　　│││#   分岐サイズ取得
+　　││◎ BranchSize =  GetBranchSize(ChildFunc)	分岐サイズ取得＜modPathChart＞
+　　│││#   子ノード配置座標計算
+　　││〇 ChildLeft =  LeftPos + H_GAP
+　　││〇 ChildTop =  TopPos + BranchOffset
+　　││〇 BranchOffset =  BranchOffset +  (BranchSize * V_GAP)
+　　│││#   Procedure情報取得
+　　││◎ Set Proc =  ResolveProcedure(  ParentModule,  ChildFunc)	Procedure解決＜modProcedureRepository＞
+　　││◆┐If Not Proc Is Nothing Then
+　　│││〇 ModuleName =  Proc.ModuleName
+　　│││┴End If
+　　│││#   ノード表示文字列生成
+　　││◎ CaptionText =  BuildCaptionText(  ChildFunc,  CallCount)	ノード表示文字列生成＜modPathChart＞
+　　│││#   モジュール色設定
+　　││◆┐If gColorModule Then
+　　│││◎ FillColor =  GetModuleColor(ModuleName)	モジュール色取得＜modPathChart＞
+　　││├┐ELSE
+　　│││〇 FillColor =  DEFAULT_NODE_COLOR
+　　│││┴End If
+　　│││#   子ノード生成
+　　││◎ Set shpChild =  DrawNode(  gContext.ManagementBook.Worksheets(
+　　│││ SHEET_PATH_CHART),  CaptionText,  ChildTop,  ChildLeft,  FillColor)	ノード作成＜modPathChart＞
+　　│││	内部呼出:Worksheets
+　　││◆┐If shpChild Is Nothing Then
+　　│││→ GoTo NextChild
+　　│││┴End If
+　　│││#   親子関係登録
+　　││〇 gParentMap(shpChild.Name) =  ParentShapeName
+　　││◆┐If gChildMap.Exists(ParentShapeName) Then
+　　│││〇 gChildMap(ParentShapeName) =  gChildMap(ParentShapeName) &  "|" &  shpChild.Name
+　　││├┐ELSE
+　　│││〇 gChildMap.Add  ParentShapeName,  shpChild.Name
+　　│││┴End If
+　　│││#   接続線生成
+　　││◎ ConnectShapes  gContext.ManagementBook.Worksheets(
+　　│││ SHEET_PATH_CHART),  ParentShapeName,  shpChild.Name	接続線作成＜modPathChart＞
+　　│││	内部呼出:Worksheets
+　　││〇 EdgeCount = EdgeCount + 1
+　　│││#   子ノード再帰生成
+　　││◎ DrawCallTreeShape  ChildFunc,  shpChild.Name,  Level + 1,  ChildTop,  ChildLeft,  PathText &  UCase$(ChildFunc) & "|"	ノード再帰描画＜modPathChart＞
+　　││┴End If
+▼ NextChild:
+　　│┴Next r
+　　┴End Sub
+
+========================================
+Calls (7)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+IsCommonFunction	共通関数判定	modPathChartCommon
+GetBranchSize	分岐サイズ取得	modPathChart
+ResolveProcedure	Procedure解決	modProcedureRepository
+BuildCaptionText	ノード表示文字列生成	modPathChart
+GetModuleColor	モジュール色取得	modPathChart
+DrawNode	ノード作成	modPathChart
+ConnectShapes	接続線作成	modPathChart
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+CreatePathChart_V3	パスチャート作成	modPathChart

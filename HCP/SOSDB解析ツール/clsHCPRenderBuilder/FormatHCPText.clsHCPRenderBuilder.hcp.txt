@@ -1,0 +1,34 @@
+┬
+〇│Private Function FormatHCPText(  ByVal Text As String)  As String	HCP文字列整形＜clsHCPRenderBuilder＞
+┴└┐
+　　□ Const MAX_LEN As Long = 60
+　　│#   長文判定
+　　◆┐If Len(Text) <= MAX_LEN Then
+　　│〇 FormatHCPText = Text
+　　│→ Exit Function
+　　│┴End If
+　　│#   HCP表示向け改行挿入
+　　〇 Text = Replace(  Text,  "Array(",  "Array(" & vbCrLf)
+　　〇 Text = Replace(  Text,  ".Worksheets.Add(
+　　│ ",  ".Worksheets.Add(
+　　│ " & vbCrLf)
+　　〇 Text = Replace(  Text,  ".Worksheets(
+　　│ ",  ".Worksheets(
+　　│ " & vbCrLf)
+　　〇 Text = Replace(  Text,  "(After:=",  vbCrLf & "After:=")
+　　〇 FormatHCPText = Text
+　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetRenderText	描画文字列取得	clsHCPRenderBuilder

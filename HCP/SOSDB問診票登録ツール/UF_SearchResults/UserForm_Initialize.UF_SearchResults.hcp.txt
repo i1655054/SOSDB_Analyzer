@@ -1,11 +1,9 @@
-Procedure: UF_SearchResults.UserForm_Initialize  [ 検索結果フォーム初期化＜UF_SearchResults＞ ]
-HCP	Business
 ┬
 〇│Private Sub UserForm_Initialize()	検索結果フォーム初期化＜UF_SearchResults＞
 ┴└┐
-　　│#  ページサイズ初期化
+　　│#   ページサイズ初期化
 　　〇 pageSize = 20
-　　│#  一覧表示初期化
+　　│#   一覧表示初期化
 　　〇 ListBox1.BorderStyle = fmBorderStyleNone
 　　〇 ListBox2.BorderStyle = fmBorderStyleNone
 　　〇 ListBox3.BorderStyle = fmBorderStyleNone
@@ -13,12 +11,30 @@ HCP	Business
 　　〇 ListBox5.BorderStyle = fmBorderStyleNone
 　　〇 ListBox6.BorderStyle = fmBorderStyleNone
 　　〇 ListBox7.Visible = False
-　　│#  ボタン初期状態設定
+　　│#   ボタン初期状態設定
 　　〇 btnNext.Visible = False
 　　〇 btnPrev.Visible = False
 　　〇 btnSelect.Visible = False
 　　〇 btnDbAccess.Visible = False
-　　│#  列幅設定
+　　│#   列幅設定
 　　〇 Me.ListBox5.ColumnWidths = "250" ' 列幅を200ポイントに設定
 　　〇 Me.ListBox6.ColumnWidths = "1200" ' 列幅を200ポイントに設定
 　　┴End Sub
+
+========================================
+Calls (5)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+NewClass
+FP_GetCalendarTable3	三か月カレンダーテーブル取得	modAboutCalendar2
+RequesterNumDivision	依頼元管理番号解析	UF_RequesterNumRegist
+Initialize	右クリック機能初期化	CRightClick
+BuildHTMLContent	HTML本文生成	UF_InfoWebDisplay
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

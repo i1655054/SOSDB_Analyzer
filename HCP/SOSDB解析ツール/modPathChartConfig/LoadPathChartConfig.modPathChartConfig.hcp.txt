@@ -1,0 +1,74 @@
+┬
+〇│Public Sub LoadPathChartConfig()	PathChart設定読込＜modPathChartConfig＞
+┴└┐
+　　□ Dim ws As Worksheet
+　　│#   PathChart設定シート取得
+　　〇 Set ws =  ThisWorkbook.Worksheets(SHEET_PATH_CHART_CONFIG)
+　　│#   共通設定読込
+　　〇 gSkipCommon = ws.Range(CFG_SKIP_COMMON).Value
+　　〇 gShowCount = ws.Range(CFG_SHOW_COUNT).Value
+　　│#   PowerPoint設定読込
+　　〇 gPowerPoint = ws.Range(CFG_POWERPOINT).Value
+　　〇 gPptOrientation = Trim$(ws.Range(CFG_PPT_ORIENTATION).Value)
+　　│#   PowerPoint向き既定値設定
+　　◆┐If gPptOrientation = "" Then
+　　│〇 gPptOrientation = PPT_ORIENT_AUTO
+　　│┴End If
+　　│#   出力設定読込
+　　〇 gPngOutput = ws.Range(CFG_PNG_OUTPUT).Value
+　　〇 gShowModule = ws.Range(CFG_SHOW_MODULE).Value
+　　〇 gColorModule = ws.Range(CFG_COLOR_MODULE).Value
+　　│#   解析対象設定読込
+　　〇 gProperty = ws.Range(CFG_PROPERTY).Value
+　　〇 gPrivate = ws.Range(CFG_PRIVATE).Value
+　　〇 gPublic = ws.Range(CFG_PUBLIC).Value
+　　〇 gStdModule = ws.Range(CFG_STD_MODULE).Value
+　　〇 gUserForm = ws.Range(CFG_USER_FORM).Value
+　　〇 gClassModule = ws.Range(CFG_CLASS_MODULE).Value
+　　│#   除外条件設定読込
+　　〇 gIgnoreAPI = ws.Range(CFG_IGNORE_API).Value
+　　〇 gIgnoreExcel = ws.Range(CFG_IGNORE_EXCEL).Value
+　　〇 gIgnoreSelf = ws.Range(CFG_IGNORE_SELF).Value
+　　〇 gSameModuleOnly = ws.Range(CFG_SAME_MODULE_ONLY).Value
+　　│#   色設定読込
+　　〇 gColorTheme = ws.Range(CFG_COLOR_THEME).Value
+　　│#   制限値読込
+　　〇 gMaxNode = Val(ws.Range(CFG_MAX_NODE).Value)
+　　〇 gMaxEdge = Val(ws.Range(CFG_MAX_EDGE).Value)
+　　│#   外部呼出設定読込
+　　〇 gExternal = ws.Range(CFG_EXTERNAL).Value
+　　│#   外部呼出設定既定値補正
+　　◆┐If Trim$(ws.Range(CFG_EXTERNAL).Value & "") = "" Then
+　　│〇 gExternal = True
+　　│┴End If
+　　〇 gRecursive = ws.Range(CFG_RECURSIVE).Value
+　　│#   再帰呼出設定既定値補正
+　　◆┐If Trim$(ws.Range(CFG_RECURSIVE).Value & "") = "" Then
+　　│〇 gRecursive = True
+　　│┴End If
+　　│#   表示設定読込
+　　〇 gShowJPName = ws.Range(CFG_SHOW_JPNAME).Value
+　　〇 gShowCategory = ws.Range(CFG_SHOW_CATEGORY).Value
+　　│#   制限値既定値補正
+　　◆ If gMaxNode = 0 Then gMaxNode = DEFAULT_MAX_NODE
+　　◆ If gMaxEdge = 0 Then gMaxEdge = DEFAULT_MAX_EDGE
+　　│#   色設定既定値補正
+　　◆┐If gColorTheme = "" Then
+　　│〇 gColorTheme = DEFAULT_COLOR_THEME
+　　│┴End If
+　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+UserForm_Initialize
+InitializeAnalyzer	Analyzer初期化	modStartup

@@ -1,0 +1,104 @@
+┬
+〇│Public Function IsFunctionCall(  ByVal LineText As String,  ByVal FuncName As String) As Boolean	関数呼出判定＜modAnalyzerCommon＞
+┴└┐
+　　□ Dim RegEx As Object
+　　□ Dim WorkText As String
+　　│#   Procedure定義行除外
+　　◆┐If IsProcedureLine(LineText) Then	内部呼出:IsProcedureLine
+　　│→ Exit Function
+　　│┴End If
+　　〇 LineText = Trim$(LineText)
+　　│#   コメント行除外
+　　◆┐If Left$(LineText, 1) = "'" Then Exit Function
+　　││#   API説明行除外
+　　│◆→ If Left$(LineText, 1) = "■" Then Exit Function
+　　││#   RegEx生成
+　　│〇 Set RegEx = CreateObject("VBScript.RegExp")
+　　│〇 RegEx.IgnoreCase = True
+　　││#   関数戻り値代入除外
+　　│〇 RegEx.Pattern =  "^\s*" &  FuncName &  "\s*="
+　　│◆┐If RegEx.Test(LineText) Then
+　　││→ Exit Function
+　　││┴End If
+　　││#   Call構文判定
+　　│〇 RegEx.Pattern =  "(^|\s)Call\s+" &  FuncName &  "(\s*\(|\s|$)"
+　　│◆┐If RegEx.Test(LineText) Then
+　　││〇 IsFunctionCall = True
+　　││→ Exit Function
+　　││┴End If
+　　││#   オブジェクトメソッド除外
+　　│◆┐If IsObjectMethodCall(  LineText,  FuncName) Then	内部呼出:IsObjectMethodCall
+　　││→ Exit Function
+　　││┴End If
+　　││#   Function呼出判定
+　　│〇 RegEx.Pattern =  "(^|[\s=\(,])" &  FuncName &  "\s*\("
+　　│◆┐If RegEx.Test(LineText) Then
+　　││〇 IsFunctionCall = True
+　　││→ Exit Function
+　　││┴End If
+　　││#   行継続呼出判定
+　　│◆┐If right$(Trim$(LineText), 1) = "_" Then
+　　││〇 WorkText = Trim$(LineText)
+　　││◆┐If Left$(WorkText, Len(FuncName)) = FuncName Then
+　　│││◆┐If Len(WorkText) = Len(FuncName) + 1 Then
+　　││││〇 IsFunctionCall = True
+　　││││→ Exit Function
+　　││││┴End If
+　　│││◆┐Select Case Mid$(  WorkText,  Len(FuncName) + 1,  1)
+　　││││├┐Case " ", "(", vbTab
+　　│││││〇 IsFunctionCall = True
+　　│││││→ Exit Function
+　　││││┴End Select
+　　│││┴End If
+　　││┴End If
+　　││#   Sub呼出判定
+　　│〇 RegEx.Pattern =  "^\s*" &  FuncName &  "\s+.+$"
+　　│◆┐If RegEx.Test(LineText) Then
+　　││〇 IsFunctionCall = True
+　　││→ Exit Function
+　　││┴End If
+　　││#   モジュール修飾呼出判定
+　　│◆┐If IsProjectModuleCall(  LineText,  FuncName) Then	内部呼出:IsProjectModuleCall
+　　││〇 IsFunctionCall = True
+　　││→ Exit Function
+　　││┴End If
+　　││#   Call Module.Procedure(...)
+　　│〇 RegEx.Pattern =  "(^|\s)Call\s+(\w+\.)+" &  FuncName &  "\s*\("
+　　│◆┐If RegEx.Test(LineText) Then
+　　││〇 IsFunctionCall = True
+　　││→ Exit Function
+　　││┴End If
+　　││#   Function単独参照
+　　│〇 RegEx.Pattern =  "^\s*" &  FuncName &  "\s*$"
+　　│◆┐If RegEx.Test(LineText) Then
+　　││〇 IsFunctionCall = True
+　　││→ Exit Function
+　　││┴End If
+　　││#   Function参照判定
+　　│〇 RegEx.Pattern =  "(^|\s)(Not\s+)?" &  FuncName &  "(\s+Then|\s+And|\s+Or|\)|$)"
+　　│◆┐If RegEx.Test(LineText) Then
+　　││〇 IsFunctionCall = True
+　　││→ Exit Function
+　　││┴End If
+　　┴End Function
+
+========================================
+Calls (3)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+IsProcedureLine	プロシージャ定義判定	modAnalyze
+IsObjectMethodCall	オブジェクトメソッド判定	modAnalyzerCommon
+IsProjectModuleCall		modAnalyzerCommon
+
+========================================
+Called By (4)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+CountUsage	使用回数集計	modAnalyze
+TraceModule	関数呼出解析	modFunctionTrac
+Test_IsFunctionCall		modUnitTest
+ExtractCallNames	呼出関数一覧取得	modProcAnalyzer

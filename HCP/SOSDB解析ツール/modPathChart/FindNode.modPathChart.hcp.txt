@@ -1,0 +1,22 @@
+┬
+〇│Public Sub FindNode()	ノード検索＜modPathChart＞
+┴└┐
+　　│#   新規検索実行
+　　◎ FindNodeCore False	ノード検索実行＜modPathChart＞
+　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+FindNodeCore	ノード検索実行	modPathChart
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+cmdFind_Click	ノード検索	frmPathChartNavigator

@@ -1,75 +1,82 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
 <meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
 <title>ScheduleNextMessage</title>
 <style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
 body{font-family:Meiryo;font-size:9pt;}
 table{border-collapse:collapse;}
-th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
 td{vertical-align:top;}
 th{background:#e8f0fe;}
-colgroup col:nth-of-type(1) {}
-colgroup col:nth-of-type(2) {}
-.resize {position: relative;}
-.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
 </style>
 </head>
-<body>
+<body translate="no">
 <h1>ScheduleNextMessage</h1>
 <p>Module : modProcessing</p>
-<p><a href="./_INDEX.html">← Module Index</a></p>
 <table>
-<colgroup><col/><col/></colgroup>
-<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
 <tbody>
-<tr><td>Procedure: modProcessing.ScheduleNextMessage  [ 進捗メッセージ更新＜modProcessing＞ ]</td><td></td></tr>
-<tr><td>HCP</td><td>Business</td></tr>
 <tr><td>┬</td><td></td></tr>
 <tr><td>〇│Sub ScheduleNextMessage()</td><td>進捗メッセージ更新＜modProcessing＞</td></tr>
 <tr><td>┴└┐</td><td></td></tr>
-<tr><td>　　│#  メッセージ残数確認</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   メッセージ残数確認</span></td><td></td></tr>
 <tr><td>　　◆┐If messageIndex &lt;= UBound(messages) Then</td><td></td></tr>
-<tr><td>　　││#  進捗メッセージ表示</td><td></td></tr>
-<tr><td>　　│◎ frmProcessing.UpdateMessage messages(messageIndex)</td><td>メッセージ更新＜frmProcessing＞</td></tr>
-<tr><td>　　││</td><td>内部呼出:messages</td></tr>
-<tr><td>　　││#  メッセージ番号更新</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   進捗メッセージ表示</span></td><td></td></tr>
+<tr><td>　　│〇 frmProcessing.UpdateMessage messages(messageIndex)</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   メッセージ番号更新</span></td><td></td></tr>
 <tr><td>　　│〇 messageIndex = messageIndex + 1</td><td></td></tr>
-<tr><td>　　││#  次回実行予約</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   次回実行予約</span></td><td></td></tr>
 <tr><td>　　│〇 nextTime = Now + TimeSerial(0, 0, 1)</td><td></td></tr>
 <tr><td>　　│〇 Application.OnTime nextTime, "ScheduleNextMessage"</td><td></td></tr>
 <tr><td>　　├┐ELSE</td><td></td></tr>
-<tr><td>　　││#  処理中画面終了</td><td></td></tr>
-<tr><td>　　│◎ StopMessageDisplay</td><td>処理中画面終了＜modProcessing＞</td></tr>
+<tr><td><span class="hcp-comment">　　││#   処理中画面終了</span></td><td></td></tr>
+<tr><td>　　│◎ <a href="../modProcessing/StopMessageDisplay.modProcessing.hcp.html">StopMessageDisplay</a></td><td><a href="../modProcessing/StopMessageDisplay.modProcessing.hcp.html">処理中画面終了＜modProcessing＞</a></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
 <tr><td>　　┴End Sub</td><td></td></tr>
 </tbody>
 </table>
+<hr>
+<h2>Calls (2)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../frmProcessing/UpdateMessage.frmProcessing.hcp.html">UpdateMessage</a></td><td>メッセージ更新</td><td>frmProcessing</td></tr>
+<tr><td><a href="../modProcessing/StopMessageDisplay.modProcessing.hcp.html">StopMessageDisplay</a></td><td>処理中画面終了</td><td>modProcessing</td></tr>
+</table>
+<hr>
+<h2>Called By (1)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modProcessing/StartMessageDisplay.modProcessing.hcp.html">StartMessageDisplay</a></td><td>処理中画面開始</td><td>modProcessing</td></tr>
+</table>
 <script>
-document.querySelectorAll('.resize').forEach(function (eleTh) {
+document.querySelectorAll('.resize').forEach(function(eleTh) {
 let startX;
 let startWidth;
 const eleResizer = document.createElement('div');
 eleResizer.classList.add('resizer');
-eleResizer.addEventListener('mousedown', function (e) {
-const styleTh = window.getComputedStyle(eleTh);
-const paddingLeft = parseFloat(styleTh.paddingLeft);
-const paddingRight = parseFloat(styleTh.paddingRight);
-const borderLeft = parseFloat(styleTh.borderLeftWidth);
-const borderRight = parseFloat(styleTh.borderRightWidth);
+eleResizer.addEventListener('mousedown', function(e) {
 startX = e.pageX;
-startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+startWidth = eleTh.offsetWidth;
 document.addEventListener('mousemove', onMouseMove);
 document.addEventListener('mouseup', onMouseUp);
 });
 eleTh.appendChild(eleResizer);
-function onMouseMove(e) {
-const newWidth = startWidth + (e.pageX - startX);
-eleTh.style.width = newWidth + 'px';
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
 }
-function onMouseUp() {
-document.removeEventListener('mousemove', onMouseMove);
-document.removeEventListener('mouseup', onMouseUp);
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
 }
 });
 </script>

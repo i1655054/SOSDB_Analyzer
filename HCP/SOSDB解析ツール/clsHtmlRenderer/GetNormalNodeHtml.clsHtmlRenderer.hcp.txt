@@ -1,0 +1,50 @@
+┬
+〇│Private Function GetNormalNodeHtml(  ByVal Node As clsHCPNode)  As String	通常ノードHTML取得＜clsHtmlRenderer＞
+┴└┐
+　　□ Dim HtmlText As String
+　　□ Dim Names() As String
+　　□ Dim FuncName As Variant
+　　□ Dim LinkText As String
+　　◎ HtmlText =  HtmlEncode(Node.RenderText)	HTMLエンコード＜clsHtmlRenderer＞
+　　│#   内部呼出なし
+　　◆┐If Trim$(Node.InternalCalls) = "" Then
+　　│〇 GetNormalNodeHtml = HtmlText
+　　│→ Exit Function
+　　│┴End If
+　　│#   内部呼出一覧取得
+　　〇 Names = Split(  Node.InternalCalls,  ",")
+　　│#   関数リンク化
+　　＠┐For Each FuncName In Names
+　　│〇 FuncName =  Trim$(CStr(FuncName))
+　　│◆┐If FuncName <> "" Then
+　　││◎ LinkText =  BuildProcedureLink(  CStr(FuncName))	Procedureリンク生成＜clsHtmlRenderer＞
+　　│││	内部呼出:CStr
+　　││◆┐#If DEBUG_MODE Then
+　　│││〇 Debug.Print  "Replace Target=" &  CStr(FuncName)
+　　│││〇 Debug.Print  "Before=" &  HtmlText
+　　│││┴#End If
+　　││〇 HtmlText =  Replace(  HtmlText,  CStr(FuncName),  LinkText)
+　　││◆┐#If DEBUG_MODE Then
+　　│││〇 Debug.Print  "After=" &  HtmlText
+　　│││┴#End If
+　　││┴End If
+　　│┴Next FuncName
+　　〇 GetNormalNodeHtml =  HtmlText
+　　┴End Function
+
+========================================
+Calls (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+HtmlEncode	HTMLエンコード	clsHtmlRenderer
+BuildProcedureLink	Procedureリンク生成	clsHtmlRenderer
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetNodeHtmlText	ノードHTML文字列取得	clsHtmlRenderer

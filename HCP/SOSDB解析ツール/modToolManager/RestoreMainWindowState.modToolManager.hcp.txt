@@ -1,0 +1,35 @@
+┬
+〇│Public Sub RestoreMainWindowState()	Main画面状態復元＜modToolManager＞
+┴└┐
+　　│#   Main画面存在確認
+　　◆┐If ThisWorkbook.Windows.Count = 0 Then
+　　│→ Exit Sub
+　　│┴End If
+　　│#   Main画面状態復元
+　　＠┐With ThisWorkbook.Windows(1)
+　　│〇 .WindowState = xlNormal
+　　││#   Main画面位置復元
+　　│〇 .Left = gMainOldLeft
+　　│〇 .Top = gMainOldTop
+　　││#   Main画面サイズ復元
+　　│〇 .Width = gMainOldWidth
+　　│〇 .Height = gMainOldHeight
+　　│〇 .WindowState = gMainOldState
+　　│┴End With
+　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (3)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+Workbook_BeforeClose	Workbook終了	ThisWorkbook
+cmdClose_Click
+UserForm_QueryClose

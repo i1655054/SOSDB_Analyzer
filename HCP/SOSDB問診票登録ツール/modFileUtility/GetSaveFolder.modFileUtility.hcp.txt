@@ -1,5 +1,3 @@
-Procedure: modFileUtility.GetSaveFolder  [ 保存先フォルダ選択＜modFileUtility＞ ]
-HCP	Business
 ┬
 〇│Public Function GetSaveFolder(stTitle As String) As String	保存先フォルダ選択＜modFileUtility＞
 ┴└┐
@@ -10,20 +8,36 @@ HCP	Business
 　　〇 glbdbgflg = False
 　　〇 Set xlApp = Application
 　　〇 xlApp.StatusBar = "出力するファイル名を指定して下さい。"
-　　│#  フォルダ選択ダイアログ準備
+　　│#   フォルダ選択ダイアログ準備
 　　〇 Set Dialog = xlApp.FileDialog(msoFileDialogFolderPicker)
-　　│#  初期フォルダ設定
+　　│#   初期フォルダ設定
 　　〇 Dialog.Title = stTitle & "フォルダを選択してください"
 　　◎ Dialog.InitialFileName = GetTargetPath(g_CurrentIssue.targetVersion)	対象バージョン保存先取得＜modIssueMapper＞
-　　│#  フォルダ選択実行
+　　│#   フォルダ選択実行
 　　◆┐If Dialog.Show = -1 Then ' ユーザーがフォルダを選択した場合
-　　││#  選択結果取得
+　　││#   選択結果取得
 　　│〇 GetSaveFolder = Dialog.SelectedItems(1)
 　　│〇 xlApp.StatusBar = False
 　　├┐ELSE
 　　│〇 GetSaveFolder = ""
-　　││#  キャンセル通知
+　　││#   キャンセル通知
 　　│〇 MsgBox "フォルダ選択がキャンセルされました。", vbExclamation
 　　│→ Exit Function
 　　│┴End If
 　　┴End Function
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetTargetPath	対象バージョン保存先取得	modIssueMapper
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+EnsureMonFolder	問診票保存フォルダ確認	modUtility

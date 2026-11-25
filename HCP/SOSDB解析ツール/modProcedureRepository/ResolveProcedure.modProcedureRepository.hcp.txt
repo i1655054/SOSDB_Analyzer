@@ -1,0 +1,65 @@
+┬
+〇│Public Function ResolveProcedure(  ByVal CallerModule As String,  ByVal ProcName As String)  As clsProcInfo	Procedure解決＜modProcedureRepository＞
+┴└┐
+　　□ Dim Key As String
+　　□ Dim Col As Collection
+　　□ Dim V As Variant
+　　│#   ProcedureRepository状態確認
+　　◆→ If gContext Is Nothing Then Exit Function
+　　◆→ If gContext.ProcInfoDic Is Nothing Then Exit Function
+　　◆→ If gContext.ProcIndexDic Is Nothing Then Exit Function
+　　│#   Procedure名確認
+　　◆→ If Trim(ProcName) = "" Then Exit Function
+　　│#   呼出元優先検索キー生成
+　　〇 Key =  CallerModule & "|" & ProcName
+　　│#   同一モジュールProcedure検索
+　　◆┐If gContext.ProcInfoDic.Exists(Key) Then
+　　│〇 Set ResolveProcedure =  gContext.ProcInfoDic(Key)
+　　│→ Exit Function
+　　│┴End If
+　　│#   Procedure索引検索
+　　◆→ If Not gContext.ProcIndexDic.Exists(  ProcName) Then Exit Function
+　　│#   Procedure候補一覧取得
+　　〇 Set Col =  gContext.ProcIndexDic(ProcName)
+　　│#   Procedure候補解決
+　　◆┐If Col.Count = 1 Then
+　　│〇 Key =  Col(1) & "|" & ProcName
+　　│〇 Set ResolveProcedure =  gContext.ProcInfoDic(Key)
+　　│→ Exit Function
+　　│┴End If
+　　◆┐#If DEBUG_MODE Then
+　　││#   Procedure候補競合出力
+　　│◆┐If Col.Count > 1 Then
+　　││〇 Debug.Print  "ResolveProcedure Ambiguous : "  & ProcName  & " CallerModule="  & CallerModule
+　　││＠┐For Each V In Col
+　　│││〇 Debug.Print  "  Candidate : " & CStr(V)
+　　│││┴Next V
+　　││┴End If
+　　│┴#End If
+　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (13)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+DrawCallTreeShape	ノード再帰描画	modPathChart
+BuildCaptionText	ノード表示文字列生成	modPathChart
+UpdateCurrentNodeInfo	ノード情報更新	modPathChart
+IsProjectModuleCall		modAnalyzerCommon
+cmbStartProc_Change	開始関数変更	frmPathChart
+CreateTreeNode	ツリーノード生成	modPathChartCommon
+ConvertProcToHCP	HCP変換	modHCPAnalyzer
+GetBusinessText	業務説明取得	modHCPAnalyzer
+WriteCallsText	Calls一覧出力	clsTextRenderer
+WriteCalledByText	Called By一覧出力	clsTextRenderer
+WriteCallsHtml	Calls一覧HTML出力	clsHtmlRenderer
+WriteCalledByHtml	Called By一覧HTML出力	clsHtmlRenderer
+Export

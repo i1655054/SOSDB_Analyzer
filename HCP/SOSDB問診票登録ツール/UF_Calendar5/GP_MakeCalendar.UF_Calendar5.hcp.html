@@ -1,30 +1,31 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
 <meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
 <title>GP_MakeCalendar</title>
 <style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
 body{font-family:Meiryo;font-size:9pt;}
 table{border-collapse:collapse;}
-th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
 td{vertical-align:top;}
 th{background:#e8f0fe;}
-colgroup col:nth-of-type(1) {}
-colgroup col:nth-of-type(2) {}
-.resize {position: relative;}
-.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
 </style>
 </head>
-<body>
+<body translate="no">
 <h1>GP_MakeCalendar</h1>
 <p>Module : UF_Calendar5</p>
-<p><a href="./_INDEX.html">← Module Index</a></p>
 <table>
-<colgroup><col/><col/></colgroup>
-<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
 <tbody>
-<tr><td>Procedure: UF_Calendar5.GP_MakeCalendar  [ カレンダー生成＜UF_Calendar5＞ ]</td><td></td></tr>
-<tr><td>HCP</td><td>Business</td></tr>
 <tr><td>┬</td><td></td></tr>
 <tr><td>〇│Private Sub GP_MakeCalendar()</td><td>カレンダー生成＜UF_Calendar5＞</td></tr>
 <tr><td>┴└┐</td><td></td></tr>
@@ -40,18 +41,18 @@ colgroup col:nth-of-type(2) {}
 <tr><td>　　□ Dim lngCurPos As Long                                           ' 選択日の位置</td><td></td></tr>
 <tr><td>　　□ Dim tblCalendar() As g_typAboutCalendar2                        ' カレンダーテーブル</td><td></td></tr>
 <tr><td>　　〇 intYear = Year(g_FormDate1)                                 ' 指定年</td><td></td></tr>
-<tr><td>　　│#  表示範囲確認</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   表示範囲確認</span></td><td></td></tr>
 <tr><td>　　◆┐If ((intYear &lt; g_cnsYearFrom) Or  (intYear &gt; (Year(Date) + g_cnsYearToAdd))) Then</td><td></td></tr>
 <tr><td>　　│〇 MsgBox "祝日計算範囲を超えています。", vbExclamation, Me.Caption</td><td></td></tr>
 <tr><td>　　│〇 g_FormDate1 = g_tblDateLabel(g_CurPos).Hiduke</td><td></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
-<tr><td>　　│#  表示年月設定</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   表示年月設定</span></td><td></td></tr>
 <tr><td>　　〇 g_intCurYear = Year(g_FormDate1)                            ' 指定年</td><td></td></tr>
 <tr><td>　　〇 g_intCurMonth = Month(g_FormDate1)                          ' 指定月</td><td></td></tr>
 <tr><td>　　〇 LBL_YM.Caption = g_intCurYear &amp; "年" &amp; Format(g_intCurMonth, "00") &amp; "月"</td><td></td></tr>
-<tr><td>　　│#  カレンダーテーブル生成</td><td></td></tr>
-<tr><td>　　◎ Call modAboutCalendar2.GP_GetCalendarTable3(g_intCurYear,  g_intCurMonth,  tblCalendar,  lngCurStrIx,  lngCurEndIx)</td><td>三か月カレンダー生成＜modAboutCalendar2＞</td></tr>
-<tr><td>　　│#  カレンダー開始位置算出</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   カレンダーテーブル生成</span></td><td></td></tr>
+<tr><td>　　◎ Call modAboutCalendar2.<a href="../modAboutCalendar2/GP_GetCalendarTable3.modAboutCalendar2.hcp.html">GP_GetCalendarTable3</a>(g_intCurYear,  g_intCurMonth,  tblCalendar,  lngCurStrIx,  lngCurEndIx)</td><td><a href="../modAboutCalendar2/GP_GetCalendarTable3.modAboutCalendar2.hcp.html">三か月カレンダー生成＜modAboutCalendar2＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│#   カレンダー開始位置算出</span></td><td></td></tr>
 <tr><td>　　〇 lngIxCMax = UBound(tblCalendar)</td><td></td></tr>
 <tr><td>　　〇 lngIxC = lngCurStrIx</td><td></td></tr>
 <tr><td>　　〇 lngIxC = lngIxC - tblCalendar(lngCurStrIx).Yobi</td><td></td></tr>
@@ -61,9 +62,9 @@ colgroup col:nth-of-type(2) {}
 <tr><td>　　│┴End If</td><td></td></tr>
 <tr><td>　　〇 intYobi = 0</td><td></td></tr>
 <tr><td>　　〇 lngCurPos = -1</td><td></td></tr>
-<tr><td>　　│#  日付ラベル生成</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   日付ラベル生成</span></td><td></td></tr>
 <tr><td>　　＠┐For lngIx = 0 To 41</td><td></td></tr>
-<tr><td>　　││#  日付情報設定</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   日付情報設定</span></td><td></td></tr>
 <tr><td>　　│〇 intYobi = intYobi + 1</td><td></td></tr>
 <tr><td>　　│◆ If intYobi &gt; 7 Then intYobi = 1</td><td></td></tr>
 <tr><td>　　│〇 dteDate = tblCalendar(lngIxC).Hiduke</td><td></td></tr>
@@ -71,7 +72,7 @@ colgroup col:nth-of-type(2) {}
 <tr><td>　　││〇 lngCurPos = lngIx</td><td></td></tr>
 <tr><td>　　││┴End If</td><td></td></tr>
 <tr><td>　　│＠┐With g_tblDateLabel(lngIx)</td><td></td></tr>
-<tr><td>　　│││#  ガイド情報設定</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│││#   ガイド情報設定</span></td><td></td></tr>
 <tr><td>　　││〇 .Hiduke = dteDate</td><td></td></tr>
 <tr><td>　　││〇 .Yobi = tblCalendar(lngIxC).Yobi</td><td></td></tr>
 <tr><td>　　││〇 .Syuku = tblCalendar(lngIxC).Syuku</td><td></td></tr>
@@ -80,47 +81,60 @@ colgroup col:nth-of-type(2) {}
 <tr><td>　　│││〇 .StsGuide = .StsGuide &amp; " " &amp; tblCalendar(lngIxC).SyukuNm</td><td></td></tr>
 <tr><td>　　│││┴End If</td><td></td></tr>
 <tr><td>　　││┴End With</td><td></td></tr>
-<tr><td>　　││#  月初月末位置取得</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   月初月末位置取得</span></td><td></td></tr>
 <tr><td>　　│◆┐If lngIxC = lngCurStrIx Then</td><td></td></tr>
 <tr><td>　　││〇 g_CurPosF = lngIx</td><td></td></tr>
 <tr><td>　　│├┐ElseIf lngIxC = lngCurEndIx Then</td><td></td></tr>
 <tr><td>　　││〇 g_CurPosT = lngIx</td><td></td></tr>
 <tr><td>　　││┴End If</td><td></td></tr>
 <tr><td>　　│〇 g_tblDateLabel(lngIx).Label.Caption = Day(dteDate)</td><td></td></tr>
-<tr><td>　　││#  表示色設定</td><td></td></tr>
-<tr><td>　　│◎ Call GP_SetForeColor(lngIx, g_FormDate1)</td><td>カレンダー表示色設定＜UF_Calendar5＞</td></tr>
+<tr><td><span class="hcp-comment">　　││#   表示色設定</span></td><td></td></tr>
+<tr><td>　　│◎ Call <a href="../UF_Calendar5/GP_SetForeColor.UF_Calendar5.hcp.html">GP_SetForeColor</a>(lngIx, g_FormDate1)</td><td><a href="../UF_Calendar5/GP_SetForeColor.UF_Calendar5.hcp.html">カレンダー表示色設定＜UF_Calendar5＞</a></td></tr>
 <tr><td>　　│〇 lngIxC = lngIxC + 1</td><td></td></tr>
 <tr><td>　　│┴Next lngIx</td><td></td></tr>
-<tr><td>　　│#  ガイド更新</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   ガイド更新</span></td><td></td></tr>
 <tr><td>　　〇 LBL_GUIDE.Caption = g_tblDateLabel(g_CurPos).StsGuide   ' ガイド表示</td><td></td></tr>
 <tr><td>　　┴End Sub</td><td></td></tr>
 </tbody>
 </table>
+<hr>
+<h2>Calls (2)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modAboutCalendar2/GP_GetCalendarTable3.modAboutCalendar2.hcp.html">GP_GetCalendarTable3</a></td><td>三か月カレンダー生成</td><td>modAboutCalendar2</td></tr>
+<tr><td><a href="../UF_Calendar5/GP_SetForeColor.UF_Calendar5.hcp.html">GP_SetForeColor</a></td><td>カレンダー表示色設定</td><td>UF_Calendar5</td></tr>
+</table>
+<hr>
+<h2>Called By (7)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../UF_Calendar5/CBO_MONTH_Change.UF_Calendar5.hcp.html">CBO_MONTH_Change</a></td><td>カレンダー月変更</td><td>UF_Calendar5</td></tr>
+<tr><td><a href="../UF_Calendar5/CBO_YEAR_Change.UF_Calendar5.hcp.html">CBO_YEAR_Change</a></td><td>カレンダー年変更</td><td>UF_Calendar5</td></tr>
+<tr><td><a href="../UF_Calendar5/LBL_PREV_Click.UF_Calendar5.hcp.html">LBL_PREV_Click</a></td><td>前月表示</td><td>UF_Calendar5</td></tr>
+<tr><td><a href="../UF_Calendar5/LBL_NEXT_Click.UF_Calendar5.hcp.html">LBL_NEXT_Click</a></td><td>翌月表示</td><td>UF_Calendar5</td></tr>
+<tr><td><a href="../UF_Calendar5/UserForm_Activate.UF_Calendar5.hcp.html">UserForm_Activate</a></td><td></td><td></td></tr>
+<tr><td><a href="../UF_Calendar5/UserForm_KeyDown.UF_Calendar5.hcp.html">UserForm_KeyDown</a></td><td>キーボード日付操作</td><td>UF_Calendar5</td></tr>
+<tr><td><a href="../UF_Calendar5/GP_MoveDay.UF_Calendar5.hcp.html">GP_MoveDay</a></td><td>日付移動</td><td>UF_Calendar5</td></tr>
+</table>
 <script>
-document.querySelectorAll('.resize').forEach(function (eleTh) {
+document.querySelectorAll('.resize').forEach(function(eleTh) {
 let startX;
 let startWidth;
 const eleResizer = document.createElement('div');
 eleResizer.classList.add('resizer');
-eleResizer.addEventListener('mousedown', function (e) {
-const styleTh = window.getComputedStyle(eleTh);
-const paddingLeft = parseFloat(styleTh.paddingLeft);
-const paddingRight = parseFloat(styleTh.paddingRight);
-const borderLeft = parseFloat(styleTh.borderLeftWidth);
-const borderRight = parseFloat(styleTh.borderRightWidth);
+eleResizer.addEventListener('mousedown', function(e) {
 startX = e.pageX;
-startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+startWidth = eleTh.offsetWidth;
 document.addEventListener('mousemove', onMouseMove);
 document.addEventListener('mouseup', onMouseUp);
 });
 eleTh.appendChild(eleResizer);
-function onMouseMove(e) {
-const newWidth = startWidth + (e.pageX - startX);
-eleTh.style.width = newWidth + 'px';
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
 }
-function onMouseUp() {
-document.removeEventListener('mousemove', onMouseMove);
-document.removeEventListener('mouseup', onMouseUp);
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
 }
 });
 </script>

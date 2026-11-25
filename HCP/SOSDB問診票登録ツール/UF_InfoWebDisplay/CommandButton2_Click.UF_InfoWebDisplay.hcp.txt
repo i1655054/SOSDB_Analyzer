@@ -1,24 +1,37 @@
-Procedure: UF_InfoWebDisplay.CommandButton2_Click  [ 改行表示切替＜UF_InfoWebDisplay＞ ]
-HCP	Business
 ┬
 〇│Private Sub CommandButton2_Click()	改行表示切替＜UF_InfoWebDisplay＞
 ┴└┐
-　　│#  表示モード切替
+　　│#   表示モード切替
 　　〇 IsScrollEnabled = Not IsScrollEnabled
-　　│#  ボタン表示更新
+　　│#   ボタン表示更新
 　　◆┐If IsScrollEnabled Then
 　　│＠┐With CommandButton2
 　　││〇 .Caption = "改行なし"
 　　││┴End With
 　　│〇 Label4.Caption = "表示mode:改行あり"
-　　│〇 Label4.Caption = "表示mode:改行なし"
 　　├┐ELSE
 　　│＠┐With CommandButton2
-　　││┴End With
 　　│〇 .Caption = "改行あり"
+　　││┴End With
+　　│〇 Label4.Caption = "表示mode:改行なし"
 　　│┴End If
-　　│#  HTML再生成
+　　│#   HTML再生成
 　　◎ BuildHTMLContent bodyText	HTML本文生成＜UF_InfoWebDisplay＞
-　　│#  画面再表示
+　　│#   画面再表示
 　　◎ RenderHTML	HTML表示＜UF_InfoWebDisplay＞
 　　┴End Sub
+
+========================================
+Calls (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+BuildHTMLContent	HTML本文生成	UF_InfoWebDisplay
+RenderHTML	HTML表示	UF_InfoWebDisplay
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

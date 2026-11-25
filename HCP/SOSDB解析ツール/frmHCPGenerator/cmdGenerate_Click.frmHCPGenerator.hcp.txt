@@ -1,0 +1,48 @@
+┬
+〇│Private Sub cmdGenerate_Click()	HCP生成＜frmHCPGenerator＞
+┴└┐
+　　□ Dim ModuleName As String
+　　□ Dim ProcName As String
+　　〇 gDevMode =  chkDevMode.Value
+　　│#   モジュール選択確認
+　　◆┐If lstModule.ListIndex < 0 Then
+　　│〇 MsgBox "モジュールを選択してください。"
+　　│→ Exit Sub
+　　│┴End If
+　　│#   Procedure選択確認
+　　◆┐If lstProcedure.ListIndex < 0 Then
+　　│〇 MsgBox "プロシージャを選択してください。"
+　　│→ Exit Sub
+　　│┴End If
+　　│#   対象Procedure取得
+　　〇 ModuleName = lstModule.Value
+　　〇 ProcName = lstProcedure.Value
+　　│#   HCP表示設定反映
+　　〇 gHCPCompactMode = optCompact.Value
+　　│#   HCP生成実行
+　　◎ CreateHCP  ModuleName,  ProcName	HCP作成＜modHCPAnalyzer＞
+　　│#   ステータスバー更新
+　　〇 Application.StatusBar =  "HCP生成完了 : " &  ModuleName & "." & ProcName
+　　│#   HCP生成ログ出力
+　　◎ Trace "HCP",  "Complete " &  ModuleName & "." & ProcName	トレース出力＜modDebug＞
+　　│#   HCPチャート表示
+　　〇 gContext.ManagementBook.Activate
+　　│#   HCPチャートシート表示
+　　〇 gContext.ManagementBook.Worksheets(
+　　│   SHEET_HCP_CHART).Activate
+　　┴End Sub
+
+========================================
+Calls (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+CreateHCP	HCP作成	modHCPAnalyzer
+Trace	トレース出力	modDebug
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

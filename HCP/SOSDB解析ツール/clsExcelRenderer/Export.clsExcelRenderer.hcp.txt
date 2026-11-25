@@ -1,0 +1,85 @@
+┬
+〇│Public Sub Export(  ByVal HCPNodes As Collection,  ByVal ModuleName As String,  ByVal ProcName As String)	Excel出力＜clsExcelRenderer＞
+┴└┐
+　　□ Dim Node As clsHCPNode
+　　□ Dim StartNode As clsHCPNode
+　　□ Dim ProcInfo As clsProcInfo
+　　☆ On Error Resume Next
+　　│#   HCPChart取得
+　　〇 Set mWorksheet =  gContext.ManagementBook.Worksheets(
+　　│   SHEET_HCP_CHART)
+　　☆ On Error GoTo 0
+　　│#   HCPChart作成
+　　◆┐If mWorksheet Is Nothing Then
+　　│〇 Set mWorksheet =  gContext.ManagementBook.Worksheets.Add
+　　│〇 mWorksheet.Name =  SHEET_HCP_CHART
+　　│┴End If
+　　│#   Procedure情報取得
+　　◎ Set ProcInfo =  ResolveProcedure(  ModuleName,  ProcName)	Procedure解決＜modProcedureRepository＞
+　　│#   STARTノード取得
+　　＠┐For Each Node In HCPNodes
+　　│◆┐If Node.NodeType = NODE_START Then
+　　││〇 Set StartNode = Node
+　　││→ Exit For
+　　││┴End If
+　　│┴Next Node
+　　│#   HCPChart初期化
+　　〇 mWorksheet.Cells.Clear
+　　│#   Procedureヘッダ出力
+　　◆┐If Not ProcInfo Is Nothing Then
+　　│〇 mWorksheet.Cells(1, 1).Value =  "Procedure: " &  ModuleName & "." &  ProcName &  "  [ " &  ProcInfo.JPName &  "＜" &  ProcInfo.ModuleName &  "＞ ]"
+　　├┐ELSE
+　　│〇 mWorksheet.Cells(1, 1).Value =  "Procedure: " &  ModuleName & "." &  ProcName
+　　│┴End If
+　　│#   HCPヘッダ出力
+　　〇 mWorksheet.Cells(2, 1).Value = "HCP"
+　　〇 mWorksheet.Cells(2, 2).Value = "Business"
+　　〇 mRowOut = 3
+　　│#   開始記号出力
+　　〇 mWorksheet.Cells(mRowOut, 1).Value = "┬"
+　　〇 mRowOut = mRowOut + 1
+　　│#   STARTノード出力
+　　◆┐If Not StartNode Is Nothing Then
+　　│◎ Call OutputNode(StartNode)	ノード出力＜clsExcelRenderer＞
+　　│┴End If
+　　│#   HCP開始終了
+　　〇 mWorksheet.Cells(mRowOut, 1).Value = "┴└┐"
+　　〇 mRowOut = mRowOut + 1
+　　│#   HCPノード出力
+　　＠┐For Each Node In HCPNodes
+　　││#   STARTノードは出力済
+　　│◆┐If Node.NodeType = NODE_START Then
+　　││→ GoTo ContinueLoop
+　　││┴End If
+　　│◎ Call OutputNode(Node)	ノード出力＜clsExcelRenderer＞
+▼ ContinueLoop:
+　　│┴Next Node
+　　│#   HCPChart体裁設定
+　　〇 mWorksheet.Columns("A:B").AutoFit
+　　〇 mWorksheet.Columns("A").ColumnWidth =  HCP_COL_WIDTH
+　　〇 mWorksheet.Columns("B").ColumnWidth =  BUSINESS_COL_WIDTH
+　　〇 mWorksheet.Columns("A").WrapText = True
+　　┴End Sub
+
+========================================
+Calls (10)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetBusinessPrefix	Business継続プレフィックス取得	modHCPCommon
+WriteCallsText	Calls一覧出力	clsTextRenderer
+WriteCalledByText	Called By一覧出力	clsTextRenderer
+WriteHtmlHeader	HTMLヘッダ出力	modHCPIndex
+OutputHCPNodes	HCPノードHTML出力	clsHtmlRenderer
+WriteCallsHtml	Calls一覧HTML出力	clsHtmlRenderer
+WriteCalledByHtml	Called By一覧HTML出力	clsHtmlRenderer
+WriteHtmlFooter	HTMLフッタ出力	modHCPIndex
+ResolveProcedure	Procedure解決	modProcedureRepository
+OutputNode	ノード出力	clsExcelRenderer
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

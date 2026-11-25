@@ -1,8 +1,20 @@
-Procedure: modMonshinCore.WrapHeader  [ 見出し装飾設定＜modMonshinCore＞ ]
-HCP	Business
 ┬
 〇│Private Function WrapHeader(  ByVal text As String,  ByVal header As String,  ByVal cssClass As String) As String	見出し装飾設定＜modMonshinCore＞
 ┴└┐
-　　│#  見出しタグ付与
+　　│#   見出しタグ付与
 　　〇 WrapHeader = Replace(  text,  header,  "<span class='" & cssClass & "'>" &  header &  "</span>"  )
 　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+FormatDescriptionForDisplay	説明文表示整形	modMonshinCore

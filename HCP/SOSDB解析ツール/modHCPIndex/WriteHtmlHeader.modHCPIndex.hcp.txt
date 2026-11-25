@@ -1,0 +1,64 @@
+┬
+〇│Public Sub WriteHtmlHeader(  ByVal FileNo As Integer,  ByVal Title As String,  Optional ByVal LineHeight As Single = 1.5,  Optional ByVal EnableResize As Boolean = False)	HTMLヘッダ出力＜modHCPIndex＞
+┴└┐
+　　│#   HTML開始
+　　〇 Print #FileNo, "<!DOCTYPE html>"
+　　│#   日本語ページ指定
+　　〇 Print #FileNo, "<html lang=""ja"">"
+　　│#   HEAD開始
+　　〇 Print #FileNo, "<head>"
+　　│#   文字コード
+　　〇 Print #FileNo,  "<meta charset=""shift_jis"">"
+　　│#   Google翻訳抑止
+　　〇 Print #FileNo,  "<meta name=""google"" content=""notranslate"">"
+　　│#   電話番号リンク化抑止
+　　〇 Print #FileNo,  "<meta name=""format-detection"" content=""telephone=no"">"
+　　│#   ブラウザ言語指定
+　　〇 Print #FileNo,  "<meta http-equiv=""Content-Language"" content=""ja"">"
+　　│#   タイトル
+　　〇 Print #FileNo,  "<title>" &  Title &  "</title>"
+　　│#   CSS開始
+　　〇 Print #FileNo,  "<style>"
+　　│#   翻訳抑止
+　　〇 Print #FileNo,  ".notranslate{" &  "translate:no;" &  "}"
+　　│#   コメント色付け
+　　〇 Print #FileNo,  ".hcp-comment{" &  "color:#008000;" &  "font-style:italic;" &  "white-space:pre;" &  "}"
+　　│#   Body
+　　〇 Print #FileNo,  "body{font-family:Meiryo;font-size:9pt;}"
+　　│#   Table
+　　〇 Print #FileNo,  "table{border-collapse:collapse;}"
+　　│#   Cell
+　　〇 Print #FileNo,  "th,td{border:1px solid #cccccc;" &  "padding:1px 4px;" &  "line-height:" &  Line_Height & ";}"
+　　│#   DataCell
+　　〇 Print #FileNo,  "td{vertical-align:top;}"
+　　│#   HeaderCell
+　　〇 Print #FileNo,  "th{background:#e8f0fe;}"
+　　│#   列幅変更CSS
+　　◆┐If EnableResize Then
+　　│◎ WriteColumnResizerCss  FileNo	列幅変更CSS出力＜modHCPIndex＞
+　　│┴End If
+　　│#   CSS終了
+　　〇 Print #FileNo,  "</style>"
+　　│#   HEAD終了
+　　〇 Print #FileNo,  "</head>"
+　　│#   BODY開始
+　　〇 Print #FileNo,  "<body translate=""no"">"
+　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+WriteColumnResizerCss	列幅変更CSS出力	modHCPIndex
+
+========================================
+Called By (3)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+WriteHtmlIndexFile	Module INDEX HTML出力	modHCPIndex
+WriteToolIndexHtml	Tool INDEX HTML出力	modHCPIndex
+Export

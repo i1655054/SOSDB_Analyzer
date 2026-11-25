@@ -1,19 +1,33 @@
-Procedure: XmlLoader.EscapeXML  [ XMLエスケープ＜XmlLoader＞ ]
-HCP	Business
 ┬
 〇│Public Function EscapeXML(  ByVal str As String) As String	XMLエスケープ＜XmlLoader＞
 ┴└┐
-　　│#  空文字確認
+　　│#   空文字確認
 　　◆┐If str = "" Then
 　　│〇 EscapeXML = ""
 　　│→ Exit Function
 　　│┴End If
-　　│#  XML特殊文字変換
+　　│#   XML特殊文字変換
 　　〇 str = Replace(str, "&", "&amp;")
 　　〇 str = Replace(str, "<", "&lt;")
 　　〇 str = Replace(str, ">", "&gt;")
 　　〇 str = Replace(str, """", "&quot;")
 　　〇 str = Replace(str, "'", "&apos;")
-　　│#  変換結果返却
+　　│#   変換結果返却
 　　〇 EscapeXML = str
 　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (3)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+CreateIssueXmlFromIssue	新規登録XML生成	modRegister
+CreateUpdateXmlFromIssue	更新登録XML生成	modRegister
+BuildCustomFieldXmlEx	カスタムフィールドXML要素生成	modRegister

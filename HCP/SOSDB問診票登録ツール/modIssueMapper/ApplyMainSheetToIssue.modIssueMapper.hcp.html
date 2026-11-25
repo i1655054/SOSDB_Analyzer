@@ -1,90 +1,91 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
 <meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
 <title>ApplyMainSheetToIssue</title>
 <style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
 body{font-family:Meiryo;font-size:9pt;}
 table{border-collapse:collapse;}
-th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
 td{vertical-align:top;}
 th{background:#e8f0fe;}
-colgroup col:nth-of-type(1) {}
-colgroup col:nth-of-type(2) {}
-.resize {position: relative;}
-.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
 </style>
 </head>
-<body>
+<body translate="no">
 <h1>ApplyMainSheetToIssue</h1>
 <p>Module : modIssueMapper</p>
-<p><a href="./_INDEX.html">← Module Index</a></p>
 <table>
-<colgroup><col/><col/></colgroup>
-<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
 <tbody>
-<tr><td>Procedure: modIssueMapper.ApplyMainSheetToIssue  [ メイン画面反映＜modIssueMapper＞ ]</td><td></td></tr>
-<tr><td>HCP</td><td>Business</td></tr>
 <tr><td>┬</td><td></td></tr>
 <tr><td>〇│Public Sub ApplyMainSheetToIssue(  ByRef issue As IssueInfo)</td><td>メイン画面反映＜modIssueMapper＞</td></tr>
 <tr><td>┴└┐</td><td></td></tr>
-<tr><td>　　│#  Issue存在確認</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   Issue存在確認</span></td><td></td></tr>
 <tr><td>　　◆┐If issue Is Nothing Then</td><td></td></tr>
 <tr><td>　　│〇 Debug.Print "issue取得失敗: "</td><td></td></tr>
 <tr><td>　　│→ Exit Sub</td><td></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
-<tr><td>　　│#  メインシート取得</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   メインシート取得</span></td><td></td></tr>
 <tr><td>　　□ Dim sht As Worksheet</td><td></td></tr>
 <tr><td>　　〇 Set sht = ThisWorkbook.Sheets(SheetName_Main)</td><td></td></tr>
 <tr><td>　　＠┐With issue</td><td></td></tr>
-<tr><td>　　││#  ステータス反映</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   ステータス反映</span></td><td></td></tr>
 <tr><td>　　│◆┐If sht.Range(DB_STATUS_RANG).Value &lt;&gt; "" Then</td><td></td></tr>
 <tr><td>　　││〇 .Status = sht.Range(DB_STATUS_RANG).Value</td><td></td></tr>
 <tr><td>　　││┴End If</td><td></td></tr>
-<tr><td>　　││#  優先度反映</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   優先度反映</span></td><td></td></tr>
 <tr><td>　　│◆┐If sht.Range(PRIORITY_RANG).Value &lt;&gt; "" Then</td><td></td></tr>
 <tr><td>　　││〇 .Priority = sht.Range(PRIORITY_RANG).Value</td><td></td></tr>
 <tr><td>　　││┴End If</td><td></td></tr>
-<tr><td>　　││#  担当者反映</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   担当者反映</span></td><td></td></tr>
 <tr><td>　　│□ Dim person As String</td><td></td></tr>
 <tr><td>　　│〇 person = sht.Range(TANTOU_NAME_RANG).Value</td><td></td></tr>
 <tr><td>　　│◆┐If person &lt;&gt; "" Then</td><td></td></tr>
 <tr><td>　　││〇 .AuthorName = person</td><td></td></tr>
 <tr><td>　　││〇 .AssignedTo = person</td><td></td></tr>
 <tr><td>　　││┴End If</td><td></td></tr>
-<tr><td>　　││#  対象バージョン反映</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   対象バージョン反映</span></td><td></td></tr>
 <tr><td>　　│〇 .targetVersion = sht.Range(TARGET_VER_RANG).Value</td><td></td></tr>
-<tr><td>　　││#  トラバス管理番号生成</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   トラバス管理番号生成</span></td><td></td></tr>
 <tr><td>　　│◆┐If sht.Range(TORBLE_NUM_RANG).Value &lt;&gt; "" And .targetVersion &lt;&gt; "" Then</td><td></td></tr>
 <tr><td>　　││□ Dim versionId As Long</td><td></td></tr>
-<tr><td>　　││◎ versionId = GetVersionId(.targetVersion)</td><td>対象バージョンID取得＜modIssueMapper＞</td></tr>
+<tr><td>　　││◎ versionId = <a href="../modIssueMapper/GetVersionId.modIssueMapper.hcp.html">GetVersionId</a>(.targetVersion)</td><td><a href="../modIssueMapper/GetVersionId.modIssueMapper.hcp.html">対象バージョンID取得＜modIssueMapper＞</a></td></tr>
 <tr><td>　　││◆┐If versionId &lt;&gt; 0 Then</td><td></td></tr>
-<tr><td>　　│││◎ .TroubleNum = BuildTroubleNum(sht.Range(TARGET_VER_RANG).Value, sht.Range(TORBLE_NUM_RANG).Value)</td><td>トラブル番号生成＜modUtility＞</td></tr>
+<tr><td>　　│││◎ .TroubleNum = <a href="../modUtility/BuildTroubleNum.modUtility.hcp.html">BuildTroubleNum</a>(sht.Range(TARGET_VER_RANG).Value, sht.Range(TORBLE_NUM_RANG).Value)</td><td><a href="../modUtility/BuildTroubleNum.modUtility.hcp.html">トラブル番号生成＜modUtility＞</a></td></tr>
 <tr><td>　　││││</td><td>内部呼出:Range, Range</td></tr>
 <tr><td>　　││├┐ELSE</td><td></td></tr>
 <tr><td>　　│││〇 Debug.Print "警告: Version未登録 " &amp; .targetVersion</td><td></td></tr>
 <tr><td>　　│││┴End If</td><td></td></tr>
 <tr><td>　　││┴End If</td><td></td></tr>
-<tr><td>　　││#  装置プロダクト反映</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   装置プロダクト反映</span></td><td></td></tr>
 <tr><td>　　│◆┐If sht.Range(EQ_PRODUCT_RANG).Value &lt;&gt; "" Then</td><td></td></tr>
 <tr><td>　　││〇 .EqProduct = sht.Range(EQ_PRODUCT_RANG).Value</td><td></td></tr>
 <tr><td>　　││┴End If</td><td></td></tr>
-<tr><td>　　││#  プロダクト担当反映</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   プロダクト担当反映</span></td><td></td></tr>
 <tr><td>　　│◆┐If sht.Range(PRODUCT_TANTOU_RANG).Value &lt;&gt; "" Then</td><td></td></tr>
 <tr><td>　　││〇 .ProductTantou = sht.Range(PRODUCT_TANTOU_RANG).Value</td><td></td></tr>
 <tr><td>　　││┴End If</td><td></td></tr>
-<tr><td>　　││#  発生日反映</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   発生日反映</span></td><td></td></tr>
 <tr><td>　　│◆┐If sht.Range(ESCALE_DAY_RANG).Value &lt;&gt; "" Then</td><td></td></tr>
 <tr><td>　　││〇 .Esukare_Date = Format(sht.Range(ESCALE_DAY_RANG).Value, "yyyy-mm-dd")</td><td></td></tr>
 <tr><td>　　││┴End If</td><td></td></tr>
-<tr><td>　　││#  完了日反映</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   完了日反映</span></td><td></td></tr>
 <tr><td>　　│◆┐If sht.Range(CLOSE_DAY_RANG).Value &lt;&gt; "" Then</td><td></td></tr>
 <tr><td>　　││〇 .Close_Date = Format(sht.Range(CLOSE_DAY_RANG).Value, "yyyy-mm-dd")</td><td></td></tr>
 <tr><td>　　││┴End If</td><td></td></tr>
-<tr><td>　　││#  問処票情報生成</td><td></td></tr>
-<tr><td>　　│◎ .Mondainum_Pro = BuildMondainumPro()</td><td>問処番号生成＜modUtility＞</td></tr>
-<tr><td>　　│◎ .KihensinName_Date = BuildKihensinNameDate()</td><td>規変審情報生成＜modUtility＞</td></tr>
-<tr><td>　　││#  サービス影響反映</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   問処票情報生成</span></td><td></td></tr>
+<tr><td>　　│◎ .Mondainum_Pro = <a href="../modUtility/BuildMondainumPro.modUtility.hcp.html">BuildMondainumPro</a>()</td><td><a href="../modUtility/BuildMondainumPro.modUtility.hcp.html">問処番号生成＜modUtility＞</a></td></tr>
+<tr><td>　　│◎ .KihensinName_Date = <a href="../modUtility/BuildKihensinNameDate.modUtility.hcp.html">BuildKihensinNameDate</a>()</td><td><a href="../modUtility/BuildKihensinNameDate.modUtility.hcp.html">規変審情報生成＜modUtility＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　││#   サービス影響反映</span></td><td></td></tr>
 <tr><td>　　│◆┐If sht.Range(SERVICE_IMPACT_RANG).Value &lt;&gt; "" Then</td><td></td></tr>
 <tr><td>　　││〇 .ServiceImpact = sht.Range(SERVICE_IMPACT_RANG).Value</td><td></td></tr>
 <tr><td>　　││┴End If</td><td></td></tr>
@@ -92,31 +93,40 @@ colgroup col:nth-of-type(2) {}
 <tr><td>　　┴End Sub</td><td></td></tr>
 </tbody>
 </table>
+<hr>
+<h2>Calls (4)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modIssueMapper/GetVersionId.modIssueMapper.hcp.html">GetVersionId</a></td><td>対象バージョンID取得</td><td>modIssueMapper</td></tr>
+<tr><td><a href="../modUtility/BuildTroubleNum.modUtility.hcp.html">BuildTroubleNum</a></td><td>トラブル番号生成</td><td>modUtility</td></tr>
+<tr><td><a href="../modUtility/BuildMondainumPro.modUtility.hcp.html">BuildMondainumPro</a></td><td>問処番号生成</td><td>modUtility</td></tr>
+<tr><td><a href="../modUtility/BuildKihensinNameDate.modUtility.hcp.html">BuildKihensinNameDate</a></td><td>規変審情報生成</td><td>modUtility</td></tr>
+</table>
+<hr>
+<h2>Called By (1)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modIssueService/RegisterIssueFromUI.modIssueService.hcp.html">RegisterIssueFromUI</a></td><td>Issue登録実行</td><td>modIssueService</td></tr>
+</table>
 <script>
-document.querySelectorAll('.resize').forEach(function (eleTh) {
+document.querySelectorAll('.resize').forEach(function(eleTh) {
 let startX;
 let startWidth;
 const eleResizer = document.createElement('div');
 eleResizer.classList.add('resizer');
-eleResizer.addEventListener('mousedown', function (e) {
-const styleTh = window.getComputedStyle(eleTh);
-const paddingLeft = parseFloat(styleTh.paddingLeft);
-const paddingRight = parseFloat(styleTh.paddingRight);
-const borderLeft = parseFloat(styleTh.borderLeftWidth);
-const borderRight = parseFloat(styleTh.borderRightWidth);
+eleResizer.addEventListener('mousedown', function(e) {
 startX = e.pageX;
-startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+startWidth = eleTh.offsetWidth;
 document.addEventListener('mousemove', onMouseMove);
 document.addEventListener('mouseup', onMouseUp);
 });
 eleTh.appendChild(eleResizer);
-function onMouseMove(e) {
-const newWidth = startWidth + (e.pageX - startX);
-eleTh.style.width = newWidth + 'px';
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
 }
-function onMouseUp() {
-document.removeEventListener('mousemove', onMouseMove);
-document.removeEventListener('mouseup', onMouseUp);
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
 }
 });
 </script>

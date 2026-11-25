@@ -1,0 +1,32 @@
+┬
+〇│Public Function GetProcInfo(  ByVal ModuleName As String,  ByVal ProcName As String)  As clsProcInfo	Procedure情報取得＜modAnalyzerCommon＞
+┴└┐
+　　□ Dim Key As String
+　　│#   Context確認
+　　◆→ If gContext Is Nothing Then Exit Function
+　　│#   Procedure名確認
+　　◆→ If Trim$(ProcName) = "" Then Exit Function
+　　│#   Repository初期化
+　　◎ InitializeProcedureRepository	ProcedureRepository初期化＜modProcedureRepository＞
+　　◆→ If gContext.ProcInfoDic Is Nothing Then Exit Function
+　　│#   Procedure検索キー生成
+　　〇 Key =  ModuleName & "|" &  ProcName
+　　│#   Procedure情報取得
+　　◆┐If gContext.ProcInfoDic.Exists(Key) Then
+　　│〇 Set GetProcInfo =  gContext.ProcInfoDic(Key)
+　　│┴End If
+　　┴End Function
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+InitializeProcedureRepository	ProcedureRepository初期化	modProcedureRepository
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

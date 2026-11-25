@@ -1,11 +1,25 @@
-Procedure: modUtility.EnsureCurrentIssue  [ CurrentIssue生成保証＜modUtility＞ ]
-HCP	Business
 ┬
 〇│Public Sub EnsureCurrentIssue()	CurrentIssue生成保証＜modUtility＞
 ┴└┐
-　　│#  CurrentIssue生成確認
+　　│#   CurrentIssue生成確認
 　　◆┐If g_CurrentIssue Is Nothing Then
-　　││#  CurrentIssue生成
+　　││#   CurrentIssue生成
 　　│〇 Set g_CurrentIssue = New IssueInfo
 　　│┴End If
 　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (3)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+MonshinInfoHandler	問診票取込処理	modMonshinCore
+UpdateMonshinHandler	問診票更新処理	modMonshinCore
+PrepareIssueFor	事前処理実行	modUtility

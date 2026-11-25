@@ -1,0 +1,25 @@
+┬
+〇│Public Sub RegisterShortcut()	ショートカット登録＜modPathChart＞
+┴└┐
+　　│#   PathChartショートカット登録
+　　〇 Application.OnKey "^+F", "FindNode"
+　　〇 Application.OnKey "^+N", "FindNextNode"
+　　〇 Application.OnKey "^+P", "MoveToParentNode"
+　　〇 Application.OnKey "^+C", "MoveToChildNode"
+　　〇 Application.OnKey "^+S", "MoveToSiblingNode"
+　　〇 Application.OnKey "^+H", "ClearHighlight"
+　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+InitializeAnalyzer	Analyzer初期化	modStartup

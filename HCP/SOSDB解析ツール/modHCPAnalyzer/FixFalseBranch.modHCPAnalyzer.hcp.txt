@@ -1,0 +1,39 @@
+┬
+〇│Private Sub FixFalseBranch(  ByVal HCPNodes As Collection)	FALSE枝補正＜modHCPAnalyzer＞
+┴└┐
+　　□ Dim i As Long
+　　□ Dim Node As clsHCPNode
+　　□ Dim FalseNodeID As Long
+　　〇 FalseNodeID = 0
+　　│#   FALSE枝補正開始
+　　＠┐For i = 1 To HCPNodes.Count
+　　│〇 Set Node = HCPNodes(i)
+　　││#   FALSEノード検出
+　　│◆┐If Node.NodeType = NODE_FALSE Then
+　　││〇 FalseNodeID = Node.NodeID
+　　│││#   FALSE配下親補正
+　　│├┐ElseIf FalseNodeID <> 0 Then
+　　││◆┐If Node.NodeType = NODE_ELSEIF Then
+　　│││〇 FalseNodeID = 0
+　　││├┐ElseIf Node.NodeType = NODE_MERGE Then
+　　│││〇 FalseNodeID = 0
+　　││├┐ElseIf Node.BranchType = BRANCH_FALSE Then
+　　│││〇 Node.ParentID = FalseNodeID
+　　│││┴End If
+　　││┴End If
+　　│┴Next i
+　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ConvertProcToHCP	HCP変換	modHCPAnalyzer

@@ -1,0 +1,32 @@
+┬
+〇│Private Sub UpdateSelectedCount()	選択件数更新＜frmExportTool＞
+┴└┐
+　　□ Dim itm As ListItem
+　　□ Dim Count As Long
+　　│#   選択件数集計
+　　＠┐For Each itm In lvwTools.ListItems
+　　││#   チェック状態判定
+　　│◆┐If itm.Checked Then
+　　││〇 Count = Count + 1
+　　││┴End If
+　　│┴Next itm
+　　│#   選択件数表示
+　　〇 lblSelectedCount.Caption =  "選択: " & Count & " 件"
+　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (4)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+LoadToolList
+cmdSelectAll_Click	全選択	frmExportTool
+cmdSelectNone_Click	全解除	frmExportTool
+lvwTools_ItemCheck	チェック変更	frmExportTool

@@ -1,10 +1,23 @@
-Procedure: UF_InfoWebDisplay.InitFormSize  [ フォームサイズ管理初期化＜UF_InfoWebDisplay＞ ]
-HCP	Business
 ┬
 〇│Private Sub InitFormSize()	フォームサイズ管理初期化＜UF_InfoWebDisplay＞
 ┴└┐
-　　│#  サイズ管理初期化
+　　│#   サイズ管理初期化
 　　◆┐If m_FormSizeDic Is Nothing Then
 　　│〇 Set m_FormSizeDic = CreateObject("Scripting.Dictionary")
 　　│┴End If
 　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+SaveCurrentSize	フォームサイズ保存	UF_InfoWebDisplay
+RestoreCurrentSize	フォームサイズ復元	UF_InfoWebDisplay

@@ -1,0 +1,28 @@
+┬
+〇│Public Function GetWorkbookByToolID(  ByVal ToolID As Long)  As Workbook	対象ブック取得＜modToolManager＞
+┴└┐
+　　□ Dim Tool As clsToolInfo
+　　│#   ツール情報取得
+　　◎ Set Tool = GetToolInfo(ToolID)	ツール情報取得＜modToolManager＞
+　　☆ On Error Resume Next
+　　│#   対象ブック取得
+　　〇 Set GetWorkbookByToolID =  Workbooks(Tool.WorkbookName)
+　　☆ On Error GoTo 0
+　　┴End Function
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetToolInfo	ツール情報取得	modToolManager
+
+========================================
+Called By (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+cmdExport_Click
+GetCurrentTargetBook	現在対象ブック取得	modToolManager

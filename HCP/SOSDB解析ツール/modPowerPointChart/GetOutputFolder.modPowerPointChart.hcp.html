@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
+<title>GetOutputFolder</title>
+<style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
+</style>
+</head>
+<body translate="no">
+<h1>GetOutputFolder</h1>
+<p>Module : modPowerPointChart</p>
+<table>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
+<tbody>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Public Function GetOutputFolder() As String</td><td>出力フォルダ取得＜modPowerPointChart＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　□ Dim Folder As String</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   出力フォルダ生成</span></td><td></td></tr>
+<tr><td>　　〇 Folder =  Environ$("USERPROFILE") &amp;  "\OneDrive - east.ntt.co.jp\" &amp;  "ドキュメント\GitHub\SOSDB_Analyzer\"</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   フォルダ存在確認</span></td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   出力フォルダ存在確認</span></td><td></td></tr>
+<tr><td>　　◆┐If Dir(Folder, vbDirectory) = "" Then</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   出力フォルダ作成</span></td><td></td></tr>
+<tr><td>　　│〇 MkDir Folder</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   出力フォルダ返却</span></td><td></td></tr>
+<tr><td>　　〇 GetOutputFolder = Folder</td><td></td></tr>
+<tr><td>　　┴End Function</td><td></td></tr>
+</tbody>
+</table>
+<hr>
+<h2>Calls (0)</h2>
+<p>呼出先なし</p>
+<hr>
+<h2>Called By (5)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modPowerPointChart/CreatePowerPointPathChart.modPowerPointChart.hcp.html">CreatePowerPointPathChart</a></td><td>PowerPoint出力</td><td>modPowerPointChart</td></tr>
+<tr><td><a href="../modPowerPointChart/ExportPathChartToPNG.modPowerPointChart.hcp.html">ExportPathChartToPNG</a></td><td>PNG出力</td><td>modPowerPointChart</td></tr>
+<tr><td><a href="../modToolManager/GetManagementFilePathByToolID.modToolManager.hcp.html">GetManagementFilePathByToolID</a></td><td>管理ファイルパス取得</td><td>modToolManager</td></tr>
+<tr><td><a href="../modHCPPath/GetHCPOutputFolder.modHCPPath.hcp.html">GetHCPOutputFolder</a></td><td>HCP出力フォルダ取得</td><td>modHCPPath</td></tr>
+<tr><td><a href="../modHCPPath/GetHCPToolFolder.modHCPPath.hcp.html">GetHCPToolFolder</a></td><td>HCPツールフォルダ取得</td><td>modHCPPath</td></tr>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function(eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function(e) {
+startX = e.pageX;
+startWidth = eleTh.offsetWidth;
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
+}
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
+}
+});
+</script>
+</body>
+</html>

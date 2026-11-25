@@ -1,14 +1,12 @@
-Procedure: modUtility.DeleteFileSafe  [ 安全ファイル削除＜modUtility＞ ]
-HCP	Business
 ┬
 〇│Public Sub DeleteFileSafe(ByVal filePath As String)	安全ファイル削除＜modUtility＞
 ┴└┐
 　　☆ On Error Resume Next
-　　│#  ファイル存在確認
+　　│#   ファイル存在確認
 　　◆┐If Trim(filePath) <> "" And Dir(filePath) <> "" Then
-　　││#  ファイル削除
+　　││#   ファイル削除
 　　│〇 Kill filePath
-　　││#  削除結果確認
+　　││#   削除結果確認
 　　│◆┐If Err.Number <> 0 Then
 　　││〇 Debug.Print "削除失敗: " & filePath & " / " & Err.Description
 　　│├┐ELSE
@@ -16,3 +14,19 @@ HCP	Business
 　　│┴End If
 　　☆ On Error GoTo 0
 　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (3)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+Clear_WorkFile	ワークファイル削除	modUtility
+RegisterNewIssue	新規Issue登録	modIssueService
+UpdateExistingIssue	Issue更新登録	modIssueService

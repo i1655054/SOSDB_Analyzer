@@ -1,12 +1,25 @@
-Procedure: modAboutCalendar2.FP_GetCalendarTable1  [ 単月カレンダーテーブル取得＜modAboutCalendar2＞ ]
-HCP	Business
 ┬
 〇│Public Function FPGetCalendarTable1(ByVal lngY As Long,  ByVal lngM As Long,  ByRef tblCalendar() As gtypAboutCalendar2,  Optional ByVal blnOmitCheck As Boolean = False) As Boolean	単月カレンダーテーブル取得＜modAboutCalendar2＞
 ┴└┐
-　　◆┐If Not FP_InitAboutCalendar(blnOmitCheck) Then
+　　◆┐If Not FP_InitAboutCalendar(blnOmitCheck) Then	内部呼出:FP_InitAboutCalendar
 　　│〇 FP_GetCalendarTable1 = False
 　　│→ Exit Function
 　　│┴End If
 　　◎ Call g_clsAboutCalendar.GetCalendarTable1(lngY, lngM, tblCalendar)	単月カレンダーテーブル生成＜clsAboutCalendar2＞
 　　〇 FP_GetCalendarTable1 = True
 　　┴End Function
+
+========================================
+Calls (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+FP_InitAboutCalendar	カレンダー初期化	modAboutCalendar2
+GetCalendarTable1	単月カレンダーテーブル生成	clsAboutCalendar2
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

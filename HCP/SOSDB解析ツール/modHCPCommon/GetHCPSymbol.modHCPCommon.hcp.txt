@@ -1,0 +1,71 @@
+┬
+〇│Public Function GetHCPSymbol(  ByVal Node As clsHCPNode)  As String	HCP記号取得＜modHCPCommon＞
+┴└┐
+　　│#   HCP記号判定
+　　◆┐Select Case Node.NodeType
+　　│├┐Case NODE_START
+　　││〇 GetHCPSymbol = "〇│"
+　　│├┐Case NODE_DECLARE
+　　││〇 GetHCPSymbol = "□ "
+　　│├┐Case NODE_REFERENCE
+　　││〇 GetHCPSymbol = "◇ "
+　　│├┐Case NODE_CONTROL
+　　││〇 GetHCPSymbol = "☆ "
+　　│├┐Case NODE_NORMAL
+　　││〇 GetHCPSymbol = "〇 "
+　　│├┐Case NODE_CALL
+　　││〇 GetHCPSymbol = "◎ "
+　　│├┐Case NODE_IF
+　　││〇 GetHCPSymbol = "◆ "
+　　│├┐Case NODE_INLINE_IF
+　　││◆┐If InStr(1,  Node.Text,  "Exit ",  vbTextCompare) > 0 Then
+　　│││〇 GetHCPSymbol = "◆→ "
+　　││├┐ELSE
+　　│││〇 GetHCPSymbol = "◆ "
+　　│││┴End If
+　　│├┐Case NODE_TRUE
+　　││〇 GetHCPSymbol = "THEN "
+　　│├┐Case NODE_FALSE
+　　││〇 GetHCPSymbol = "ELSE "
+　　│├┐Case NODE_FOR
+　　││〇 GetHCPSymbol = "＠ "
+　　│├┐Case NODE_DO
+　　││〇 GetHCPSymbol = "＠ "
+　　│├┐Case NODE_WITH
+　　││〇 GetHCPSymbol = "＠ "
+　　│├┐Case NODE_WHILE
+　　││〇 GetHCPSymbol = "＠ "
+　　│├┐Case NODE_SELECT
+　　││〇 GetHCPSymbol = "◆ "
+　　│├┐Case NODE_CASE
+　　││〇 GetHCPSymbol = ""
+　　│├┐Case NODE_MERGE
+　　││〇 GetHCPSymbol = ""
+　　│├┐Case NODE_END
+　　││〇 GetHCPSymbol = "┴"
+　　│├┐Case NODE_GOTO
+　　││〇 GetHCPSymbol = "→ "
+　　│├┐Case NODE_EXIT
+　　││〇 GetHCPSymbol = "→ "
+　　│├┐Case NODE_LABEL
+　　││〇 GetHCPSymbol = "▼ "
+　　│├┐Case NODE_RESUME
+　　││〇 GetHCPSymbol = "☆ "
+　　│├┐Case Else
+　　││〇 GetHCPSymbol = ""
+　　│┴End Select
+　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+BuildOutputNode	通常ノード RenderText生成	clsHCPRenderBuilder

@@ -1,5 +1,3 @@
-Procedure: modIssueService.FindIssueIdByTroubleNum  [ トラバス管理番号検索＜modIssueService＞ ]
-HCP	Business
 ┬
 〇│Public Function FindIssueIdByTroubleNum(  ByVal AuthorName As String,  ByVal TroubleNum As String) As String	トラバス管理番号検索＜modIssueService＞
 ┴└┐
@@ -10,47 +8,67 @@ HCP	Business
 　　□ Dim apiKey As String
 　　□ Dim url As String
 　　□ Dim id As String
-　　│#  戻り値初期化
+　　│#   戻り値初期化
 　　〇 FindIssueIdByTroubleNum = ""
-　　│#  HTTP通信準備
+　　│#   HTTP通信準備
 　　〇 Set http = New XMLHTTP60
-　　│#  Redmine接続先取得
+　　│#   Redmine接続先取得
 　　□ Dim RedmineDB As String
 　　◎ RedmineDB = GetServerURL(Range(RedmineDbSev_RANG).Value)	RedmineサーバURL取得＜modIssueMapper＞
 　　│	内部呼出:Range
-　　│#  APIURL生成
+　　│#   APIURL生成
 　　〇 api = RedmineDB + "redmine/projects/trabas_ngn/"
-　　│#  APIキー取得
+　　│#   APIキー取得
 　　◎ apiKey = GetApiKey(Author_Name)	APIキー取得＜modIssueMapper＞
-　　│#  APIキー補完
+　　│#   APIキー補完
 　　◆┐If (apiKey = "") Then
 　　│〇 apiKey = Read_API_Key
 　　│┴End If
-　　│#  検索URL生成
+　　│#   検索URL生成
 　　〇 url = api + "search.xml?key=" + apiKey + "&q=" + TroubleNum
-　　│#  Redmine検索実行
+　　│#   Redmine検索実行
 　　〇 http.Open "GET", url, False
 　　〇 http.send
-　　│#  通信結果確認
+　　│#   通信結果確認
 　　◆┐If http.statusText <> "OK" Then
 　　│〇 MsgBox "サーバへの接続に失敗しました", vbCritical
 　　│→ Exit Function
 　　│┴End If
-　　│#  XML読込
+　　│#   XML読込
 　　〇 Set doc = New DOMDocument60
 　　〇 doc.LoadXML (http.responseText)
-　　│#  検索結果走査
+　　│#   検索結果走査
 　　＠┐For Each node In doc.SelectNodes("//result")
 　　│〇 id = node.SelectSingleNode("id").text
-　　││#  管理番号一致確認
-　　│◆┐If (ValidateIssueIdByTroubleNum(Author_Name, TroubleNum, id) <> "") Then
-　　│││#  IssueID返却
+　　││#   管理番号一致確認
+　　│◆┐If (ValidateIssueIdByTroubleNum(Author_Name, TroubleNum, id) <> "") Then	内部呼出:ValidateIssueIdByTroubleNum
+　　│││#   IssueID返却
 　　││〇 FindIssueIdByTroubleNum = id
 　　││→ Exit For
 　　││┴End If
 　　│┴Next
-　　│#  オブジェクト解放
+　　│#   オブジェクト解放
 　　〇 Set http = Nothing
 　　〇 Set doc = Nothing
 　　〇 Set node = Nothing
 　　┴End Function
+
+========================================
+Calls (3)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetServerURL	RedmineサーバURL取得	modIssueMapper
+GetApiKey	APIキー取得	modIssueMapper
+ValidateIssueIdByTroubleNum	管理番号一致確認	modIssueService
+
+========================================
+Called By (3)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+UpdateMonshinHandler	問診票更新処理	modMonshinCore
+LoadRedmineIssue	Redmine情報読込	modMonshinCore
+RegisterNewIssue	新規Issue登録	modIssueService

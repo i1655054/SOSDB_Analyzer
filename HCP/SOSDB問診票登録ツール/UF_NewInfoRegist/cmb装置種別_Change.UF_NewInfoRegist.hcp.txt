@@ -1,5 +1,3 @@
-Procedure: UF_NewInfoRegist.cmb装置種別_Change  [ 装置種別変更処理＜UF_NewInfoRegist＞ ]
-HCP	Business
 ┬
 〇│Private Sub cmb装置種別_Change()	装置種別変更処理＜UF_NewInfoRegist＞
 ┴└┐
@@ -16,21 +14,21 @@ HCP	Business
 　　〇 Set Rng = ThisWorkbook.Names(DefName).RefersToRange
 　　☆ On Error GoTo 0
 　　〇 NameValue = Rng.Value
-　　│#  装置種別取得
+　　│#   装置種別取得
 　　〇 LookupValue = cmb装置種別.Value
 　　☆ On Error Resume Next
-　　│#  装置プロダクト定義取得
+　　│#   装置プロダクト定義取得
 　　〇 result = Application.WorksheetFunction.VLookup(LookupValue, NameValue, 1, False)
 　　☆ On Error GoTo 0
 　　◆┐If Not IsError(result) Then
-　　││#  装置プロダクト初期化
+　　││#   装置プロダクト初期化
 　　│〇 cmb装置プロダクト.Value = "装置等種別を選択して下さい"
 　　├┐ELSE
 　　│〇 cmb装置プロダクト = ""
 　　│┴End If
 　　〇 DefName = result
 　　☆ On Error Resume Next
-　　│#  装置プロダクトマスタ取得
+　　│#   装置プロダクトマスタ取得
 　　〇 Set Rng = ThisWorkbook.Names(DefName).RefersToRange
 　　☆ On Error GoTo 0
 　　◆┐If Rng Is Nothing Then
@@ -38,10 +36,24 @@ HCP	Business
 　　│→ Exit Sub
 　　│┴End If
 　　〇 Set Rng = Rng.Resize(Rng.Rows.count - 0).offset(0, 0)
-　　◎ cmb装置プロダクト.Clear	Issue情報初期化＜IssueInfo＞
+　　〇 cmb装置プロダクト.Clear
 　　〇 cmb装置プロダクト.Value = "装置を選択して下さい"
-　　│#  装置プロダクト一覧生成
+　　│#   装置プロダクト一覧生成
 　　＠┐For Each cell In Rng.Columns(1).Cells
 　　│〇 cmb装置プロダクト.AddItem cell.Value
 　　│┴Next cell
 　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+Clear	Issue情報初期化	IssueInfo
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

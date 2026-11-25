@@ -1,0 +1,22 @@
+┬
+〇│Public Sub TestNavigator()	MainMenuテスト起動＜modUnitTest＞
+┴└┐
+　　□ Dim History As Workbook
+　　□ Dim CurrentPos As Long
+　　〇 Set History = Nothing
+　　〇 CurrentPos = 0
+　　〇 Unload frmMainMenu
+　　〇 frmMainMenu.Show vbModeless
+　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

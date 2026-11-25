@@ -1,30 +1,31 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
 <meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
 <title>CommandButton1_Click</title>
 <style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
 body{font-family:Meiryo;font-size:9pt;}
 table{border-collapse:collapse;}
-th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
 td{vertical-align:top;}
 th{background:#e8f0fe;}
-colgroup col:nth-of-type(1) {}
-colgroup col:nth-of-type(2) {}
-.resize {position: relative;}
-.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
 </style>
 </head>
-<body>
+<body translate="no">
 <h1>CommandButton1_Click</h1>
 <p>Module : UF_InfoWebDisplay</p>
-<p><a href="./_INDEX.html">← Module Index</a></p>
 <table>
-<colgroup><col/><col/></colgroup>
-<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
 <tbody>
-<tr><td>Procedure: UF_InfoWebDisplay.CommandButton1_Click  [ 情報表示終了＜UF_InfoWebDisplay＞ ]</td><td></td></tr>
-<tr><td>HCP</td><td>Business</td></tr>
 <tr><td>┬</td><td></td></tr>
 <tr><td>〇│Private Sub CommandButton1_Click()</td><td>情報表示終了＜UF_InfoWebDisplay＞</td></tr>
 <tr><td>┴└┐</td><td></td></tr>
@@ -47,38 +48,52 @@ colgroup col:nth-of-type(2) {}
 <tr><td>　　│├┐Case "キーワード"</td><td></td></tr>
 <tr><td>　　│├┐Case Else</td><td></td></tr>
 <tr><td>　　│┴End Select</td><td></td></tr>
-<tr><td>　　│#  表示状態初期化</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   表示状態初期化</span></td><td></td></tr>
 <tr><td>　　〇 CallingInfoDisplay = ""</td><td></td></tr>
-<tr><td>　　│#  フォーム終了</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   フォーム終了</span></td><td></td></tr>
 <tr><td>　　〇 Unload Me</td><td></td></tr>
 <tr><td>　　┴End Sub</td><td></td></tr>
 </tbody>
 </table>
+<hr>
+<h2>Calls (12)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../UF_NewInfoRegist/管理番号_子番号_chk.UF_NewInfoRegist.hcp.html">管理番号_子番号_chk</a></td><td>管理番号入力確認</td><td>UF_NewInfoRegist</td></tr>
+<tr><td><a href="../UF_NewInfoRegist/優先度_chk.UF_NewInfoRegist.hcp.html">優先度_chk</a></td><td>優先度入力確認</td><td>UF_NewInfoRegist</td></tr>
+<tr><td><a href="../UF_NewInfoRegist/装置プロダクト_chk.UF_NewInfoRegist.hcp.html">装置プロダクト_chk</a></td><td>装置プロダクト確認</td><td>UF_NewInfoRegist</td></tr>
+<tr><td><a href="../UF_NewInfoRegist/プロダクト担当者_chk.UF_NewInfoRegist.hcp.html">プロダクト担当者_chk</a></td><td>プロダクト担当者確認</td><td>UF_NewInfoRegist</td></tr>
+<tr><td><a href="../UF_NewInfoRegist/発生日_chk.UF_NewInfoRegist.hcp.html">発生日_chk</a></td><td>発生日入力確認</td><td>UF_NewInfoRegist</td></tr>
+<tr><td><a href="../UF_NewInfoRegist/事象名_chk.UF_NewInfoRegist.hcp.html">事象名_chk</a></td><td>事象名入力確認</td><td>UF_NewInfoRegist</td></tr>
+<tr><td><a href="../UF_NewInfoRegist/依頼元管理番号_chk.UF_NewInfoRegist.hcp.html">依頼元管理番号_chk</a></td><td>依頼元管理番号確認</td><td>UF_NewInfoRegist</td></tr>
+<tr><td><a href="../UF_NewInfoRegist/依頼者_chk.UF_NewInfoRegist.hcp.html">依頼者_chk</a></td><td>依頼者入力確認</td><td>UF_NewInfoRegist</td></tr>
+<tr><td><a href="../UF_NewInfoRegist/説明_chk.UF_NewInfoRegist.hcp.html">説明_chk</a></td><td>説明入力確認</td><td>UF_NewInfoRegist</td></tr>
+<tr><td><a href="../UF_NewInfoRegist/Clear_chk.UF_NewInfoRegist.hcp.html">Clear_chk</a></td><td>入力エラー表示解除</td><td>UF_NewInfoRegist</td></tr>
+<tr><td><a href="../modUtility/BuildTroubleNum.modUtility.hcp.html">BuildTroubleNum</a></td><td>トラブル番号生成</td><td>modUtility</td></tr>
+<tr><td><a href="../modUtility/IsUserFormOpen.modUtility.hcp.html">IsUserFormOpen</a></td><td>フォーム起動状態確認</td><td>modUtility</td></tr>
+</table>
+<hr>
+<h2>Called By (0)</h2>
+<p>呼出元なし</p>
 <script>
-document.querySelectorAll('.resize').forEach(function (eleTh) {
+document.querySelectorAll('.resize').forEach(function(eleTh) {
 let startX;
 let startWidth;
 const eleResizer = document.createElement('div');
 eleResizer.classList.add('resizer');
-eleResizer.addEventListener('mousedown', function (e) {
-const styleTh = window.getComputedStyle(eleTh);
-const paddingLeft = parseFloat(styleTh.paddingLeft);
-const paddingRight = parseFloat(styleTh.paddingRight);
-const borderLeft = parseFloat(styleTh.borderLeftWidth);
-const borderRight = parseFloat(styleTh.borderRightWidth);
+eleResizer.addEventListener('mousedown', function(e) {
 startX = e.pageX;
-startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+startWidth = eleTh.offsetWidth;
 document.addEventListener('mousemove', onMouseMove);
 document.addEventListener('mouseup', onMouseUp);
 });
 eleTh.appendChild(eleResizer);
-function onMouseMove(e) {
-const newWidth = startWidth + (e.pageX - startX);
-eleTh.style.width = newWidth + 'px';
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
 }
-function onMouseUp() {
-document.removeEventListener('mousemove', onMouseMove);
-document.removeEventListener('mouseup', onMouseUp);
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
 }
 });
 </script>

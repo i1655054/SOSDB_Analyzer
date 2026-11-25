@@ -1,10 +1,34 @@
-Procedure: UF_InfoWebDisplay.BuildHTMLContent  [ HTML本文生成＜UF_InfoWebDisplay＞ ]
-HCP	Business
 ┬
 〇│Public Sub BuildHTMLContent(ByVal bodyContent As String)	HTML本文生成＜UF_InfoWebDisplay＞
 ┴└┐
-　　│#  本文保持
+　　│#   本文保持
 　　〇 bodyText = bodyContent
-　　│#  HTML生成
+　　│#   HTML生成
 　　◎ htmlText = "<html><head>" &  "<meta http-equiv='X-UA-Compatible' content='IE=edge'>" &  "</head><body>" & ConvertNewLinesToHTML(bodyText) & "</body></html>"	改行HTML変換＜UF_InfoWebDisplay＞
 　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ConvertNewLinesToHTML	改行HTML変換	UF_InfoWebDisplay
+
+========================================
+Called By (11)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ShowPhenomenon	事象名表示	modInfoDisplay
+ShowRequesterNum	依頼元管理番号表示	modInfoDisplay
+ShowRequesterPro	依頼者表示	modInfoDisplay
+ShowCause	原因詳細表示	modInfoDisplay
+ShowCope	対処内容表示	modInfoDisplay
+ShowRemarks	備考表示	modInfoDisplay
+ShowDescription	説明表示	modInfoDisplay
+ShowKeyWordX	キーワード表示編集	modInfoDisplay
+UserForm_Initialize
+CommandButton2_Click
+SaveEditedTextIntoVba	編集内容保存	UF_InfoWebDisplay

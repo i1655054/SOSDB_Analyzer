@@ -1,0 +1,27 @@
+┬
+〇│Private Function IsMatchNode(  ByVal NodeText As String,  ByVal FindText As String,  ByVal ExactMatch As Boolean)  As Boolean	ノード一致判定＜modPathChart＞
+┴└┐
+　　◆┐If ExactMatch Then
+　　│□ Dim BaseText As String
+　　│〇 BaseText = Split(NodeText, "(")(0)
+　　│〇 BaseText = Split(BaseText, "[")(0)
+　　│〇 BaseText = Trim$(BaseText)
+　　│〇 IsMatchNode =  (StrComp(BaseText,  FindText,  vbTextCompare) = 0)
+　　├┐ELSE
+　　│〇 IsMatchNode =  (InStr(1,  NodeText,  FindText,  vbTextCompare) > 0)
+　　│┴End If
+　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+FindNodeCore	ノード検索実行	modPathChart

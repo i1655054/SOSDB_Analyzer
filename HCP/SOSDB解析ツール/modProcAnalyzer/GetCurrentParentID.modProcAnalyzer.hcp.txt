@@ -1,0 +1,24 @@
+┬
+〇│Private Function GetCurrentParentID(  ByVal ParentStack As Collection)  As Long	親ノード取得＜modProcAnalyzer＞
+┴└┐
+　　│#   現在親ノード取得
+　　◆┐If ParentStack.Count = 0 Then
+　　│〇 GetCurrentParentID = 0
+　　├┐ELSE
+　　│〇 GetCurrentParentID =  ParentStack(ParentStack.Count)
+　　│┴End If
+　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+AnalyzeProcedure	Proc解析	modProcAnalyzer

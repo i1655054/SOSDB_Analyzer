@@ -1,0 +1,19 @@
+┬
+〇│Private Function IsDebugPrint(  ByVal Text As String)  As Boolean	Debug.Print判定＜modHCPAnalyzer＞
+┴└┐
+　　〇 IsDebugPrint =  (InStr(1,  Text,  "Debug.Print",  vbTextCompare) > 0)
+　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ConvertProcToHCP	HCP変換	modHCPAnalyzer

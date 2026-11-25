@@ -1,14 +1,12 @@
-Procedure: clsAboutCalendar2.GetCalendarTable3  [ 三か月カレンダーテーブル生成＜clsAboutCalendar2＞ ]
-HCP	Business
 ┬
 〇│Friend Sub GetCalendarTable3(ByVal lngYear As Long,  ByVal lngMonth As Long,  ByRef tblCalendar() As gtypAboutCalendar2,  Optional ByRef lngCurrStartIx As Long = -1,  Optional ByRef lngCurrEndIx As Long = -1)	三か月カレンダーテーブル生成＜clsAboutCalendar2＞
 ┴└┐
 　　□ Dim lngCalIxMax As Long                                         ' カレンダーテーブル要素上限
 　　□ Dim lngY As Long                                                ' 年WORK
 　　□ Dim lngM As Long                                                ' 月WORK
-　　│#  カレンダーテーブル初期化
+　　│#   カレンダーテーブル初期化
 　　〇 ReDim tblCalendar(0)
-　　│#  前月算出
+　　│#   前月算出
 　　〇 lngCalIxMax = -1
 　　◆┐If lngMonth = 1 Then
 　　│〇 lngY = lngYear - 1
@@ -17,15 +15,15 @@ HCP	Business
 　　│〇 lngY = lngYear
 　　│〇 lngM = lngMonth - 1
 　　│┴End If
-　　│#  前月カレンダー生成
+　　│#   前月カレンダー生成
 　　◎ Call GP_GetCalendarSub(lngY, lngM, lngCalIxMax, tblCalendar)	単月カレンダー生成内部処理＜clsAboutCalendar2＞
-　　│#  当月開始位置設定
+　　│#   当月開始位置設定
 　　〇 lngCurrStartIx = lngCalIxMax + 1
-　　│#  当月カレンダー生成
+　　│#   当月カレンダー生成
 　　◎ Call GP_GetCalendarSub(lngYear, lngMonth, lngCalIxMax, tblCalendar)	単月カレンダー生成内部処理＜clsAboutCalendar2＞
-　　│#  当月終了位置設定
+　　│#   当月終了位置設定
 　　〇 lngCurrEndIx = lngCalIxMax
-　　│#  翌月算出
+　　│#   翌月算出
 　　◆┐If lngMonth = 12 Then
 　　│〇 lngY = lngYear + 1
 　　│〇 lngM = 1
@@ -33,6 +31,23 @@ HCP	Business
 　　│〇 lngY = lngYear
 　　│〇 lngM = lngMonth + 1
 　　│┴End If
-　　│#  翌月カレンダー生成
+　　│#   翌月カレンダー生成
 　　◎ Call GP_GetCalendarSub(lngY, lngM, lngCalIxMax, tblCalendar)	単月カレンダー生成内部処理＜clsAboutCalendar2＞
 　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GP_GetCalendarSub	単月カレンダー生成内部処理	clsAboutCalendar2
+
+========================================
+Called By (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+FP_GetCalendarTable3	三か月カレンダーテーブル取得	modAboutCalendar2
+GP_GetCalendarTable3	三か月カレンダー生成	modAboutCalendar2

@@ -1,21 +1,33 @@
-Procedure: modMonshinMap.AddMapItem  [ マッピング項目登録＜modMonshinMap＞ ]
-HCP	Business
 ┬
 〇│Private Sub AddMapItem(  ByVal Key As String,  ByVal v0 As String,  ByVal v1 As String,  ByVal v2 As String,  ByVal v3 As String,  ByVal v4 As String)	マッピング項目登録＜modMonshinMap＞
 ┴└┐
-　　│#  フォーマット別アドレス情報生成
+　　│#   フォーマット別アドレス情報生成
 　　□ Dim d As Object
 　　〇 Set d = CreateObject("Scripting.Dictionary")
-　　│#  2010形式アドレス設定
+　　│#   2010形式アドレス設定
 　　〇 d(Monshin_2010) = v0
-　　│#  フォーマット①アドレス設定
+　　│#   フォーマット①アドレス設定
 　　〇 d(Monshin_Format1) = v1
-　　│#  帳票形式アドレス設定
+　　│#   帳票形式アドレス設定
 　　〇 d(Monshin_Book) = v2
-　　│#  現行形式アドレス設定
+　　│#   現行形式アドレス設定
 　　〇 d(Monshin_Current) = v3
-　　│#  互換形式アドレス設定
+　　│#   互換形式アドレス設定
 　　〇 d(Monshin_Other) = v4
-　　│#  マッピング登録
+　　│#   マッピング登録
 　　〇 MonshinMap.Add Key, d
 　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+InitMonshinMap	問診票マッピング初期化	modMonshinMap

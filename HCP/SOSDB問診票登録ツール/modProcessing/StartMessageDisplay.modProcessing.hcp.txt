@@ -1,16 +1,31 @@
-Procedure: modProcessing.StartMessageDisplay  [ 処理中画面開始＜modProcessing＞ ]
-HCP	Business
 ┬
 〇│Sub StartMessageDisplay()	処理中画面開始＜modProcessing＞
 ┴└┐
-　　│#  進捗メッセージ初期化
+　　│#   進捗メッセージ初期化
 　　〇 messages = Split("処理中です...|まだ処理中です...|もう少しです...|完了間近...", "|")
-　　│#  メッセージ番号初期化
+　　│#   メッセージ番号初期化
 　　〇 messageIndex = 0
-　　│#  処理中画面表示
+　　│#   処理中画面表示
 　　〇 frmProcessing.Show vbModeless
-　　│#  画面更新
+　　│#   画面更新
 　　〇 DoEvents
-　　│#  メッセージ更新開始
+　　│#   メッセージ更新開始
 　　◎ ScheduleNextMessage	進捗メッセージ更新＜modProcessing＞
 　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ScheduleNextMessage	進捗メッセージ更新	modProcessing
+
+========================================
+Called By (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+MonshinInfoHandler	問診票取込処理	modMonshinCore
+UpdateMonshinHandler	問診票更新処理	modMonshinCore

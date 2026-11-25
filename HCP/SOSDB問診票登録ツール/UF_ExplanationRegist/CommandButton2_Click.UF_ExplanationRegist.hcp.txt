@@ -1,8 +1,21 @@
-Procedure: UF_ExplanationRegist.CommandButton2_Click  [ 説明入力取消＜UF_ExplanationRegist＞ ]
-HCP	Business
 ┬
 〇│Private Sub CommandButton2_Click()	説明入力取消＜UF_ExplanationRegist＞
 ┴└┐
-　　│#  入力取消
+　　│#   入力取消
 　　〇 Unload Me
 　　┴End Sub
+
+========================================
+Calls (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+BuildHTMLContent	HTML本文生成	UF_InfoWebDisplay
+RenderHTML	HTML表示	UF_InfoWebDisplay
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

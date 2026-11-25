@@ -1,0 +1,33 @@
+┬
+〇│Public Function CreateAnalyzeContext()  As clsAnalyzeContext	解析コンテキスト生成＜modAnalyzerCommon＞
+┴└┐
+　　□ Dim Context As clsAnalyzeContext
+　　│#   解析コンテキスト生成
+　　〇 Set Context = New clsAnalyzeContext
+　　│#   対象ブック取得
+　　◎ Set Context.TargetBook = GetCurrentTargetBook()	現在対象ブック取得＜modToolManager＞
+　　│#   管理ブック取得
+　　◎ Set Context.ManagementBook = GetCurrentManagementWorkbook()	現在管理ブック取得＜modToolManager＞
+　　│#   選択ツール情報取得
+　　◎ Set Context.Tool = GetCurrentToolInfo()	現在ツール情報取得＜modToolManager＞
+　　│#   解析コンテキスト返却
+　　〇 Set CreateAnalyzeContext = Context
+　　┴End Function
+
+========================================
+Calls (3)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetCurrentTargetBook	現在対象ブック取得	modToolManager
+GetCurrentManagementWorkbook	現在管理ブック取得	modToolManager
+GetCurrentToolInfo	現在ツール情報取得	modToolManager
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+cmdOK_Click

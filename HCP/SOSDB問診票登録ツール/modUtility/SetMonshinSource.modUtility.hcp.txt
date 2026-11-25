@@ -1,11 +1,24 @@
-Procedure: modUtility.SetMonshinSource  [ 問診票保存元設定＜modUtility＞ ]
-HCP	Business
 ┬
 〇│Public Sub SetMonshinSource(ByRef issue As IssueInfo, ByVal xlBook As Object)	問診票保存元設定＜modUtility＞
 ┴└┐
-　　│#  引数確認
+　　│#   引数確認
 　　◆→ If issue Is Nothing Then Exit Sub
 　　◆→ If xlBook Is Nothing Then Exit Sub
-　　│#  問診票保存元設定
+　　│#   問診票保存元設定
 　　〇 issue.MonFolder = xlBook.Path
 　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+MonshinInfoHandler	問診票取込処理	modMonshinCore
+UpdateMonshinHandler	問診票更新処理	modMonshinCore

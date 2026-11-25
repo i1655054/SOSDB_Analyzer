@@ -1,0 +1,39 @@
+┬
+〇│Private Sub BuildRenderWhileBlock(  ByVal WhileNode As clsHCPNode,  ByVal Prefix As String)	WHILE RenderText生成＜clsHCPRenderBuilder＞
+┴└┐
+　　□ Dim Node As clsHCPNode
+　　□ Dim EndNode As clsHCPNode
+　　│#   WHILE開始RenderText生成
+　　◎ WhileNode.RenderText =  Prefix &  "＠┐" &  GetDisplayText(  WhileNode,  Prefix)	表示文字列取得＜clsHCPRenderBuilder＞
+　　│#   終端MERGEノード検索
+　　＠┐For Each Node In mNodes
+　　│◆┐If Node.ParentID =  WhileNode.NodeID Then
+　　││◆┐If Node.NodeType =  NODE_MERGE Then
+　　│││〇 Set EndNode = Node
+　　│││┴End If
+　　││┴End If
+　　│┴Next Node
+　　│#   WHILE配下RenderText生成
+　　◎ BuildNode  WhileNode.NodeID,  Prefix & "│"	RenderNode生成＜clsHCPRenderBuilder＞
+　　│#   WHILE終端RenderText生成
+　　◆┐If Not EndNode Is Nothing Then
+　　│◎ EndNode.RenderText =  Prefix &  "│┴" &  GetDisplayText(  EndNode,  Prefix)	表示文字列取得＜clsHCPRenderBuilder＞
+　　│┴End If
+　　┴End Sub
+
+========================================
+Calls (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetDisplayText	表示文字列取得	clsHCPRenderBuilder
+BuildNode	RenderNode生成	clsHCPRenderBuilder
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+BuildRenderControlNode	制御ノード RenderText生成	clsHCPRenderBuilder

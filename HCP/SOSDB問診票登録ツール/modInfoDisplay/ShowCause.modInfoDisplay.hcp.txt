@@ -1,55 +1,53 @@
-Procedure: modInfoDisplay.ShowCause  [ 原因詳細表示＜modInfoDisplay＞ ]
-HCP	Business
 ┬
 〇│Public Function ShowCause(ByVal issue As IssueInfo)	原因詳細表示＜modInfoDisplay＞
 ┴└┐
 　　□ Dim bodyHTML As String
-　　│#  同一画面表示中判定
+　　│#   同一画面表示中判定
 　　◆┐If UF_InfoWebDisplay.Visible  And CallingInfoDisplay = "ShowCause" Then
-　　││#  表示状態初期化
+　　││#   表示状態初期化
 　　│〇 CallingInfoDisplay = ""
-　　││#  フォーム非表示
+　　││#   フォーム非表示
 　　│〇 UF_InfoWebDisplay.Hide
 　　│→ Exit Function
 　　│┴End If
-　　│#  現在サイズ保存
+　　│#   現在サイズ保存
 　　◆┐If UF_InfoWebDisplay.Visible Then
-　　│◎ UF_InfoWebDisplay.SaveCurrentSize	フォームサイズ保存＜UF_InfoWebDisplay＞
+　　│〇 UF_InfoWebDisplay.SaveCurrentSize
 　　│┴End If
-　　│#  表示種別設定
+　　│#   表示種別設定
 　　〇 CallingInfoDisplay = "ShowCause"
-　　│#  原因詳細取得
+　　│#   原因詳細取得
 　　〇 bodyHTML = issue.CauseDetail & vbCrLf & vbCrLf
 　　□ Dim uf As UF_InfoWebDisplay
-　　│#  フォーム取得
+　　│#   フォーム取得
 　　〇 Set uf = UF_InfoWebDisplay
-　　│#  画面部品配置
+　　│#   画面部品配置
 　　＠┐With uf.Label1
 　　│〇 .Top = margin
 　　│〇 .Left = margin
 　　│〇 .Caption = "原因詳細"
 　　│┴End With
-　　│#  スクロールラベル非表示
+　　│#   スクロールラベル非表示
 　　＠┐With uf.Label4
 　　│〇 .Top = uf.Frame1.Top + uf.Frame1.Height + margin
 　　│〇 .Left = uf.Frame1.Width / 2 - uf.Label4.Width / 2
 　　│〇 .Visible = True             ' ラベルを表示に設定
 　　│┴End With
-　　│#  表示フレーム設定
+　　│#   表示フレーム設定
 　　＠┐With uf.Frame1
 　　│〇 .Top = 3 * margin
 　　│〇 .Left = margin
 　　│〇 .Width = uf.Width - (3 * margin)
 　　│〇 .Height = uf.Height - (9 * margin)
 　　│┴End With
-　　│#  HTML表示領域設定
+　　│#   HTML表示領域設定
 　　＠┐With uf.WebBrowser1
 　　│〇 .Top = 1
 　　│〇 .Left = 1
 　　│〇 .Width = uf.Frame1.Width - 2
 　　│〇 .Height = uf.Frame1.Height - 2
 　　│┴End With
-　　│#  閉じるボタン設定
+　　│#   閉じるボタン設定
 　　＠┐With uf.CommandButton1
 　　│〇 .Top = uf.Frame1.Top + uf.Frame1.Height + margin
 　　│〇 .Left = uf.Frame1.Left + uf.Frame1.Width - btWidth
@@ -58,22 +56,40 @@ HCP	Business
 　　│〇 .Caption = "閉じる"
 　　│〇 .Visible = True ' コマンドボタンを表示に設定
 　　│┴End With
-　　│#  編集ボタン非表示
+　　│#   編集ボタン非表示
 　　＠┐With uf.CommandButtonEdit
 　　│〇 .Visible = False        ' コマンドボタンを非表示に設定
 　　│┴End With
-　　│#  改行表示ボタン設定
+　　│#   改行表示ボタン設定
 　　＠┐With uf.CommandButton2
 　　│〇 .Top = uf.Frame1.Top + uf.Frame1.Height + margin
 　　│〇 .Left = margin
 　　│〇 .Caption = "改行あり"
 　　│〇 .Visible = True ' コマンドボタンを表示に設定
 　　│┴End With
-　　│#  HTML生成
+　　│#   HTML生成
 　　＠┐With uf
 　　│〇 .ScrollEnabled = True  ' ← ここでスクロールバーの表示を指定
-　　│◎ .BuildHTMLContent bodyHTML	HTML本文生成＜UF_InfoWebDisplay＞
+　　│〇 .BuildHTMLContent bodyHTML
 　　│┴End With
-　　│#  フォーム表示
+　　│#   フォーム表示
 　　◎ Call ShowInfoDisplay(uf)	情報表示フォーム表示＜modInfoDisplay＞
 　　┴End Function
+
+========================================
+Calls (3)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+SaveCurrentSize	フォームサイズ保存	UF_InfoWebDisplay
+BuildHTMLContent	HTML本文生成	UF_InfoWebDisplay
+ShowInfoDisplay	情報表示フォーム表示	modInfoDisplay
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+CauseButton_Click	原因詳細表示	Sheet1

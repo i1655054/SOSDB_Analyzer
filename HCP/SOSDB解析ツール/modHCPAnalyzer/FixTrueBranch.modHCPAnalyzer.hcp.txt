@@ -1,0 +1,56 @@
+┬
+〇│Private Sub FixTrueBranch(  ByVal HCPNodes As Collection)	TRUE枝補正＜modHCPAnalyzer＞
+┴└┐
+　　□ Dim i As Long
+　　□ Dim j As Long
+　　□ Dim IfID As Long
+　　□ Dim TrueID As Long
+　　│#   TRUE枝補正開始
+　　＠┐For i = 2 To HCPNodes.Count
+　　│◆┐If HCPNodes(i).NodeType = NODE_TRUE Then
+　　││〇 IfID = HCPNodes(i - 1).NodeID
+　　││〇 TrueID = HCPNodes(i).NodeID
+　　│││#   TRUEノード親設定
+　　││〇 HCPNodes(i).ParentID = IfID
+　　││＠┐For j = i + 1 To HCPNodes.Count
+　　│││◆┐If HCPNodes(j).NodeType = NODE_TRUE Then
+　　││││→ GoTo ContinueJ
+　　││││┴End If
+　　│││◆┐If HCPNodes(j).NodeType = NODE_ELSEIF Then
+　　││││〇 HCPNodes(j).ParentID = IfID
+　　││││〇 HCPNodes(j).BranchType = BRANCH_NONE
+　　││││→ Exit For
+　　││││┴End If
+　　│││◆┐If HCPNodes(j).NodeType = NODE_FALSE Then
+　　││││→ Exit For
+　　││││┴End If
+　　│││◆┐If HCPNodes(j).ParentID <> IfID  And HCPNodes(j).ParentID <> TrueID Then
+　　││││◆┐If HCPNodes(j).Level <=  HCPNodes(i - 1).Level Then
+　　│││││→ Exit For
+　　│││││┴End If
+　　││││┴End If
+　　││││#   TRUE配下親補正
+　　│││◆┐If HCPNodes(j).BranchType = BRANCH_TRUE Then
+　　││││◆┐If HCPNodes(j).ParentID = IfID Then
+　　│││││〇 HCPNodes(j).ParentID = TrueID
+　　│││││┴End If
+　　││││┴End If
+▼ ContinueJ:
+　　│││┴Next j
+　　││┴End If
+　　│┴Next i
+　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ConvertProcToHCP	HCP変換	modHCPAnalyzer

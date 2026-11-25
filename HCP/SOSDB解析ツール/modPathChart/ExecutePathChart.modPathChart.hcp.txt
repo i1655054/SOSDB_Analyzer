@@ -1,0 +1,41 @@
+┬
+〇│Public Sub ExecutePathChart(  ByVal StartProc As String,  ByVal MaxDepth As Long)	パスチャート実行＜modPathChart＞
+┴└┐
+　　□ Dim ws As Worksheet
+　　│#   PathChartシート取得
+　　〇 Set ws =  gContext.ManagementBook.Worksheets(
+　　│ SHEET_PATH_CHART)
+　　│#   PathChart生成開始ログ出力
+　　〇 frmPathChart.AddLog  "PathChart生成開始"
+　　│#   PathChart生成実行
+　　◎ CreatePathChart_V3 StartProc, MaxDepth	パスチャート作成＜modPathChart＞
+　　│#   PathChart生成完了ログ出力
+　　〇 frmPathChart.AddLog  "PathChart生成完了"
+　　│#   統計情報表示更新
+　　〇 frmPathChart.lblNodeCount.Caption =  "Node数: " & NodeCount
+　　〇 frmPathChart.lblEdgeCount.Caption =  "Edge数: " & EdgeCount
+　　〇 frmPathChart.lblDepth.Caption =  "最大深度: " & MaxDepthFound
+　　│#   統計情報ログ出力
+　　〇 frmPathChart.AddLog  "Node数 : " & NodeCount
+　　〇 frmPathChart.AddLog  "Edge数 : " & EdgeCount
+　　〇 frmPathChart.AddLog  "最大深度 : " & MaxDepthFound
+　　│#   PathChartシート表示
+　　〇 gContext.ManagementBook.Worksheets(
+　　│ SHEET_PATH_CHART).Activate
+　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+CreatePathChart_V3	パスチャート作成	modPathChart
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+cmdAnalyze_Click

@@ -1,50 +1,51 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
 <meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
 <title>OpenDialog</title>
 <style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
 body{font-family:Meiryo;font-size:9pt;}
 table{border-collapse:collapse;}
-th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
 td{vertical-align:top;}
 th{background:#e8f0fe;}
-colgroup col:nth-of-type(1) {}
-colgroup col:nth-of-type(2) {}
-.resize {position: relative;}
-.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
 </style>
 </head>
-<body>
+<body translate="no">
 <h1>OpenDialog</h1>
 <p>Module : modFileUtility</p>
-<p><a href="./_INDEX.html">← Module Index</a></p>
 <table>
-<colgroup><col/><col/></colgroup>
-<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
 <tbody>
-<tr><td>Procedure: modFileUtility.OpenDialog  [ ファイル選択ダイアログ表示＜modFileUtility＞ ]</td><td></td></tr>
-<tr><td>HCP</td><td>Business</td></tr>
 <tr><td>┬</td><td></td></tr>
 <tr><td>〇│Public Function OpenDialog(strTitle As String,  Optional tblFilter As Variant,  Optional blnNetGetConnection As Boolean = False,  Optional strRootPath As String = "",  Optional swFixRootPath As Integer = 0,  Optional strDefaultRootPath As String = "",  Optional strButtonName As String = "開く") As String</td><td>ファイル選択ダイアログ表示＜modFileUtility＞</td></tr>
 <tr><td>┴└┐</td><td></td></tr>
-<tr><td>　　│#  前回選択フォルダ保持</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   前回選択フォルダ保持</span></td><td></td></tr>
 <tr><td>　　〇 Static strPrevDir As String</td><td></td></tr>
 <tr><td>　　□ Dim strFileName As String, strFileName2 As String</td><td></td></tr>
 <tr><td>　　□ Dim IX As Integer</td><td></td></tr>
-<tr><td>　　│#  ファイル選択ダイアログ初期化</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   ファイル選択ダイアログ初期化</span></td><td></td></tr>
 <tr><td>　　＠┐With Application.FileDialog(msoFileDialogOpen)</td><td></td></tr>
 <tr><td>　　│〇 .Title = strTitle</td><td></td></tr>
-<tr><td>　　││#  初期フォルダ設定</td><td></td></tr>
-<tr><td>　　│◎ Call GP_SetRootPathName(  .InitialFileName, strPrevDir, strRootPath, strDefaultRootPath, swFixRootPath)</td><td>初期フォルダ設定＜modFileUtility＞</td></tr>
-<tr><td>　　││#  ボタン名称設定</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   初期フォルダ設定</span></td><td></td></tr>
+<tr><td>　　│◎ Call <a href="../modFileUtility/GP_SetRootPathName.modFileUtility.hcp.html">GP_SetRootPathName</a>(  .InitialFileName, strPrevDir, strRootPath, strDefaultRootPath, swFixRootPath)</td><td><a href="../modFileUtility/GP_SetRootPathName.modFileUtility.hcp.html">初期フォルダ設定＜modFileUtility＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　││#   ボタン名称設定</span></td><td></td></tr>
 <tr><td>　　│◆┐If Len(strButtonName) &gt; 0 Then</td><td></td></tr>
 <tr><td>　　││〇 .ButtonName = strButtonName</td><td></td></tr>
 <tr><td>　　││┴End If</td><td></td></tr>
-<tr><td>　　││#  フィルタ設定</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   フィルタ設定</span></td><td></td></tr>
 <tr><td>　　│◆┐If IsArray(tblFilter) Then</td><td></td></tr>
 <tr><td>　　││＠┐With .Filters</td><td></td></tr>
-<tr><td>　　│││◎ .Clear</td><td>Issue情報初期化＜IssueInfo＞</td></tr>
+<tr><td>　　│││〇 .Clear</td><td></td></tr>
 <tr><td>　　│││〇 IX = 0</td><td></td></tr>
 <tr><td>　　│││＠┐Do While IX &lt;= UBound(tblFilter)</td><td></td></tr>
 <tr><td>　　││││〇 .Add tblFilter(IX, 0), tblFilter(IX, 1), IX + 1</td><td></td></tr>
@@ -55,57 +56,66 @@ colgroup col:nth-of-type(2) {}
 <tr><td>　　│〇 .InitialFileName = strPrevDir</td><td></td></tr>
 <tr><td>　　│〇 .InitialView = msoFileDialogViewDetails</td><td></td></tr>
 <tr><td>　　│〇 .AllowMultiSelect = False</td><td></td></tr>
-<tr><td>　　││#  ダイアログ表示</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   ダイアログ表示</span></td><td></td></tr>
 <tr><td>　　│◆┐If .Show Then</td><td></td></tr>
-<tr><td>　　│││#  選択ファイル取得</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│││#   選択ファイル取得</span></td><td></td></tr>
 <tr><td>　　││〇 strFileName = .SelectedItems(1)</td><td></td></tr>
-<tr><td>　　│││#  UNCパス変換</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│││#   UNCパス変換</span></td><td></td></tr>
 <tr><td>　　││◆┐If (blnNetGetConnection And (Mid$(strFileName, 2, 1) = g_cnsCol)) Then</td><td></td></tr>
-<tr><td>　　│││◎ strFileName2 = GetResourceNameFromLocalDrive(strFileName)</td><td>ネットワーク共有パス取得＜modFileUtility＞</td></tr>
+<tr><td>　　│││◎ strFileName2 = <a href="../modFileUtility/GetResourceNameFromLocalDrive.modFileUtility.hcp.html">GetResourceNameFromLocalDrive</a>(strFileName)</td><td><a href="../modFileUtility/GetResourceNameFromLocalDrive.modFileUtility.hcp.html">ネットワーク共有パス取得＜modFileUtility＞</a></td></tr>
 <tr><td>　　│││◆┐If Left(strFileName2, 2) = g_cnsYen &amp; g_cnsYen Then</td><td></td></tr>
 <tr><td>　　││││〇 strFileName = strFileName2 &amp; Mid$(strFileName, 3)</td><td></td></tr>
 <tr><td>　　││││┴End If</td><td></td></tr>
 <tr><td>　　│││┴End If</td><td></td></tr>
-<tr><td>　　│││#  次回用フォルダ保存</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│││#   次回用フォルダ保存</span></td><td></td></tr>
 <tr><td>　　││◆┐If ((swFixRootPath = 0) Or (Len(strPrevDir) = 0)) Then</td><td></td></tr>
 <tr><td>　　│││〇 strFileName2 = Left(strFileName, InStrRev(strFileName, g_cnsYen))</td><td></td></tr>
 <tr><td>　　│││〇 strPrevDir = strFileName2</td><td></td></tr>
-<tr><td>　　││├┐ElseIf swFixRootPath = 3 Then</td><td></td></tr>
-<tr><td>　　││││#  キャンセル時フォルダ初期化</td><td></td></tr>
-<tr><td>　　│││〇 strPrevDir = strDefaultRootPath</td><td></td></tr>
 <tr><td>　　│││┴End If</td><td></td></tr>
+<tr><td>　　││├┐ElseIf swFixRootPath = 3 Then</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││││#   キャンセル時フォルダ初期化</span></td><td></td></tr>
+<tr><td>　　│││〇 strPrevDir = strDefaultRootPath</td><td></td></tr>
 <tr><td>　　││┴End If</td><td></td></tr>
 <tr><td>　　│┴End With</td><td></td></tr>
-<tr><td>　　│#  選択結果返却</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   選択結果返却</span></td><td></td></tr>
 <tr><td>　　〇 OpenDialog = strFileName</td><td></td></tr>
 <tr><td>　　┴End Function</td><td></td></tr>
 </tbody>
 </table>
+<hr>
+<h2>Calls (3)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modFileUtility/GP_SetRootPathName.modFileUtility.hcp.html">GP_SetRootPathName</a></td><td>初期フォルダ設定</td><td>modFileUtility</td></tr>
+<tr><td><a href="../IssueInfo/Clear.IssueInfo.hcp.html">Clear</a></td><td>Issue情報初期化</td><td>IssueInfo</td></tr>
+<tr><td><a href="../modFileUtility/GetResourceNameFromLocalDrive.modFileUtility.hcp.html">GetResourceNameFromLocalDrive</a></td><td>ネットワーク共有パス取得</td><td>modFileUtility</td></tr>
+</table>
+<hr>
+<h2>Called By (2)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modFileUtility/get_MonshinFile.modFileUtility.hcp.html">get_MonshinFile</a></td><td>問診票ファイル選択</td><td>modFileUtility</td></tr>
+<tr><td><a href="../modFileUtility/get_MonshinFile2.modFileUtility.hcp.html">get_MonshinFile2</a></td><td>問診票ファイル選択</td><td>modFileUtility</td></tr>
+</table>
 <script>
-document.querySelectorAll('.resize').forEach(function (eleTh) {
+document.querySelectorAll('.resize').forEach(function(eleTh) {
 let startX;
 let startWidth;
 const eleResizer = document.createElement('div');
 eleResizer.classList.add('resizer');
-eleResizer.addEventListener('mousedown', function (e) {
-const styleTh = window.getComputedStyle(eleTh);
-const paddingLeft = parseFloat(styleTh.paddingLeft);
-const paddingRight = parseFloat(styleTh.paddingRight);
-const borderLeft = parseFloat(styleTh.borderLeftWidth);
-const borderRight = parseFloat(styleTh.borderRightWidth);
+eleResizer.addEventListener('mousedown', function(e) {
 startX = e.pageX;
-startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+startWidth = eleTh.offsetWidth;
 document.addEventListener('mousemove', onMouseMove);
 document.addEventListener('mouseup', onMouseUp);
 });
 eleTh.appendChild(eleResizer);
-function onMouseMove(e) {
-const newWidth = startWidth + (e.pageX - startX);
-eleTh.style.width = newWidth + 'px';
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
 }
-function onMouseUp() {
-document.removeEventListener('mousemove', onMouseMove);
-document.removeEventListener('mouseup', onMouseUp);
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
 }
 });
 </script>

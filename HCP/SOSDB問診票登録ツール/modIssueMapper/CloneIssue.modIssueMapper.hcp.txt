@@ -1,12 +1,10 @@
-Procedure: modIssueMapper.CloneIssue  [ Issue複製＜modIssueMapper＞ ]
-HCP	Business
 ┬
 〇│Public Function CloneIssue(  ByVal src As IssueInfo) As IssueInfo	Issue複製＜modIssueMapper＞
 ┴└┐
-　　│#  複製先Issue生成
+　　│#   複製先Issue生成
 　　□ Dim dst As New IssueInfo
 　　＠┐With dst
-　　││#  基本情報複製
+　　││#   基本情報複製
 　　│〇 .IssueId = src.IssueId
 　　│〇 .Subject = src.Subject
 　　│〇 .Description = src.Description
@@ -15,30 +13,44 @@ HCP	Business
 　　│〇 .AuthorName = src.AuthorName
 　　│〇 .AssignedTo = src.AssignedTo
 　　│〇 .targetVersion = src.targetVersion
-　　││#  問診情報複製
+　　││#   問診情報複製
 　　│〇 .OccurrenceDateTime = src.OccurrenceDateTime
 　　│〇 .ProblemBuilding = src.ProblemBuilding
 　　│〇 .HostName = src.HostName
 　　│〇 .Phenomenon = src.Phenomenon
 　　│〇 .CauseDetail = src.CauseDetail
-　　││#  管理情報複製
+　　││#   管理情報複製
 　　│〇 .Mondainum_Pro = src.Mondainum_Pro
 　　│〇 .Remarks = src.Remarks
 　　│〇 .Esukare_Date = src.Esukare_Date
 　　│〇 .Close_Date = src.Close_Date
 　　│〇 .Requester_Pro = src.Requester_Pro
-　　││#  業務情報複製
+　　││#   業務情報複製
 　　│〇 .ServiceImpact = src.ServiceImpact
 　　│〇 .TroubleNum = src.TroubleNum
 　　│〇 .Equipment = src.Equipment
 　　│〇 .Countermeasure = src.Countermeasure
 　　│〇 .RequesterNum = src.RequesterNum
-　　││#  拡張情報複製
+　　││#   拡張情報複製
 　　│〇 .ProductTantou = src.ProductTantou
 　　│〇 .KihensinName_Date = src.KihensinName_Date
 　　│〇 .Key_Word = src.Key_Word
 　　│〇 .EqProduct = src.EqProduct
 　　│┴End With
-　　│#  複製Issue返却
+　　│#   複製Issue返却
 　　〇 Set CloneIssue = dst
 　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+LoadRedmineIssue	Redmine情報読込	modMonshinCore

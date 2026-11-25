@@ -1,8 +1,18 @@
-Procedure: CRightClick.BDelete_Click  [ 選択文字削除＜CRightClick＞ ]
-HCP	Business
 ┬
 〇│Private Sub BDelete_Click(ByVal ctrl As Office.CommandBarButton, CancelDefault As Boolean)	選択文字削除＜CRightClick＞
 ┴└┐
-　　│#  選択文字削除
+　　│#   選択文字削除
 　　◆ If TypeName(Tb) = "TextBox" Then Tb.SelText = "" Else Cb.SelText = ""
 　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

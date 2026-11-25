@@ -1,0 +1,23 @@
+┬
+〇│Public Sub OpenGitPowerShell(  ByVal RootPath As String)	Gitフォルダ起動＜modExportVBA＞
+┴└┐
+　　□ Dim Cmd As String
+　　│#   PowerShell起動コマンド生成
+　　〇 Cmd =  "powershell.exe -NoExit -Command " &  """Set-Location '" & RootPath & "'"""
+　　│#   GitフォルダでPowerShell起動
+　　〇 Shell Cmd, vbNormalFocus
+　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+cmdExport_Click

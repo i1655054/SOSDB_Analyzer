@@ -1,0 +1,34 @@
+┬
+〇│Private Function GetModuleColor(  ByVal ModuleName As String) As Long	モジュール色取得＜modPathChart＞
+┴└┐
+　　◆┐Select Case UCase$(ModuleName)
+　　│├┐Case "MODMONSHINCORE"
+　　││〇 GetModuleColor = MODULE_COLOR_MONSHIN
+　　│├┐Case "MODISSUESERVICE"
+　　││〇 GetModuleColor = MODULE_COLOR_ISSUE
+　　│├┐Case "MODISSUEMAPPER"
+　　││〇 GetModuleColor = MODULE_COLOR_MAPPER
+　　│├┐Case "MODINFODISPLAY"
+　　││〇 GetModuleColor = MODULE_COLOR_INFO
+　　│├┐Case "MODUTILITY"
+　　││〇 GetModuleColor = MODULE_COLOR_UTILITY
+　　│├┐Case "XMLLOADER"
+　　││〇 GetModuleColor = MODULE_COLOR_XML
+　　│├┐Case Else
+　　││〇 GetModuleColor = MODULE_COLOR_DEFAULT
+　　│┴End Select
+　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+DrawCallTreeShape	ノード再帰描画	modPathChart

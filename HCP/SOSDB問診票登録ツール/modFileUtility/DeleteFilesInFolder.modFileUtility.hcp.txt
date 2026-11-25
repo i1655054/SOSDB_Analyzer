@@ -1,21 +1,33 @@
-Procedure: modFileUtility.DeleteFilesInFolder  [ SendBodyファイル削除＜modFileUtility＞ ]
-HCP	Business
 ┬
 〇│Public Function DeleteFilesInFolder(ByVal Folder0 As String, ByVal Folder1 As String) As Long	SendBodyファイル削除＜modFileUtility＞
 ┴└┐
 　　□ Dim folderPath As String
 　　□ Dim filePath As String
-　　│#  SendBody格納フォルダ決定
+　　│#   SendBody格納フォルダ決定
 　　〇 folderPath = Folder0 & "\" & Folder1 & "\" ' 必要に応じて変更してください
-　　│#  パス末尾補正
+　　│#   パス末尾補正
 　　◆┐If Right(folderPath, 1) <> "\" Then
 　　│〇 folderPath = folderPath & "\"
 　　│┴End If
-　　│#  削除対象検索
+　　│#   削除対象検索
 　　〇 filePath = Dir(folderPath & "SendBody*.*")
-　　│#  SendBodyファイル削除
+　　│#   SendBodyファイル削除
 　　＠┐Do While filePath <> ""
 　　│〇 Kill folderPath & filePath
 　　│〇 filePath = Dir
 　　│┴Loop
 　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+Clear_InputCellDat	入力セル初期化	modUtility

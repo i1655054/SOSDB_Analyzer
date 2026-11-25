@@ -1,0 +1,28 @@
+┬
+〇│Public Sub ResizeMainWindow()	Main画面サイズ変更＜modToolManager＞
+┴└┐
+　　│#   Main画面サイズ変更
+　　＠┐With ThisWorkbook.Windows(1)
+　　│〇 .WindowState = xlNormal
+　　││#   Main画面位置設定
+　　│〇 .Top = 0
+　　│〇 .Left = 0
+　　││#   Main画面サイズ設定
+　　│〇 .Width = MAIN_WIDTH
+　　│〇 .Height = MAIN_HEIGHT
+　　│┴End With
+　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+InitializeAnalyzer	Analyzer初期化	modStartup

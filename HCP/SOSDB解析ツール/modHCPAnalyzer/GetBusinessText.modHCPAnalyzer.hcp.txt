@@ -1,0 +1,33 @@
+┬
+〇│Private Function GetBusinessText(  ByVal ProcNode As clsProcNode)  As String	業務説明取得＜modHCPAnalyzer＞
+┴└┐
+　　□ Dim Info As clsProcInfo
+　　│#   CALLノード以外除外
+　　◆→ If ProcNode.NodeType <> NODE_CALL Then Exit Function
+　　│#   Procedure情報取得
+　　◎ Set Info =  ResolveProcedure(  ProcNode.ModuleName,  ProcNode.CallName)	Procedure解決＜modProcedureRepository＞
+　　◆→ If Info Is Nothing Then Exit Function
+　　│#   JPName優先返却
+　　◆┐If Trim$(Info.JPName) <> "" Then
+　　│〇 GetBusinessText =  Info.JPName &  "＜" &  Info.ModuleName &  "＞"
+　　├┐ELSE
+　　││#   Procedure名表示
+　　│〇 GetBusinessText =  ProcNode.CallName &  "＜" &  Info.ModuleName &  "＞"
+　　│┴End If
+　　┴End Function
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ResolveProcedure	Procedure解決	modProcedureRepository
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ConvertProcToHCP	HCP変換	modHCPAnalyzer

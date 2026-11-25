@@ -1,5 +1,3 @@
-Procedure: frmProcessing.UserForm_Initialize  [ 処理中画面初期化＜frmProcessing＞ ]
-HCP	Business
 ┬
 〇│Private Sub UserForm_Initialize()	処理中画面初期化＜frmProcessing＞
 ┴└┐
@@ -7,14 +5,32 @@ HCP	Business
 　　□ Dim xlTop As Long
 　　□ Dim xlWidth As Long
 　　□ Dim xlHeight As Long
-　　│#  Excel画面情報取得
+　　│#   Excel画面情報取得
 　　＠┐With Application
 　　│〇 xlLeft = .Left
 　　│〇 xlTop = .Top
 　　│〇 xlWidth = .Width
 　　│〇 xlHeight = .Height
 　　│┴End With
-　　│#  フォーム中央配置
+　　│#   フォーム中央配置
 　　〇 Me.Left = xlLeft + (xlWidth - Me.Width) / 2
 　　〇 Me.Top = xlTop + (xlHeight - Me.Height) / 2
 　　┴End Sub
+
+========================================
+Calls (5)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+NewClass
+FP_GetCalendarTable3	三か月カレンダーテーブル取得	modAboutCalendar2
+RequesterNumDivision	依頼元管理番号解析	UF_RequesterNumRegist
+Initialize	右クリック機能初期化	CRightClick
+BuildHTMLContent	HTML本文生成	UF_InfoWebDisplay
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

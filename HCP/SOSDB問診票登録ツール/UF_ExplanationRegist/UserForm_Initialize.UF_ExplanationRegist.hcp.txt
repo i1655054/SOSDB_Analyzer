@@ -1,9 +1,7 @@
-Procedure: UF_ExplanationRegist.UserForm_Initialize  [ 説明入力フォーム初期化＜UF_ExplanationRegist＞ ]
-HCP	Business
 ┬
 〇│Private Sub UserForm_Initialize()	説明入力フォーム初期化＜UF_ExplanationRegist＞
 ┴└┐
-　　│#  入力欄初期化
+　　│#   入力欄初期化
 　　＠┐With txtアラーム
 　　│〇 .IMEMode = fmIMEModeOn
 　　│〇 .ScrollBars = fmScrollBarsBoth
@@ -24,7 +22,25 @@ HCP	Business
 　　│〇 .IMEMode = fmIMEModeOn
 　　│〇 .ScrollBars = fmScrollBarsBoth
 　　│┴End With
-　　│#  右クリック機能初期化
+　　│#   右クリック機能初期化
 　　〇 Static dcp As New CRightClick
-　　◎ dcp.Initialize Me	右クリック機能初期化＜CRightClick＞
+　　〇 dcp.Initialize Me
 　　┴End Sub
+
+========================================
+Calls (5)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+NewClass
+FP_GetCalendarTable3	三か月カレンダーテーブル取得	modAboutCalendar2
+RequesterNumDivision	依頼元管理番号解析	UF_RequesterNumRegist
+Initialize	右クリック機能初期化	CRightClick
+BuildHTMLContent	HTML本文生成	UF_InfoWebDisplay
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

@@ -1,0 +1,27 @@
+┬
+〇│Private Sub cmdClear_Click()	ログクリア＜frmPathChart＞
+┴└┐
+　　│#   ログ初期化
+　　〇 lstLog.Clear
+　　│#   状態表示初期化
+　　〇 lblStatus.Caption = "状態： 待機中"
+　　〇 lblElapsed.Caption = "解析時間： 0.00 秒"
+　　│#   統計表示初期化
+　　〇 lblNodeCount.Caption = "Node数： 0"
+　　〇 lblEdgeCount.Caption = "Edge数： 0"
+　　〇 lblDepth.Caption = "最大深度： 0"
+　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ClearHighlight	強調表示解除	modPathChart
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

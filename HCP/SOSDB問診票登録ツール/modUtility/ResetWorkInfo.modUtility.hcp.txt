@@ -1,30 +1,47 @@
-Procedure: modUtility.ResetWorkInfo  [ 作業情報リセット＜modUtility＞ ]
-HCP	Business
 ┬
 〇│Public Sub ResetWorkInfo()	作業情報リセット＜modUtility＞
 ┴└┐
 　　☆ On Error Resume Next
-　　│#  情報表示フォーム終了
+　　│#   情報表示フォーム終了
 　　〇 Unload UF_InfoWebDisplay
 　　☆ On Error GoTo 0
-　　│#  入力情報初期化
+　　│#   入力情報初期化
 　　◎ Call Clear_InputCellDat(False)	入力セル初期化＜modUtility＞
-　　│#  セル色初期化
+　　│#   セル色初期化
 　　◎ Call RestoreAllColors	全セル色復元＜modUtility＞
-　　│#  Issue情報初期化
+　　│#   Issue情報初期化
 　　〇 Set g_CurrentIssue = Nothing
 　　〇 Set g_OriginalIssue = Nothing
 　　〇 DoEvents
-　　│#  検索画面状態確認
+　　│#   検索画面状態確認
 　　◆┐If UF_SearchResults.Visible = False  And Sheet1.DB検索.Caption <> "検索" Then
-　　││#  検索フォーム終了
+　　││#   検索フォーム終了
 　　│〇 Unload UF_SearchResults
-　　││#  検索ボタン状態復元
+　　││#   検索ボタン状態復元
 　　│〇 Sheet1.DB検索.Caption = "検索"
 　　│〇 Sheet1.DB検索.BackColor = &H8000000F
 　　│┴End If
-　　│#  チェックボックス初期化
-　　◎ Call Sheet1.ResetCheckBox	問診票チェック初期化＜Sheet1＞
-　　│#  ワーク情報削除
+　　│#   チェックボックス初期化
+　　〇 Call Sheet1.ResetCheckBox
+　　│#   ワーク情報削除
 　　◎ Call Work情報削除	ワーク情報削除＜modUtility＞
 　　┴End Sub
+
+========================================
+Calls (4)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+Clear_InputCellDat	入力セル初期化	modUtility
+RestoreAllColors	全セル色復元	modUtility
+ResetCheckBox	問診票チェック初期化	Sheet1
+Work情報削除	ワーク情報削除	modUtility
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+Work情報削除_Click	Work情報削除	Sheet1

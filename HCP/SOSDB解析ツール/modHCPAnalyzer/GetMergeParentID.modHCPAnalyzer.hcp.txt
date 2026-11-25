@@ -1,0 +1,27 @@
+┬
+〇│Private Function GetMergeParentID(  ByVal StackValue As String)  As Long	マージ親ID取得＜modHCPAnalyzer＞
+┴└┐
+　　□ Dim Parts() As String
+　　│#   NodeType:NodeID分解
+　　〇 Parts = Split(StackValue, ":")
+　　◆┐If UBound(Parts) <> 1 Then
+　　│〇 GetMergeParentID = 0
+　　│→ Exit Function
+　　│┴End If
+　　│#   ParentID返却
+　　〇 GetMergeParentID = CLng(Parts(1))
+　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+PopMergeStack	マージスタック取得	modHCPAnalyzer

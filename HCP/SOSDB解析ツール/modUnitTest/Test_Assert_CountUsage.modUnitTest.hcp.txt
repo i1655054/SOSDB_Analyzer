@@ -1,0 +1,25 @@
+┬
+〇│Public Sub Test_Assert_CountUsage()	＜modUnitTest＞
+┴└┐
+　　〇 Debug.Print "Test_Assert_CountUsage()"
+　　◎ Debug.Assert  CountUsage("Test") = 0	使用回数集計＜modAnalyze＞
+　　◎ Debug.Assert  CountUsage("TestSub") = 0	使用回数集計＜modAnalyze＞
+　　◎ Debug.Assert  CountUsage("FuncA") = 5	使用回数集計＜modAnalyze＞
+　　〇 Debug.Print "OK"
+　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+CountUsage	使用回数集計	modAnalyze
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+Test_All		modUnitTest

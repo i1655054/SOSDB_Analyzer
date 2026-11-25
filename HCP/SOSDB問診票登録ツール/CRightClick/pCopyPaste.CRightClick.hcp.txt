@@ -1,55 +1,65 @@
-Procedure: CRightClick.pCopyPaste  [ 編集メニュー表示＜CRightClick＞ ]
-HCP	Business
 ┬
 〇│Private Sub pCopyPaste(bx As Object) 'Copy&Paste右クリックメニュー	編集メニュー表示＜CRightClick＞
 ┴└┐
-　　│#  ポップアップメニュー生成
+　　│#   ポップアップメニュー生成
 　　＠┐With Application.CommandBars.Add(position:=msoBarPopup, Temporary:=True)
-　　││#  切り取りメニュー追加
+　　││#   切り取りメニュー追加
 　　│〇 Set BCut = .Controls.Add(msoControlButton)
 　　│＠┐With BCut
 　　││〇 .Caption = "切り取り(&T)"
 　　││〇 .FaceId = 21
-　　│││#  選択状態判定
+　　│││#   選択状態判定
 　　││〇 .Enabled = bx.SelLength
-　　│││#  編集可否判定
+　　│││#   編集可否判定
 　　││◆ If bx.Locked Then .Enabled = False
 　　││┴End With
-　　││#  コピーメニュー追加
+　　││#   コピーメニュー追加
 　　│〇 Set BCopy = .Controls.Add(msoControlButton)
 　　│＠┐With BCopy
 　　││〇 .Caption = "コピー(&C)"
 　　││〇 .FaceId = 19
 　　││〇 .Enabled = bx.SelLength
 　　││┴End With
-　　││#  貼り付けメニュー追加
+　　││#   貼り付けメニュー追加
 　　│〇 Set BPaste = .Controls.Add(msoControlButton)
 　　│＠┐With BPaste
 　　││〇 .Caption = "貼り付け(&P)"
 　　││〇 .FaceId = 22
-　　│││#  貼り付け可否判定
+　　│││#   貼り付け可否判定
 　　││〇 .Enabled = bx.CanPaste
 　　││┴End With
-　　││#  削除メニュー追加
+　　││#   削除メニュー追加
 　　│〇 Set BDelete = .Controls.Add(msoControlButton)
 　　│＠┐With BDelete
 　　││〇 .Caption = "削除(&D)"
 　　││〇 .FaceId = 47
-　　│││#  選択状態判定
+　　│││#   選択状態判定
 　　││〇 .Enabled = bx.SelLength
-　　│││#  メニュー区切り設定
+　　│││#   メニュー区切り設定
 　　││〇 .BeginGroup = True
 　　││┴End With
-　　││#  全選択メニュー追加
+　　││#   全選択メニュー追加
 　　│〇 Set BAll = .Controls.Add(msoControlButton)
 　　│＠┐With BAll
 　　││〇 .Caption = "すべて選択(&A)"
-　　│││#  入力有無判定
+　　│││#   入力有無判定
 　　││〇 .Enabled = Len(bx.Value)
 　　││┴End With
-　　││#  ポップアップ表示
+　　││#   ポップアップ表示
 　　│〇 .ShowPopup
-　　││#  ポップアップ削除
+　　││#   ポップアップ削除
 　　│〇 .Delete
 　　│┴End With
 　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

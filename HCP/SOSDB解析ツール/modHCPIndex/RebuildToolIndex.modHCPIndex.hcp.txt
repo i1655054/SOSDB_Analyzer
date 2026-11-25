@@ -1,0 +1,47 @@
+┬
+〇│Public Sub RebuildToolIndex()	ツールINDEX再生成＜modHCPIndex＞
+┴└┐
+　　│#   HCPルート
+　　□ Dim RootPath As String
+　　│#   モジュールフォルダ名
+　　□ Dim FolderName As String
+　　│#   モジュール数
+　　□ Dim ModuleCount As Long
+　　│#   INDEXファイル
+　　□ Dim IndexPath As String
+　　◎ Trace "INDEX",  "RebuildToolIndex"	トレース出力＜modDebug＞
+　　◎ RootPath =  GetHCPToolFolder()	HCPツールフォルダ取得＜modHCPPath＞
+　　│#   モジュール数取得
+　　〇 FolderName =  Dir(  RootPath & "*",  vbDirectory)
+　　＠┐Do While FolderName <> ""
+　　│◆┐If FolderName <> "."  And FolderName <> ".." Then
+　　││◆┐If (GetAttr(  RootPath & FolderName)  And vbDirectory) <> 0 Then
+　　│││〇 ModuleCount =  ModuleCount + 1
+　　│││┴End If
+　　││┴End If
+　　│〇 FolderName = Dir()
+　　│┴Loop
+　　│#   INDEX HTML 出力
+　　〇 IndexPath =  RootPath &  "_INDEX.html"
+　　◎ WriteToolIndexHtml  IndexPath,  ModuleCount	Tool INDEX HTML出力＜modHCPIndex＞
+　　◎ Trace "INDEX",  "ToolIndex Created Modules=" &  ModuleCount	トレース出力＜modDebug＞
+　　┴End Sub
+
+========================================
+Calls (3)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+Trace	トレース出力	modDebug
+GetHCPToolFolder	HCPツールフォルダ取得	modHCPPath
+WriteToolIndexHtml	Tool INDEX HTML出力	modHCPIndex
+
+========================================
+Called By (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+CreateHCP	HCP作成	modHCPAnalyzer
+RebuildAllIndexes	INDEX一括再生成	modHCPIndex

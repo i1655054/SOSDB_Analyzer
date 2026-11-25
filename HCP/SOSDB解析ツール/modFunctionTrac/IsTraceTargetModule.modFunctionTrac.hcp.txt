@@ -1,0 +1,32 @@
+┬
+〇│Private Function IsTraceTargetModule(  ByVal VBComp As Object)  As Boolean	FunctionTrace対象判定＜modFunctionTrac＞
+┴└┐
+　　│#   コンポーネント種別判定
+　　◆┐Select Case VBComp.Type
+　　│├┐Case 1
+　　││〇 IsTraceTargetModule = True
+　　│││#   クラスモジュール
+　　│├┐Case 2
+　　││〇 IsTraceTargetModule = True
+　　│││#   UserForm
+　　│├┐Case 3
+　　││〇 IsTraceTargetModule = True
+　　│││#   シート/ThisWorkbook
+　　│├┐Case 100
+　　││〇 IsTraceTargetModule = True
+　　│┴End Select
+　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+FunctionTrace	関数トレース作成	modFunctionTrac

@@ -1,0 +1,35 @@
+┬
+〇│Public Sub InitializeProcedureRepository()	ProcedureRepository初期化＜modProcedureRepository＞
+┴└┐
+　　〇 #Const DEBUG_MODE = False
+　　│#   初期化状態確認
+　　│#   Context存在確認
+　　◆→ If gContext Is Nothing Then Exit Sub
+　　│#   ProcedureRepository初期化済確認
+　　◆→ If gContext.ProcInfoLoaded Then Exit Sub
+　　│#   ProcedureRepository生成
+　　│#   Procedure辞書生成
+　　◎ BuildProcInfoDictionary	Procedure辞書作成＜modProcedureRepository＞
+　　│#   ProcedureRepository初期化完了
+　　◆┐If Not gContext.ProcInfoDic Is Nothing Then
+　　│〇 gContext.ProcInfoLoaded = True
+　　│┴End If
+　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+BuildProcInfoDictionary	Procedure辞書作成	modProcedureRepository
+
+========================================
+Called By (3)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetProcInfo	Procedure情報取得	modAnalyzerCommon
+cmdHCP_Click	HCP生成起動	frmFunctionManager
+cmdPathChart_Click	PathChart起動	frmFunctionManager

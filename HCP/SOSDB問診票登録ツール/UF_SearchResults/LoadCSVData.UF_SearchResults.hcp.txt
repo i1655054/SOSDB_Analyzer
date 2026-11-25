@@ -1,5 +1,3 @@
-Procedure: UF_SearchResults.LoadCSVData  [ CSV読込＜UF_SearchResults＞ ]
-HCP	Business
 ┬
 〇│Function LoadCSVData(filePath As String) As Variant	CSV読込＜UF_SearchResults＞
 ┴└┐
@@ -9,25 +7,39 @@ HCP	Business
 　　□ Dim result() As Variant
 　　□ Dim i As Long
 　　〇 fileNum = FreeFile
-　　│#  CSV読込開始
+　　│#   CSV読込開始
 　　〇 Open filePath For Input As #fileNum
 　　〇 i = 0
 　　＠┐Do Until EOF(fileNum)
-　　││#  CSV行取得
+　　││#   CSV行取得
 　　│〇 Line Input #fileNum, lineData
-　　││#  空行確認
+　　││#   空行確認
 　　│◆┐If lineData = "" Then
 　　││→ Exit Do
 　　││┴End If
-　　││#  CSV分解
+　　││#   CSV分解
 　　│〇 dataArray = Split(lineData, ",")
-　　││#  配列格納
+　　││#   配列格納
 　　│〇 ReDim Preserve result(i)
 　　│〇 result(i) = dataArray
 　　│〇 i = i + 1
 　　│┴Loop
-　　│#  ファイルクローズ
+　　│#   ファイルクローズ
 　　〇 Close #fileNum
-　　│#  読込結果返却
+　　│#   読込結果返却
 　　〇 LoadCSVData = result
 　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+loadcsv	検索結果読込	UF_SearchResults

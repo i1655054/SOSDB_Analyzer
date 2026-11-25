@@ -1,0 +1,20 @@
+┬
+〇│Public Function GetTimeStamp() As String	タイムスタンプ取得＜modPowerPointChart＞
+┴└┐
+　　│#   出力用タイムスタンプ生成
+　　〇 GetTimeStamp =  Format(Now, "yyyymmdd_hhnnss")
+　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+CreatePathChart_V3	パスチャート作成	modPathChart

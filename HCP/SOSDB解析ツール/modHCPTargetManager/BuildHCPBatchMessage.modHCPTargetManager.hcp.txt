@@ -1,0 +1,43 @@
+┬
+〇│Public Function BuildHCPBatchMessage()  As String	HCP一括生成確認メッセージ作成＜modHCPTargetManager＞
+┴└┐
+　　□ Dim ws As Worksheet
+　　□ Dim LastRow As Long
+　　□ Dim r As Long
+　　□ Dim TargetCount As Long
+　　□ Dim Message As String
+　　│#   HCP_TARGETS取得
+　　〇 Set ws =  gContext.ManagementBook.Worksheets(
+　　│   SHEET_HCP_TARGETS)
+　　〇 LastRow =  ws.Cells(  ws.Rows.Count,  2).End(xlUp).row
+　　│#   対象一覧作成
+　　＠┐For r = 2 To LastRow
+　　│◆┐If UCase$(Trim$(  ws.Cells(r, 1).Value)) = "Y" Then
+　　││◆┐If Trim$(  ws.Cells(r, 4).Value) <> "Done" Then
+　　│││〇 TargetCount =  TargetCount + 1
+　　│││◆┐If TargetCount <= 20 Then
+　　││││〇 Message =  Message &  ws.Cells(r, 2).Value &  "." &  ws.Cells(r, 3).Value &  vbCrLf
+　　││││┴End If
+　　│││┴End If
+　　││┴End If
+　　│┴Next r
+　　│#   確認メッセージ生成
+　　〇 BuildHCPBatchMessage =  "HCP一括生成を実行します。" &  vbCrLf & vbCrLf &  "対象件数 : " &  TargetCount &  vbCrLf & vbCrLf &  Message
+　　◆┐If TargetCount > 20 Then
+　　│〇 BuildHCPBatchMessage =  BuildHCPBatchMessage &  vbCrLf &  "※先頭20件のみ表示"
+　　│┴End If
+　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+cmdGenerateBatch_Click	HCP一括生成実行	frmHCPGenerator

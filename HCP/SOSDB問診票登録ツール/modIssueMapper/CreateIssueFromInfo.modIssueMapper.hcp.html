@@ -1,58 +1,59 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
 <meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
 <title>CreateIssueFromInfo</title>
 <style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
 body{font-family:Meiryo;font-size:9pt;}
 table{border-collapse:collapse;}
-th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
 td{vertical-align:top;}
 th{background:#e8f0fe;}
-colgroup col:nth-of-type(1) {}
-colgroup col:nth-of-type(2) {}
-.resize {position: relative;}
-.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
 </style>
 </head>
-<body>
+<body translate="no">
 <h1>CreateIssueFromInfo</h1>
 <p>Module : modIssueMapper</p>
-<p><a href="./_INDEX.html">← Module Index</a></p>
 <table>
-<colgroup><col/><col/></colgroup>
-<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
 <tbody>
-<tr><td>Procedure: modIssueMapper.CreateIssueFromInfo  [ 問診情報からIssue生成＜modIssueMapper＞ ]</td><td></td></tr>
-<tr><td>HCP</td><td>Business</td></tr>
 <tr><td>┬</td><td></td></tr>
 <tr><td>〇│Public Function CreateIssueFromInfo(  ByRef info As MonshinInfoType) As IssueInfo</td><td>問診情報からIssue生成＜modIssueMapper＞</td></tr>
 <tr><td>┴└┐</td><td></td></tr>
 <tr><td>　　□ Dim issue As IssueInfo</td><td></td></tr>
 <tr><td>　　〇 Set issue = New IssueInfo</td><td></td></tr>
 <tr><td>　　＠┐With issue</td><td></td></tr>
-<tr><td>　　││#  基本情報設定</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   基本情報設定</span></td><td></td></tr>
 <tr><td>　　│〇 .AuthorName = info.Author_Name</td><td></td></tr>
 <tr><td>　　│〇 .AssignedTo = info.Assigned_To</td><td></td></tr>
 <tr><td>　　│〇 .targetVersion = info.Target_Ver</td><td></td></tr>
 <tr><td>　　│〇 .Subject = info.TitleLine</td><td></td></tr>
 <tr><td>　　│〇 .Description = info.Description</td><td></td></tr>
-<tr><td>　　││#  問診情報設定</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   問診情報設定</span></td><td></td></tr>
 <tr><td>　　│〇 .Requester_Pro = info.Request_Client</td><td></td></tr>
-<tr><td>　　│◎ .OccurrenceDateTime = FormatOccurrence(info.occurrenceDate, info.occurrenceTime)</td><td>発生日時整形＜modUtility＞</td></tr>
+<tr><td>　　│◎ .OccurrenceDateTime = <a href="../modUtility/FormatOccurrence.modUtility.hcp.html">FormatOccurrence</a>(info.occurrenceDate, info.occurrenceTime)</td><td><a href="../modUtility/FormatOccurrence.modUtility.hcp.html">発生日時整形＜modUtility＞</a></td></tr>
 <tr><td>　　│〇 .RequesterNum = info.RequesterNum</td><td></td></tr>
 <tr><td>　　│〇 .Phenomenon = info.Phenomenon</td><td></td></tr>
 <tr><td>　　│〇 .Equipment = info.Equipment</td><td></td></tr>
 <tr><td>　　│〇 .CauseDetail = info.CauseDetail</td><td></td></tr>
 <tr><td>　　│〇 .Countermeasure = info.Countermeasure</td><td></td></tr>
 <tr><td>　　│〇 .ServiceImpact = info.ServiceImpact</td><td></td></tr>
-<tr><td>　　││#  管理情報設定</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   管理情報設定</span></td><td></td></tr>
 <tr><td>　　│〇 .ProductTantou = info.ProductTantou</td><td></td></tr>
 <tr><td>　　│〇 .KihensinName_Date = info.KihensinName_Date</td><td></td></tr>
 <tr><td>　　│〇 .TroubleNum = info.TroubleNum</td><td></td></tr>
 <tr><td>　　│〇 .Esukare_Date = info.Esukare_Date</td><td></td></tr>
 <tr><td>　　│〇 .Close_Date = info.Close_Date</td><td></td></tr>
-<tr><td>　　││#  拡張情報設定</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   拡張情報設定</span></td><td></td></tr>
 <tr><td>　　│〇 .Remarks = info.Remarks</td><td></td></tr>
 <tr><td>　　│〇 .Key_Word = info.Key_Word</td><td></td></tr>
 <tr><td>　　│〇 .EqProduct = info.EqProduct</td><td></td></tr>
@@ -60,36 +61,43 @@ colgroup col:nth-of-type(2) {}
 <tr><td>　　│〇 .ProblemBuilding = info.ProblemBuilding</td><td></td></tr>
 <tr><td>　　│〇 .HostName = info.HostName</td><td></td></tr>
 <tr><td>　　│┴End With</td><td></td></tr>
-<tr><td>　　│#  Issue返却</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   Issue返却</span></td><td></td></tr>
 <tr><td>　　〇 Set CreateIssueFromInfo = issue</td><td></td></tr>
 <tr><td>　　┴End Function</td><td></td></tr>
 </tbody>
 </table>
+<hr>
+<h2>Calls (1)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modUtility/FormatOccurrence.modUtility.hcp.html">FormatOccurrence</a></td><td>発生日時整形</td><td>modUtility</td></tr>
+</table>
+<hr>
+<h2>Called By (2)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modMonshinCore/MonshinInfoHandler.modMonshinCore.hcp.html">MonshinInfoHandler</a></td><td>問診票取込処理</td><td>modMonshinCore</td></tr>
+<tr><td><a href="../modMonshinCore/UpdateMonshinHandler.modMonshinCore.hcp.html">UpdateMonshinHandler</a></td><td>問診票更新処理</td><td>modMonshinCore</td></tr>
+</table>
 <script>
-document.querySelectorAll('.resize').forEach(function (eleTh) {
+document.querySelectorAll('.resize').forEach(function(eleTh) {
 let startX;
 let startWidth;
 const eleResizer = document.createElement('div');
 eleResizer.classList.add('resizer');
-eleResizer.addEventListener('mousedown', function (e) {
-const styleTh = window.getComputedStyle(eleTh);
-const paddingLeft = parseFloat(styleTh.paddingLeft);
-const paddingRight = parseFloat(styleTh.paddingRight);
-const borderLeft = parseFloat(styleTh.borderLeftWidth);
-const borderRight = parseFloat(styleTh.borderRightWidth);
+eleResizer.addEventListener('mousedown', function(e) {
 startX = e.pageX;
-startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+startWidth = eleTh.offsetWidth;
 document.addEventListener('mousemove', onMouseMove);
 document.addEventListener('mouseup', onMouseUp);
 });
 eleTh.appendChild(eleResizer);
-function onMouseMove(e) {
-const newWidth = startWidth + (e.pageX - startX);
-eleTh.style.width = newWidth + 'px';
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
 }
-function onMouseUp() {
-document.removeEventListener('mousemove', onMouseMove);
-document.removeEventListener('mouseup', onMouseUp);
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
 }
 });
 </script>

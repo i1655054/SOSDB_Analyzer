@@ -1,5 +1,3 @@
-Procedure: modAboutCalendar2.GP_SortHoliParameter  [ 祝日パラメータ並替＜modAboutCalendar2＞ ]
-HCP	Business
 ┬
 〇│Public Sub GP_SortHoliParameter(ByRef objParaSheet As Worksheet)	祝日パラメータ並替＜modAboutCalendar2＞
 ┴└┐
@@ -29,3 +27,15 @@ HCP	Business
 　　│〇 .Columns("$K").ClearContents
 　　│┴End With
 　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

@@ -1,30 +1,28 @@
-Procedure: UF_InfoWebDisplay.UserForm_Initialize  [ 情報表示フォーム初期化＜UF_InfoWebDisplay＞ ]
-HCP	Business
 ┬
 〇│Private Sub UserForm_Initialize()	情報表示フォーム初期化＜UF_InfoWebDisplay＞
 ┴└┐
 　　□ Dim hWnd As LongPtr
 　　□ Dim hStyle As LongPtr
 　　□ Dim flgChange As Boolean
-　　│#  デフォルトサイズ保存
+　　│#   デフォルトサイズ保存
 　　〇 m_DefaultWidth = Me.Width
 　　〇 m_DefaultHeight = Me.Height
-　　│#  表示モード初期化
+　　│#   表示モード初期化
 　　〇 IsScrollEnabled = True  ' 初期状態：改行あり
-　　│#  フォント設定初期化
+　　│#   フォント設定初期化
 　　〇 FontSize = 12  ' 初期サイズ
 　　〇 Me.SpinButton1.Value = FontSize
 　　〇 Me.SpinButton1.Min = 8
 　　〇 Me.SpinButton1.Max = 20
-　　│#  HTML本文生成
+　　│#   HTML本文生成
 　　◎ Call BuildHTMLContent(bodyText)   ' ← 先にやっておくのがポイント	HTML本文生成＜UF_InfoWebDisplay＞
 　　〇 flgChange = Sheet1.CheckBox1.Value
-　　│#  フォームスタイル設定
+　　│#   フォームスタイル設定
 　　〇 hWnd = FindWindow("ThunderDFrame", Me.Caption)
 　　〇 hStyle = GetWindowLongPtr(hWnd, GWL_STYLE)
 　　〇 hStyle = hStyle Or WS_THICKFRAME Or WS_MAXIMIZEBOX Or WS_MINIMIZEBOX
 　　〇 Call SetWindowLongPtr(hWnd, GWL_STYLE, hStyle)
-　　│#  ボタン配置
+　　│#   ボタン配置
 　　＠┐With Me.CommandButton1
 　　│〇 .Top = Me.Frame1.Top + Me.Frame1.Height + margin
 　　│〇 .Left = Me.Frame1.Left + Me.Frame1.Width - btWidth
@@ -41,19 +39,19 @@ HCP	Business
 　　│〇 .Top = Me.Frame1.Top + Me.Frame1.Height + margin
 　　│〇 .Left = margin
 　　│┴End With
-　　│#  表示モード設定
+　　│#   表示モード設定
 　　◆┐If IsScrollEnabled Then
 　　│＠┐With CommandButton2
 　　││〇 .Caption = "改行なし"
 　　││┴End With
 　　│〇 Label4.Caption = "表示mode:改行あり"
-　　│〇 Label4.Caption = "表示mode:改行なし"
 　　├┐ELSE
 　　│＠┐With CommandButton2
-　　││┴End With
 　　│〇 .Caption = "改行あり"
+　　││┴End With
+　　│〇 Label4.Caption = "表示mode:改行なし"
 　　│┴End If
-　　│#  フォント操作部配置
+　　│#   フォント操作部配置
 　　＠┐With SpinButton1
 　　│〇 .Top = margin - 4
 　　│〇 .Left = Me.Frame1.Left + Me.Frame1.Width - 2 * margin
@@ -76,7 +74,25 @@ HCP	Business
 　　│〇 .Left = Frame1.Width / 2 - Label4.Width / 2
 　　│〇 .Visible = False             ' ラベルを非表示に設定
 　　│┴End With
-　　│#  右クリック機能初期化
+　　│#   右クリック機能初期化
 　　〇 Static dcp As New CRightClick
-　　◎ dcp.Initialize Me	右クリック機能初期化＜CRightClick＞
+　　〇 dcp.Initialize Me
 　　┴End Sub
+
+========================================
+Calls (5)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+NewClass
+FP_GetCalendarTable3	三か月カレンダーテーブル取得	modAboutCalendar2
+RequesterNumDivision	依頼元管理番号解析	UF_RequesterNumRegist
+Initialize	右クリック機能初期化	CRightClick
+BuildHTMLContent	HTML本文生成	UF_InfoWebDisplay
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

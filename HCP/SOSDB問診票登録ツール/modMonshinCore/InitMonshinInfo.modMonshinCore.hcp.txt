@@ -1,47 +1,45 @@
-Procedure: modMonshinCore.InitMonshinInfo  [ 問診情報初期化＜modMonshinCore＞ ]
-HCP	Business
 ┬
 〇│Public Function InitMonshinInfo(  ByVal sheetType As enMonshinSheetType  ) As MonshinInfoType	問診情報初期化＜modMonshinCore＞
 ┴└┐
-　　│#  構造体生成
+　　│#   構造体生成
 　　□ Dim info As MonshinInfoType
 　　□ Dim i As Long
-　　│#  フォーマット種別初期化
+　　│#   フォーマット種別初期化
 　　〇 info.sheetType = sheetType
-　　│#  管理番号初期化
+　　│#   管理番号初期化
 　　〇 info.RequesterNum = ""
 　　〇 info.MonShinNum = ""
 　　〇 info.faultRepNum = ""
 　　〇 info.unKanNum = ""
-　　│#  題名事象初期化
+　　│#   題名事象初期化
 　　〇 info.TitleLine = ""
 　　〇 info.Phenomenon = ""
 　　〇 info.Description = ""
-　　│#  発生日時初期化
+　　│#   発生日時初期化
 　　〇 info.occurrenceDate = ""
 　　〇 info.occurrenceTime = ""
-　　│#  環境情報初期化
+　　│#   環境情報初期化
 　　〇 info.ProblemBuilding = ""
 　　〇 info.Equipment = ""
 　　〇 info.HostName = ""
 　　〇 info.FileVer = ""
-　　│#  状況情報初期化
+　　│#   状況情報初期化
 　　〇 info.AlarmInfo = ""
 　　〇 info.OccurrenceStatus = ""
 　　〇 info.ResponseStatus = ""
-　　│#  問合せ内容初期化
+　　│#   問合せ内容初期化
 　　＠┐For i = 0 To 7
 　　│〇 info.RequestContents(i) = ""
 　　│┴Next i
-　　│#  収集データ初期化
+　　│#   収集データ初期化
 　　〇 info.CollectedData = ""
-　　│#  回答情報初期化
+　　│#   回答情報初期化
 　　〇 info.AnswerDate = ""
 　　〇 info.AnswerPerson = ""
 　　〇 info.AnswerInfo = ""
 　　〇 info.CauseDetail = ""
 　　〇 info.Countermeasure = ""
-　　│#  Redmine素材初期化
+　　│#   Redmine素材初期化
 　　〇 info.Request_Client = ""
 　　〇 info.Target_Ver = ""
 　　〇 info.ServiceImpact = ""
@@ -52,9 +50,23 @@ HCP	Business
 　　〇 info.Key_Word = ""
 　　〇 info.EqProduct = ""
 　　〇 info.Mondainum_Pro = ""
-　　│#  担当者初期化
+　　│#   担当者初期化
 　　〇 info.Author_Name = ""
 　　〇 info.Assigned_To = ""
-　　│#  初期化結果返却
+　　│#   初期化結果返却
 　　〇 InitMonshinInfo = info
 　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+Get_MonshinInfo	問診情報取得	modMonshinCore

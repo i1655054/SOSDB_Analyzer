@@ -1,11 +1,28 @@
-Procedure: modAboutCalendar2.FP_InitAboutCalendar  [ カレンダー初期化＜modAboutCalendar2＞ ]
-HCP	Business
 ┬
 〇│Public Function FP_InitAboutCalendar(Optional ByVal blnOmitCheck As Boolean = False) As Boolean	カレンダー初期化＜modAboutCalendar2＞
 ┴└┐
 　　◆┐If Not g_blnInitAboutCalendar Then
 　　│〇 Set g_clsAboutCalendar = New clsAboutCalendar2
-　　│◎ g_blnInitAboutCalendar = g_clsAboutCalendar.MakeHoliParamater(blnOmitCheck)	祝日パラメータ作成＜clsAboutCalendar2＞
+　　│〇 g_blnInitAboutCalendar = g_clsAboutCalendar.MakeHoliParamater(blnOmitCheck)
 　　│┴End If
 　　〇 FP_InitAboutCalendar = g_blnInitAboutCalendar
 　　┴End Function
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+MakeHoliParamater	祝日パラメータ作成	clsAboutCalendar2
+
+========================================
+Called By (4)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+FP_GetCalendarTable1	単月カレンダーテーブル取得	modAboutCalendar2
+FP_GetCalendarTable3	三か月カレンダーテーブル取得	modAboutCalendar2
+FP_SumEigyoNissu	営業日数集計	modAboutCalendar2
+FP_SumEigyoBi	営業日加算日付計算	modAboutCalendar2

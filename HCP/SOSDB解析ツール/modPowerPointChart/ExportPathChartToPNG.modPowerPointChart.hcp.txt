@@ -1,0 +1,75 @@
+┬
+〇│Public Sub ExportPathChartToPNG(  ByVal StartProc As String,  ByVal MaxDepth As Long)	PNG出力＜modPowerPointChart＞
+┴└┐
+　　□ Dim pptApp As Object
+　　□ Dim pptPres As Object
+　　□ Dim pptSlide As Object
+　　□ Dim pptShape As Object
+　　□ Dim ws As Worksheet
+　　□ Dim rng As Range
+　　□ Dim GridLineFlg As Boolean
+　　□ Dim PngFile As String
+　　│#   PathChartシート取得
+　　〇 Set ws = gContext.ManagementBook.Worksheets(
+　　│ SHEET_PATH_CHART)
+　　│#   PathChart出力範囲取得
+　　◎ Set rng = GetChartRange()	チャート範囲取得＜modPathChart＞
+　　│#   グリッド線一時非表示
+　　〇 GridLineFlg =  ActiveWindow.DisplayGridlines
+　　〇 ActiveWindow.DisplayGridlines = False
+　　│#   PathChart画像取得
+　　〇 rng.CopyPicture  Appearance:=xlScreen,  Format:=xlPicture
+　　│#   グリッド線表示復元
+　　〇 ActiveWindow.DisplayGridlines =  GridLineFlg
+　　│#   PowerPoint起動
+　　〇 Set pptApp =  CreateObject("PowerPoint.Application")
+　　〇 pptApp.Visible = True
+　　│#   プレゼンテーション生成
+　　〇 Set pptPres =  pptApp.Presentations.Add
+　　│#   PowerPointスライド追加
+　　〇 Set pptSlide =  pptPres.Slides.Add(  PPT_SLIDE_INDEX,  PPT_LAYOUT_BLANK)
+　　│#   PathChart貼付
+　　〇 pptSlide.Shapes.Paste
+　　│#   貼付図形取得
+　　〇 Set pptShape =  pptSlide.Shapes(  pptSlide.Shapes.Count)
+　　│#   PNG出力ファイル生成
+　　◎ PngFile =  GetOutputFolder() &  StartProc &  "_PathChart_" &  gExportTimeStamp &  ".png"	出力フォルダ取得＜modPowerPointChart＞
+　　☆ On Error Resume Next
+　　│#   PNG保存
+　　〇 pptShape.Export PngFile, 2
+　　│#   後処理
+　　│#   PowerPoint終了
+　　〇 pptPres.Close
+　　│#   PowerPointアプリ終了
+　　〇 pptApp.Quit
+　　│#   PowerPointオブジェクト解放
+　　〇 Set pptShape = Nothing
+　　〇 Set pptSlide = Nothing
+　　〇 Set pptPres = Nothing
+　　〇 Set pptApp = Nothing
+　　│#   結果通知
+　　│#   PNG保存結果通知
+　　◆┐If Err.Number <> 0 Then
+　　│〇 MsgBox  "PNG保存失敗" & vbCrLf &  Err.Description,  vbExclamation
+　　├┐ELSE
+　　│〇 MsgBox  "PNG保存完了" & vbCrLf &  PngFile,  vbInformation
+　　│┴End If
+　　☆ On Error GoTo 0
+　　┴End Sub
+
+========================================
+Calls (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetChartRange	チャート範囲取得	modPathChart
+GetOutputFolder	出力フォルダ取得	modPowerPointChart
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+CreatePathChart_V3	パスチャート作成	modPathChart

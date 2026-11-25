@@ -1,16 +1,28 @@
-Procedure: UF_NewInfoRegist.プロダクト担当者_chk  [ プロダクト担当者確認＜UF_NewInfoRegist＞ ]
-HCP	Business
 ┬
 〇│Private Function プロダクト担当者_chk() As Boolean	プロダクト担当者確認＜UF_NewInfoRegist＞
 ┴└┐
 　　〇 プロダクト担当者_chk = True
-　　│#  入力有無確認
+　　│#   入力有無確認
 　　◆┐If Trim(Me.txtプロダクト担当者.Value) = "" Then
-　　││#  エラー表示
+　　││#   エラー表示
 　　│〇 プロダクト担当者_chk = False
 　　│〇 Me.txtプロダクト担当者.BackColor = &HC0C0FF
 　　├┐ELSE
-　　││#  表示復元
+　　││#   表示復元
 　　│〇 Me.txtプロダクト担当者.BackColor = &H80000005
 　　│┴End If
 　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+CommandButton1_Click

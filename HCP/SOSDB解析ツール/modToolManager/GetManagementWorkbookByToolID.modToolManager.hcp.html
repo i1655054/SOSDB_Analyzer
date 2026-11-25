@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
+<title>GetManagementWorkbookByToolID</title>
+<style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
+</style>
+</head>
+<body translate="no">
+<h1>GetManagementWorkbookByToolID</h1>
+<p>Module : modToolManager</p>
+<table>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
+<tbody>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Public Function GetManagementWorkbookByToolID(  ByVal ToolID As Long)  As Workbook</td><td>管理ブック取得＜modToolManager＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　□ Dim Tool As clsToolInfo</td><td></td></tr>
+<tr><td>　　□ Dim FullPath As String</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   ツール情報取得</span></td><td></td></tr>
+<tr><td>　　◎ Set Tool = <a href="../modToolManager/GetToolInfo.modToolManager.hcp.html">GetToolInfo</a>(ToolID)</td><td><a href="../modToolManager/GetToolInfo.modToolManager.hcp.html">ツール情報取得＜modToolManager＞</a></td></tr>
+<tr><td>　　☆ On Error Resume Next</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   管理ブック取得</span></td><td></td></tr>
+<tr><td>　　〇 Set GetManagementWorkbookByToolID =  Workbooks(Tool.ManagementFile)</td><td></td></tr>
+<tr><td>　　☆ On Error GoTo 0</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   管理ブック未存在時処理</span></td><td></td></tr>
+<tr><td>　　◆┐If GetManagementWorkbookByToolID Is Nothing Then</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   管理ファイルパス取得</span></td><td></td></tr>
+<tr><td>　　│◎ FullPath =  <a href="../modToolManager/GetManagementFilePathByToolID.modToolManager.hcp.html">GetManagementFilePathByToolID</a>(ToolID)</td><td><a href="../modToolManager/GetManagementFilePathByToolID.modToolManager.hcp.html">管理ファイルパス取得＜modToolManager＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　││#   管理ファイル存在確認</span></td><td></td></tr>
+<tr><td>　　│◆┐If Dir(FullPath) = "" Then</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│││#   管理ブック作成</span></td><td></td></tr>
+<tr><td>　　││◎ Set GetManagementWorkbookByToolID =  <a href="../modToolManager/CreateManagementWorkbook.modToolManager.hcp.html">CreateManagementWorkbook</a>(FullPath, Tool.ToolName)</td><td><a href="../modToolManager/CreateManagementWorkbook.modToolManager.hcp.html">管理ブック作成＜modToolManager＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│││#   管理画面サイズ設定</span></td><td></td></tr>
+<tr><td>　　││◎ <a href="../modToolManager/ResizeManageWindow.modToolManager.hcp.html">ResizeManageWindow</a>  GetManagementWorkbookByToolID</td><td><a href="../modToolManager/ResizeManageWindow.modToolManager.hcp.html">管理画面サイズ変更＜modToolManager＞</a></td></tr>
+<tr><td>　　││→ Exit Function</td><td></td></tr>
+<tr><td>　　│├┐ELSE</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│││#   管理ブックオープン</span></td><td></td></tr>
+<tr><td>　　││〇 Set GetManagementWorkbookByToolID =  Workbooks.Open(FullPath)</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│││#   管理画面サイズ設定</span></td><td></td></tr>
+<tr><td>　　││◎ <a href="../modToolManager/ResizeManageWindow.modToolManager.hcp.html">ResizeManageWindow</a>  GetManagementWorkbookByToolID</td><td><a href="../modToolManager/ResizeManageWindow.modToolManager.hcp.html">管理画面サイズ変更＜modToolManager＞</a></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　┴End Function</td><td></td></tr>
+</tbody>
+</table>
+<hr>
+<h2>Calls (4)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modToolManager/GetToolInfo.modToolManager.hcp.html">GetToolInfo</a></td><td>ツール情報取得</td><td>modToolManager</td></tr>
+<tr><td><a href="../modToolManager/GetManagementFilePathByToolID.modToolManager.hcp.html">GetManagementFilePathByToolID</a></td><td>管理ファイルパス取得</td><td>modToolManager</td></tr>
+<tr><td><a href="../modToolManager/CreateManagementWorkbook.modToolManager.hcp.html">CreateManagementWorkbook</a></td><td>管理ブック作成</td><td>modToolManager</td></tr>
+<tr><td><a href="../modToolManager/ResizeManageWindow.modToolManager.hcp.html">ResizeManageWindow</a></td><td>管理画面サイズ変更</td><td>modToolManager</td></tr>
+</table>
+<hr>
+<h2>Called By (1)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modToolManager/GetCurrentManagementWorkbook.modToolManager.hcp.html">GetCurrentManagementWorkbook</a></td><td>現在管理ブック取得</td><td>modToolManager</td></tr>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function(eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function(e) {
+startX = e.pageX;
+startWidth = eleTh.offsetWidth;
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
+}
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
+}
+});
+</script>
+</body>
+</html>

@@ -1,5 +1,3 @@
-Procedure: UF_Calendar5.UserForm_Initialize  [ カレンダー初期化＜UF_Calendar5＞ ]
-HCP	Business
 ┬
 〇│Private Sub UserForm_Initialize()	カレンダー初期化＜UF_Calendar5＞
 ┴└┐
@@ -9,37 +7,24 @@ HCP	Business
 　　□ Dim dteDate As Date                                             ' 日付WORK
 　　□ Dim tblTodayNm As Variant                                       ' 昨日､今日､明日の名称
 　　□ Dim tblCalendar() As g_typAboutCalendar2                        ' カレンダーテーブル
-　　│#  日付ラベル初期化
+　　│#   日付ラベル初期化
 　　＠┐For lngIx = 0 To 44
-　　│◎ Call g_tblDateLabel(lngIx).NewClass(Me.Controls("LBL_" & Format((lngIx + 1), "00")), lngIx)
-　　││	内部呼出:g_tblDateLabel, Controls, Format
+　　│〇 Call g_tblDateLabel(lngIx).NewClass(Me.Controls("LBL_" & Format((lngIx + 1), "00")), lngIx)
 　　│┴Next lngIx
-　　│#  固定ラベル初期化
-　　◎ Call g_tblFixLabel(0).NewClass(LBL_SUN, cnsDefaultGuide)        ' 日
-　　│	内部呼出:g_tblFixLabel
-　　◎ Call g_tblFixLabel(1).NewClass(LBL_MON, cnsDefaultGuide)        ' 月
-　　│	内部呼出:g_tblFixLabel
-　　◎ Call g_tblFixLabel(2).NewClass(LBL_TUE, cnsDefaultGuide)        ' 火
-　　│	内部呼出:g_tblFixLabel
-　　◎ Call g_tblFixLabel(3).NewClass(LBL_WED, cnsDefaultGuide)        ' 水
-　　│	内部呼出:g_tblFixLabel
-　　◎ Call g_tblFixLabel(4).NewClass(LBL_THU, cnsDefaultGuide)        ' 木
-　　│	内部呼出:g_tblFixLabel
-　　◎ Call g_tblFixLabel(5).NewClass(LBL_FRI, cnsDefaultGuide)        ' 金
-　　│	内部呼出:g_tblFixLabel
-　　◎ Call g_tblFixLabel(6).NewClass(LBL_SAT, cnsDefaultGuide)        ' 土
-　　│	内部呼出:g_tblFixLabel
-　　◎ Call g_tblFixLabel(7).NewClass(LBL_PREV, "前月に戻ります(PageUp)") ' ←
-　　│	内部呼出:g_tblFixLabel
-　　◎ Call g_tblFixLabel(8).NewClass(LBL_NEXT, "翌月に進みます(PageDown)") ' →
-　　│	内部呼出:g_tblFixLabel
-　　◎ Call g_tblFixLabel(9).NewClass(LBL_YM, "年か月を選択します。")  ' 年月
-　　│	内部呼出:g_tblFixLabel
-　　◎ Call g_tblFixLabel(10).NewClass(LBL_YEAR, "年が選択できます。") ' 年
-　　│	内部呼出:g_tblFixLabel
-　　◎ Call g_tblFixLabel(11).NewClass(LBL_MONTH, "月が選択できます。") ' 月
-　　│	内部呼出:g_tblFixLabel
-　　│#  曜日配置設定
+　　│#   固定ラベル初期化
+　　〇 Call g_tblFixLabel(0).NewClass(LBL_SUN, cnsDefaultGuide)        ' 日
+　　〇 Call g_tblFixLabel(1).NewClass(LBL_MON, cnsDefaultGuide)        ' 月
+　　〇 Call g_tblFixLabel(2).NewClass(LBL_TUE, cnsDefaultGuide)        ' 火
+　　〇 Call g_tblFixLabel(3).NewClass(LBL_WED, cnsDefaultGuide)        ' 水
+　　〇 Call g_tblFixLabel(4).NewClass(LBL_THU, cnsDefaultGuide)        ' 木
+　　〇 Call g_tblFixLabel(5).NewClass(LBL_FRI, cnsDefaultGuide)        ' 金
+　　〇 Call g_tblFixLabel(6).NewClass(LBL_SAT, cnsDefaultGuide)        ' 土
+　　〇 Call g_tblFixLabel(7).NewClass(LBL_PREV, "前月に戻ります(PageUp)") ' ←
+　　〇 Call g_tblFixLabel(8).NewClass(LBL_NEXT, "翌月に進みます(PageDown)") ' →
+　　〇 Call g_tblFixLabel(9).NewClass(LBL_YM, "年か月を選択します。")  ' 年月
+　　〇 Call g_tblFixLabel(10).NewClass(LBL_YEAR, "年が選択できます。") ' 年
+　　〇 Call g_tblFixLabel(11).NewClass(LBL_MONTH, "月が選択できます。") ' 月
+　　│#   曜日配置設定
 　　◆┐If g_cnsStartYobi = 2 Then
 　　│〇 LBL_MON.Left = 3
 　　│〇 LBL_MON.Width = 16.75
@@ -65,12 +50,12 @@ HCP	Business
 　　│〇 LBL_SAT.Left = 108
 　　│〇 LBL_SAT.Width = 17
 　　│┴End If
-　　│#  曜日テーブル生成
+　　│#   曜日テーブル生成
 　　〇 g_tblYobi = Array(
 　　│ "(日)", "(月)", "(火)", "(水)", "(木)", "(金)", "(土)")
-　　│#  昨日今日明日情報生成
+　　│#   昨日今日明日情報生成
 　　〇 dteDate = Date              ' 今日
-　　◆→ If Not modAboutCalendar2.FP_GetCalendarTable3(Year(dteDate),  Month(dteDate),  tblCalendar) Then Exit Sub
+　　◆→ If Not modAboutCalendar2.FP_GetCalendarTable3(Year(dteDate),  Month(dteDate),  tblCalendar) Then Exit Sub	内部呼出:FP_GetCalendarTable3
 　　〇 dteDate = dteDate - 1
 　　〇 lngIxC = 0
 　　＠┐Do While lngIxC <= UBound(tblCalendar)
@@ -94,3 +79,21 @@ HCP	Business
 　　│〇 lngIx2 = lngIx2 + 1
 　　│┴Next lngIx
 　　┴End Sub
+
+========================================
+Calls (5)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+NewClass
+FP_GetCalendarTable3	三か月カレンダーテーブル取得	modAboutCalendar2
+RequesterNumDivision	依頼元管理番号解析	UF_RequesterNumRegist
+Initialize	右クリック機能初期化	CRightClick
+BuildHTMLContent	HTML本文生成	UF_InfoWebDisplay
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

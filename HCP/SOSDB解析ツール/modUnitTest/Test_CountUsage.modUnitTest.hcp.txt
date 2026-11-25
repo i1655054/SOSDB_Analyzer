@@ -1,0 +1,22 @@
+┬
+〇│Public Sub Test_CountUsage()	＜modUnitTest＞
+┴└┐
+　　〇 Debug.Print "Test_CountUsage()"
+　　◎ Debug.Print "Test=" &  CountUsage("Test")	使用回数集計＜modAnalyze＞
+　　◎ Debug.Print "TestSub=" &  CountUsage("TestSub")	使用回数集計＜modAnalyze＞
+　　◎ Debug.Print "FuncA=" &  CountUsage("FuncA")	使用回数集計＜modAnalyze＞
+　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+CountUsage	使用回数集計	modAnalyze
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

@@ -1,0 +1,37 @@
+┬
+〇│Public Sub LoadStartProcedure(  ByVal cbo As MSForms.ComboBox)	開始関数読込＜modPathChart＞
+┴└┐
+　　□ Dim ws As Worksheet
+　　□ Dim LastRow As Long
+　　□ Dim r As Long
+　　□ Dim Dic As Object
+　　〇 Set Dic = CreateObject("Scripting.Dictionary")
+　　〇 Set ws =  gContext.ManagementBook.Worksheets(
+　　│ SHEET_FUNCTION_DEPENDENCY)
+　　〇 LastRow =  ws.Cells(ws.Rows.Count, "A")  .End(xlUp).row
+　　〇 cbo.Clear
+　　│#   開始Procedure一覧取得
+　　＠┐For r = 2 To LastRow
+　　│◆┐If Trim$(ws.Cells(r, 1).Value) <> "" Then
+　　│││#   開始Procedure候補追加
+　　││◆┐If Not Dic.Exists(  ws.Cells(r, 1).Value) Then
+　　│││〇 Dic.Add  ws.Cells(r, 1).Value,  True
+　　│││〇 cbo.AddItem  ws.Cells(r, 1).Value
+　　│││┴End If
+　　││┴End If
+　　│┴Next r
+　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+UserForm_Initialize

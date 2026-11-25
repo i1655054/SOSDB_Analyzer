@@ -1,36 +1,48 @@
-Procedure: modUtility.ParseMondainumPro  [ 問処番号解析＜modUtility＞ ]
-HCP	Business
 ┬
 〇│Public Function ParseMondainumPro(src As String, ByRef numVal As String, ByRef proVal As String) As Boolean	問処番号解析＜modUtility＞
 ┴└┐
 　　□ Dim parts() As String
-　　│#  入力文字列整形
+　　│#   入力文字列整形
 　　〇 src = Trim(src)
-　　│#  出力値初期化
+　　│#   出力値初期化
 　　〇 numVal = ""
 　　〇 proVal = ""
-　　│#  入力有無確認
+　　│#   入力有無確認
 　　◆┐If src = "" Then
 　　│〇 ParseMondainumPro = False
 　　│→ Exit Function
 　　│┴End If
-　　│#  問処番号分割
+　　│#   問処番号分割
 　　〇 parts = Split(src, "/")
-　　│#  分割数判定
+　　│#   分割数判定
 　　◆┐Select Case UBound(parts)
 　　│├┐Case 0
-　　│││#  問処番号設定
+　　│││#   問処番号設定
 　　││〇 numVal = Trim(parts(0))
 　　│├┐Case 1
-　　│││#  問処番号設定
+　　│││#   問処番号設定
 　　││〇 numVal = Trim(parts(0))
-　　│││#  発行元設定
+　　│││#   発行元設定
 　　││〇 proVal = Trim(parts(1))
 　　│├┐Case Else
-　　│││#  フォーマット異常
+　　│││#   フォーマット異常
 　　││〇 ParseMondainumPro = False
 　　││→ Exit Function
 　　│┴End Select
-　　│#  解析成功
+　　│#   解析成功
 　　〇 ParseMondainumPro = True
 　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+SetIssueToUI	Issue画面反映	modUtility

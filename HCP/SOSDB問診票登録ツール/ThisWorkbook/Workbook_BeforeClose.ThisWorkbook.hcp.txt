@@ -1,5 +1,3 @@
-Procedure: ThisWorkbook.Workbook_BeforeClose  [ ブック終了処理＜ThisWorkbook＞ ]
-HCP	Business
 ┬
 〇│Private Sub Workbook_BeforeClose(Cancel As Boolean)	ブック終了処理＜ThisWorkbook＞
 ┴└┐
@@ -7,3 +5,15 @@ HCP	Business
 　　〇 ThisWorkbook.Close SaveChanges:=False ' 保存せずに閉じる
 　　〇 Application.DisplayAlerts = True ' ダイアログ表示を元に戻す
 　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
+<title>GetChartRange</title>
+<style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
+</style>
+</head>
+<body translate="no">
+<h1>GetChartRange</h1>
+<p>Module : modPathChart</p>
+<table>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
+<tbody>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Public Function GetChartRange() As Range</td><td>チャート範囲取得＜modPathChart＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　□ Dim ws As Worksheet</td><td></td></tr>
+<tr><td>　　□ Dim shp As Shape</td><td></td></tr>
+<tr><td>　　□ Dim MaxRight As Double</td><td></td></tr>
+<tr><td>　　□ Dim MaxBottom As Double</td><td></td></tr>
+<tr><td>　　□ Dim LastCol As Long</td><td></td></tr>
+<tr><td>　　□ Dim LastRow As Long</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   PathChartシート取得</span></td><td></td></tr>
+<tr><td>　　〇 Set ws = gContext.ManagementBook.Worksheets(<br>　　│ SHEET_PATH_CHART)</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   描画範囲初期化</span></td><td></td></tr>
+<tr><td>　　〇 MaxRight = ws.Range(ROOT_CELL).Left</td><td></td></tr>
+<tr><td>　　〇 MaxBottom = ws.Range(ROOT_CELL).Top</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   図形配置範囲取得</span></td><td></td></tr>
+<tr><td>　　＠┐For Each shp In ws.Shapes</td><td></td></tr>
+<tr><td>　　│◆┐If Left$(shp.Name, 2) = "N_"  Or Left$(shp.Name, 2) = "C_" Then</td><td></td></tr>
+<tr><td>　　││◆┐If shp.Left + shp.Width &gt; MaxRight Then</td><td></td></tr>
+<tr><td>　　│││〇 MaxRight = shp.Left + shp.Width</td><td></td></tr>
+<tr><td>　　│││┴End If</td><td></td></tr>
+<tr><td>　　││◆┐If shp.Top + shp.Height &gt; MaxBottom Then</td><td></td></tr>
+<tr><td>　　│││〇 MaxBottom = shp.Top + shp.Height</td><td></td></tr>
+<tr><td>　　│││┴End If</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td>　　│┴Next shp</td><td></td></tr>
+<tr><td>　　〇 LastCol = 1</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   最終列算出</span></td><td></td></tr>
+<tr><td>　　＠┐Do While ws.Columns(LastCol).Left &lt; MaxRight</td><td></td></tr>
+<tr><td>　　│〇 LastCol = LastCol + 1</td><td></td></tr>
+<tr><td>　　│┴Loop</td><td></td></tr>
+<tr><td>　　〇 LastRow = 1</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   最終行算出</span></td><td></td></tr>
+<tr><td>　　＠┐Do While ws.Rows(LastRow).Top &lt; MaxBottom</td><td></td></tr>
+<tr><td>　　│〇 LastRow = LastRow + 1</td><td></td></tr>
+<tr><td>　　│┴Loop</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   PathChart範囲返却</span></td><td></td></tr>
+<tr><td>　　〇 Set GetChartRange =  ws.Range(  ws.Range(ROOT_CELL),  ws.Cells(LastRow + 1,  LastCol + 1))</td><td></td></tr>
+<tr><td>　　┴End Function</td><td></td></tr>
+</tbody>
+</table>
+<hr>
+<h2>Calls (0)</h2>
+<p>呼出先なし</p>
+<hr>
+<h2>Called By (3)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modPathChart/CreatePathChart_V3.modPathChart.hcp.html">CreatePathChart_V3</a></td><td>パスチャート作成</td><td>modPathChart</td></tr>
+<tr><td><a href="../modPowerPointChart/CreatePowerPointPathChart.modPowerPointChart.hcp.html">CreatePowerPointPathChart</a></td><td>PowerPoint出力</td><td>modPowerPointChart</td></tr>
+<tr><td><a href="../modPowerPointChart/ExportPathChartToPNG.modPowerPointChart.hcp.html">ExportPathChartToPNG</a></td><td>PNG出力</td><td>modPowerPointChart</td></tr>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function(eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function(e) {
+startX = e.pageX;
+startWidth = eleTh.offsetWidth;
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
+}
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
+}
+});
+</script>
+</body>
+</html>

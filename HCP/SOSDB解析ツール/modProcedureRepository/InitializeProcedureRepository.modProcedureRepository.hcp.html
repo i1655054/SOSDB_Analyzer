@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
+<title>InitializeProcedureRepository</title>
+<style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
+</style>
+</head>
+<body translate="no">
+<h1>InitializeProcedureRepository</h1>
+<p>Module : modProcedureRepository</p>
+<table>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
+<tbody>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Public Sub InitializeProcedureRepository()</td><td>ProcedureRepository初期化＜modProcedureRepository＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　〇 #Const DEBUG_MODE = False</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   初期化状態確認</span></td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   Context存在確認</span></td><td></td></tr>
+<tr><td>　　◆→ If gContext Is Nothing Then Exit Sub</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   ProcedureRepository初期化済確認</span></td><td></td></tr>
+<tr><td>　　◆→ If gContext.ProcInfoLoaded Then Exit Sub</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   ProcedureRepository生成</span></td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   Procedure辞書生成</span></td><td></td></tr>
+<tr><td>　　◎ <a href="../modProcedureRepository/BuildProcInfoDictionary.modProcedureRepository.hcp.html">BuildProcInfoDictionary</a></td><td><a href="../modProcedureRepository/BuildProcInfoDictionary.modProcedureRepository.hcp.html">Procedure辞書作成＜modProcedureRepository＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│#   ProcedureRepository初期化完了</span></td><td></td></tr>
+<tr><td>　　◆┐If Not gContext.ProcInfoDic Is Nothing Then</td><td></td></tr>
+<tr><td>　　│〇 gContext.ProcInfoLoaded = True</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　┴End Sub</td><td></td></tr>
+</tbody>
+</table>
+<hr>
+<h2>Calls (1)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modProcedureRepository/BuildProcInfoDictionary.modProcedureRepository.hcp.html">BuildProcInfoDictionary</a></td><td>Procedure辞書作成</td><td>modProcedureRepository</td></tr>
+</table>
+<hr>
+<h2>Called By (3)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modAnalyzerCommon/GetProcInfo.modAnalyzerCommon.hcp.html">GetProcInfo</a></td><td>Procedure情報取得</td><td>modAnalyzerCommon</td></tr>
+<tr><td><a href="../frmFunctionManager/cmdHCP_Click.frmFunctionManager.hcp.html">cmdHCP_Click</a></td><td>HCP生成起動</td><td>frmFunctionManager</td></tr>
+<tr><td><a href="../frmFunctionManager/cmdPathChart_Click.frmFunctionManager.hcp.html">cmdPathChart_Click</a></td><td>PathChart起動</td><td>frmFunctionManager</td></tr>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function(eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function(e) {
+startX = e.pageX;
+startWidth = eleTh.offsetWidth;
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
+}
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
+}
+});
+</script>
+</body>
+</html>

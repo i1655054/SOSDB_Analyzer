@@ -1,0 +1,37 @@
+┬
+〇│Private Sub RebuildParentID(  ByVal HCPNodes As Collection,  ByVal IDMap As Object)	親子関係再構築＜modHCPAnalyzer＞
+┴└┐
+　　□ Dim Node As clsHCPNode
+　　□ Dim OldParentID As Long
+　　│#   ParentID変換開始
+　　＠┐For Each Node In HCPNodes
+　　││#   MERGE除外
+　　│◆┐If Node.NodeType = NODE_MERGE Then
+　　││→ GoTo ContinueLoop
+　　││┴End If
+　　│◆┐If Node.ParentID <> 0 Then
+　　││〇 OldParentID = Abs(Node.ParentID)
+　　│││#   HCPNode親ID変換
+　　││◆┐If IDMap.Exists(CStr(OldParentID)) Then
+　　│││〇 Node.ParentID =  CLng(IDMap(CStr(OldParentID)))
+　　││├┐ELSE
+　　│││〇 Node.ParentID = 0
+　　│││┴End If
+　　││┴End If
+▼ ContinueLoop:
+　　│┴Next Node
+　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ConvertProcToHCP	HCP変換	modHCPAnalyzer

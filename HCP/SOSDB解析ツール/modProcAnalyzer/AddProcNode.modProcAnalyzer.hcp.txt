@@ -1,0 +1,30 @@
+┬
+〇│Private Sub AddProcNode(  ByVal Nodes As Collection,  ByVal Node As clsProcNode,  ByRef PrevNode As clsProcNode,  ByRef LastNodeID As Long)	ProcNode追加＜modProcAnalyzer＞
+┴└┐
+　　│#   前後リンク設定
+　　〇 Node.PrevNodeID = LastNodeID
+　　〇 Node.NextNodeID = 0
+　　│#   前ノード更新
+　　◆┐If Not PrevNode Is Nothing Then
+　　│〇 PrevNode.NextNodeID =  Node.NodeID
+　　│┴End If
+　　│#   ProcNode登録
+　　〇 Nodes.Add Node
+　　│#   管理情報更新
+　　〇 Set PrevNode = Node
+　　〇 LastNodeID = Node.NodeID
+　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+AnalyzeProcedure	Proc解析	modProcAnalyzer

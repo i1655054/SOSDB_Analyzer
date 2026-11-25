@@ -1,30 +1,31 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
 <meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
 <title>FindIssueIdByTroubleNum</title>
 <style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
 body{font-family:Meiryo;font-size:9pt;}
 table{border-collapse:collapse;}
-th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
 td{vertical-align:top;}
 th{background:#e8f0fe;}
-colgroup col:nth-of-type(1) {}
-colgroup col:nth-of-type(2) {}
-.resize {position: relative;}
-.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
 </style>
 </head>
-<body>
+<body translate="no">
 <h1>FindIssueIdByTroubleNum</h1>
 <p>Module : modIssueService</p>
-<p><a href="./_INDEX.html">← Module Index</a></p>
 <table>
-<colgroup><col/><col/></colgroup>
-<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
 <tbody>
-<tr><td>Procedure: modIssueService.FindIssueIdByTroubleNum  [ トラバス管理番号検索＜modIssueService＞ ]</td><td></td></tr>
-<tr><td>HCP</td><td>Business</td></tr>
 <tr><td>┬</td><td></td></tr>
 <tr><td>〇│Public Function FindIssueIdByTroubleNum(  ByVal AuthorName As String,  ByVal TroubleNum As String) As String</td><td>トラバス管理番号検索＜modIssueService＞</td></tr>
 <tr><td>┴└┐</td><td></td></tr>
@@ -35,77 +36,87 @@ colgroup col:nth-of-type(2) {}
 <tr><td>　　□ Dim apiKey As String</td><td></td></tr>
 <tr><td>　　□ Dim url As String</td><td></td></tr>
 <tr><td>　　□ Dim id As String</td><td></td></tr>
-<tr><td>　　│#  戻り値初期化</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   戻り値初期化</span></td><td></td></tr>
 <tr><td>　　〇 FindIssueIdByTroubleNum = ""</td><td></td></tr>
-<tr><td>　　│#  HTTP通信準備</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   HTTP通信準備</span></td><td></td></tr>
 <tr><td>　　〇 Set http = New XMLHTTP60</td><td></td></tr>
-<tr><td>　　│#  Redmine接続先取得</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   Redmine接続先取得</span></td><td></td></tr>
 <tr><td>　　□ Dim RedmineDB As String</td><td></td></tr>
-<tr><td>　　◎ RedmineDB = GetServerURL(Range(RedmineDbSev_RANG).Value)</td><td>RedmineサーバURL取得＜modIssueMapper＞</td></tr>
+<tr><td>　　◎ RedmineDB = <a href="../modIssueMapper/GetServerURL.modIssueMapper.hcp.html">GetServerURL</a>(Range(RedmineDbSev_RANG).Value)</td><td><a href="../modIssueMapper/GetServerURL.modIssueMapper.hcp.html">RedmineサーバURL取得＜modIssueMapper＞</a></td></tr>
 <tr><td>　　│</td><td>内部呼出:Range</td></tr>
-<tr><td>　　│#  APIURL生成</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   APIURL生成</span></td><td></td></tr>
 <tr><td>　　〇 api = RedmineDB + "redmine/projects/trabas_ngn/"</td><td></td></tr>
-<tr><td>　　│#  APIキー取得</td><td></td></tr>
-<tr><td>　　◎ apiKey = GetApiKey(Author_Name)</td><td>APIキー取得＜modIssueMapper＞</td></tr>
-<tr><td>　　│#  APIキー補完</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   APIキー取得</span></td><td></td></tr>
+<tr><td>　　◎ apiKey = <a href="../modIssueMapper/GetApiKey.modIssueMapper.hcp.html">GetApiKey</a>(Author_Name)</td><td><a href="../modIssueMapper/GetApiKey.modIssueMapper.hcp.html">APIキー取得＜modIssueMapper＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│#   APIキー補完</span></td><td></td></tr>
 <tr><td>　　◆┐If (apiKey = "") Then</td><td></td></tr>
 <tr><td>　　│〇 apiKey = Read_API_Key</td><td></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
-<tr><td>　　│#  検索URL生成</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   検索URL生成</span></td><td></td></tr>
 <tr><td>　　〇 url = api + "search.xml?key=" + apiKey + "&amp;q=" + TroubleNum</td><td></td></tr>
-<tr><td>　　│#  Redmine検索実行</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   Redmine検索実行</span></td><td></td></tr>
 <tr><td>　　〇 http.Open "GET", url, False</td><td></td></tr>
 <tr><td>　　〇 http.send</td><td></td></tr>
-<tr><td>　　│#  通信結果確認</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   通信結果確認</span></td><td></td></tr>
 <tr><td>　　◆┐If http.statusText &lt;&gt; "OK" Then</td><td></td></tr>
 <tr><td>　　│〇 MsgBox "サーバへの接続に失敗しました", vbCritical</td><td></td></tr>
 <tr><td>　　│→ Exit Function</td><td></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
-<tr><td>　　│#  XML読込</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   XML読込</span></td><td></td></tr>
 <tr><td>　　〇 Set doc = New DOMDocument60</td><td></td></tr>
 <tr><td>　　〇 doc.LoadXML (http.responseText)</td><td></td></tr>
-<tr><td>　　│#  検索結果走査</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   検索結果走査</span></td><td></td></tr>
 <tr><td>　　＠┐For Each node In doc.SelectNodes("//result")</td><td></td></tr>
 <tr><td>　　│〇 id = node.SelectSingleNode("id").text</td><td></td></tr>
-<tr><td>　　││#  管理番号一致確認</td><td></td></tr>
-<tr><td>　　│◆┐If (ValidateIssueIdByTroubleNum(Author_Name, TroubleNum, id) &lt;&gt; "") Then</td><td></td></tr>
-<tr><td>　　│││#  IssueID返却</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   管理番号一致確認</span></td><td></td></tr>
+<tr><td>　　│◆┐If (<a href="../modIssueService/ValidateIssueIdByTroubleNum.modIssueService.hcp.html">ValidateIssueIdByTroubleNum</a>(Author_Name, TroubleNum, id) &lt;&gt; "") Then</td><td>内部呼出:<a href="../modIssueService/ValidateIssueIdByTroubleNum.modIssueService.hcp.html">ValidateIssueIdByTroubleNum</a></td></tr>
+<tr><td><span class="hcp-comment">　　│││#   IssueID返却</span></td><td></td></tr>
 <tr><td>　　││〇 FindIssueIdByTroubleNum = id</td><td></td></tr>
 <tr><td>　　││→ Exit For</td><td></td></tr>
 <tr><td>　　││┴End If</td><td></td></tr>
 <tr><td>　　│┴Next</td><td></td></tr>
-<tr><td>　　│#  オブジェクト解放</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   オブジェクト解放</span></td><td></td></tr>
 <tr><td>　　〇 Set http = Nothing</td><td></td></tr>
 <tr><td>　　〇 Set doc = Nothing</td><td></td></tr>
 <tr><td>　　〇 Set node = Nothing</td><td></td></tr>
 <tr><td>　　┴End Function</td><td></td></tr>
 </tbody>
 </table>
+<hr>
+<h2>Calls (3)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modIssueMapper/GetServerURL.modIssueMapper.hcp.html">GetServerURL</a></td><td>RedmineサーバURL取得</td><td>modIssueMapper</td></tr>
+<tr><td><a href="../modIssueMapper/GetApiKey.modIssueMapper.hcp.html">GetApiKey</a></td><td>APIキー取得</td><td>modIssueMapper</td></tr>
+<tr><td><a href="../modIssueService/ValidateIssueIdByTroubleNum.modIssueService.hcp.html">ValidateIssueIdByTroubleNum</a></td><td>管理番号一致確認</td><td>modIssueService</td></tr>
+</table>
+<hr>
+<h2>Called By (3)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modMonshinCore/UpdateMonshinHandler.modMonshinCore.hcp.html">UpdateMonshinHandler</a></td><td>問診票更新処理</td><td>modMonshinCore</td></tr>
+<tr><td><a href="../modMonshinCore/LoadRedmineIssue.modMonshinCore.hcp.html">LoadRedmineIssue</a></td><td>Redmine情報読込</td><td>modMonshinCore</td></tr>
+<tr><td><a href="../modIssueService/RegisterNewIssue.modIssueService.hcp.html">RegisterNewIssue</a></td><td>新規Issue登録</td><td>modIssueService</td></tr>
+</table>
 <script>
-document.querySelectorAll('.resize').forEach(function (eleTh) {
+document.querySelectorAll('.resize').forEach(function(eleTh) {
 let startX;
 let startWidth;
 const eleResizer = document.createElement('div');
 eleResizer.classList.add('resizer');
-eleResizer.addEventListener('mousedown', function (e) {
-const styleTh = window.getComputedStyle(eleTh);
-const paddingLeft = parseFloat(styleTh.paddingLeft);
-const paddingRight = parseFloat(styleTh.paddingRight);
-const borderLeft = parseFloat(styleTh.borderLeftWidth);
-const borderRight = parseFloat(styleTh.borderRightWidth);
+eleResizer.addEventListener('mousedown', function(e) {
 startX = e.pageX;
-startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+startWidth = eleTh.offsetWidth;
 document.addEventListener('mousemove', onMouseMove);
 document.addEventListener('mouseup', onMouseUp);
 });
 eleTh.appendChild(eleResizer);
-function onMouseMove(e) {
-const newWidth = startWidth + (e.pageX - startX);
-eleTh.style.width = newWidth + 'px';
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
 }
-function onMouseUp() {
-document.removeEventListener('mousemove', onMouseMove);
-document.removeEventListener('mouseup', onMouseUp);
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
 }
 });
 </script>

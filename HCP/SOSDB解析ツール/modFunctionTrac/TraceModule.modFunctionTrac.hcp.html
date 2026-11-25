@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
+<title>TraceModule</title>
+<style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
+</style>
+</head>
+<body translate="no">
+<h1>TraceModule</h1>
+<p>Module : modFunctionTrac</p>
+<table>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
+<tbody>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Private Function TraceModule(  ByVal CodeText As String,  ByVal ModuleName As String,  ByRef FuncList As Object,  ByRef wsOut As Worksheet,  ByVal RowOut As Long) As Long</td><td>関数呼出解析＜modFunctionTrac＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　□ Dim Lines() As String</td><td></td></tr>
+<tr><td>　　□ Dim CurrentProc As String</td><td></td></tr>
+<tr><td>　　□ Dim i As Long</td><td></td></tr>
+<tr><td>　　□ Dim Key As Variant</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   ソースコード行分割</span></td><td></td></tr>
+<tr><td>　　〇 Lines = Split(CodeText, vbCrLf)</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   モジュール解析開始</span></td><td></td></tr>
+<tr><td>　　＠┐For i = LBound(Lines) To UBound(Lines)</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   現在Procedure取得</span></td><td></td></tr>
+<tr><td>　　│◎ CurrentProc = <a href="../modFunctionTrac/GetProcedureName.modFunctionTrac.hcp.html">GetProcedureName</a>(  Lines(i),  CurrentProc)</td><td><a href="../modFunctionTrac/GetProcedureName.modFunctionTrac.hcp.html">現在関数取得＜modFunctionTrac＞</a></td></tr>
+<tr><td>　　││</td><td>内部呼出:Lines</td></tr>
+<tr><td>　　│◆┐If CurrentProc &lt;&gt; "" Then</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│││#   呼出先Procedure探索</span></td><td></td></tr>
+<tr><td>　　││＠┐For Each Key In FuncList.Keys</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││││#   Procedure呼出判定</span></td><td></td></tr>
+<tr><td>　　│││◆┐If <a href="../modAnalyzerCommon/IsFunctionCall.modAnalyzerCommon.hcp.html">IsFunctionCall</a>(  Lines(i),  CStr(Key)) Then</td><td>内部呼出:<a href="../modAnalyzerCommon/IsFunctionCall.modAnalyzerCommon.hcp.html">IsFunctionCall</a></td></tr>
+<tr><td><span class="hcp-comment">　　│││││#   自己呼出除外</span></td><td></td></tr>
+<tr><td>　　││││◆┐If UCase(Key) &lt;&gt;  UCase(CurrentProc) Then</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││││││#   呼出関係登録</span></td><td></td></tr>
+<tr><td>　　│││││◆┐If FuncList.Exists(CurrentProc) Then</td><td></td></tr>
+<tr><td>　　││││││〇 FuncList(CurrentProc).AddCall Key</td><td></td></tr>
+<tr><td>　　││││││┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││││││#   被呼出関係登録</span></td><td></td></tr>
+<tr><td>　　│││││◆┐If FuncList.Exists(Key) Then</td><td></td></tr>
+<tr><td>　　││││││〇 FuncList(Key).AddCalledBy CurrentProc</td><td></td></tr>
+<tr><td>　　││││││┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││││││#   FunctionTrace出力</span></td><td></td></tr>
+<tr><td>　　│││││〇 wsOut.Cells(RowOut, 1) = CurrentProc</td><td></td></tr>
+<tr><td>　　│││││◆┐If FuncList.Exists(CurrentProc) Then</td><td></td></tr>
+<tr><td>　　││││││〇 wsOut.Cells(RowOut, 2) =  FuncList(CurrentProc).JPName</td><td></td></tr>
+<tr><td>　　│││││├┐ELSE</td><td></td></tr>
+<tr><td>　　││││││〇 wsOut.Cells(RowOut, 2) = ""</td><td></td></tr>
+<tr><td>　　││││││┴End If</td><td></td></tr>
+<tr><td>　　│││││〇 wsOut.Cells(RowOut, 3) = Key</td><td></td></tr>
+<tr><td>　　│││││〇 wsOut.Cells(RowOut, 4) =  FuncList(Key).JPName</td><td></td></tr>
+<tr><td>　　│││││〇 wsOut.Cells(RowOut, 5) = ModuleName</td><td></td></tr>
+<tr><td>　　│││││〇 wsOut.Cells(RowOut, 6) =  FuncList(Key).ModuleName</td><td></td></tr>
+<tr><td>　　│││││〇 wsOut.Cells(RowOut, 7) =  FuncList(Key).Category</td><td></td></tr>
+<tr><td>　　│││││〇 wsOut.Cells(RowOut, 8) =  FuncList(Key).Summary</td><td></td></tr>
+<tr><td>　　│││││〇 wsOut.Cells(RowOut, 9) = i + 1</td><td></td></tr>
+<tr><td>　　│││││〇 wsOut.Cells(RowOut, 10) =  Trim$(Lines(i))</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││││││#   次出力行へ移動</span></td><td></td></tr>
+<tr><td>　　│││││〇 RowOut = RowOut + 1</td><td></td></tr>
+<tr><td>　　│││││┴End If</td><td></td></tr>
+<tr><td>　　││││┴End If</td><td></td></tr>
+<tr><td>　　│││┴Next Key</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td>　　│┴Next i</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   次出力行返却</span></td><td></td></tr>
+<tr><td>　　〇 TraceModule = RowOut</td><td></td></tr>
+<tr><td>　　┴End Function</td><td></td></tr>
+</tbody>
+</table>
+<hr>
+<h2>Calls (2)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modFunctionTrac/GetProcedureName.modFunctionTrac.hcp.html">GetProcedureName</a></td><td>現在関数取得</td><td>modFunctionTrac</td></tr>
+<tr><td><a href="../modAnalyzerCommon/IsFunctionCall.modAnalyzerCommon.hcp.html">IsFunctionCall</a></td><td>関数呼出判定</td><td>modAnalyzerCommon</td></tr>
+</table>
+<hr>
+<h2>Called By (1)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modFunctionTrac/FunctionTrace.modFunctionTrac.hcp.html">FunctionTrace</a></td><td>関数トレース作成</td><td>modFunctionTrac</td></tr>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function(eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function(e) {
+startX = e.pageX;
+startWidth = eleTh.offsetWidth;
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
+}
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
+}
+});
+</script>
+</body>
+</html>

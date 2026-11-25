@@ -1,0 +1,49 @@
+┬
+〇│Private Sub WriteCalledByText(  ByVal FileNo As Integer,  ByVal ProcName As String)	Called By一覧出力＜clsTextRenderer＞
+┴└┐
+　　□ Dim Callers As Collection
+　　□ Dim Caller As Variant
+　　□ Dim Info As clsProcInfo
+　　│#   呼出元一覧取得
+　　◎ Set Callers =  GetCalledByList(  ProcName)	呼出元一覧取得＜modHCPInfo＞
+　　〇 Print #FileNo, ""
+　　〇 Print #FileNo, String$(40, "=")
+　　〇 Print #FileNo, "Called By (" &  Callers.Count &  ")"
+　　〇 Print #FileNo, String$(40, "=")
+　　〇 Print #FileNo, ""
+　　│#   呼出元なし
+　　◆┐If Callers.Count = 0 Then
+　　│〇 Print #FileNo, "呼出元なし"
+　　│→ Exit Sub
+　　│┴End If
+　　│#   ヘッダ出力
+　　〇 Print #FileNo,  "Procedure" & vbTab &  "JPName" & vbTab &  "Module"
+　　〇 Print #FileNo,  String$(60, "-")
+　　│#   呼出元一覧出力
+　　＠┐For Each Caller In Callers
+　　│◎ Set Info =  ResolveProcedure(  "",  CStr(Caller))	Procedure解決＜modProcedureRepository＞
+　　││	内部呼出:CStr
+　　│◆┐If Info Is Nothing Then
+　　││〇 Print #FileNo,  CStr(Caller)
+　　│├┐ELSE
+　　││〇 Print #FileNo,  Info.ProcName & vbTab &  Info.JPName & vbTab &  Info.ModuleName
+　　││┴End If
+　　│┴Next Caller
+　　┴End Sub
+
+========================================
+Calls (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetCalledByList	呼出元一覧取得	modHCPInfo
+ResolveProcedure	Procedure解決	modProcedureRepository
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+Export

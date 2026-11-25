@@ -1,10 +1,23 @@
-Procedure: UF_NewInfoRegist.CommandButton2_Click  [ 新規登録取消＜UF_NewInfoRegist＞ ]
-HCP	Business
 ┬
 〇│Private Sub CommandButton2_Click()	新規登録取消＜UF_NewInfoRegist＞
 ┴└┐
-　　│#  入力取消
+　　│#   入力取消
 　　〇 IsCanceled = True
-　　│#  フォーム終了
+　　│#   フォーム終了
 　　〇 Unload Me
 　　┴End Sub
+
+========================================
+Calls (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+BuildHTMLContent	HTML本文生成	UF_InfoWebDisplay
+RenderHTML	HTML表示	UF_InfoWebDisplay
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

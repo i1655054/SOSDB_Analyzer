@@ -1,0 +1,24 @@
+┬
+〇│Public Function IsCommonFunction(  ByVal ProcName As String) As Boolean	共通関数判定＜modPathChartCommon＞
+┴└┐
+　　│#   共通関数判定
+　　◆┐Select Case UCase$(ProcName)
+　　│├┐Case "CHK_PERSON",  "CHK_TARGET",  "CHK_PRIORITY",  "CHK_EQ_PRODUCT",  "CHK_ESCALE_DAY",  "CHK_TORBLENUM"
+　　││〇 IsCommonFunction = True
+　　│┴End Select
+　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+DrawCallTreeShape	ノード再帰描画	modPathChart
+IsTargetRelation	出力対象判定	modPathChartCommon

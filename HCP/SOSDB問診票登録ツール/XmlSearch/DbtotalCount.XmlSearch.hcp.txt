@@ -1,5 +1,3 @@
-Procedure: XmlSearch.DbtotalCount  [ 検索件数取得＜XmlSearch＞ ]
-HCP	Business
 ┬
 〇│Public Function DbtotalCount(ByVal apiUrl As String, ByVal apiKey As String) As Long	検索件数取得＜XmlSearch＞
 ┴└┐
@@ -9,41 +7,57 @@ HCP	Business
 　　□ Dim statusCode As Integer
 　　〇 DbtotalCount = 0
 　　☆ On Error GoTo ErrorHandler
-　　│#  HTTP通信開始
+　　│#   HTTP通信開始
 　　〇 Set http = New XMLHTTP60
 　　〇 http.Open "GET", apiUrl, False
-　　│#  APIキー設定
+　　│#   APIキー設定
 　　〇 http.setRequestHeader "X-Redmine-API-Key", apiKey
 　　〇 http.send
-　　│#  レスポンス確認
+　　│#   レスポンス確認
 　　〇 statusCode = http.Status
 　　◆ If statusCode = 1223 Then statusCode = 204
 　　◆┐If statusCode <> 200 Then
-　　││#  通信エラー
+　　││#   通信エラー
 　　│〇 MsgBox "接続失敗: " & statusCode, vbCritical
 　　│→ GoTo CleanUp
 　　│┴End If
-　　│#  レスポンス有無確認
+　　│#   レスポンス有無確認
 　　◆┐If Len(http.responseText) = 0 Then
 　　│〇 MsgBox "データなし（204）", vbInformation
 　　│→ GoTo CleanUp
 　　│┴End If
-　　│#  XML解析
+　　│#   XML解析
 　　〇 Set xmlDoc = New DOMDocument60
 　　〇 xmlDoc.LoadXML http.responseText
-　　│#  XML解析結果確認
+　　│#   XML解析結果確認
 　　◆┐If xmlDoc.parseError.ErrorCode <> 0 Then
 　　│〇 MsgBox "XML解析失敗: " & xmlDoc.parseError.reason, vbCritical
 　　│→ GoTo CleanUp
 　　│┴End If
-　　│#  総件数取得
+　　│#   総件数取得
 　　〇 Set rootNode = xmlDoc.DocumentElement
 　　〇 DbtotalCount = CLng(rootNode.getAttribute("total_count"))
 ▼ CleanUp:
-　　│#  オブジェクト解放
+　　│#   オブジェクト解放
 　　◎ Call ReleaseHttpObjects(http, xmlDoc, rootNode)	通信オブジェクト解放＜XmlSearch＞
 　　→ Exit Function
 ▼ ErrorHandler:
 　　〇 MsgBox "エラー: " & Err.Description, vbCritical
 　　☆ Resume CleanUp
 　　┴End Function
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ReleaseHttpObjects	通信オブジェクト解放	XmlSearch
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ExportRedmineIDsToCSV	検索結果CSV生成	XmlSearch

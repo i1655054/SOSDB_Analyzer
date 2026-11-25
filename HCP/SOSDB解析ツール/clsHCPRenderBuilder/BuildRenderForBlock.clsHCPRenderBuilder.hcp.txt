@@ -1,0 +1,40 @@
+┬
+〇│Private Sub BuildRenderForBlock(  ByVal ForNode As clsHCPNode,  ByVal Prefix As String)	FOR RenderText生成＜clsHCPRenderBuilder＞
+┴└┐
+　　□ Dim Node As clsHCPNode
+　　□ Dim MergeNode As clsHCPNode
+　　│#   FOR開始
+　　◎ ForNode.RenderText =  Prefix &  "＠┐" &  GetDisplayText(  ForNode,  Prefix)	表示文字列取得＜clsHCPRenderBuilder＞
+　　│#   配下RenderText生成
+　　◎ BuildNode  ForNode.NodeID,  Prefix & "│"	RenderNode生成＜clsHCPRenderBuilder＞
+　　│#   MERGE検索
+　　＠┐For Each Node In mNodes
+　　│◆┐If Node.ParentID = ForNode.NodeID Then
+　　││◆┐If Node.NodeType = NODE_MERGE Then
+　　│││〇 Set MergeNode = Node
+　　│││→ Exit For
+　　│││┴End If
+　　││┴End If
+　　│┴Next Node
+　　│#   FOR終了
+　　◆┐If Not MergeNode Is Nothing Then
+　　│◎ MergeNode.RenderText =  Prefix &  "│┴" &  GetDisplayText(  MergeNode,  Prefix)	表示文字列取得＜clsHCPRenderBuilder＞
+　　│┴End If
+　　┴End Sub
+
+========================================
+Calls (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetDisplayText	表示文字列取得	clsHCPRenderBuilder
+BuildNode	RenderNode生成	clsHCPRenderBuilder
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+BuildRenderControlNode	制御ノード RenderText生成	clsHCPRenderBuilder

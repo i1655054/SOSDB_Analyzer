@@ -1,57 +1,30 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
 <meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
 <title>UF_ExplanationRegist</title>
 <style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
 body{font-family:Meiryo;font-size:9pt;}
 table{border-collapse:collapse;}
-th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.5;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.5;}
 td{vertical-align:top;}
 th{background:#e8f0fe;}
-colgroup col:nth-of-type(1) {}
-colgroup col:nth-of-type(2) {}
-.resize {position: relative;}
-.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
 </style>
 </head>
-<body>
+<body translate="no">
 <p><a href="../_INDEX.html">← Tool Index</a></p>
 <h1>UF_ExplanationRegist</h1>
 <p>Procedure Count : 3</p>
 <table>
 <tr><th>Procedure</th><th>JPName</th><th>Status</th><th>Updated</th></tr>
-<tr><td><a href="UserForm_Initialize.UF_ExplanationRegist.hcp.html">UserForm_Initialize</a></td><td>説明入力フォーム初期化</td><td>[OK]</td><td>2026/11/13 17:17:56</td></tr>
-<tr><td><a href="CommandButton1_Click.UF_ExplanationRegist.hcp.html">CommandButton1_Click</a></td><td>説明文生成登録</td><td>[OK]</td><td>2026/11/13 17:18:00</td></tr>
-<tr><td><a href="CommandButton2_Click.UF_ExplanationRegist.hcp.html">CommandButton2_Click</a></td><td>説明入力取消</td><td>[OK]</td><td>2026/11/13 17:18:04</td></tr>
+<tr><td><a href="UserForm_Initialize.UF_ExplanationRegist.hcp.html">UserForm_Initialize</a></td><td>説明入力フォーム初期化</td><td>[OK]</td><td>2026/11/25 11:34:59</td></tr>
+<tr><td><a href="CommandButton1_Click.UF_ExplanationRegist.hcp.html">CommandButton1_Click</a></td><td>説明文生成登録</td><td>[OK]</td><td>2026/11/25 11:35:03</td></tr>
+<tr><td><a href="CommandButton2_Click.UF_ExplanationRegist.hcp.html">CommandButton2_Click</a></td><td>説明入力取消</td><td>[OK]</td><td>2026/11/25 11:35:07</td></tr>
 </table>
-<script>
-document.querySelectorAll('.resize').forEach(function (eleTh) {
-let startX;
-let startWidth;
-const eleResizer = document.createElement('div');
-eleResizer.classList.add('resizer');
-eleResizer.addEventListener('mousedown', function (e) {
-const styleTh = window.getComputedStyle(eleTh);
-const paddingLeft = parseFloat(styleTh.paddingLeft);
-const paddingRight = parseFloat(styleTh.paddingRight);
-const borderLeft = parseFloat(styleTh.borderLeftWidth);
-const borderRight = parseFloat(styleTh.borderRightWidth);
-startX = e.pageX;
-startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
-document.addEventListener('mousemove', onMouseMove);
-document.addEventListener('mouseup', onMouseUp);
-});
-eleTh.appendChild(eleResizer);
-function onMouseMove(e) {
-const newWidth = startWidth + (e.pageX - startX);
-eleTh.style.width = newWidth + 'px';
-}
-function onMouseUp() {
-document.removeEventListener('mousemove', onMouseMove);
-document.removeEventListener('mouseup', onMouseUp);
-}
-});
-</script>
 </body>
 </html>

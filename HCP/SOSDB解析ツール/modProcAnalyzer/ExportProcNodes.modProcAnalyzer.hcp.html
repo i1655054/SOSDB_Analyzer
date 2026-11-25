@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
+<title>ExportProcNodes</title>
+<style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
+</style>
+</head>
+<body translate="no">
+<h1>ExportProcNodes</h1>
+<p>Module : modProcAnalyzer</p>
+<table>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
+<tbody>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Public Sub ExportProcNodes(  ByVal Nodes As Collection)</td><td>ProcNode出力＜modProcAnalyzer＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　□ Dim ws As Worksheet</td><td></td></tr>
+<tr><td>　　□ Dim Node As clsProcNode</td><td></td></tr>
+<tr><td>　　□ Dim RowOut As Long</td><td></td></tr>
+<tr><td>　　☆ On Error Resume Next</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   ProcNodesシート取得</span></td><td></td></tr>
+<tr><td>　　〇 Set ws =  gContext.ManagementBook.Worksheets(<br>　　│   SHEET_PROC_NODES)</td><td></td></tr>
+<tr><td>　　☆ On Error GoTo 0</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   gDevMode 時 ProcNode構造ダンプ</span></td><td></td></tr>
+<tr><td>　　◆┐If gDevMode Then</td><td></td></tr>
+<tr><td>　　│◎ <a href="../modHCPAnalyzer/DumpProcNodes.modHCPAnalyzer.hcp.html">DumpProcNodes</a>  "AnalyzeProcedure Result",  Nodes</td><td><a href="../modHCPAnalyzer/DumpProcNodes.modHCPAnalyzer.hcp.html">DumpProcNodes＜modHCPAnalyzer＞</a></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　◆┐If gContext Is Nothing Then</td><td></td></tr>
+<tr><td>　　│☆ On Error Resume Next</td><td></td></tr>
+<tr><td>　　│〇 Set ws = gContext.ManagementBook.Worksheets(<br>　　││   SHEET_PROC_NODES)</td><td></td></tr>
+<tr><td>　　│☆ On Error GoTo 0</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   ProcNodesシート作成</span></td><td></td></tr>
+<tr><td>　　│◆┐If ws Is Nothing Then</td><td></td></tr>
+<tr><td>　　││〇 Set ws =  gContext.ManagementBook.Worksheets.Add</td><td></td></tr>
+<tr><td>　　││〇 ws.Name =  SHEET_PROC_NODES</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td>　　├┐ELSE</td><td></td></tr>
+<tr><td>　　│☆ On Error Resume Next</td><td></td></tr>
+<tr><td>　　│〇 Set ws =  gContext.ManagementBook.Worksheets(<br>　　││   SHEET_PROC_NODES)</td><td></td></tr>
+<tr><td>　　│☆ On Error GoTo 0</td><td></td></tr>
+<tr><td>　　│◆┐If ws Is Nothing Then</td><td></td></tr>
+<tr><td>　　││〇 Set ws =  gContext.ManagementBook.Worksheets.Add</td><td></td></tr>
+<tr><td>　　││〇 ws.Name =  SHEET_PROC_NODES</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   ProcNodesシート初期化</span></td><td></td></tr>
+<tr><td>　　〇 ws.Range("A:H").Value = ""</td><td></td></tr>
+<tr><td>　　〇 ws.Range("A:H").ClearFormats</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   ProcNodesヘッダ出力</span></td><td></td></tr>
+<tr><td>　　〇 ws.Range("A1:I1").Value = Array(<br>　　│   "NodeID",  "ParentID",  "PrevNodeID",  "NextNodeID",  "Level",  "NodeType",  "BranchType",  "Text",  "SourceText")</td><td></td></tr>
+<tr><td>　　〇 RowOut = 2</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   ProcNode一覧出力</span></td><td></td></tr>
+<tr><td>　　＠┐For Each Node In Nodes</td><td></td></tr>
+<tr><td>　　│〇 ws.Cells(RowOut, 1) = Node.NodeID</td><td></td></tr>
+<tr><td>　　│〇 ws.Cells(RowOut, 2) = Node.ParentID</td><td></td></tr>
+<tr><td>　　│〇 ws.Cells(RowOut, 3) = Node.PrevNodeID</td><td></td></tr>
+<tr><td>　　│〇 ws.Cells(RowOut, 4) = Node.NextNodeID</td><td></td></tr>
+<tr><td>　　│〇 ws.Cells(RowOut, 5) = Node.Level</td><td></td></tr>
+<tr><td>　　│〇 ws.Cells(RowOut, 6) = Node.NodeType</td><td></td></tr>
+<tr><td>　　│〇 ws.Cells(RowOut, 7) = Node.BranchType</td><td></td></tr>
+<tr><td>　　│〇 ws.Cells(RowOut, 8) = Node.NodeText</td><td></td></tr>
+<tr><td>　　│〇 ws.Cells(RowOut, 9) = Node.SourceLine</td><td></td></tr>
+<tr><td>　　│〇 RowOut = RowOut + 1</td><td></td></tr>
+<tr><td>　　│┴Next Node</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   ProcNodesシート体裁設定</span></td><td></td></tr>
+<tr><td>　　〇 ws.Rows(1).Font.Bold = True</td><td></td></tr>
+<tr><td>　　〇 ws.Columns.AutoFit</td><td></td></tr>
+<tr><td>　　┴End Sub</td><td></td></tr>
+</tbody>
+</table>
+<hr>
+<h2>Calls (1)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modHCPAnalyzer/DumpProcNodes.modHCPAnalyzer.hcp.html">DumpProcNodes</a></td><td></td><td>modHCPAnalyzer</td></tr>
+</table>
+<hr>
+<h2>Called By (1)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modHCPAnalyzer/CreateHCP.modHCPAnalyzer.hcp.html">CreateHCP</a></td><td>HCP作成</td><td>modHCPAnalyzer</td></tr>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function(eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function(e) {
+startX = e.pageX;
+startWidth = eleTh.offsetWidth;
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
+}
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
+}
+});
+</script>
+</body>
+</html>

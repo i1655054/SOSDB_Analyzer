@@ -1,0 +1,31 @@
+┬
+〇│Private Sub BuildOutputNode(  ByVal Node As clsHCPNode,  ByVal Prefix As String)	通常ノード RenderText生成＜clsHCPRenderBuilder＞
+┴└┐
+　　│#   LABELノード判定
+　　◆┐If Node.NodeType = NODE_LABEL Then
+　　││#   LABEL RenderText生成
+　　│◎ Node.RenderText =  GetHCPSymbol(Node) &  GetDisplayText(  Node,  Prefix)	表示文字列取得＜clsHCPRenderBuilder＞
+　　││	内部呼出:GetHCPSymbol
+　　├┐ELSE
+　　││#   通常 RenderText生成
+　　│◎ Node.RenderText =  Prefix &  GetHCPSymbol(Node) &  GetDisplayText(  Node,  Prefix)	表示文字列取得＜clsHCPRenderBuilder＞
+　　││	内部呼出:GetHCPSymbol
+　　│┴End If
+　　┴End Sub
+
+========================================
+Calls (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetHCPSymbol	HCP記号取得	modHCPCommon
+GetDisplayText	表示文字列取得	clsHCPRenderBuilder
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+BuildRenderControlNode	制御ノード RenderText生成	clsHCPRenderBuilder

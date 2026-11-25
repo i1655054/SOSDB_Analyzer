@@ -1,0 +1,26 @@
+┬
+〇│Private Sub HighlightParentConnector()	親接続線強調＜modPathChart＞
+┴└┐
+　　◆→ If gParentMap Is Nothing Then Exit Sub
+　　◆┐If gCurrentParentShapeName = "" Then
+　　│→ Exit Sub
+　　│┴End If
+　　│#   親接続線強調表示
+　　◎ HighlightConnector  gCurrentParentShapeName,  gCurrentShapeName,  CURRENT_NODE_LINE_COLOR,  PARENT_CONNECTOR_WEIGHT	接続線強調＜modPathChart＞
+　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+HighlightConnector	接続線強調	modPathChart
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+HighlightNode	ノード強調表示	modPathChart

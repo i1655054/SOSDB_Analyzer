@@ -1,63 +1,36 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
 <meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
 <title>UF_OccDateTimeRegist</title>
 <style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
 body{font-family:Meiryo;font-size:9pt;}
 table{border-collapse:collapse;}
-th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.5;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.5;}
 td{vertical-align:top;}
 th{background:#e8f0fe;}
-colgroup col:nth-of-type(1) {}
-colgroup col:nth-of-type(2) {}
-.resize {position: relative;}
-.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
 </style>
 </head>
-<body>
+<body translate="no">
 <p><a href="../_INDEX.html">← Tool Index</a></p>
 <h1>UF_OccDateTimeRegist</h1>
 <p>Procedure Count : 9</p>
 <table>
 <tr><th>Procedure</th><th>JPName</th><th>Status</th><th>Updated</th></tr>
-<tr><td><a href="UserForm_Initialize.UF_OccDateTimeRegist.hcp.html">UserForm_Initialize</a></td><td>発生日時フォーム初期化</td><td>[OK]</td><td>2026/11/13 17:17:26</td></tr>
-<tr><td><a href="Chk発生時分_Click.UF_OccDateTimeRegist.hcp.html">Chk発生時分_Click</a></td><td>発生時刻入力切替</td><td>[OK]</td><td>2026/11/13 17:17:30</td></tr>
-<tr><td><a href="CommandButton1_Click.UF_OccDateTimeRegist.hcp.html">CommandButton1_Click</a></td><td>発生日時登録</td><td>[OK]</td><td>2026/11/13 17:17:33</td></tr>
-<tr><td><a href="CommandButton2_Click.UF_OccDateTimeRegist.hcp.html">CommandButton2_Click</a></td><td>発生日時入力取消</td><td>[OK]</td><td>2026/11/13 17:17:36</td></tr>
-<tr><td><a href="txt時刻_時_MouseDown.UF_OccDateTimeRegist.hcp.html">txt時刻_時_MouseDown</a></td><td>時入力欄選択</td><td>[OK]</td><td>2026/11/13 17:17:40</td></tr>
-<tr><td><a href="txt時刻_分_MouseDown.UF_OccDateTimeRegist.hcp.html">txt時刻_分_MouseDown</a></td><td>分入力欄選択</td><td>[OK]</td><td>2026/11/13 17:17:42</td></tr>
-<tr><td><a href="txt問題発生日_MouseDown.UF_OccDateTimeRegist.hcp.html">txt問題発生日_MouseDown</a></td><td>発生日カレンダー表示</td><td>[OK]</td><td>2026/11/13 17:17:46</td></tr>
-<tr><td><a href="SpinButton1_SpinUp.UF_OccDateTimeRegist.hcp.html">SpinButton1_SpinUp</a></td><td>時刻増加</td><td>[OK]</td><td>2026/11/13 17:17:49</td></tr>
-<tr><td><a href="SpinButton1_SpinDown.UF_OccDateTimeRegist.hcp.html">SpinButton1_SpinDown</a></td><td>時刻減少</td><td>[OK]</td><td>2026/11/13 17:17:53</td></tr>
+<tr><td><a href="UserForm_Initialize.UF_OccDateTimeRegist.hcp.html">UserForm_Initialize</a></td><td>発生日時フォーム初期化</td><td>[OK]</td><td>2026/11/25 11:34:25</td></tr>
+<tr><td><a href="Chk発生時分_Click.UF_OccDateTimeRegist.hcp.html">Chk発生時分_Click</a></td><td>発生時刻入力切替</td><td>[OK]</td><td>2026/11/25 11:34:31</td></tr>
+<tr><td><a href="CommandButton1_Click.UF_OccDateTimeRegist.hcp.html">CommandButton1_Click</a></td><td>発生日時登録</td><td>[OK]</td><td>2026/11/25 11:34:36</td></tr>
+<tr><td><a href="CommandButton2_Click.UF_OccDateTimeRegist.hcp.html">CommandButton2_Click</a></td><td>発生日時入力取消</td><td>[OK]</td><td>2026/11/25 11:34:40</td></tr>
+<tr><td><a href="txt時刻_時_MouseDown.UF_OccDateTimeRegist.hcp.html">txt時刻_時_MouseDown</a></td><td>時入力欄選択</td><td>[OK]</td><td>2026/11/25 11:34:45</td></tr>
+<tr><td><a href="txt時刻_分_MouseDown.UF_OccDateTimeRegist.hcp.html">txt時刻_分_MouseDown</a></td><td>分入力欄選択</td><td>[OK]</td><td>2026/11/25 11:34:49</td></tr>
+<tr><td><a href="txt問題発生日_MouseDown.UF_OccDateTimeRegist.hcp.html">txt問題発生日_MouseDown</a></td><td>発生日カレンダー表示</td><td>[OK]</td><td>2026/11/25 11:34:52</td></tr>
+<tr><td><a href="SpinButton1_SpinUp.UF_OccDateTimeRegist.hcp.html">SpinButton1_SpinUp</a></td><td>時刻増加</td><td>[OK]</td><td>2026/11/25 11:34:54</td></tr>
+<tr><td><a href="SpinButton1_SpinDown.UF_OccDateTimeRegist.hcp.html">SpinButton1_SpinDown</a></td><td>時刻減少</td><td>[OK]</td><td>2026/11/25 11:34:57</td></tr>
 </table>
-<script>
-document.querySelectorAll('.resize').forEach(function (eleTh) {
-let startX;
-let startWidth;
-const eleResizer = document.createElement('div');
-eleResizer.classList.add('resizer');
-eleResizer.addEventListener('mousedown', function (e) {
-const styleTh = window.getComputedStyle(eleTh);
-const paddingLeft = parseFloat(styleTh.paddingLeft);
-const paddingRight = parseFloat(styleTh.paddingRight);
-const borderLeft = parseFloat(styleTh.borderLeftWidth);
-const borderRight = parseFloat(styleTh.borderRightWidth);
-startX = e.pageX;
-startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
-document.addEventListener('mousemove', onMouseMove);
-document.addEventListener('mouseup', onMouseUp);
-});
-eleTh.appendChild(eleResizer);
-function onMouseMove(e) {
-const newWidth = startWidth + (e.pageX - startX);
-eleTh.style.width = newWidth + 'px';
-}
-function onMouseUp() {
-document.removeEventListener('mousemove', onMouseMove);
-document.removeEventListener('mouseup', onMouseUp);
-}
-});
-</script>
 </body>
 </html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
+<title>GetTagValueFromCode</title>
+<style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
+</style>
+</head>
+<body translate="no">
+<h1>GetTagValueFromCode</h1>
+<p>Module : modAnalyzerCommon</p>
+<table>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
+<tbody>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Public Function GetTagValueFromCode(  ByVal CodeText As String,  ByVal ProcName As String,  ByVal TagName As String) As String</td><td>タグ値取得＜modAnalyzerCommon＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　□ Dim Lines() As String</td><td></td></tr>
+<tr><td>　　□ Dim i As Long</td><td></td></tr>
+<tr><td>　　□ Dim j As Long</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   ソースコード行分割</span></td><td></td></tr>
+<tr><td>　　〇 Lines = Split(CodeText, vbCrLf)</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   Procedure定義検索</span></td><td></td></tr>
+<tr><td>　　＠┐For i = LBound(Lines) To UBound(Lines)</td><td></td></tr>
+<tr><td>　　│◆┐If <a href="../modAnalyze/IsProcedureLine.modAnalyze.hcp.html">IsProcedureLine</a>(Trim$(Lines(i))) Then</td><td>内部呼出:<a href="../modAnalyze/IsProcedureLine.modAnalyze.hcp.html">IsProcedureLine</a></td></tr>
+<tr><td><span class="hcp-comment">　　│││#   対象Procedure一致確認</span></td><td></td></tr>
+<tr><td>　　││◆┐If StrComp(  <a href="../modAnalyze/ExtractProcedureName.modAnalyze.hcp.html">ExtractProcedureName</a>(  Trim$(Lines(i))),  ProcName,  vbTextCompare) = 0 Then</td><td>内部呼出:<a href="../modAnalyze/ExtractProcedureName.modAnalyze.hcp.html">ExtractProcedureName</a></td></tr>
+<tr><td><span class="hcp-comment">　　││││#   コメントタグ検索</span></td><td></td></tr>
+<tr><td>　　│││＠┐For j = i - 1 To 0 Step -1</td><td></td></tr>
+<tr><td>　　││││◆┐If Left$(Trim$(Lines(j)), 1) &lt;&gt; "'" Then</td><td></td></tr>
+<tr><td>　　│││││→ Exit For</td><td></td></tr>
+<tr><td>　　│││││┴End If</td><td></td></tr>
+<tr><td>　　││││◆┐If StrComp(  Trim$(Lines(j)),  "'" &amp; TagName,  vbTextCompare) = 0 Then</td><td></td></tr>
+<tr><td>　　│││││◆┐If j + 1 &lt;= UBound(Lines) Then</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│││││││#   タグ値取得</span></td><td></td></tr>
+<tr><td>　　││││││〇 GetTagValueFromCode =  Trim$(Replace(  Trim$(Lines(j + 1)),  "'", ""))</td><td></td></tr>
+<tr><td>　　││││││┴End If</td><td></td></tr>
+<tr><td>　　│││││→ Exit Function</td><td></td></tr>
+<tr><td>　　│││││┴End If</td><td></td></tr>
+<tr><td>　　││││┴Next j</td><td></td></tr>
+<tr><td>　　│││┴End If</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td>　　│┴Next i</td><td></td></tr>
+<tr><td>　　┴End Function</td><td></td></tr>
+</tbody>
+</table>
+<hr>
+<h2>Calls (2)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modAnalyze/IsProcedureLine.modAnalyze.hcp.html">IsProcedureLine</a></td><td>プロシージャ定義判定</td><td>modAnalyze</td></tr>
+<tr><td><a href="../modAnalyze/ExtractProcedureName.modAnalyze.hcp.html">ExtractProcedureName</a></td><td>プロシージャ名抽出</td><td>modAnalyze</td></tr>
+</table>
+<hr>
+<h2>Called By (1)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modFunctionTrac/GetFunctions.modFunctionTrac.hcp.html">GetFunctions</a></td><td>関数一覧取得</td><td>modFunctionTrac</td></tr>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function(eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function(e) {
+startX = e.pageX;
+startWidth = eleTh.offsetWidth;
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
+}
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
+}
+});
+</script>
+</body>
+</html>

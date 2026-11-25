@@ -1,0 +1,21 @@
+┬
+〇│Public Sub Test_InternalCall()	＜modUnitTest＞
+┴└┐
+　　◆┐If Not TestBoolFunction() Then	内部呼出:TestBoolFunction
+　　│→ Exit Sub
+　　│┴End If
+　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+TestBoolFunction		modUnitTest
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

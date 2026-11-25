@@ -1,0 +1,33 @@
+┬
+〇│Public Sub UpdateNavigatorStatus(  ByVal Msg As String)	Navigator状態更新＜modPathChart＞
+┴└┐
+　　│#   Navigator状態保存
+　　〇 gNavigatorStatus = Msg
+　　☆ On Error Resume Next
+　　│#   Navigator表示更新
+　　◆┐If frmPathChartNavigator.Visible Then
+　　│〇 frmPathChartNavigator.txtStatus.Text =  Msg
+　　│┴End If
+　　☆ On Error GoTo 0
+　　│#   ステータスバー更新
+　　〇 Application.StatusBar = Msg
+　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (6)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+FindNodeCore	ノード検索実行	modPathChart
+SelectNode	ノード選択	modPathChart
+MoveToParentNode	親ノード移動	modPathChart
+MoveToChildNode	子ノード移動	modPathChart
+MoveToSiblingNode	兄弟ノード移動	modPathChart
+ClearHighlight	強調表示解除	modPathChart

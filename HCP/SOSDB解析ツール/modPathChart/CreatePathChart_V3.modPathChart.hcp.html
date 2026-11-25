@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
+<title>CreatePathChart_V3</title>
+<style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
+</style>
+</head>
+<body translate="no">
+<h1>CreatePathChart_V3</h1>
+<p>Module : modPathChart</p>
+<table>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
+<tbody>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Public Sub CreatePathChartV3(  ByVal StartProc As String,  ByVal MaxDepth As Long)</td><td>パスチャート作成＜modPathChart＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　□ Dim ws As Worksheet</td><td></td></tr>
+<tr><td>　　□ Dim RootShape As Shape</td><td></td></tr>
+<tr><td>　　□ Dim RootLeft As Double</td><td></td></tr>
+<tr><td>　　□ Dim RootCaption As String</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   状態初期化</span></td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   PathChart状態初期化</span></td><td></td></tr>
+<tr><td>　　〇 gNodeNo = 0</td><td></td></tr>
+<tr><td>　　〇 NodeCount = 0</td><td></td></tr>
+<tr><td>　　〇 EdgeCount = 0</td><td></td></tr>
+<tr><td>　　〇 MaxDepthFound = 0</td><td></td></tr>
+<tr><td>　　〇 gCurrentNodeText = ""</td><td></td></tr>
+<tr><td>　　〇 gNavigatorStatus = ""</td><td></td></tr>
+<tr><td>　　〇 gCurrentShapeName = ""</td><td></td></tr>
+<tr><td>　　〇 gCurrentParentShapeName = ""</td><td></td></tr>
+<tr><td>　　〇 gCurrentParentWithChildren = ""</td><td></td></tr>
+<tr><td>　　〇 gCurrentChildIndex = 0</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   親子関係管理初期化</span></td><td></td></tr>
+<tr><td>　　〇 Set gParentMap =  CreateObject("Scripting.Dictionary")</td><td></td></tr>
+<tr><td>　　〇 Set gChildMap =  CreateObject("Scripting.Dictionary")</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   シート準備</span></td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   PathChartシート取得</span></td><td></td></tr>
+<tr><td>　　〇 Set ws = gContext.ManagementBook.Worksheets(<br>　　│ SHEET_PATH_CHART)</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   開始Procedure確認</span></td><td></td></tr>
+<tr><td>　　◆┐If StartProc = "" Then</td><td></td></tr>
+<tr><td>　　│〇 MsgBox  "開始Procedureを指定してください。"</td><td></td></tr>
+<tr><td>　　│→ Exit Sub</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   探索最大深度設定</span></td><td></td></tr>
+<tr><td>　　〇 gMaxLevel = MaxDepth</td><td></td></tr>
+<tr><td>　　◆┐If gMaxLevel &lt;= 0 Then</td><td></td></tr>
+<tr><td>　　│〇 gMaxLevel = 99</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   出力タイムスタンプ生成</span></td><td></td></tr>
+<tr><td>　　◎ gExportTimeStamp = <a href="../modPowerPointChart/GetTimeStamp.modPowerPointChart.hcp.html">GetTimeStamp</a>()</td><td><a href="../modPowerPointChart/GetTimeStamp.modPowerPointChart.hcp.html">タイムスタンプ取得＜modPowerPointChart＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│#   PathChart初期化</span></td><td></td></tr>
+<tr><td>　　◎ Call <a href="../modPathChart/ClearChartShapes.modPathChart.hcp.html">ClearChartShapes</a>(ws)</td><td><a href="../modPathChart/ClearChartShapes.modPathChart.hcp.html">チャート初期化＜modPathChart＞</a></td></tr>
+<tr><td>　　〇 RootLeft = ws.Range(ROOT_CELL).Left</td><td></td></tr>
+<tr><td>　　◆┐#If DEBUG_MODE Then</td><td></td></tr>
+<tr><td>　　│◎ Debug.Print  "SetIssueToUI=" &amp; <a href="../modPathChart/GetBranchSize.modPathChart.hcp.html">GetBranchSize</a>("SetIssueToUI")</td><td><a href="../modPathChart/GetBranchSize.modPathChart.hcp.html">分岐サイズ取得＜modPathChart＞</a></td></tr>
+<tr><td>　　│◎ Debug.Print  "get_MonshinFile=" &amp; <a href="../modPathChart/GetBranchSize.modPathChart.hcp.html">GetBranchSize</a>("get_MonshinFile")</td><td><a href="../modPathChart/GetBranchSize.modPathChart.hcp.html">分岐サイズ取得＜modPathChart＞</a></td></tr>
+<tr><td>　　│◎ Debug.Print  "Get_MonshinInfo=" &amp; <a href="../modPathChart/GetBranchSize.modPathChart.hcp.html">GetBranchSize</a>("Get_MonshinInfo")</td><td><a href="../modPathChart/GetBranchSize.modPathChart.hcp.html">分岐サイズ取得＜modPathChart＞</a></td></tr>
+<tr><td>　　│┴#End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   ルートノード表示文字列生成</span></td><td></td></tr>
+<tr><td>　　◎ RootCaption =  <a href="../modPathChart/BuildCaptionText.modPathChart.hcp.html">BuildCaptionText</a>(StartProc)</td><td><a href="../modPathChart/BuildCaptionText.modPathChart.hcp.html">ノード表示文字列生成＜modPathChart＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│#   ルートノード生成</span></td><td></td></tr>
+<tr><td>　　◎ Set RootShape =  <a href="../modPathChart/DrawNode.modPathChart.hcp.html">DrawNode</a>(  ws,  RootCaption,  ROOT_TOP,  RootLeft,  ROOT_NODE_COLOR)</td><td><a href="../modPathChart/DrawNode.modPathChart.hcp.html">ノード作成＜modPathChart＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│#   パスチャート再帰生成</span></td><td></td></tr>
+<tr><td>　　◎ <a href="../modPathChart/DrawCallTreeShape.modPathChart.hcp.html">DrawCallTreeShape</a>  StartProc,  RootShape.Name,  1,  ROOT_TOP,  RootLeft</td><td><a href="../modPathChart/DrawCallTreeShape.modPathChart.hcp.html">ノード再帰描画＜modPathChart＞</a></td></tr>
+<tr><td>　　〇 ActiveWindow.Zoom = DEFAULT_ZOOM</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   出力処理</span></td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   PowerPoint出力</span></td><td></td></tr>
+<tr><td>　　◆┐If gPowerPoint Then</td><td></td></tr>
+<tr><td>　　│◎ Call <a href="../modPathChart/ExportPathChartToPowerPoint.modPathChart.hcp.html">ExportPathChartToPowerPoint</a>(  StartProc,  MaxDepth)</td><td><a href="../modPathChart/ExportPathChartToPowerPoint.modPathChart.hcp.html">PowerPoint出力＜modPathChart＞</a></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   PNG出力</span></td><td></td></tr>
+<tr><td>　　◆┐If gPngOutput Then</td><td></td></tr>
+<tr><td>　　│◎ Call <a href="../modPowerPointChart/ExportPathChartToPNG.modPowerPointChart.hcp.html">ExportPathChartToPNG</a>(  StartProc,  MaxDepth)</td><td><a href="../modPowerPointChart/ExportPathChartToPNG.modPowerPointChart.hcp.html">PNG出力＜modPowerPointChart＞</a></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   パスチャートテキスト出力</span></td><td></td></tr>
+<tr><td>　　◎ Call <a href="../modPathChartText/ExportPathChartToText.modPathChartText.hcp.html">ExportPathChartToText</a>(  StartProc,  MaxDepth)</td><td><a href="../modPathChartText/ExportPathChartToText.modPathChartText.hcp.html">テキストチャート出力＜modPathChartText＞</a></td></tr>
+<tr><td>　　〇 NodeCount = gNodeNo</td><td></td></tr>
+<tr><td>　　□ Dim ChartRange As Range</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   出力範囲取得</span></td><td></td></tr>
+<tr><td>　　◎ Set ChartRange = <a href="../modPathChart/GetChartRange.modPathChart.hcp.html">GetChartRange</a>()</td><td><a href="../modPathChart/GetChartRange.modPathChart.hcp.html">チャート範囲取得＜modPathChart＞</a></td></tr>
+<tr><td>　　〇 ChartRange.Cells(  ChartRange.Rows.Count,  ChartRange.Columns.Count).Value = " "</td><td></td></tr>
+<tr><td>　　┴End Sub</td><td></td></tr>
+</tbody>
+</table>
+<hr>
+<h2>Calls (10)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modPowerPointChart/GetTimeStamp.modPowerPointChart.hcp.html">GetTimeStamp</a></td><td>タイムスタンプ取得</td><td>modPowerPointChart</td></tr>
+<tr><td><a href="../modPathChart/ClearChartShapes.modPathChart.hcp.html">ClearChartShapes</a></td><td>チャート初期化</td><td>modPathChart</td></tr>
+<tr><td><a href="../modPathChart/GetBranchSize.modPathChart.hcp.html">GetBranchSize</a></td><td>分岐サイズ取得</td><td>modPathChart</td></tr>
+<tr><td><a href="../modPathChart/BuildCaptionText.modPathChart.hcp.html">BuildCaptionText</a></td><td>ノード表示文字列生成</td><td>modPathChart</td></tr>
+<tr><td><a href="../modPathChart/DrawNode.modPathChart.hcp.html">DrawNode</a></td><td>ノード作成</td><td>modPathChart</td></tr>
+<tr><td><a href="../modPathChart/DrawCallTreeShape.modPathChart.hcp.html">DrawCallTreeShape</a></td><td>ノード再帰描画</td><td>modPathChart</td></tr>
+<tr><td><a href="../modPathChart/ExportPathChartToPowerPoint.modPathChart.hcp.html">ExportPathChartToPowerPoint</a></td><td>PowerPoint出力</td><td>modPathChart</td></tr>
+<tr><td><a href="../modPowerPointChart/ExportPathChartToPNG.modPowerPointChart.hcp.html">ExportPathChartToPNG</a></td><td>PNG出力</td><td>modPowerPointChart</td></tr>
+<tr><td><a href="../modPathChartText/ExportPathChartToText.modPathChartText.hcp.html">ExportPathChartToText</a></td><td>テキストチャート出力</td><td>modPathChartText</td></tr>
+<tr><td><a href="../modPathChart/GetChartRange.modPathChart.hcp.html">GetChartRange</a></td><td>チャート範囲取得</td><td>modPathChart</td></tr>
+</table>
+<hr>
+<h2>Called By (1)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modPathChart/ExecutePathChart.modPathChart.hcp.html">ExecutePathChart</a></td><td>パスチャート実行</td><td>modPathChart</td></tr>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function(eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function(e) {
+startX = e.pageX;
+startWidth = eleTh.offsetWidth;
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
+}
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
+}
+});
+</script>
+</body>
+</html>

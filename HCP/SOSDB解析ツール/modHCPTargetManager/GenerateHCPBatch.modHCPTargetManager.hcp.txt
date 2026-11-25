@@ -1,0 +1,110 @@
+┬
+〇│Public Sub GenerateHCPBatch()	HCP一括生成＜modHCPTargetManager＞
+┴└┐
+　　□ Dim ws As Worksheet
+　　□ Dim LastRow As Long
+　　□ Dim r As Long
+　　□ Dim ModuleName As String
+　　□ Dim ProcName As String
+　　□ Dim CreateCount As Long
+　　□ Dim ErrorCount As Long
+　　□ Dim TargetCount As Long
+　　□ Dim CurrentCount As Long
+　　◎ Trace "HCP",  "GenerateHCPBatch Start"	トレース出力＜modDebug＞
+　　│#   HCP_TARGETS取得
+　　〇 Set ws =  gContext.ManagementBook.Worksheets(
+　　│   SHEET_HCP_TARGETS)
+　　〇 LastRow =  ws.Cells(  ws.Rows.Count,  2).End(xlUp).row
+　　│#   対象件数取得
+　　＠┐For r = 2 To LastRow
+　　│◆┐If UCase$(Trim$(  ws.Cells(r, 1).Value)) = "Y" Then
+　　││◆┐If Trim$(  ws.Cells(r, 4).Value) <> "Done" Then
+　　│││〇 TargetCount =  TargetCount + 1
+　　│││┴End If
+　　││┴End If
+　　│┴Next r
+　　│#   進捗表示初期化
+　　〇 frmHCPGenerator.lblProgress.Caption =  "0 / " & TargetCount
+　　〇 frmHCPGenerator.lblCurrentProc.Caption =  "開始準備中"
+　　〇 DoEvents
+　　│#   HCP生成開始
+　　＠┐For r = 2 To LastRow
+　　││#   生成対象判定
+　　│◆┐If UCase$(Trim$(  ws.Cells(r, 1).Value)) = "Y" Then
+　　││◆┐If Trim$(  ws.Cells(r, 4).Value) <> "Done" Then
+　　││││#   対象取得
+　　│││〇 ModuleName =  Trim$(ws.Cells(r, 2).Value)
+　　│││〇 ProcName =  Trim$(ws.Cells(r, 3).Value)
+　　││││#   実行中表示
+　　│││〇 frmHCPGenerator.lblCurrentProc.Caption =  "実行中 : " &  ModuleName & "." &  ProcName
+　　│││〇 DoEvents
+　　│││◎ Trace "HCP",  "Generate " &  ModuleName & "." &  ProcName	トレース出力＜modDebug＞
+　　│││☆ On Error GoTo ProcError
+　　││││#   HCP生成
+　　│││◎ CreateHCP  ModuleName,  ProcName	HCP作成＜modHCPAnalyzer＞
+　　││││#   正常終了記録
+　　│││〇 ws.Cells(r, 4).Value =  "Done"
+　　│││〇 ws.Cells(r, 5).Value =  Format$(  Now,  "yyyy/mm/dd hh:nn:ss")
+　　│││〇 ws.Cells(r, 6).ClearContents
+　　│││〇 ws.Cells(r, 7).ClearContents
+　　│││〇 CreateCount =  CreateCount + 1
+　　│││〇 CurrentCount =  CurrentCount + 1
+　　│││〇 frmHCPGenerator.lblProgress.Caption =  CurrentCount &  " / " &  TargetCount
+　　│││〇 frmHCPGenerator.lblCurrentProc.Caption =  "[OK] " &  ModuleName & "." &  ProcName
+　　│││〇 Application.StatusBar =  "HCP生成完了 : " &  ModuleName & "." &  ProcName &  " [OK]" &  "  エラー:" &  ErrorCount & "件"
+　　│││〇 DoEvents
+　　│││→ GoTo ContinueLoop
+▼ ProcError:
+　　││││#   HCP生成失敗
+　　│││〇 ws.Cells(r, 4).Value =  "Error"
+　　│││〇 ws.Cells(r, 5).Value =  Format$(  Now,  "yyyy/mm/dd hh:nn:ss")
+　　│││〇 ws.Cells(r, 6).Value =  Err.Number
+　　│││〇 ws.Cells(r, 7).Value =  Err.Description
+　　│││〇 ws.Cells(r, 8).Value =  ModuleName & "." & ProcName
+　　│││〇 ws.Cells(r, 9).Value = Err.Source
+　　│││〇 ErrorCount =  ErrorCount + 1
+　　│││〇 CurrentCount =  CurrentCount + 1
+　　│││〇 frmHCPGenerator.lblProgress.Caption =  CurrentCount &  " / " &  TargetCount
+　　│││〇 frmHCPGenerator.lblCurrentProc.Caption =  "[ERROR] " &  ModuleName & "." &  ProcName
+　　│││◎ Trace "ERROR",  ModuleName & "." &  ProcName &  " : " &  Err.Description	トレース出力＜modDebug＞
+　　│││〇 Application.StatusBar =  "HCP生成失敗 : " &  ModuleName & "." &  ProcName &  " [NG]" &  "  エラー:" &  ErrorCount & "件"
+　　│││〇 Err.Clear
+　　│││☆ Resume ContinueLoop
+　　│││┴End If
+　　││┴End If
+▼ ContinueLoop:
+　　│☆ On Error GoTo 0
+　　│┴Next r
+　　│#   完了表示
+　　〇 frmHCPGenerator.lblProgress.Caption =  CurrentCount &  " / " &  TargetCount
+　　◆┐If ErrorCount = 0 Then
+　　│〇 frmHCPGenerator.lblCurrentProc.Caption =  "完了"
+　　├┐ELSE
+　　│〇 frmHCPGenerator.lblCurrentProc.Caption =  "エラーあり : " &  ErrorCount & "件"
+　　│┴End If
+　　│#   INDEX再生成
+　　◎ Trace "HCP",  "RebuildAllIndexes"	トレース出力＜modDebug＞
+　　◎ RebuildAllIndexes	INDEX一括再生成＜modHCPIndex＞
+　　◎ Trace "HCP",  "GenerateHCPBatch End Success=" &  CreateCount &  " Error=" &  ErrorCount	トレース出力＜modDebug＞
+　　│#   完了通知
+　　〇 Application.StatusBar =  "HCP一括生成完了 " &  "成功=" & CreateCount &  "件  エラー=" & ErrorCount & "件"
+　　〇 MsgBox  "HCP一括生成完了" & vbCrLf &  "成功 : " &  CreateCount & vbCrLf &  "エラー : " &  ErrorCount,  vbInformation
+　　┴End Sub
+
+========================================
+Calls (3)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+Trace	トレース出力	modDebug
+CreateHCP	HCP作成	modHCPAnalyzer
+RebuildAllIndexes	INDEX一括再生成	modHCPIndex
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+cmdGenerateBatch_Click	HCP一括生成実行	frmHCPGenerator

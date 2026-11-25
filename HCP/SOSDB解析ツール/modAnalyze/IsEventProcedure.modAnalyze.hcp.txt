@@ -1,0 +1,20 @@
+┬
+〇│Private Function IsEventProcedure(  ByVal ProcName As String)  As Boolean	イベントプロシージャ判定＜modAnalyze＞
+┴└┐
+　　│#   イベントプロシージャ判定
+　　〇 IsEventProcedure =  ProcName Like "Workbook_*"  Or ProcName Like "Worksheet_*"  Or ProcName Like "UserForm_*"  Or ProcName Like "Class_*"  Or ProcName Like "*_Click"  Or ProcName Like "*_DblClick"  Or ProcName Like "*_Change"  Or ProcName Like "*_MouseDown"  Or ProcName Like "*_MouseUp"  Or ProcName Like "*_MouseMove"  Or ProcName Like "*_KeyDown"  Or ProcName Like "*_KeyUp"  Or ProcName Like "*_KeyPress"  Or ProcName Like "*_ItemCheck"  Or ProcName Like "*_ItemClick"
+　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetUsageStatus	使用状況判定	modAnalyze

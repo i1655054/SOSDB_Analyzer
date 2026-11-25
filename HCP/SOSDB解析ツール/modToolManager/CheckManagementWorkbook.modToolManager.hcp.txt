@@ -1,0 +1,25 @@
+┬
+〇│Public Function CheckManagementWorkbook(  ByVal TargetBook As Workbook,  ByVal FileName As String)  As Boolean	管理ブック確認＜modToolManager＞
+┴└┐
+　　│#   管理ブック存在確認
+　　◆┐If TargetBook Is Nothing Then
+　　│〇 MsgBox  "管理ファイルが開かれていません。"  & vbCrLf &  FileName,  vbExclamation
+　　│→ Exit Function
+　　│┴End If
+　　│#   管理ブック有効
+　　〇 CheckManagementWorkbook = True
+　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+AnalyzeAll	全解析実行	modAnalyzerCommon

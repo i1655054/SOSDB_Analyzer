@@ -1,29 +1,41 @@
-Procedure: modFileUtility.CreateDirectory  [ 多階層フォルダ作成＜modFileUtility＞ ]
-HCP	Business
 ┬
 〇│Function CreateDirectory(ParamArray arg()) As Long	多階層フォルダ作成＜modFileUtility＞
 ┴└┐
 　　☆ On Error GoTo ErrExit
-　　│#  フォルダ存在確認
+　　│#   フォルダ存在確認
 　　◆┐If Dir(Join(arg, "\"), vbDirectory) <> "" Then
 　　│〇 CreateDirectory = 1
 　　│→ Exit Function
 　　│┴End If
 　　□ Dim ary As Variant
 　　□ Dim i As Long
-　　│#  階層ごとに作成
+　　│#   階層ごとに作成
 　　＠┐For i = LBound(arg) To UBound(arg)
 　　│〇 ary = arg
 　　│〇 ReDim Preserve ary(i)
-　　││#  未存在フォルダ作成
+　　││#   未存在フォルダ作成
 　　│◆┐If Dir(Join(ary, "\"), vbDirectory) = "" Then
 　　││〇 MkDir Join(ary, "\")
 　　││┴End If
 　　│┴Next
-　　│#  作成成功
+　　│#   作成成功
 　　〇 CreateDirectory = 0
 　　→ Exit Function
 ▼ ErrExit:
-　　│#  作成失敗
+　　│#   作成失敗
 　　〇 CreateDirectory = 9
 　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+MakeWorkFolder	作業フォルダ作成	modFileUtility

@@ -1,0 +1,81 @@
+┬
+〇│Private Sub cmdAnalyze_Click()	PathChart解析実行＜frmPathChart＞
+┴└┐
+　　□ Dim StartTime As Double
+　　□ Dim StartProc As String
+　　□ Dim MaxDepth As Long
+　　☆ On Error GoTo EH
+　　│#   開始Procedure取得
+　　〇 StartProc = Trim$(cmbStartProc.Text)
+　　│#   開始Procedure確認
+　　◆┐If StartProc = "" Then
+　　│〇 MsgBox  "開始Procedureを選択してください。",  vbExclamation
+　　│→ Exit Sub
+　　│┴End If
+　　│#   最大深度取得
+　　〇 MaxDepth = CLng(txtMaxDepth.Text)
+　　│#   PathChart条件設定
+　　〇 gRecursive = chkRecursive.Value
+　　│#   外部呼出設定
+　　〇 gExternal = chkExternal.Value
+　　│#   最大深度確認
+　　◆┐If MaxDepth <= 0 Then
+　　│〇 MsgBox  "最大深度は1以上を指定してください。",  vbExclamation
+　　│→ Exit Sub
+　　│┴End If
+　　│#   解析状態初期化
+　　〇 StartTime = Timer
+　　│#   ログ初期化
+　　〇 lstLog.Clear
+　　〇 lblStatus.Caption = "状態： 解析中"
+　　│#   統計表示初期化
+　　〇 lblNodeCount.Caption = "Node数： 0"
+　　〇 lblEdgeCount.Caption = "Edge数： 0"
+　　〇 lblDepth.Caption = "最大深度： 0"
+　　〇 frmPathChart.AddLog String(40, "=")
+　　│#   解析開始ログ出力
+　　◎ AddLog "解析開始"	ログ追加＜frmPathChart＞
+　　◎ AddLog "開始Procedure ： " & StartProc	ログ追加＜frmPathChart＞
+　　◎ AddLog "最大深度 ： " & MaxDepth	ログ追加＜frmPathChart＞
+　　〇 DoEvents
+　　│#   最大深度保存
+　　◎ SaveDefaultMaxDepth MaxDepth	既定深度保存＜modPathChartConfig＞
+　　│#   開始Procedure保存
+　　◎ SaveDefaultStartProcedure StartProc	開始関数保存＜modPathChartConfig＞
+　　│#   PathChart解析実行
+　　◎ ExecutePathChart  StartProc,  MaxDepth	パスチャート実行＜modPathChart＞
+　　│#   実行時間表示
+　　〇 lblElapsed.Caption =  "解析時間: " &  Format(Timer - StartTime, "0.00 秒")
+　　│#   解析完了表示
+　　〇 lblStatus.Caption = "状態： 完了"
+　　│#   解析完了ログ出力
+　　◎ AddLog "解析完了"	ログ追加＜frmPathChart＞
+　　→ Exit Sub
+　　│#   異常終了処理
+▼ EH:
+　　〇 lblStatus.Caption =  "状態： 異常終了"
+　　│#   エラーログ出力
+　　◎ AddLog  "ERROR ： " & Err.Description	ログ追加＜frmPathChart＞
+　　│#   エラー通知
+　　〇 MsgBox Err.Description, vbCritical
+　　┴End Sub
+
+========================================
+Calls (7)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+AddLog	ログ追加	frmPathChart
+SaveDefaultMaxDepth	既定深度保存	modPathChartConfig
+SaveDefaultStartProcedure	開始関数保存	modPathChartConfig
+ExecutePathChart	パスチャート実行	modPathChart
+ValidateTargetBook	対象ブック存在確認	modToolManager
+AnalyzeAll	全解析実行	modAnalyzerCommon
+ClearProcedureRepository	ProcedureRepository初期化解除	modProcedureRepository
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

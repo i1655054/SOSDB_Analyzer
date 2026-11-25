@@ -1,99 +1,109 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
 <meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
 <title>chk_TorbleNum</title>
 <style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
 body{font-family:Meiryo;font-size:9pt;}
 table{border-collapse:collapse;}
-th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
 td{vertical-align:top;}
 th{background:#e8f0fe;}
-colgroup col:nth-of-type(1) {}
-colgroup col:nth-of-type(2) {}
-.resize {position: relative;}
-.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
 </style>
 </head>
-<body>
+<body translate="no">
 <h1>chk_TorbleNum</h1>
 <p>Module : modUtility</p>
-<p><a href="./_INDEX.html">← Module Index</a></p>
 <table>
-<colgroup><col/><col/></colgroup>
-<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
 <tbody>
-<tr><td>Procedure: modUtility.chk_TorbleNum  [ トラブル番号確認＜modUtility＞ ]</td><td></td></tr>
-<tr><td>HCP</td><td>Business</td></tr>
 <tr><td>┬</td><td></td></tr>
 <tr><td>〇│Public Function chk_TorbleNum(ByVal issue As IssueInfo) As Boolean</td><td>トラブル番号確認＜modUtility＞</td></tr>
 <tr><td>┴└┐</td><td></td></tr>
-<tr><td>　　│#  トラブル番号取得</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   トラブル番号取得</span></td><td></td></tr>
 <tr><td>　　□ Dim val As String</td><td></td></tr>
 <tr><td>　　〇 val = Trim(CStr(issue.TroubleNum))</td><td></td></tr>
-<tr><td>　　│#  未入力確認</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   未入力確認</span></td><td></td></tr>
 <tr><td>　　◆┐If val = "" Then</td><td></td></tr>
-<tr><td>　　│◎ Call HighlightCell(TORBLE_NUM_RANG, COLOR_REQUIRED)</td><td>セル強調表示＜modUtility＞</td></tr>
+<tr><td>　　│◎ Call <a href="../modUtility/HighlightCell.modUtility.hcp.html">HighlightCell</a>(TORBLE_NUM_RANG, COLOR_REQUIRED)</td><td><a href="../modUtility/HighlightCell.modUtility.hcp.html">セル強調表示＜modUtility＞</a></td></tr>
 <tr><td>　　│〇 chk_TorbleNum = False</td><td></td></tr>
 <tr><td>　　│→ Exit Function</td><td></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
-<tr><td>　　│#  フォーマット確認（xx-xxx）</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   フォーマット確認（xx-xxx）</span></td><td></td></tr>
 <tr><td>　　◆┐If Not val Like "##-###" Then</td><td></td></tr>
-<tr><td>　　│◎ Call HighlightCell(TORBLE_NUM_RANG, COLOR_REQUIRED)</td><td>セル強調表示＜modUtility＞</td></tr>
+<tr><td>　　│◎ Call <a href="../modUtility/HighlightCell.modUtility.hcp.html">HighlightCell</a>(TORBLE_NUM_RANG, COLOR_REQUIRED)</td><td><a href="../modUtility/HighlightCell.modUtility.hcp.html">セル強調表示＜modUtility＞</a></td></tr>
 <tr><td>　　│〇 chk_TorbleNum = False</td><td></td></tr>
 <tr><td>　　│→ Exit Function</td><td></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
-<tr><td>　　│#  トラブル番号分解</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   トラブル番号分解</span></td><td></td></tr>
 <tr><td>　　□ Dim parts() As String</td><td></td></tr>
 <tr><td>　　〇 parts = Split(val, "-")</td><td></td></tr>
 <tr><td>　　□ Dim num1 As Long, num2 As Long</td><td></td></tr>
-<tr><td>　　│#  数値変換</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   数値変換</span></td><td></td></tr>
 <tr><td>　　〇 num1 = CLng(parts(0))</td><td></td></tr>
 <tr><td>　　〇 num2 = CLng(parts(1))</td><td></td></tr>
-<tr><td>　　│#  年度番号範囲確認</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   年度番号範囲確認</span></td><td></td></tr>
 <tr><td>　　◆┐If num1 &lt; 1 Or num1 &gt; 99 Then</td><td></td></tr>
-<tr><td>　　│◎ Call HighlightCell(TORBLE_NUM_RANG, COLOR_REQUIRED)</td><td>セル強調表示＜modUtility＞</td></tr>
+<tr><td>　　│◎ Call <a href="../modUtility/HighlightCell.modUtility.hcp.html">HighlightCell</a>(TORBLE_NUM_RANG, COLOR_REQUIRED)</td><td><a href="../modUtility/HighlightCell.modUtility.hcp.html">セル強調表示＜modUtility＞</a></td></tr>
 <tr><td>　　│〇 chk_TorbleNum = False</td><td></td></tr>
 <tr><td>　　│→ Exit Function</td><td></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
-<tr><td>　　│#  管理番号範囲確認</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   管理番号範囲確認</span></td><td></td></tr>
 <tr><td>　　◆┐If num2 &lt; 1 Or num2 &gt; 999 Then</td><td></td></tr>
-<tr><td>　　│◎ Call HighlightCell(TORBLE_NUM_RANG, COLOR_REQUIRED)</td><td>セル強調表示＜modUtility＞</td></tr>
+<tr><td>　　│◎ Call <a href="../modUtility/HighlightCell.modUtility.hcp.html">HighlightCell</a>(TORBLE_NUM_RANG, COLOR_REQUIRED)</td><td><a href="../modUtility/HighlightCell.modUtility.hcp.html">セル強調表示＜modUtility＞</a></td></tr>
 <tr><td>　　│〇 chk_TorbleNum = False</td><td></td></tr>
 <tr><td>　　│→ Exit Function</td><td></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
-<tr><td>　　│#  セル色復元</td><td></td></tr>
-<tr><td>　　◎ Call RestoreColor(TORBLE_NUM_RANG)</td><td>セル色復元＜modUtility＞</td></tr>
-<tr><td>　　│#  入力確認完了</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   セル色復元</span></td><td></td></tr>
+<tr><td>　　◎ Call <a href="../modUtility/RestoreColor.modUtility.hcp.html">RestoreColor</a>(TORBLE_NUM_RANG)</td><td><a href="../modUtility/RestoreColor.modUtility.hcp.html">セル色復元＜modUtility＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│#   入力確認完了</span></td><td></td></tr>
 <tr><td>　　〇 chk_TorbleNum = True</td><td></td></tr>
 <tr><td>　　┴End Function</td><td></td></tr>
 </tbody>
 </table>
+<hr>
+<h2>Calls (2)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modUtility/HighlightCell.modUtility.hcp.html">HighlightCell</a></td><td>セル強調表示</td><td>modUtility</td></tr>
+<tr><td><a href="../modUtility/RestoreColor.modUtility.hcp.html">RestoreColor</a></td><td>セル色復元</td><td>modUtility</td></tr>
+</table>
+<hr>
+<h2>Called By (3)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modMonshinCore/UpdateMonshinHandler.modMonshinCore.hcp.html">UpdateMonshinHandler</a></td><td>問診票更新処理</td><td>modMonshinCore</td></tr>
+<tr><td><a href="../modUtility/ValidateIssue.modUtility.hcp.html">ValidateIssue</a></td><td>登録前入力確認</td><td>modUtility</td></tr>
+<tr><td><a href="../modUtility/ValidateForSearch.modUtility.hcp.html">ValidateForSearch</a></td><td>検索前入力確認</td><td>modUtility</td></tr>
+</table>
 <script>
-document.querySelectorAll('.resize').forEach(function (eleTh) {
+document.querySelectorAll('.resize').forEach(function(eleTh) {
 let startX;
 let startWidth;
 const eleResizer = document.createElement('div');
 eleResizer.classList.add('resizer');
-eleResizer.addEventListener('mousedown', function (e) {
-const styleTh = window.getComputedStyle(eleTh);
-const paddingLeft = parseFloat(styleTh.paddingLeft);
-const paddingRight = parseFloat(styleTh.paddingRight);
-const borderLeft = parseFloat(styleTh.borderLeftWidth);
-const borderRight = parseFloat(styleTh.borderRightWidth);
+eleResizer.addEventListener('mousedown', function(e) {
 startX = e.pageX;
-startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+startWidth = eleTh.offsetWidth;
 document.addEventListener('mousemove', onMouseMove);
 document.addEventListener('mouseup', onMouseUp);
 });
 eleTh.appendChild(eleResizer);
-function onMouseMove(e) {
-const newWidth = startWidth + (e.pageX - startX);
-eleTh.style.width = newWidth + 'px';
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
 }
-function onMouseUp() {
-document.removeEventListener('mousemove', onMouseMove);
-document.removeEventListener('mouseup', onMouseUp);
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
 }
 });
 </script>

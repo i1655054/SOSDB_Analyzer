@@ -1,31 +1,43 @@
-Procedure: modMonshinCore.BuildDescription2010  [ 説明文生成2010形式＜modMonshinCore＞ ]
-HCP	Business
 ┬
 〇│Private Function BuildDescription2010(  ByRef info As MonshinInfoType) As String	説明文生成2010形式＜modMonshinCore＞
 ┴└┐
 　　□ Dim sb As String
 　　□ Dim r() As String
 　　〇 r = info.RequestContents
-　　│#  問合せ内容出力
+　　│#   問合せ内容出力
 　　◆┐If r(0) <> "" Then
 　　│〇 sb = sb &  "＝＝＝＜問合せ種別＞＝＝＝" & vbCrLf &  r(0) & vbCrLf
 　　│┴End If
-　　│#  故障発生状況出力
+　　│#   故障発生状況出力
 　　◆┐If r(1) <> "" Then
 　　│〇 sb = sb &  "＝＝＝＜故障発生状況＞＝＝＝" & vbCrLf &  r(1) & vbCrLf
 　　│┴End If
-　　│#  発生状況出力
+　　│#   発生状況出力
 　　◆┐If r(2) <> "" Then
 　　│〇 sb = sb &  "＝＝＝【発生状況】＝＝＝" & vbCrLf &  r(2) & vbCrLf
 　　│┴End If
-　　│#  対応状況出力
+　　│#   対応状況出力
 　　◆┐If info.ResponseStatus <> "" Then
 　　│〇 sb = sb &  "===【対応状況】===" & vbCrLf &  info.ResponseStatus & vbCrLf
 　　│┴End If
-　　│#  収集データ出力
+　　│#   収集データ出力
 　　◆┐If info.CollectedData <> "" Then
 　　│〇 sb = sb &  "===【収集データ】===" & vbCrLf &  info.CollectedData & vbCrLf
 　　│┴End If
-　　│#  説明文返却
+　　│#   説明文返却
 　　〇 BuildDescription2010 = sb
 　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+BuildDescription	説明文生成	modMonshinCore

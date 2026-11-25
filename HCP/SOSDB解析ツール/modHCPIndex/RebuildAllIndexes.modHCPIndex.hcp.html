@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
+<title>RebuildAllIndexes</title>
+<style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
+</style>
+</head>
+<body translate="no">
+<h1>RebuildAllIndexes</h1>
+<p>Module : modHCPIndex</p>
+<table>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
+<tbody>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Public Sub RebuildAllIndexes()</td><td>INDEX一括再生成＜modHCPIndex＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   HCP_TARGETS</span></td><td></td></tr>
+<tr><td>　　□ Dim ws As Worksheet</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   最終行</span></td><td></td></tr>
+<tr><td>　　□ Dim LastRow As Long</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   行番号</span></td><td></td></tr>
+<tr><td>　　□ Dim r As Long</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   モジュール名</span></td><td></td></tr>
+<tr><td>　　□ Dim ModuleName As String</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   モジュール管理</span></td><td></td></tr>
+<tr><td>　　□ Dim Modules As Object</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   Dictionaryキー</span></td><td></td></tr>
+<tr><td>　　□ Dim Key As Variant</td><td></td></tr>
+<tr><td>　　◎ <a href="../modDebug/Trace.modDebug.hcp.html">Trace</a> "INDEX",  "RebuildAllIndexes"</td><td><a href="../modDebug/Trace.modDebug.hcp.html">トレース出力＜modDebug＞</a></td></tr>
+<tr><td>　　〇 Set Modules =  CreateObject(  "Scripting.Dictionary")</td><td></td></tr>
+<tr><td>　　〇 Set ws =  gContext.ManagementBook.Worksheets(<br>　　│   SHEET_HCP_TARGETS)</td><td></td></tr>
+<tr><td>　　〇 LastRow =  ws.Cells(  ws.Rows.Count,  COL_HCP_MODULE).End(xlUp).row</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   モジュール一覧作成</span></td><td></td></tr>
+<tr><td>　　＠┐For r = 2 To LastRow</td><td></td></tr>
+<tr><td>　　│〇 ModuleName =  Trim$(  ws.Cells(  r,  COL_HCP_MODULE).Value)</td><td></td></tr>
+<tr><td>　　│◆┐If ModuleName &lt;&gt; "" Then</td><td></td></tr>
+<tr><td>　　││◆┐If Not Modules.Exists(  ModuleName) Then</td><td></td></tr>
+<tr><td>　　│││〇 Modules.Add  ModuleName,  True</td><td></td></tr>
+<tr><td>　　│││┴End If</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td>　　│┴Next r</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   モジュールINDEX再生成</span></td><td></td></tr>
+<tr><td>　　＠┐For Each Key In Modules.Keys</td><td></td></tr>
+<tr><td>　　│◎ <a href="../modHCPIndex/RebuildModuleIndex.modHCPIndex.hcp.html">RebuildModuleIndex</a>  CStr(Key)</td><td><a href="../modHCPIndex/RebuildModuleIndex.modHCPIndex.hcp.html">モジュールINDEX再生成＜modHCPIndex＞</a></td></tr>
+<tr><td>　　││</td><td>内部呼出:CStr</td></tr>
+<tr><td>　　│┴Next Key</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   ツールINDEX再生成</span></td><td></td></tr>
+<tr><td>　　◎ <a href="../modHCPIndex/RebuildToolIndex.modHCPIndex.hcp.html">RebuildToolIndex</a></td><td><a href="../modHCPIndex/RebuildToolIndex.modHCPIndex.hcp.html">ツールINDEX再生成＜modHCPIndex＞</a></td></tr>
+<tr><td>　　┴End Sub</td><td></td></tr>
+</tbody>
+</table>
+<hr>
+<h2>Calls (3)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modDebug/Trace.modDebug.hcp.html">Trace</a></td><td>トレース出力</td><td>modDebug</td></tr>
+<tr><td><a href="../modHCPIndex/RebuildModuleIndex.modHCPIndex.hcp.html">RebuildModuleIndex</a></td><td>モジュールINDEX再生成</td><td>modHCPIndex</td></tr>
+<tr><td><a href="../modHCPIndex/RebuildToolIndex.modHCPIndex.hcp.html">RebuildToolIndex</a></td><td>ツールINDEX再生成</td><td>modHCPIndex</td></tr>
+</table>
+<hr>
+<h2>Called By (3)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modUnitTest/RefreshHCPIndexes.modUnitTest.hcp.html">RefreshHCPIndexes</a></td><td></td><td>modUnitTest</td></tr>
+<tr><td><a href="../modHCPTargetManager/CreateHCPTargets.modHCPTargetManager.hcp.html">CreateHCPTargets</a></td><td>HCP_TARGETS作成</td><td>modHCPTargetManager</td></tr>
+<tr><td><a href="../modHCPTargetManager/GenerateHCPBatch.modHCPTargetManager.hcp.html">GenerateHCPBatch</a></td><td>HCP一括生成</td><td>modHCPTargetManager</td></tr>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function(eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function(e) {
+startX = e.pageX;
+startWidth = eleTh.offsetWidth;
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
+}
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
+}
+});
+</script>
+</body>
+</html>

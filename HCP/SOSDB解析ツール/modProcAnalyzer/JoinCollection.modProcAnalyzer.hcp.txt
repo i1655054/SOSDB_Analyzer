@@ -1,0 +1,29 @@
+┬
+〇│Private Function JoinCollection(  ByVal Values As Collection)  As String	Collection連結＜modProcAnalyzer＞
+┴└┐
+　　□ Dim V As Variant
+　　□ Dim Result As String
+　　│#   Collection走査
+　　＠┐For Each V In Values
+　　│◆┐If Result <> "" Then
+　　││〇 Result =  Result & ","
+　　││┴End If
+　　│〇 Result =  Result &  CStr(V)
+　　│┴Next V
+　　│#   連結結果返却
+　　〇 JoinCollection =  Result
+　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+AnalyzeProcedure	Proc解析	modProcAnalyzer

@@ -1,0 +1,22 @@
+┬
+〇│Public Sub TraceStack(  ByVal Action As String,  ByVal StackValue As String,  ByVal Count As Long)	スタックトレース出力＜modDebug＞
+┴└┐
+　　◎ Trace "STACK",  Action &  " [" & StackValue & "]" &  " Count=" & Count	トレース出力＜modDebug＞
+　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+Trace	トレース出力	modDebug
+
+========================================
+Called By (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+PushMergeStack	マージスタック登録	modHCPAnalyzer
+PopMergeStack	マージスタック取得	modHCPAnalyzer

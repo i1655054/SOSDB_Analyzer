@@ -1,8 +1,20 @@
-Procedure: Sheet1.CauseButton_Click  [ 原因詳細表示＜Sheet1＞ ]
-HCP	Business
 ┬
 〇│Public Sub CauseButton_Click()	原因詳細表示＜Sheet1＞
 ┴└┐
 　　◆→ If g_CurrentIssue Is Nothing Then Exit Sub
 　　◎ Call modInfoDisplay.ShowCause(g_CurrentIssue)	原因詳細表示＜modInfoDisplay＞
 　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ShowCause	原因詳細表示	modInfoDisplay
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

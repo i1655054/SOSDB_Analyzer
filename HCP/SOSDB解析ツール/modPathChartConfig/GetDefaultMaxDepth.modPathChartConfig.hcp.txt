@@ -1,0 +1,28 @@
+┬
+〇│Public Function GetDefaultMaxDepth() As Long	既定深度取得＜modPathChartConfig＞
+┴└┐
+　　□ Dim ws As Worksheet
+　　│#   PathChartConfig取得
+　　│#   PathChart設定シート取得
+　　〇 Set ws = ThisWorkbook.Worksheets(SHEET_PATH_CHART_CONFIG)
+　　│#   既定探索深度取得
+　　〇 GetDefaultMaxDepth = Val(ws.Range(CFG_MAX_DEPTH).Value)
+　　│#   既定値補正
+　　◆┐If GetDefaultMaxDepth <= 0 Then
+　　│〇 GetDefaultMaxDepth = DEFAULT_MAX_DEPTH
+　　│┴End If
+　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+UserForm_Initialize

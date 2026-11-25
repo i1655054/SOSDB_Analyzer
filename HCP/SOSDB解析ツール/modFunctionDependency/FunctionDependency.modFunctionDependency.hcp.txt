@@ -1,0 +1,115 @@
+┬
+〇│Public Sub FunctionDependency()	関数依存関係作成＜modFunctionDependency＞
+┴└┐
+　　□ Dim wsTrace As Worksheet
+　　□ Dim wsDep As Worksheet
+　　□ Dim LastRow As Long
+　　□ Dim r As Long
+　　□ Dim Key As String
+　　□ Dim V As Variant
+　　□ Dim Dic As Object
+　　□ Dim DicCallerJP As Object
+　　□ Dim DicCalleeJP As Object
+　　□ Dim DicFromModule As Object
+　　□ Dim DicToModule As Object
+　　□ Dim DicCategory As Object
+　　□ Dim DicSummary As Object
+　　〇 Set Dic = CreateObject("Scripting.Dictionary")
+　　〇 Set DicCallerJP = CreateObject("Scripting.Dictionary")
+　　〇 Set DicCalleeJP = CreateObject("Scripting.Dictionary")
+　　〇 Set DicFromModule = CreateObject("Scripting.Dictionary")
+　　〇 Set DicToModule = CreateObject("Scripting.Dictionary")
+　　〇 Set DicCategory = CreateObject("Scripting.Dictionary")
+　　〇 Set DicSummary = CreateObject("Scripting.Dictionary")
+　　◆→ If gContext Is Nothing Then Exit Sub
+　　│#   FunctionTraceシート取得
+　　〇 Set wsTrace = gContext.ManagementBook.Worksheets(
+　　│ SHEET_FUNCTION_TRACE)
+　　〇 Application.DisplayAlerts = False
+　　☆ On Error Resume Next
+　　│#   FunctionDependencyシート再作成
+　　〇 gContext.ManagementBook.Worksheets(
+　　│ SHEET_FUNCTION_DEPENDENCY).Delete
+　　☆ On Error GoTo 0
+　　〇 Application.DisplayAlerts = True
+　　│#   FunctionDependencyシート作成
+　　〇 Set wsDep =  gContext.ManagementBook.Worksheets.Add(
+　　│   After:=gContext.ManagementBook.Worksheets(
+　　│   gContext.ManagementBook.Worksheets.Count))
+　　〇 wsDep.Name = SHEET_FUNCTION_DEPENDENCY
+　　│#   ヘッダ
+　　│#   FunctionDependencyヘッダ出力
+　　〇 wsDep.Range("A1") = "呼出元"
+　　〇 wsDep.Range("B1") = "呼出元JPName"
+　　〇 wsDep.Range("C1") = "呼出先"
+　　〇 wsDep.Range("D1") = "呼出先JPName"
+　　〇 wsDep.Range("E1") = "回数"
+　　〇 wsDep.Range("F1") = "呼出元モジュール"
+　　〇 wsDep.Range("G1") = "呼出先モジュール"
+　　〇 wsDep.Range("H1") = "呼出先Category"
+　　〇 wsDep.Range("I1") = "呼出先Summary"
+　　│#   FunctionTrace最終行取得
+　　〇 LastRow = wsTrace.Cells(  wsTrace.Rows.Count,  "A").End(xlUp).row
+　　│#   集計
+　　│#   呼出関係集計
+　　＠┐For r = 2 To LastRow
+　　││#   呼出元・呼出先キー生成
+　　│〇 Key =  wsTrace.Cells(r, 1).Value & "|" &  wsTrace.Cells(r, 3).Value
+　　││#   呼出回数加算
+　　│◆┐If Dic.Exists(Key) Then
+　　││〇 Dic(Key) = Dic(Key) + 1
+　　│││#   呼出関係初回登録
+　　│├┐ELSE
+　　││〇 Dic.Add Key, 1
+　　│││#   呼出元JPName保存
+　　││〇 DicCallerJP.Add  Key, wsTrace.Cells(r, 2).Value
+　　│││#   呼出先JPName保存
+　　││〇 DicCalleeJP.Add  Key, wsTrace.Cells(r, 4).Value
+　　│││#   呼出元モジュール保存
+　　││〇 DicFromModule.Add  Key, wsTrace.Cells(r, 5).Value
+　　│││#   呼出先モジュール保存
+　　││〇 DicToModule.Add  Key, wsTrace.Cells(r, 6).Value
+　　│││#   呼出先Category保存
+　　││〇 DicCategory.Add  Key, wsTrace.Cells(r, 7).Value
+　　│││#   呼出先Summary保存
+　　││〇 DicSummary.Add  Key, wsTrace.Cells(r, 8).Value
+　　││┴End If
+　　│┴Next r
+　　│#   出力
+　　〇 r = 2
+　　│#   依存関係一覧出力
+　　＠┐For Each V In Dic.Keys
+　　││#   呼出元情報出力
+　　│〇 wsDep.Cells(r, 1).Value = Split(V, "|")(0)
+　　│〇 wsDep.Cells(r, 2).Value = DicCallerJP(V)
+　　││#   呼出先情報出力
+　　│〇 wsDep.Cells(r, 3).Value = Split(V, "|")(1)
+　　│〇 wsDep.Cells(r, 4).Value = DicCalleeJP(V)
+　　││#   呼出回数出力
+　　│〇 wsDep.Cells(r, 5).Value = Dic(V)
+　　│〇 wsDep.Cells(r, 6).Value = DicFromModule(V)
+　　│〇 wsDep.Cells(r, 7).Value = DicToModule(V)
+　　││#   呼出先付帯情報出力
+　　│〇 wsDep.Cells(r, 8).Value = DicCategory(V)
+　　│〇 wsDep.Cells(r, 9).Value = DicSummary(V)
+　　│〇 r = r + 1
+　　│┴Next V
+　　│#   FunctionDependencyシート体裁設定
+　　〇 wsDep.Rows(1).Font.Bold = True
+　　〇 wsDep.Rows(1).AutoFilter
+　　〇 wsDep.Columns.AutoFit
+　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+AnalyzeAll	全解析実行	modAnalyzerCommon

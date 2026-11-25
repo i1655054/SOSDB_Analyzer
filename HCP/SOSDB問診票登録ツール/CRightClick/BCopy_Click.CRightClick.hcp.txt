@@ -1,8 +1,18 @@
-Procedure: CRightClick.BCopy_Click  [ コピー実行＜CRightClick＞ ]
-HCP	Business
 ┬
 〇│Private Sub BCopy_Click(ByVal ctrl As Office.CommandBarButton, CancelDefault As Boolean)	コピー実行＜CRightClick＞
 ┴└┐
-　　│#  コピー実行
+　　│#   コピー実行
 　　◆ If TypeName(Tb) = "TextBox" Then Tb.Copy Else Cb.Copy
 　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

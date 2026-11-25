@@ -1,0 +1,29 @@
+┬
+〇│Private Function GetProcedureName(  ByVal LineText As String,  ByVal CurrentName As String) As String	現在関数取得＜modFunctionTrac＞
+┴└┐
+　　│#   Procedure定義判定
+　　◆┐If IsProcedureLine(LineText) Then	内部呼出:IsProcedureLine
+　　││#   現在Procedure更新
+　　│◎ GetProcedureName =  ExtractProcedureName(LineText)	プロシージャ名抽出＜modAnalyze＞
+　　├┐ELSE
+　　││#   現在Procedure継続
+　　│〇 GetProcedureName = CurrentName
+　　│┴End If
+　　┴End Function
+
+========================================
+Calls (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+IsProcedureLine	プロシージャ定義判定	modAnalyze
+ExtractProcedureName	プロシージャ名抽出	modAnalyze
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+TraceModule	関数呼出解析	modFunctionTrac

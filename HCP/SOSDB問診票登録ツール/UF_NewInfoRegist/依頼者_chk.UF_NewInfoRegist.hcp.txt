@@ -1,16 +1,28 @@
-Procedure: UF_NewInfoRegist.依頼者_chk  [ 依頼者入力確認＜UF_NewInfoRegist＞ ]
-HCP	Business
 ┬
 〇│Private Function 依頼者_chk() As Boolean	依頼者入力確認＜UF_NewInfoRegist＞
 ┴└┐
 　　〇 依頼者_chk = True
-　　│#  入力有無確認
+　　│#   入力有無確認
 　　◆┐If Trim(Me.txt依頼者.Value) = "" Then
-　　││#  エラー表示
+　　││#   エラー表示
 　　│〇 依頼者_chk = False
 　　│〇 Me.txt依頼者.BackColor = &HC0C0FF
 　　├┐ELSE
-　　││#  表示復元
+　　││#   表示復元
 　　│〇 Me.txt依頼者.BackColor = &H80000005
 　　│┴End If
 　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+CommandButton1_Click

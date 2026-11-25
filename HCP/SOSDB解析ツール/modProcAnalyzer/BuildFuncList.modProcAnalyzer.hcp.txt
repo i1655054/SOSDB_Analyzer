@@ -1,0 +1,37 @@
+┬
+〇│Public Function BuildFuncList()  As Object	Function一覧作成＜modProcAnalyzer＞
+┴└┐
+　　□ Dim FuncList As Object
+　　□ Dim VBComp As Object
+　　□ Dim CodeText As String
+　　│#   Procedure一覧初期化
+　　│#   Procedure一覧生成
+　　〇 Set FuncList =  CreateObject("Scripting.Dictionary")
+　　│#   VBAモジュール走査
+　　＠┐For Each VBComp In  gContext.TargetBook.VBProject.VBComponents
+　　│◆┐If VBComp.CodeModule.CountOfLines > 0 Then
+　　│││#   モジュールソース取得
+　　││〇 CodeText =  VBComp.CodeModule.Lines(  1,  VBComp.CodeModule.CountOfLines)
+　　│││#   Procedure収集
+　　││◎ GetFunctions  CodeText,  VBComp.Name,  FuncList	関数一覧取得＜modFunctionTrac＞
+　　││┴End If
+　　│┴Next VBComp
+　　│#   Procedure一覧返却
+　　〇 Set BuildFuncList = FuncList
+　　┴End Function
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetFunctions	関数一覧取得	modFunctionTrac
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+CreateHCP	HCP作成	modHCPAnalyzer

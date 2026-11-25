@@ -1,0 +1,38 @@
+┬
+〇│Public Sub Trace(  ByVal Category As String,  ByVal Message As String)	トレース出力＜modDebug＞
+┴└┐
+　　◆→ If Not gDevMode Then Exit Sub
+　　◆┐If Category = "PROC" Then
+　　│◆→ If Not gTraceProc Then Exit Sub
+　　│┴End If
+　　◆┐If Category = "STACK" Then
+　　│◆→ If Not gTraceStack Then Exit Sub
+　　│┴End If
+　　〇 Debug.Print  Format$(Now, "hh:nn:ss") &  " [" & Category & "] " &  Message
+　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (13)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+RefreshHCPIndexes		modUnitTest
+CreateHCP	HCP作成	modHCPAnalyzer
+ConvertProcToHCP	HCP変換	modHCPAnalyzer
+PopMergeStack	マージスタック取得	modHCPAnalyzer
+cmdGenerate_Click	HCP生成	frmHCPGenerator
+cmdHCPTargets_Click	HCP_TARGETS更新	frmHCPGenerator
+TraceStack	スタックトレース出力	modDebug
+CreateHCPTargets	HCP_TARGETS作成	modHCPTargetManager
+UpdateHCPTargets	HCP_TARGETS更新	modHCPTargetManager
+GenerateHCPBatch	HCP一括生成	modHCPTargetManager
+RebuildModuleIndex	モジュールINDEX再生成	modHCPIndex
+RebuildToolIndex	ツールINDEX再生成	modHCPIndex
+RebuildAllIndexes	INDEX一括再生成	modHCPIndex

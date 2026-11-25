@@ -1,7 +1,21 @@
-Procedure: modIssueMapper.IsChangedDescription  [ 説明文変更判定＜modIssueMapper＞ ]
-HCP	Business
 ┬
 〇│Public Function IsChangedDescription(  ByVal newText As String,  ByVal oldText As String) As Boolean	説明文変更判定＜modIssueMapper＞
 ┴└┐
 　　◎ IsChangedDescription =  (NormalizeDescription(newText) <> NormalizeDescription(oldText))	説明文正規化＜modIssueMapper＞
 　　┴End Function
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+NormalizeDescription	説明文正規化	modIssueMapper
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetUpdateCheckResult	更新差分判定	modIssueMapper

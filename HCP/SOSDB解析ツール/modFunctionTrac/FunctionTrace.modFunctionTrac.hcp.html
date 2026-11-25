@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
+<title>FunctionTrace</title>
+<style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
+</style>
+</head>
+<body translate="no">
+<h1>FunctionTrace</h1>
+<p>Module : modFunctionTrac</p>
+<table>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
+<tbody>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Public Sub FunctionTrace()</td><td>関数トレース作成＜modFunctionTrac＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　□ Dim wsOut As Worksheet</td><td></td></tr>
+<tr><td>　　□ Dim VBComp As Object</td><td></td></tr>
+<tr><td>　　□ Dim FuncList As Object</td><td></td></tr>
+<tr><td>　　□ Dim CodeText As String</td><td></td></tr>
+<tr><td>　　□ Dim RowOut As Long</td><td></td></tr>
+<tr><td>　　□ Dim TotalModuleCount As Long</td><td></td></tr>
+<tr><td>　　□ Dim CurrentModuleCount As Long</td><td></td></tr>
+<tr><td>　　◆→ If gContext Is Nothing Then Exit Sub</td><td></td></tr>
+<tr><td>　　☆ On Error Resume Next</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   FunctionTraceシート準備</span></td><td></td></tr>
+<tr><td>　　〇 Set wsOut = gContext.ManagementBook.Worksheets(<br>　　│ SHEET_FUNCTION_TRACE)</td><td></td></tr>
+<tr><td>　　☆ On Error GoTo 0</td><td></td></tr>
+<tr><td>　　◆┐If wsOut Is Nothing Then</td><td></td></tr>
+<tr><td>　　│〇 Set wsOut =  gContext.ManagementBook.Worksheets.Add(<br>　　││   After:=gContext.ManagementBook.Worksheets(<br>　　││   gContext.ManagementBook.Worksheets.Count))</td><td></td></tr>
+<tr><td>　　│〇 wsOut.Name = SHEET_FUNCTION_TRACE</td><td></td></tr>
+<tr><td>　　├┐ELSE</td><td></td></tr>
+<tr><td>　　│〇 wsOut.Cells.Clear</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　〇 wsOut.Range("A1") = "呼出元"</td><td></td></tr>
+<tr><td>　　〇 wsOut.Range("B1") = "呼出元JPName"</td><td></td></tr>
+<tr><td>　　〇 wsOut.Range("C1") = "呼出先"</td><td></td></tr>
+<tr><td>　　〇 wsOut.Range("D1") = "呼出先JPName"</td><td></td></tr>
+<tr><td>　　〇 wsOut.Range("E1") = "呼出元モジュール"</td><td></td></tr>
+<tr><td>　　〇 wsOut.Range("F1") = "呼出先モジュール"</td><td></td></tr>
+<tr><td>　　〇 wsOut.Range("G1") = "呼出先Category"</td><td></td></tr>
+<tr><td>　　〇 wsOut.Range("H1") = "呼出先Summary"</td><td></td></tr>
+<tr><td>　　〇 wsOut.Range("I1") = "行番号"</td><td></td></tr>
+<tr><td>　　〇 wsOut.Range("J1") = "元コード"</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   Procedure一覧管理初期化</span></td><td></td></tr>
+<tr><td>　　〇 Set FuncList = CreateObject("Scripting.Dictionary")</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   関数一覧取得</span></td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   解析対象モジュール数取得</span></td><td></td></tr>
+<tr><td>　　〇 TotalModuleCount =  gContext.TargetBook.VBProject.VBComponents.Count</td><td></td></tr>
+<tr><td>　　〇 CurrentModuleCount = 0</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   Procedure一覧収集</span></td><td></td></tr>
+<tr><td>　　＠┐For Each VBComp In gContext.TargetBook.VBProject.VBComponents</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   FunctionTrace対象判定</span></td><td></td></tr>
+<tr><td>　　│◆┐If <a href="../modFunctionTrac/IsTraceTargetModule.modFunctionTrac.hcp.html">IsTraceTargetModule</a>(VBComp) Then</td><td>内部呼出:<a href="../modFunctionTrac/IsTraceTargetModule.modFunctionTrac.hcp.html">IsTraceTargetModule</a></td></tr>
+<tr><td>　　││◆┐If VBComp.CodeModule.CountOfLines &gt; 0 Then</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││││#   モジュールソース取得</span></td><td></td></tr>
+<tr><td>　　│││〇 CodeText = VBComp.CodeModule.Lines(  1,  VBComp.CodeModule.CountOfLines)</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││││#   Procedure情報収集</span></td><td></td></tr>
+<tr><td>　　│││◎ Call <a href="../modFunctionTrac/GetFunctions.modFunctionTrac.hcp.html">GetFunctions</a>(CodeText, VBComp.Name, FuncList)</td><td><a href="../modFunctionTrac/GetFunctions.modFunctionTrac.hcp.html">関数一覧取得＜modFunctionTrac＞</a></td></tr>
+<tr><td>　　│││┴End If</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td>　　│┴Next</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   呼出関係取得</span></td><td></td></tr>
+<tr><td>　　〇 RowOut = 2</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   呼出関係解析開始</span></td><td></td></tr>
+<tr><td>　　＠┐For Each VBComp In gContext.TargetBook.VBProject.VBComponents</td><td></td></tr>
+<tr><td>　　│〇 CurrentModuleCount =  CurrentModuleCount + 1</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   解析進捗表示更新</span></td><td></td></tr>
+<tr><td>　　│〇 Application.StatusBar =  "FunctionTrace解析中 [" &amp;  CurrentModuleCount &amp; "/" &amp;  TotalModuleCount &amp;  "] " &amp;  VBComp.Name &amp;  " Trace=" &amp; RowOut</td><td></td></tr>
+<tr><td>　　│〇 DoEvents</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   FunctionTrace対象判定</span></td><td></td></tr>
+<tr><td>　　│◆┐If <a href="../modFunctionTrac/IsTraceTargetModule.modFunctionTrac.hcp.html">IsTraceTargetModule</a>(VBComp) Then</td><td>内部呼出:<a href="../modFunctionTrac/IsTraceTargetModule.modFunctionTrac.hcp.html">IsTraceTargetModule</a></td></tr>
+<tr><td>　　││◆┐If VBComp.CodeModule.CountOfLines &gt; 0 Then</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││││#   モジュールソース取得</span></td><td></td></tr>
+<tr><td>　　│││〇 CodeText = VBComp.CodeModule.Lines(  1,  VBComp.CodeModule.CountOfLines)</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││││#   モジュール呼出関係解析</span></td><td></td></tr>
+<tr><td>　　│││◎ RowOut = <a href="../modFunctionTrac/TraceModule.modFunctionTrac.hcp.html">TraceModule</a>(  CodeText,  VBComp.Name,  FuncList,  wsOut,  RowOut)</td><td><a href="../modFunctionTrac/TraceModule.modFunctionTrac.hcp.html">関数呼出解析＜modFunctionTrac＞</a></td></tr>
+<tr><td>　　│││┴End If</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td>　　│┴Next VBComp</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   確認支援設定</span></td><td></td></tr>
+<tr><td>　　◎ Call <a href="../modFunctionTrac/SetupTraceValidation.modFunctionTrac.hcp.html">SetupTraceValidation</a>(wsOut)</td><td><a href="../modFunctionTrac/SetupTraceValidation.modFunctionTrac.hcp.html">トレース確認設定＜modFunctionTrac＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│#   FunctionTraceシート体裁設定</span></td><td></td></tr>
+<tr><td>　　〇 wsOut.Columns.AutoFit</td><td></td></tr>
+<tr><td>　　┴End Sub</td><td></td></tr>
+</tbody>
+</table>
+<hr>
+<h2>Calls (4)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modFunctionTrac/IsTraceTargetModule.modFunctionTrac.hcp.html">IsTraceTargetModule</a></td><td>FunctionTrace対象判定</td><td>modFunctionTrac</td></tr>
+<tr><td><a href="../modFunctionTrac/GetFunctions.modFunctionTrac.hcp.html">GetFunctions</a></td><td>関数一覧取得</td><td>modFunctionTrac</td></tr>
+<tr><td><a href="../modFunctionTrac/TraceModule.modFunctionTrac.hcp.html">TraceModule</a></td><td>関数呼出解析</td><td>modFunctionTrac</td></tr>
+<tr><td><a href="../modFunctionTrac/SetupTraceValidation.modFunctionTrac.hcp.html">SetupTraceValidation</a></td><td>トレース確認設定</td><td>modFunctionTrac</td></tr>
+</table>
+<hr>
+<h2>Called By (1)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modAnalyzerCommon/AnalyzeAll.modAnalyzerCommon.hcp.html">AnalyzeAll</a></td><td>全解析実行</td><td>modAnalyzerCommon</td></tr>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function(eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function(e) {
+startX = e.pageX;
+startWidth = eleTh.offsetWidth;
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
+}
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
+}
+});
+</script>
+</body>
+</html>

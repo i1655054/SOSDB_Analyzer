@@ -1,20 +1,34 @@
-Procedure: modProcessing.ScheduleNextMessage  [ 進捗メッセージ更新＜modProcessing＞ ]
-HCP	Business
 ┬
 〇│Sub ScheduleNextMessage()	進捗メッセージ更新＜modProcessing＞
 ┴└┐
-　　│#  メッセージ残数確認
+　　│#   メッセージ残数確認
 　　◆┐If messageIndex <= UBound(messages) Then
-　　││#  進捗メッセージ表示
-　　│◎ frmProcessing.UpdateMessage messages(messageIndex)	メッセージ更新＜frmProcessing＞
-　　││	内部呼出:messages
-　　││#  メッセージ番号更新
+　　││#   進捗メッセージ表示
+　　│〇 frmProcessing.UpdateMessage messages(messageIndex)
+　　││#   メッセージ番号更新
 　　│〇 messageIndex = messageIndex + 1
-　　││#  次回実行予約
+　　││#   次回実行予約
 　　│〇 nextTime = Now + TimeSerial(0, 0, 1)
 　　│〇 Application.OnTime nextTime, "ScheduleNextMessage"
 　　├┐ELSE
-　　││#  処理中画面終了
+　　││#   処理中画面終了
 　　│◎ StopMessageDisplay	処理中画面終了＜modProcessing＞
 　　│┴End If
 　　┴End Sub
+
+========================================
+Calls (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+UpdateMessage	メッセージ更新	frmProcessing
+StopMessageDisplay	処理中画面終了	modProcessing
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+StartMessageDisplay	処理中画面開始	modProcessing

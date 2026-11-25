@@ -1,0 +1,51 @@
+┬
+〇│Private Sub SetupTraceValidation(ByVal ws As Worksheet)	トレース確認設定＜modFunctionTrac＞
+┴└┐
+　　□ Dim LastRow As Long
+　　│#   FunctionTrace最終行取得
+　　〇 LastRow = ws.Cells(ws.Rows.Count, "A").End(xlUp).row
+　　│#   確認列作成
+　　〇 ws.Range("K1").Value = "確認"
+　　〇 ws.Range("L1").Value = "コメント"
+　　◆→ If LastRow < 2 Then Exit Sub
+　　│#   確認入力規則設定
+　　＠┐With ws.Range("K2:K" & LastRow).Validation
+　　│☆ On Error Resume Next
+　　│〇 .Delete
+　　│☆ On Error GoTo 0
+　　│〇 Err.Clear
+　　│〇 .Add  Type:=xlValidateList,  AlertStyle:=xlValidAlertStop,  Formula1:="○ 正常,× 誤検出,△ 要確認,除外"
+　　│〇 .IgnoreBlank = True
+　　│〇 .InCellDropdown = True
+　　│┴End With
+　　│#   条件付き書式初期化
+　　〇 ws.Range("A2:L" & LastRow).FormatConditions.Delete
+　　│#   正常判定色設定
+　　◎ AddConditionColor  ws.Range("A2:L" & LastRow),  "=$K2=""○ 正常""",  RGB(198, 239, 206)	条件色設定＜modFunctionTrac＞
+　　│	内部呼出:Range, RGB
+　　│#   誤検出色設定
+　　◎ AddConditionColor  ws.Range("A2:L" & LastRow),  "=$K2=""× 誤検出""",  RGB(255, 199, 206)	条件色設定＜modFunctionTrac＞
+　　│	内部呼出:Range, RGB
+　　│#   要確認色設定
+　　◎ AddConditionColor  ws.Range("A2:L" & LastRow),  "=$K2=""△ 要確認""",  RGB(255, 235, 156)	条件色設定＜modFunctionTrac＞
+　　│	内部呼出:Range, RGB
+　　│#   除外色設定
+　　◎ AddConditionColor  ws.Range("A2:L" & LastRow),  "=$K2=""除外""",  RGB(217, 217, 217)	条件色設定＜modFunctionTrac＞
+　　│	内部呼出:Range, RGB
+　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+AddConditionColor	条件色設定	modFunctionTrac
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+FunctionTrace	関数トレース作成	modFunctionTrac

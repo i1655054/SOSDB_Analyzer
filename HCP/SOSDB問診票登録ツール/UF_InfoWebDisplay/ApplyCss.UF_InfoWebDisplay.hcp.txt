@@ -1,16 +1,14 @@
-Procedure: UF_InfoWebDisplay.ApplyCss  [ CSS適用＜UF_InfoWebDisplay＞ ]
-HCP	Business
 ┬
 〇│Public Sub ApplyCss(ByVal SizePt As Long)	CSS適用＜UF_InfoWebDisplay＞
 ┴└┐
 　　☆ On Error Resume Next
 　　□ Dim doc As Object, head As Object, styleEl As Object, css As String
-　　│#  HTMLドキュメント取得
+　　│#   HTMLドキュメント取得
 　　〇 Set doc = WebBrowser1.document
 　　◆→ If doc Is Nothing Then Exit Sub
 　　〇 Set head = doc.getElementsByTagName("head")(0)
 　　◆→ If head Is Nothing Then Exit Sub
-　　│#  スタイル要素取得
+　　│#   スタイル要素取得
 　　〇 Set styleEl = doc.getElementById("appStyle")
 　　◆┐If styleEl Is Nothing Then
 　　│〇 Set styleEl = doc.createElement("style")
@@ -19,22 +17,38 @@ HCP	Business
 　　│┴End If
 　　□ Dim ws As String, ww As String
 　　□ Dim bodyOx As String, contentExtra As String
-　　│#  表示モード判定
+　　│#   表示モード判定
 　　◆┐If IsScrollEnabled Then
-　　││#  折返し表示設定
+　　││#   折返し表示設定
 　　│〇 ws = "normal"                    ' 折り返す
 　　│〇 ww = "word-wrap: break-word;"    ' 長い単語も折る
 　　│〇 bodyOx = "hidden"                ' 横バーは隠す
 　　│〇 contentExtra = "display:block;"  ' ふつうのブロックでOK
 　　├┐ELSE
-　　││#  横スクロール表示設定
+　　││#   横スクロール表示設定
 　　│〇 ws = "pre"                       ' 折り返さない（<br>以外は改行しない）
 　　│〇 ww = ""                          ' 折り返し指定なし
 　　│〇 bodyOx = "auto"                  ' ★ ここを auto（必要時にバー）や scroll（常時バー）に
 　　│〇 contentExtra = "display:inline-block;"
 　　│┴End If
-　　│#  CSS生成
+　　│#   CSS生成
 　　〇 css =  "html,body{margin:0;padding:0;width:100%;}" &  "input[type=hidden]{display:none!important;}" &  "body{overflow-x:" & bodyOx & ";}" &  "#content{" &  " font-family:'MS Gothic','ＭＳ ゴシック',monospace;" &  " font-size:" & CStr(SizePt) & "pt;" &  " line-height:1.0;" &  " white-space:" & ws & ";" &  " " & ww &  " margin:0;padding:0;" &  " " & contentExtra &  "}" &  ".hdr1{" &  " color:#0000FF;" &  " font-weight:bold;" &  "}" &  ".hdr2{" &  " color:#008000;" &  " font-weight:bold;" &  "}" &  ".hdr3{" &  " color:#CC0000;" &  " font-weight:bold;" &  "}"
-　　│#  CSS反映
+　　│#   CSS反映
 　　〇 styleEl.innerHTML = css
 　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (3)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+RenderHTML	HTML表示	UF_InfoWebDisplay
+SpinButton1_Change	文字サイズ変更	UF_InfoWebDisplay
+UserForm_Activate

@@ -1,0 +1,26 @@
+┬
+〇│Public Function GetCurrentToolInfo() As clsToolInfo	現在ツール情報取得＜modToolManager＞
+┴└┐
+　　│#   現在ツール情報取得
+　　◎ Set GetCurrentToolInfo =  GetToolInfo(gTargetToolID)	ツール情報取得＜modToolManager＞
+　　┴End Function
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetToolInfo	ツール情報取得	modToolManager
+
+========================================
+Called By (5)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+CreateAnalyzeContext	解析コンテキスト生成	modAnalyzerCommon
+ValidateTargetBook	対象ブック存在確認	modToolManager
+UserForm_Initialize
+GetHCPOutputFolder	HCP出力フォルダ取得	modHCPPath
+GetHCPToolFolder	HCPツールフォルダ取得	modHCPPath

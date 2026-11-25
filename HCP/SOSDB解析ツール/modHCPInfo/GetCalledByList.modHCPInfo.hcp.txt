@@ -1,0 +1,60 @@
+┬
+〇│Public Function GetCalledByList(  ByVal ProcName As String)  As Collection	呼出元一覧取得＜modHCPInfo＞
+┴└┐
+　　│#   結果
+　　□ Dim Result As Collection
+　　│#   重複除外用
+　　□ Dim Dic As Object
+　　│#   FunctionDependency
+　　□ Dim ws As Worksheet
+　　│#   最終行
+　　□ Dim LastRow As Long
+　　│#   行番号
+　　□ Dim r As Long
+　　│#   呼出元
+　　□ Dim Caller As String
+　　│#   Dictionary走査用
+　　□ Dim V As Variant
+　　〇 Set Result = New Collection
+　　〇 Set Dic =  CreateObject("Scripting.Dictionary")
+　　│#   FunctionDependency取得
+　　〇 Set ws =  gContext.ManagementBook.Worksheets(
+　　│   SHEET_FUNCTION_DEPENDENCY)
+　　│#   最終行取得
+　　〇 LastRow =  ws.Cells(  ws.Rows.Count,  1).End(xlUp).row
+　　│#   呼出元探索
+　　＠┐For r = 2 To LastRow
+　　││#   呼出先一致確認
+　　│◆┐If StrComp(  Trim$(ws.Cells(r, 3).Value),  ProcName,  vbTextCompare) = 0 Then
+　　│││#   呼出元取得
+　　││〇 Caller =  Trim$(ws.Cells(r, 1).Value)
+　　││◆┐If Caller <> "" Then
+　　││││#   重複除外登録
+　　│││◆┐If Not Dic.Exists(Caller) Then
+　　││││〇 Dic.Add  Caller,  True
+　　││││┴End If
+　　│││┴End If
+　　││┴End If
+　　│┴Next r
+　　│#   Collectionへ変換
+　　＠┐For Each V In Dic.Keys
+　　│〇 Result.Add CStr(V)
+　　│┴Next V
+　　│#   呼出元一覧返却
+　　〇 Set GetCalledByList = Result
+　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+WriteCalledByText	Called By一覧出力	clsTextRenderer
+WriteCalledByHtml	Called By一覧HTML出力	clsHtmlRenderer

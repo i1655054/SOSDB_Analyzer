@@ -1,24 +1,41 @@
-Procedure: modUtility.ValidateForMonshin  [ 問診票処理入力確認＜modUtility＞ ]
-HCP	Business
 ┬
 〇│Public Function ValidateForMonshin(issue As IssueInfo) As Boolean	問診票処理入力確認＜modUtility＞
 ┴└┐
 　　□ Dim errMsg As String
-　　│#  担当者確認
-　　◆┐If Not chk_Person(issue) Then
+　　│#   担当者確認
+　　◆┐If Not chk_Person(issue) Then	内部呼出:chk_Person
 　　│〇 errMsg = errMsg & "・担当者" & vbCrLf
 　　│┴End If
-　　│#  対象バージョン確認
-　　◆┐If Not chk_Target(issue) Then
+　　│#   対象バージョン確認
+　　◆┐If Not chk_Target(issue) Then	内部呼出:chk_Target
 　　│〇 errMsg = errMsg & "・対象バージョン" & vbCrLf
 　　│┴End If
-　　│#  入力エラー確認
+　　│#   入力エラー確認
 　　◆┐If errMsg <> "" Then
-　　││#  エラーメッセージ表示
+　　││#   エラーメッセージ表示
 　　│〇 MsgBox "処理に必要な情報が未入力です。" & vbCrLf & vbCrLf &  "以下を入力してください：" & vbCrLf & vbCrLf & errMsg
 　　│〇 ValidateForMonshin = False
 　　│→ Exit Function
 　　│┴End If
-　　│#  入力確認完了
+　　│#   入力確認完了
 　　〇 ValidateForMonshin = True
 　　┴End Function
+
+========================================
+Calls (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+chk_Person	担当者確認	modUtility
+chk_Target	対象バージョン確認	modUtility
+
+========================================
+Called By (3)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+MonshinInfoHandler	問診票取込処理	modMonshinCore
+UpdateMonshinHandler	問診票更新処理	modMonshinCore
+PrepareIssueFor	事前処理実行	modUtility

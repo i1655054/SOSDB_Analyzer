@@ -1,29 +1,41 @@
-Procedure: modFileUtility.GetResourceNameFromLocalDrive  [ ネットワーク共有パス取得＜modFileUtility＞ ]
-HCP	Business
 ┬
 〇│Public Function GetResourceNameFromLocalDrive(strDrv As String) As String	ネットワーク共有パス取得＜modFileUtility＞
 ┴└┐
 　　□ Dim strBuf As String
 　　□ Dim strDriveName As String
 　　□ Dim lngLen As Long
-　　│#  ドライブ名抽出
+　　│#   ドライブ名抽出
 　　〇 strDriveName = Left$(strDrv, 1) & g_cnsCol
 　　☆ On Error GoTo GetResourceNameFromLocalDrive_ERROR
 　　〇 strBuf = String$(MAX_PATH + 1, vbNullChar)
-　　│#  ネットワーク共有取得
+　　│#   ネットワーク共有取得
 　　〇 WNetGetConnection strDriveName, strBuf, MAX_PATH
 　　〇 lngLen = InStr(1, strBuf, vbNullChar)
-　　│#  取得結果判定
+　　│#   取得結果判定
 　　◆┐If lngLen > 1 Then
-　　││#  UNCパス返却
+　　││#   UNCパス返却
 　　│〇 GetResourceNameFromLocalDrive = Left$(strBuf, lngLen - 1)
 　　├┐ELSE
-　　││#  ドライブ名返却
+　　││#   ドライブ名返却
 　　│〇 GetResourceNameFromLocalDrive = strDriveName
 　　│┴End If
 　　☆ On Error GoTo 0
 　　→ Exit Function
 ▼ GetResourceNameFromLocalDrive_ERROR:
-　　│#  取得失敗時は元ドライブ返却
+　　│#   取得失敗時は元ドライブ返却
 　　〇 GetResourceNameFromLocalDrive = strDriveName
 　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+OpenDialog	ファイル選択ダイアログ表示	modFileUtility

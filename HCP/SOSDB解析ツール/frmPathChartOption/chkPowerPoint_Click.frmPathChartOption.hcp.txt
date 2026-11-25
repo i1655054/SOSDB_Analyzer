@@ -1,0 +1,24 @@
+┬
+〇│Private Sub chkPowerPoint_Click()	PowerPoint出力切替＜frmPathChartOption＞
+┴└┐
+　　│#   PowerPoint向き選択制御
+　　〇 optPptAuto.Enabled =  chkPowerPoint.Value
+　　│#   縦向き選択制御
+　　〇 optPptPortrait.Enabled =  chkPowerPoint.Value
+　　│#   横向き選択制御
+　　〇 optPptLandscape.Enabled =  chkPowerPoint.Value
+　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+UserForm_Initialize

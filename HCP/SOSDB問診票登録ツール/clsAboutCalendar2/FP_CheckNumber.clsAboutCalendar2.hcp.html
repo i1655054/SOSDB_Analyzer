@@ -1,48 +1,49 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
 <meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
 <title>FP_CheckNumber</title>
 <style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
 body{font-family:Meiryo;font-size:9pt;}
 table{border-collapse:collapse;}
-th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
 td{vertical-align:top;}
 th{background:#e8f0fe;}
-colgroup col:nth-of-type(1) {}
-colgroup col:nth-of-type(2) {}
-.resize {position: relative;}
-.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
 </style>
 </head>
-<body>
+<body translate="no">
 <h1>FP_CheckNumber</h1>
 <p>Module : clsAboutCalendar2</p>
-<p><a href="./_INDEX.html">← Module Index</a></p>
 <table>
-<colgroup><col/><col/></colgroup>
-<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
 <tbody>
-<tr><td>Procedure: clsAboutCalendar2.FP_CheckNumber  [ 数値妥当性確認＜clsAboutCalendar2＞ ]</td><td></td></tr>
-<tr><td>HCP</td><td>Business</td></tr>
 <tr><td>┬</td><td></td></tr>
 <tr><td>〇│Private Function FPCheckNumber(ByRef objRange As Range,  Optional ByRef lngValue As Long = -1) As Boolean</td><td>数値妥当性確認＜clsAboutCalendar2＞</td></tr>
 <tr><td>┴└┐</td><td></td></tr>
 <tr><td>　　□ Dim strText1 As String                                          ' 文字列WORK</td><td></td></tr>
 <tr><td>　　□ Dim strText2 As String                                          ' 文字列WORK</td><td></td></tr>
-<tr><td>　　│#  セル値取得</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   セル値取得</span></td><td></td></tr>
 <tr><td>　　〇 strText1 = CStr(objRange.Value)</td><td></td></tr>
-<tr><td>　　│#  空文字判定</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   空文字判定</span></td><td></td></tr>
 <tr><td>　　〇 strText2 = Trim(strText1)</td><td></td></tr>
 <tr><td>　　◆┐If strText2 = "" Then</td><td></td></tr>
 <tr><td>　　│〇 lngValue = 0</td><td></td></tr>
 <tr><td>　　│〇 FP_CheckNumber = True</td><td></td></tr>
 <tr><td>　　│→ Exit Function</td><td></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
-<tr><td>　　│#  数値変換確認</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   数値変換確認</span></td><td></td></tr>
 <tr><td>　　☆ On Error Resume Next</td><td></td></tr>
 <tr><td>　　〇 lngValue = CLng(strText2)</td><td></td></tr>
-<tr><td>　　│#  判定結果返却</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   判定結果返却</span></td><td></td></tr>
 <tr><td>　　◆┐If Err.Number = 0 Then</td><td></td></tr>
 <tr><td>　　│〇 FP_CheckNumber = True</td><td></td></tr>
 <tr><td>　　├┐ELSE</td><td></td></tr>
@@ -52,31 +53,34 @@ colgroup col:nth-of-type(2) {}
 <tr><td>　　┴End Function</td><td></td></tr>
 </tbody>
 </table>
+<hr>
+<h2>Calls (0)</h2>
+<p>呼出先なし</p>
+<hr>
+<h2>Called By (1)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../clsAboutCalendar2/GP_CheckSyukuParameterSUB.clsAboutCalendar2.hcp.html">GP_CheckSyukuParameterSUB</a></td><td>祝日パラメータ行検証</td><td>clsAboutCalendar2</td></tr>
+</table>
 <script>
-document.querySelectorAll('.resize').forEach(function (eleTh) {
+document.querySelectorAll('.resize').forEach(function(eleTh) {
 let startX;
 let startWidth;
 const eleResizer = document.createElement('div');
 eleResizer.classList.add('resizer');
-eleResizer.addEventListener('mousedown', function (e) {
-const styleTh = window.getComputedStyle(eleTh);
-const paddingLeft = parseFloat(styleTh.paddingLeft);
-const paddingRight = parseFloat(styleTh.paddingRight);
-const borderLeft = parseFloat(styleTh.borderLeftWidth);
-const borderRight = parseFloat(styleTh.borderRightWidth);
+eleResizer.addEventListener('mousedown', function(e) {
 startX = e.pageX;
-startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+startWidth = eleTh.offsetWidth;
 document.addEventListener('mousemove', onMouseMove);
 document.addEventListener('mouseup', onMouseUp);
 });
 eleTh.appendChild(eleResizer);
-function onMouseMove(e) {
-const newWidth = startWidth + (e.pageX - startX);
-eleTh.style.width = newWidth + 'px';
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
 }
-function onMouseUp() {
-document.removeEventListener('mousemove', onMouseMove);
-document.removeEventListener('mouseup', onMouseUp);
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
 }
 });
 </script>

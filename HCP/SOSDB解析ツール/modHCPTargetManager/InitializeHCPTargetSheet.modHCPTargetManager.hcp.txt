@@ -1,0 +1,39 @@
+┬
+〇│Private Sub InitializeHCPTargetSheet(  ByVal ws As Worksheet)	HCP_TARGETS初期化＜modHCPTargetManager＞
+┴└┐
+　　│#   HCP_TARGETS初期化
+　　〇 ws.Cells.Clear
+　　│#   ヘッダ出力
+　　〇 ws.Range("A1:E1").Value = Array(
+　　│   "Exec",  "ModuleName",  "ProcName",  "Status",  "LastUpdate")
+　　│#   Exec入力規則
+　　＠┐With ws.Range("A2:A10000").Validation
+　　│〇 .Delete
+　　│〇 .Add  Type:=xlValidateList,  AlertStyle:=xlValidAlertStop,  Formula1:=",Y"
+　　│〇 .IgnoreBlank = True
+　　│〇 .InCellDropdown = True
+　　│┴End With
+　　│#   Exec=Yを緑表示
+　　＠┐With ws.Range("A2:A10000")
+　　│〇 .FormatConditions.Delete
+　　│〇 .FormatConditions.Add  Type:=xlCellValue,  Operator:=xlEqual,  Formula1:="=""Y"""
+　　│〇 .FormatConditions(1).Interior.Color =  RGB(198, 239, 206)
+　　│┴End With
+　　│#   体裁設定
+　　〇 ws.Rows(1).Font.Bold = True
+　　〇 ws.Range("A1:E1").AutoFilter
+　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+CreateHCPTargets	HCP_TARGETS作成	modHCPTargetManager

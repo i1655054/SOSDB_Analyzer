@@ -1,0 +1,67 @@
+┬
+〇│Public Function GetCallList(  ByVal ProcName As String)  As Collection	呼出先一覧取得＜modHCPInfo＞
+┴└┐
+　　◆┐#If DEBUG_MODE Then
+　　│〇 Debug.Print
+　　│〇 Debug.Print "GetCallList ProcName=" & ProcName
+　　│┴#End If
+　　│#   結果
+　　□ Dim Result As Collection
+　　│#   重複除外
+　　□ Dim Dic As Object
+　　│#   FunctionDependency
+　　□ Dim ws As Worksheet
+　　│#   最終行
+　　□ Dim LastRow As Long
+　　│#   行番号
+　　□ Dim r As Long
+　　│#   呼出先
+　　□ Dim Callee As String
+　　│#   Dictionary走査用
+　　□ Dim V As Variant
+　　〇 Set Result = New Collection
+　　〇 Set Dic =  CreateObject("Scripting.Dictionary")
+　　│#   FunctionDependency取得
+　　〇 Set ws =  gContext.ManagementBook.Worksheets(
+　　│   SHEET_FUNCTION_DEPENDENCY)
+　　│#   最終行取得
+　　〇 LastRow =  ws.Cells(  ws.Rows.Count,  1).End(xlUp).row
+　　│#   呼出先探索
+　　＠┐For r = 2 To LastRow
+　　││#   呼出元一致確認
+　　│◆┐If StrComp(  Trim$(ws.Cells(r, 1).Value),  ProcName,  vbTextCompare) = 0 Then
+　　││◆┐#If DEBUG_MODE Then
+　　│││〇 Debug.Print  "Match:" &  ws.Cells(r, 1).Value &  " -> " &  ws.Cells(r, 3).Value
+　　│││┴#End If
+　　│││#   呼出先取得
+　　││〇 Callee =  Trim$(ws.Cells(r, 3).Value)
+　　││◆┐If Callee <> "" Then
+　　││││#   重複除外登録
+　　│││◆┐If Not Dic.Exists(Callee) Then
+　　││││〇 Dic.Add  Callee,  True
+　　││││┴End If
+　　│││┴End If
+　　││┴End If
+　　│┴Next r
+　　│#   Collection化
+　　＠┐For Each V In Dic.Keys
+　　│〇 Result.Add CStr(V)
+　　│┴Next V
+　　│#   呼出先一覧返却
+　　〇 Set GetCallList = Result
+　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+WriteCallsText	Calls一覧出力	clsTextRenderer
+WriteCallsHtml	Calls一覧HTML出力	clsHtmlRenderer

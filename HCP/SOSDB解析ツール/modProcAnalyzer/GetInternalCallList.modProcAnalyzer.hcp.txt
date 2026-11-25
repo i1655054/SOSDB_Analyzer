@@ -1,0 +1,40 @@
+┬
+〇│Private Function GetInternalCallList(  ByVal SourceLine As String,  ByVal MainCall As String)  As String	内部呼出一覧取得＜modProcAnalyzer＞
+┴└┐
+　　□ Dim RE As Object
+　　□ Dim Matches As Object
+　　□ Dim Match As Object
+　　□ Dim Result As String
+　　〇 Set RE =  CreateObject("VBScript.RegExp")
+　　〇 RE.Global = True
+　　〇 RE.IgnoreCase = True
+　　│#   関数呼出抽出
+　　〇 RE.Pattern =  "([A-Za-z_][A-Za-z0-9_]*)\s*\("
+　　〇 Set Matches =  RE.Execute(SourceLine)
+　　＠┐For Each Match In Matches
+　　│□ Dim FuncName As String
+　　│〇 FuncName =  Match.SubMatches(0)
+　　││#   主CALL除外
+　　│◆┐If StrComp(  FuncName,  MainCall,  vbTextCompare) <> 0 Then
+　　││◆┐If Result <> "" Then
+　　│││〇 Result =  Result & ", "
+　　│││┴End If
+　　││〇 Result =  Result & FuncName
+　　││┴End If
+　　│┴Next Match
+　　〇 GetInternalCallList =  Result
+　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+AnalyzeProcedure	Proc解析	modProcAnalyzer

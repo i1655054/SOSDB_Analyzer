@@ -1,0 +1,23 @@
+┬
+〇│Private Sub AddConditionColor(  ByVal rng As Range,  ByVal Formula As String,  ByVal FillColor As Long)	条件色設定＜modFunctionTrac＞
+┴└┐
+　　□ Dim fc As FormatCondition
+　　│#   条件付き書式追加
+　　〇 Set fc = rng.FormatConditions.Add(  Type:=xlExpression,  Formula1:=Formula)
+　　│#   背景色設定
+　　〇 fc.Interior.Color = FillColor
+　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+SetupTraceValidation	トレース確認設定	modFunctionTrac

@@ -1,5 +1,3 @@
-Procedure: modMonshinCore.SetMonshinValue  [ 問診情報設定＜modMonshinCore＞ ]
-HCP	Business
 ┬
 〇│Private Sub SetMonshinValue(  ByRef info As MonshinInfoType,  ByVal Key As String,  ByVal Value As String)	問診情報設定＜modMonshinCore＞
 ┴└┐
@@ -10,12 +8,14 @@ HCP	Business
 　　││〇 info.faultRepNum = Value
 　　│├┐Case "UnKanNum"              ' 運管管理番号
 　　││〇 info.unKanNum = Value
+　　│││#   題名事象設定
 　　│├┐Case "TitleLine"             ' 題名（1行目）
 　　││〇 info.TitleLine = Value
 　　│├┐Case "Phenomenon"            ' 事象／問合せ内容
 　　││〇 info.Phenomenon = Value
 　　│├┐Case "Request_Client"
 　　││〇 info.Request_Client = Value
+　　│││#   発生日時設定
 　　│├┐Case "OccurrenceDate"        ' 発生日
 　　││〇 info.occurrenceDate = Format(Value, "yyyy-mm-dd")
 　　│├┐Case "OccurrenceTime"        ' 発生時間
@@ -28,12 +28,14 @@ HCP	Business
 　　││〇 info.HostName = Value
 　　│├┐Case "FileVer"               ' ファイル版数
 　　││〇 info.FileVer = Value
+　　│││#   環境情報設定
 　　│├┐Case "AlarmInfo"             ' アラーム表示内容
 　　││〇 info.AlarmInfo = Value
 　　│├┐Case "OccurrenceStatus"      ' 発生状況
 　　││〇 info.OccurrenceStatus = Value
 　　│├┐Case "ResponseStatus"        ' 対応状況
 　　││〇 info.ResponseStatus = Value
+　　│││#   状況情報設定
 　　│├┐Case "Req0": info.RequestContents(0) = Value
 　　│├┐Case "Req1": info.RequestContents(1) = Value
 　　│├┐Case "Req2": info.RequestContents(2) = Value
@@ -44,18 +46,36 @@ HCP	Business
 　　│├┐Case "Req7": info.RequestContents(7) = Value
 　　│├┐Case "CollectedData"         ' 収集データ
 　　││〇 info.CollectedData = Value
+　　│││#   問合せ内容設定
 　　│├┐Case "CauseDetail"           ' 原因
 　　││〇 info.CauseDetail = Value
 　　│├┐Case "Countermeasure"        ' 対処
 　　││〇 info.Countermeasure = Value
+　　│││#   回答情報設定
 　　│├┐Case "AnswerDate"            ' 回答日
 　　││〇 info.AnswerDate = Value
 　　│├┐Case "AnswerPerson"          ' 回答者
 　　││〇 info.AnswerPerson = Value
 　　│├┐Case "AnswerInfo"            ' 解析結果・対処方法
 　　││〇 info.AnswerInfo = Value
+　　│││#   Redmine素材設定
 　　│├┐Case "Key_Word"              ' キーワード
 　　││〇 info.Key_Word = Value
+　　│││#   未定義キー
 　　│├┐Case Else
 　　│┴End Select
 　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+Get_MonshinInfo	問診情報取得	modMonshinCore

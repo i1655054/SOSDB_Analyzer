@@ -1,0 +1,40 @@
+┬
+〇│Private Sub cmbStartProc_Change()	開始関数変更＜frmPathChart＞
+┴└┐
+　　□ Dim Proc As clsProcInfo
+　　□ Dim ProcName As String
+　　│#   選択Procedure取得
+　　〇 ProcName = Trim$(cmbStartProc.Value)
+　　◆→ If ProcName = "" Then Exit Sub
+　　│#   Procedure情報取得
+　　◎ Set Proc =  ResolveProcedure(  "",  ProcName)	Procedure解決＜modProcedureRepository＞
+　　│#   Procedure情報表示
+　　◆┐If Not Proc Is Nothing Then
+　　│◆┐If Proc.JPName <> "" Then
+　　││〇 lblSelectProc.Caption = Proc.JPName
+　　│├┐ELSE
+　　││〇 lblSelectProc.Caption = ProcName
+　　││┴End If
+　　│〇 lblCategory.Caption = Proc.Category
+　　│〇 txtSummary.Text = Proc.Summary
+　　││#   Procedure情報クリア
+　　├┐ELSE
+　　│〇 lblSelectProc.Caption = ""
+　　│〇 lblCategory.Caption = ""
+　　│〇 txtSummary.Text = ""
+　　│┴End If
+　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ResolveProcedure	Procedure解決	modProcedureRepository
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

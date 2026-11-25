@@ -1,11 +1,25 @@
-Procedure: UF_InfoWebDisplay.ResetEditMode  [ 編集モード解除＜UF_InfoWebDisplay＞ ]
-HCP	Business
 ┬
 〇│Public Sub ResetEditMode()	編集モード解除＜UF_InfoWebDisplay＞
 ┴└┐
-　　│#  編集モード解除
+　　│#   編集モード解除
 　　〇 m_IsEditing = False
 　　◎ ToggleEditMode False	編集モード切替処理＜UF_InfoWebDisplay＞
-　　│#  ボタン表示初期化
+　　│#   ボタン表示初期化
 　　〇 Me.CommandButtonEdit.Caption = "編集"
 　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ToggleEditMode	編集モード切替処理	UF_InfoWebDisplay
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ShowInfoDisplay	情報表示フォーム表示	modInfoDisplay

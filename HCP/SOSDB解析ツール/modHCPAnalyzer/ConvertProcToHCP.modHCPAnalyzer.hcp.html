@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
+<title>ConvertProcToHCP</title>
+<style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
+</style>
+</head>
+<body translate="no">
+<h1>ConvertProcToHCP</h1>
+<p>Module : modHCPAnalyzer</p>
+<table>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
+<tbody>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Public Function ConvertProcToHCP(  ByVal ProcNodes As Collection)  As Collection</td><td>HCP変換＜modHCPAnalyzer＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　◎ <a href="../modDebug/Trace.modDebug.hcp.html">Trace</a> "HCP", "ConvertProcToHCP Start"</td><td><a href="../modDebug/Trace.modDebug.hcp.html">トレース出力＜modDebug＞</a></td></tr>
+<tr><td>　　□ Dim HCPNodes As Collection</td><td></td></tr>
+<tr><td>　　□ Dim MergeStack As Collection</td><td></td></tr>
+<tr><td>　　□ Dim ProcNode As clsProcNode</td><td></td></tr>
+<tr><td>　　□ Dim HCPNode As clsHCPNode</td><td></td></tr>
+<tr><td>　　□ Dim ProcInfo As clsProcInfo</td><td></td></tr>
+<tr><td>　　□ Dim LastTagNode As clsHCPNode</td><td></td></tr>
+<tr><td>　　□ Dim LastText As String</td><td></td></tr>
+<tr><td>　　□ Dim IDMap As Object</td><td></td></tr>
+<tr><td>　　□ Dim NewID As Long</td><td></td></tr>
+<tr><td>　　◎ <a href="../modDebug/Trace.modDebug.hcp.html">Trace</a> "HCP", "CreateHCPNodes"</td><td><a href="../modDebug/Trace.modDebug.hcp.html">トレース出力＜modDebug＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│#   HCP変換管理初期化</span></td><td></td></tr>
+<tr><td>　　〇 Set HCPNodes = New Collection</td><td></td></tr>
+<tr><td>　　〇 Set MergeStack = New Collection</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   ProcNode-HCPNode変換表作成</span></td><td></td></tr>
+<tr><td>　　〇 Set IDMap =  CreateObject("Scripting.Dictionary")</td><td></td></tr>
+<tr><td>　　〇 NewID = 1</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   Proc → HCP変換</span></td><td></td></tr>
+<tr><td>　　＠┐For Each ProcNode In ProcNodes</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   制御構造終了処理</span></td><td></td></tr>
+<tr><td>　　│◆┐Select Case ProcNode.NodeType</td><td></td></tr>
+<tr><td>　　││├┐Case NODE_ENDIF,  NODE_ENDSELECT,  NODE_NEXT,  NODE_LOOP,  NODE_ENDWITH,  NODE_WEND,  NODE_COMPILE_ENDIF</td><td></td></tr>
+<tr><td>　　│││◎ <a href="../modHCPAnalyzer/PopMergeStack.modHCPAnalyzer.hcp.html">PopMergeStack</a>  MergeStack,  HCPNodes,  NewID,  ProcNode.SourceLine,  ProcNode.NodeType</td><td><a href="../modHCPAnalyzer/PopMergeStack.modHCPAnalyzer.hcp.html">マージスタック取得＜modHCPAnalyzer＞</a></td></tr>
+<tr><td>　　│││→ GoTo ContinueLoop</td><td></td></tr>
+<tr><td>　　││┴End Select</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   HCPNode生成</span></td><td></td></tr>
+<tr><td>　　│〇 Set HCPNode = New clsHCPNode</td><td></td></tr>
+<tr><td>　　│〇 HCPNode.NodeID = NewID</td><td></td></tr>
+<tr><td>　　│〇 IDMap.Add  CStr(ProcNode.NodeID),  NewID</td><td></td></tr>
+<tr><td>　　│〇 NewID = NewID + 1</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   ProcNode属性引継ぎ</span></td><td></td></tr>
+<tr><td>　　│〇 HCPNode.ParentID =  ProcNode.ParentID</td><td></td></tr>
+<tr><td>　　│〇 HCPNode.PrevNodeID =  ProcNode.PrevNodeID</td><td></td></tr>
+<tr><td>　　│〇 HCPNode.NextNodeID =  ProcNode.NextNodeID</td><td></td></tr>
+<tr><td>　　│〇 HCPNode.Level =  ProcNode.Level</td><td></td></tr>
+<tr><td>　　│〇 HCPNode.NodeType =  ProcNode.NodeType</td><td></td></tr>
+<tr><td>　　│〇 HCPNode.BranchType =  ProcNode.BranchType</td><td></td></tr>
+<tr><td>　　│〇 HCPNode.SourceText =  ProcNode.NodeText</td><td></td></tr>
+<tr><td>　　│〇 HCPNode.SourceLine =  ProcNode.SourceLine</td><td></td></tr>
+<tr><td>　　│〇 HCPNode.CallName =  ProcNode.CallName</td><td></td></tr>
+<tr><td>　　│〇 HCPNode.InternalCalls =  ProcNode.InternalCalls</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   STARTノード業務説明取得</span></td><td></td></tr>
+<tr><td>　　│◆┐If HCPNode.NodeType = NODE_START Then</td><td></td></tr>
+<tr><td>　　││◎ Set ProcInfo =  <a href="../modProcedureRepository/ResolveProcedure.modProcedureRepository.hcp.html">ResolveProcedure</a>(  ProcNode.ModuleName,  ProcNode.ProcName)</td><td><a href="../modProcedureRepository/ResolveProcedure.modProcedureRepository.hcp.html">Procedure解決＜modProcedureRepository＞</a></td></tr>
+<tr><td>　　││◆┐If Not ProcInfo Is Nothing Then</td><td></td></tr>
+<tr><td>　　│││〇 HCPNode.BusinessText =  ProcInfo.JPName &amp;  "＜" &amp;  ProcInfo.ModuleName &amp;  "＞"</td><td></td></tr>
+<tr><td>　　│││┴End If</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   ELSEノード変換</span></td><td></td></tr>
+<tr><td>　　│◆┐If ProcNode.NodeType = NODE_ELSE Then</td><td></td></tr>
+<tr><td>　　││〇 HCPNode.Text =  "FALSE"</td><td></td></tr>
+<tr><td>　　││〇 HCPNode.NodeType =  NODE_FALSE</td><td></td></tr>
+<tr><td>　　│├┐ELSE</td><td></td></tr>
+<tr><td>　　││〇 HCPNode.Text =  ProcNode.NodeText</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│││#   CALLノード業務説明取得</span></td><td></td></tr>
+<tr><td>　　││◆┐If HCPNode.NodeType = NODE_CALL Then</td><td></td></tr>
+<tr><td>　　│││◎ HCPNode.BusinessText =  <a href="../modHCPAnalyzer/GetBusinessText.modHCPAnalyzer.hcp.html">GetBusinessText</a>(  ProcNode)</td><td><a href="../modHCPAnalyzer/GetBusinessText.modHCPAnalyzer.hcp.html">業務説明取得＜modHCPAnalyzer＞</a></td></tr>
+<tr><td>　　│││┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│││#   内部呼出追記</span></td><td></td></tr>
+<tr><td>　　││◆┐If Trim$(HCPNode.InternalCalls) &lt;&gt; "" Then</td><td></td></tr>
+<tr><td>　　│││◆┐If Trim$(HCPNode.BusinessText) &lt;&gt; "" Then</td><td></td></tr>
+<tr><td>　　││││〇 HCPNode.BusinessText =  HCPNode.BusinessText &amp;  vbCrLf &amp;  "内部呼出:" &amp;  HCPNode.InternalCalls</td><td></td></tr>
+<tr><td>　　│││├┐ELSE</td><td></td></tr>
+<tr><td>　　││││〇 HCPNode.BusinessText =  "内部呼出:" &amp;  HCPNode.InternalCalls</td><td></td></tr>
+<tr><td>　　││││┴End If</td><td></td></tr>
+<tr><td>　　│││┴End If</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   Debug.Print除外</span></td><td></td></tr>
+<tr><td>　　│◆┐If gHCPCompactMode Then</td><td></td></tr>
+<tr><td>　　││◆┐If <a href="../modHCPAnalyzer/IsDebugPrint.modHCPAnalyzer.hcp.html">IsDebugPrint</a>(  HCPNode.Text) Then</td><td>内部呼出:<a href="../modHCPAnalyzer/IsDebugPrint.modHCPAnalyzer.hcp.html">IsDebugPrint</a></td></tr>
+<tr><td>　　│││→ GoTo ContinueLoop</td><td></td></tr>
+<tr><td>　　│││┴End If</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   重複CALL除外</span></td><td></td></tr>
+<tr><td>　　│◆┐If gHCPCompactMode Then</td><td></td></tr>
+<tr><td>　　││◆┐If HCPNode.NodeType =  NODE_CALL Then</td><td></td></tr>
+<tr><td>　　│││◆┐If HCPNode.Text =  LastText Then</td><td></td></tr>
+<tr><td>　　││││→ GoTo ContinueLoop</td><td></td></tr>
+<tr><td>　　││││┴End If</td><td></td></tr>
+<tr><td>　　│││┴End If</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   Tag取得集約</span></td><td></td></tr>
+<tr><td>　　│◆┐If gHCPCompactMode Then</td><td></td></tr>
+<tr><td>　　││◆┐If HCPNode.Text =  "Procedure情報取得" Then</td><td></td></tr>
+<tr><td>　　│││◆┐If Not LastTagNode Is Nothing Then</td><td></td></tr>
+<tr><td>　　││││◆┐If LastTagNode.ParentID =  HCPNode.ParentID Then</td><td></td></tr>
+<tr><td>　　│││││→ GoTo ContinueLoop</td><td></td></tr>
+<tr><td>　　│││││┴End If</td><td></td></tr>
+<tr><td>　　││││┴End If</td><td></td></tr>
+<tr><td>　　│││〇 Set LastTagNode = HCPNode</td><td></td></tr>
+<tr><td>　　││├┐ELSE</td><td></td></tr>
+<tr><td>　　│││〇 Set LastTagNode = Nothing</td><td></td></tr>
+<tr><td>　　│││┴End If</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   HCPNode登録</span></td><td></td></tr>
+<tr><td>　　│〇 HCPNodes.Add HCPNode</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   制御構造開始登録</span></td><td></td></tr>
+<tr><td>　　│◆┐If <a href="../modHCPAnalyzer/IsMergeNode.modHCPAnalyzer.hcp.html">IsMergeNode</a>(  HCPNode.NodeType) Then</td><td>内部呼出:<a href="../modHCPAnalyzer/IsMergeNode.modHCPAnalyzer.hcp.html">IsMergeNode</a></td></tr>
+<tr><td>　　││◎ <a href="../modHCPAnalyzer/PushMergeStack.modHCPAnalyzer.hcp.html">PushMergeStack</a>  MergeStack,  HCPNode.NodeType,  HCPNode.NodeID</td><td><a href="../modHCPAnalyzer/PushMergeStack.modHCPAnalyzer.hcp.html">マージスタック登録＜modHCPAnalyzer＞</a></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   TRUEノード生成</span></td><td></td></tr>
+<tr><td>　　│◆┐If HCPNode.NodeType = NODE_IF  Or HCPNode.NodeType = NODE_ELSEIF Then</td><td></td></tr>
+<tr><td>　　││◎ <a href="../modHCPAnalyzer/AddTrueNode.modHCPAnalyzer.hcp.html">AddTrueNode</a>  HCPNodes,  NewID,  HCPNode.NodeID</td><td><a href="../modHCPAnalyzer/AddTrueNode.modHCPAnalyzer.hcp.html">TRUEノード追加＜modHCPAnalyzer＞</a></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td>　　│〇 LastText = HCPNode.Text</td><td></td></tr>
+<tr><td>▼ ContinueLoop:</td><td></td></tr>
+<tr><td>　　│┴Next ProcNode</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   ParentID再構築</span></td><td></td></tr>
+<tr><td>　　◎ <a href="../modHCPAnalyzer/RebuildParentID.modHCPAnalyzer.hcp.html">RebuildParentID</a>  HCPNodes,  IDMap</td><td><a href="../modHCPAnalyzer/RebuildParentID.modHCPAnalyzer.hcp.html">親子関係再構築＜modHCPAnalyzer＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│#   Prev/Next再構築</span></td><td></td></tr>
+<tr><td>　　◎ <a href="../modHCPAnalyzer/RebuildLinks.modHCPAnalyzer.hcp.html">RebuildLinks</a>  HCPNodes</td><td><a href="../modHCPAnalyzer/RebuildLinks.modHCPAnalyzer.hcp.html">ノードリンク再構築＜modHCPAnalyzer＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│#   TRUE枝補正</span></td><td></td></tr>
+<tr><td>　　◎ <a href="../modHCPAnalyzer/FixTrueBranch.modHCPAnalyzer.hcp.html">FixTrueBranch</a>  HCPNodes</td><td><a href="../modHCPAnalyzer/FixTrueBranch.modHCPAnalyzer.hcp.html">TRUE枝補正＜modHCPAnalyzer＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│#   FALSE枝補正</span></td><td></td></tr>
+<tr><td>　　◎ <a href="../modHCPAnalyzer/FixFalseBranch.modHCPAnalyzer.hcp.html">FixFalseBranch</a>  HCPNodes</td><td><a href="../modHCPAnalyzer/FixFalseBranch.modHCPAnalyzer.hcp.html">FALSE枝補正＜modHCPAnalyzer＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│#   Level再計算</span></td><td></td></tr>
+<tr><td>　　◎ <a href="../modHCPAnalyzer/RebuildHCPLevel.modHCPAnalyzer.hcp.html">RebuildHCPLevel</a>  HCPNodes</td><td><a href="../modHCPAnalyzer/RebuildHCPLevel.modHCPAnalyzer.hcp.html">HCPレベル再計算＜modHCPAnalyzer＞</a></td></tr>
+<tr><td>　　◎ <a href="../modDebug/Trace.modDebug.hcp.html">Trace</a> "HCP",  "ConvertProcToHCP End Nodes=" &amp;  HCPNodes.Count</td><td><a href="../modDebug/Trace.modDebug.hcp.html">トレース出力＜modDebug＞</a></td></tr>
+<tr><td>　　〇 Set ConvertProcToHCP =  HCPNodes</td><td></td></tr>
+<tr><td>　　┴End Function</td><td></td></tr>
+</tbody>
+</table>
+<hr>
+<h2>Calls (13)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modDebug/Trace.modDebug.hcp.html">Trace</a></td><td>トレース出力</td><td>modDebug</td></tr>
+<tr><td><a href="../modHCPAnalyzer/PopMergeStack.modHCPAnalyzer.hcp.html">PopMergeStack</a></td><td>マージスタック取得</td><td>modHCPAnalyzer</td></tr>
+<tr><td><a href="../modProcedureRepository/ResolveProcedure.modProcedureRepository.hcp.html">ResolveProcedure</a></td><td>Procedure解決</td><td>modProcedureRepository</td></tr>
+<tr><td><a href="../modHCPAnalyzer/GetBusinessText.modHCPAnalyzer.hcp.html">GetBusinessText</a></td><td>業務説明取得</td><td>modHCPAnalyzer</td></tr>
+<tr><td><a href="../modHCPAnalyzer/IsDebugPrint.modHCPAnalyzer.hcp.html">IsDebugPrint</a></td><td>Debug.Print判定</td><td>modHCPAnalyzer</td></tr>
+<tr><td><a href="../modHCPAnalyzer/IsMergeNode.modHCPAnalyzer.hcp.html">IsMergeNode</a></td><td>マージ対象判定</td><td>modHCPAnalyzer</td></tr>
+<tr><td><a href="../modHCPAnalyzer/PushMergeStack.modHCPAnalyzer.hcp.html">PushMergeStack</a></td><td>マージスタック登録</td><td>modHCPAnalyzer</td></tr>
+<tr><td><a href="../modHCPAnalyzer/AddTrueNode.modHCPAnalyzer.hcp.html">AddTrueNode</a></td><td>TRUEノード追加</td><td>modHCPAnalyzer</td></tr>
+<tr><td><a href="../modHCPAnalyzer/RebuildParentID.modHCPAnalyzer.hcp.html">RebuildParentID</a></td><td>親子関係再構築</td><td>modHCPAnalyzer</td></tr>
+<tr><td><a href="../modHCPAnalyzer/RebuildLinks.modHCPAnalyzer.hcp.html">RebuildLinks</a></td><td>ノードリンク再構築</td><td>modHCPAnalyzer</td></tr>
+<tr><td><a href="../modHCPAnalyzer/FixTrueBranch.modHCPAnalyzer.hcp.html">FixTrueBranch</a></td><td>TRUE枝補正</td><td>modHCPAnalyzer</td></tr>
+<tr><td><a href="../modHCPAnalyzer/FixFalseBranch.modHCPAnalyzer.hcp.html">FixFalseBranch</a></td><td>FALSE枝補正</td><td>modHCPAnalyzer</td></tr>
+<tr><td><a href="../modHCPAnalyzer/RebuildHCPLevel.modHCPAnalyzer.hcp.html">RebuildHCPLevel</a></td><td>HCPレベル再計算</td><td>modHCPAnalyzer</td></tr>
+</table>
+<hr>
+<h2>Called By (1)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modHCPAnalyzer/CreateHCP.modHCPAnalyzer.hcp.html">CreateHCP</a></td><td>HCP作成</td><td>modHCPAnalyzer</td></tr>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function(eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function(e) {
+startX = e.pageX;
+startWidth = eleTh.offsetWidth;
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
+}
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
+}
+});
+</script>
+</body>
+</html>

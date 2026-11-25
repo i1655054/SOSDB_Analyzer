@@ -1,5 +1,3 @@
-Procedure: modCalendar5.GP_GetScreenPos  [ 画面有効領域取得＜modCalendar5＞ ]
-HCP	Business
 ┬
 〇│Private Sub GPGetScreenPos(ByRef lngScreenLeft As Long,  ByRef lngScreenTop As Long,  ByRef lngScreenRight As Long,  ByRef lngScreenBottom As Long)	画面有効領域取得＜modCalendar5＞
 ┴└┐
@@ -19,3 +17,18 @@ HCP	Business
 　　〇 lngScreenRight = lngWidth - lngScreenLeft
 　　〇 lngScreenBottom = lngHeight - lngScreenTop
 　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ShowCalendarFromTextBox2	テキストボックス日付選択	modCalendar5
+FP_GetFormPosition	フォーム表示位置算出	modCalendar5

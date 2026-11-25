@@ -1,57 +1,61 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
 <meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
 <title>GP_UpdateHolidayToCalendar</title>
 <style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
 body{font-family:Meiryo;font-size:9pt;}
 table{border-collapse:collapse;}
-th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
 td{vertical-align:top;}
 th{background:#e8f0fe;}
-colgroup col:nth-of-type(1) {}
-colgroup col:nth-of-type(2) {}
-.resize {position: relative;}
-.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
 </style>
 </head>
-<body>
+<body translate="no">
 <h1>GP_UpdateHolidayToCalendar</h1>
 <p>Module : clsAboutCalendar2</p>
-<p><a href="./_INDEX.html">← Module Index</a></p>
 <table>
-<colgroup><col/><col/></colgroup>
-<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
 <tbody>
-<tr><td>Procedure: clsAboutCalendar2.GP_UpdateHolidayToCalendar  [ 祝日反映処理＜clsAboutCalendar2＞ ]</td><td></td></tr>
-<tr><td>HCP</td><td>Business</td></tr>
 <tr><td>┬</td><td></td></tr>
 <tr><td>〇│Private Sub GPUpdateHolidayToCalendar(ByVal lngY As Long,  ByVal lngM As Long,  ByVal lngCalStrIx As Long,  ByRef lngFuriDIxMax As Long,  ByRef tblFuriDIx() As gtypFuriDIx,  ByRef tblCalendar() As g_typAboutCalendar2)</td><td>祝日反映処理＜clsAboutCalendar2＞</td></tr>
 <tr><td>┴└┐</td><td></td></tr>
 <tr><td>　　□ Dim lngIxS_Str As Long                                          ' 祝日テーブル当月開始位置</td><td></td></tr>
 <tr><td>　　□ Dim lngIxS_End As Long                                          ' 祝日テーブル当月終了位置</td><td></td></tr>
 <tr><td>　　□ Dim lngIxSyuku As Long                                          ' 祝日テーブルテーブルINDEX</td><td></td></tr>
-<tr><td>　　│#  当月祝日範囲取得</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   当月祝日範囲取得</span></td><td></td></tr>
 <tr><td>　　〇 lngIxS_Str = g_tblParamMMPos(lngM).StrIx</td><td></td></tr>
 <tr><td>　　〇 lngIxS_End = g_tblParamMMPos(lngM).EndIx</td><td></td></tr>
-<tr><td>　　│#  祝日パラメータ走査</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   祝日パラメータ走査</span></td><td></td></tr>
 <tr><td>　　＠┐For lngIxSyuku = lngIxS_Str To lngIxS_End</td><td></td></tr>
 <tr><td>　　│＠┐With g_tblParamater(lngIxSyuku)</td><td></td></tr>
-<tr><td>　　│││#  有効年判定</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│││#   有効年判定</span></td><td></td></tr>
 <tr><td>　　││◆┐If ((.StrYear &lt;= lngY) And (.EndYear &gt;= lngY)) Then</td><td></td></tr>
-<tr><td>　　││││#  処理区分判定</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││││#   処理区分判定</span></td><td></td></tr>
 <tr><td>　　│││◆┐Select Case .SyoriKbn</td><td></td></tr>
 <tr><td>　　││││├┐Case 0                          ' 固定日</td><td></td></tr>
-<tr><td>　　│││││◎ Call GP_UpdateHolidaySUB1(.Hiduke,  .SyukuNm,  1,  .FurikaeKbn,  lngCalStrIx,  lngIxSyuku,  lngFuriDIxMax,  tblFuriDIx,  tblCalendar)</td><td>固定日祝日設定＜clsAboutCalendar2＞</td></tr>
+<tr><td>　　│││││◎ Call <a href="../clsAboutCalendar2/GP_UpdateHolidaySUB1.clsAboutCalendar2.hcp.html">GP_UpdateHolidaySUB1</a>(.Hiduke,  .SyukuNm,  1,  .FurikaeKbn,  lngCalStrIx,  lngIxSyuku,  lngFuriDIxMax,  tblFuriDIx,  tblCalendar)</td><td><a href="../clsAboutCalendar2/GP_UpdateHolidaySUB1.clsAboutCalendar2.hcp.html">固定日祝日設定＜clsAboutCalendar2＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　││││││#   HappyMonday反映</span></td><td></td></tr>
 <tr><td>　　││││├┐Case 1                          ' HappyMonday</td><td></td></tr>
-<tr><td>　　│││││◎ Call GP_UpdateHolidaySUB2(.HmSyusu,  .HmYobi,  .SyukuNm,  1,  .FurikaeKbn,  lngCalStrIx,  lngIxSyuku,  lngFuriDIxMax,  tblFuriDIx,  tblCalendar)</td><td>HappyMonday祝日設定＜clsAboutCalendar2＞</td></tr>
+<tr><td>　　│││││◎ Call <a href="../clsAboutCalendar2/GP_UpdateHolidaySUB2.clsAboutCalendar2.hcp.html">GP_UpdateHolidaySUB2</a>(.HmSyusu,  .HmYobi,  .SyukuNm,  1,  .FurikaeKbn,  lngCalStrIx,  lngIxSyuku,  lngFuriDIxMax,  tblFuriDIx,  tblCalendar)</td><td><a href="../clsAboutCalendar2/GP_UpdateHolidaySUB2.clsAboutCalendar2.hcp.html">HappyMonday祝日設定＜clsAboutCalendar2＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　││││││#   会社休日反映</span></td><td></td></tr>
 <tr><td>　　││││├┐Case 2                          ' 固定日(会社休日)</td><td></td></tr>
-<tr><td>　　│││││◎ Call GP_UpdateHolidaySUB1(.Hiduke,  .SyukuNm,  3,  .FurikaeKbn,  lngCalStrIx,  lngIxSyuku,  lngFuriDIxMax,  tblFuriDIx,  tblCalendar)</td><td>固定日祝日設定＜clsAboutCalendar2＞</td></tr>
+<tr><td>　　│││││◎ Call <a href="../clsAboutCalendar2/GP_UpdateHolidaySUB1.clsAboutCalendar2.hcp.html">GP_UpdateHolidaySUB1</a>(.Hiduke,  .SyukuNm,  3,  .FurikaeKbn,  lngCalStrIx,  lngIxSyuku,  lngFuriDIxMax,  tblFuriDIx,  tblCalendar)</td><td><a href="../clsAboutCalendar2/GP_UpdateHolidaySUB1.clsAboutCalendar2.hcp.html">固定日祝日設定＜clsAboutCalendar2＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　││││││#   特殊祝日算出</span></td><td></td></tr>
 <tr><td>　　││││├┐Case 9                          ' 特殊処理</td><td></td></tr>
 <tr><td>　　│││││◆┐If lngM = 3 Then</td><td></td></tr>
-<tr><td>　　││││││◎ Call GP_GetSyunbun(lngY,  lngCalStrIx,  lngIxSyuku,  lngFuriDIxMax,  tblFuriDIx,  tblCalendar)</td><td>春分の日算出＜clsAboutCalendar2＞</td></tr>
+<tr><td>　　││││││◎ Call <a href="../clsAboutCalendar2/GP_GetSyunbun.clsAboutCalendar2.hcp.html">GP_GetSyunbun</a>(lngY,  lngCalStrIx,  lngIxSyuku,  lngFuriDIxMax,  tblFuriDIx,  tblCalendar)</td><td><a href="../clsAboutCalendar2/GP_GetSyunbun.clsAboutCalendar2.hcp.html">春分の日算出＜clsAboutCalendar2＞</a></td></tr>
 <tr><td>　　│││││├┐ElseIf lngM = 9 Then</td><td></td></tr>
-<tr><td>　　││││││◎ Call GP_GetSyuubun(lngY,  lngCalStrIx,  lngIxSyuku,  lngFuriDIxMax,  tblFuriDIx,  tblCalendar)</td><td>秋分の日算出＜clsAboutCalendar2＞</td></tr>
+<tr><td>　　││││││◎ Call <a href="../clsAboutCalendar2/GP_GetSyuubun.clsAboutCalendar2.hcp.html">GP_GetSyuubun</a>(lngY,  lngCalStrIx,  lngIxSyuku,  lngFuriDIxMax,  tblFuriDIx,  tblCalendar)</td><td><a href="../clsAboutCalendar2/GP_GetSyuubun.clsAboutCalendar2.hcp.html">秋分の日算出＜clsAboutCalendar2＞</a></td></tr>
 <tr><td>　　││││││〇 Else ' 他月は無視</td><td></td></tr>
 <tr><td>　　││││││┴End If</td><td></td></tr>
 <tr><td>　　││││┴End Select</td><td></td></tr>
@@ -61,31 +65,40 @@ colgroup col:nth-of-type(2) {}
 <tr><td>　　┴End Sub</td><td></td></tr>
 </tbody>
 </table>
+<hr>
+<h2>Calls (4)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../clsAboutCalendar2/GP_UpdateHolidaySUB1.clsAboutCalendar2.hcp.html">GP_UpdateHolidaySUB1</a></td><td>固定日祝日設定</td><td>clsAboutCalendar2</td></tr>
+<tr><td><a href="../clsAboutCalendar2/GP_UpdateHolidaySUB2.clsAboutCalendar2.hcp.html">GP_UpdateHolidaySUB2</a></td><td>HappyMonday祝日設定</td><td>clsAboutCalendar2</td></tr>
+<tr><td><a href="../clsAboutCalendar2/GP_GetSyunbun.clsAboutCalendar2.hcp.html">GP_GetSyunbun</a></td><td>春分の日算出</td><td>clsAboutCalendar2</td></tr>
+<tr><td><a href="../clsAboutCalendar2/GP_GetSyuubun.clsAboutCalendar2.hcp.html">GP_GetSyuubun</a></td><td>秋分の日算出</td><td>clsAboutCalendar2</td></tr>
+</table>
+<hr>
+<h2>Called By (1)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../clsAboutCalendar2/GP_GetCalendarSub.clsAboutCalendar2.hcp.html">GP_GetCalendarSub</a></td><td>単月カレンダー生成内部処理</td><td>clsAboutCalendar2</td></tr>
+</table>
 <script>
-document.querySelectorAll('.resize').forEach(function (eleTh) {
+document.querySelectorAll('.resize').forEach(function(eleTh) {
 let startX;
 let startWidth;
 const eleResizer = document.createElement('div');
 eleResizer.classList.add('resizer');
-eleResizer.addEventListener('mousedown', function (e) {
-const styleTh = window.getComputedStyle(eleTh);
-const paddingLeft = parseFloat(styleTh.paddingLeft);
-const paddingRight = parseFloat(styleTh.paddingRight);
-const borderLeft = parseFloat(styleTh.borderLeftWidth);
-const borderRight = parseFloat(styleTh.borderRightWidth);
+eleResizer.addEventListener('mousedown', function(e) {
 startX = e.pageX;
-startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+startWidth = eleTh.offsetWidth;
 document.addEventListener('mousemove', onMouseMove);
 document.addEventListener('mouseup', onMouseUp);
 });
 eleTh.appendChild(eleResizer);
-function onMouseMove(e) {
-const newWidth = startWidth + (e.pageX - startX);
-eleTh.style.width = newWidth + 'px';
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
 }
-function onMouseUp() {
-document.removeEventListener('mousemove', onMouseMove);
-document.removeEventListener('mouseup', onMouseUp);
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
 }
 });
 </script>

@@ -1,28 +1,40 @@
-Procedure: UF_SearchResults.CopyTextToClipboard  [ クリップボードコピー＜UF_SearchResults＞ ]
-HCP	Business
 ┬
 〇│Sub CopyTextToClipboard(text As String)	クリップボードコピー＜UF_SearchResults＞
 ┴└┐
 　　□ Dim hGlobalMemory As LongPtr
 　　□ Dim lpGlobalMemory As LongPtr
 　　□ Dim size As LongPtr
-　　│#  コピー領域サイズ算出
+　　│#   コピー領域サイズ算出
 　　〇 size = (Len(text) + 1) * 2 ' Unicodeは2バイト
-　　│#  クリップボードオープン
+　　│#   クリップボードオープン
 　　◆┐If OpenClipboard(0&) Then
-　　││#  クリップボード初期化
+　　││#   クリップボード初期化
 　　│〇 EmptyClipboard
-　　││#  メモリ確保
+　　││#   メモリ確保
 　　│〇 hGlobalMemory = GlobalAlloc(GHND, size)
-　　││#  メモリロック
+　　││#   メモリロック
 　　│〇 lpGlobalMemory = GlobalLock(hGlobalMemory)
-　　││#  文字列コピー
+　　││#   文字列コピー
 　　│〇 CopyMemory ByVal lpGlobalMemory, ByVal StrPtr(text), size
-　　││#  メモリ解放
+　　││#   メモリ解放
 　　│〇 GlobalUnlock hGlobalMemory
-　　││#  クリップボード設定
+　　││#   クリップボード設定
 　　│〇 SetClipboardData CF_UNICODETEXT, hGlobalMemory
-　　││#  クリップボードクローズ
+　　││#   クリップボードクローズ
 　　│〇 CloseClipboard
 　　│┴End If
 　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+HandleListBoxRightClick	右クリックコピー処理	UF_SearchResults

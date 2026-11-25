@@ -1,0 +1,50 @@
+┬
+〇│Public Sub WriteHtmlIndexFile(  ByVal IndexPath As String,  ByVal HeaderText As String,  ByVal ProcedureList As Collection)	Module INDEX HTML出力＜modHCPIndex＞
+┴└┐
+　　│#   出力ファイル番号
+　　□ Dim FileNo As Integer
+　　│#   Procedure情報
+　　□ Dim Info As clsProcedureInfo
+　　〇 FileNo = FreeFile
+　　〇 Open IndexPath  For Output As #FileNo
+　　│#   HTMLヘッダ
+　　◎ WriteHtmlHeader  FileNo,  HeaderText	HTMLヘッダ出力＜modHCPIndex＞
+　　│#   Tool Indexへ戻る
+　　◎ Print #FileNo,  "<p>" &  "<a href=""" &  GetIndexRelativePath(1) &  """>← Tool Index</a>" &  "</p>"	INDEX相対パス取得＜modHCPPath＞
+　　│#   見出し
+　　〇 Print #FileNo,  "<h1>" &  HeaderText &  "</h1>"
+　　│#   件数
+　　〇 Print #FileNo,  "<p>Procedure Count : " &  ProcedureList.Count &  "</p>"
+　　│#   テーブル開始
+　　〇 Print #FileNo,  "<table>"
+　　│#   ヘッダ行
+　　〇 Print #FileNo,  "<tr>" &  "<th>Procedure</th>" &  "<th>JPName</th>" &  "<th>Status</th>" &  "<th>Updated</th>" &  "</tr>"
+　　│#   明細行
+　　＠┐For Each Info In ProcedureList	内部呼出:ProcedureList
+　　│〇 Print #FileNo,  "<tr>" &  "<td><a href=""" &  Info.FileName &  ".hcp.html"">" &  Info.ProcedureName &  "</a></td>" &  "<td>" &  Info.JPName &  "</td>" &  "<td>" &  Info.Status &  "</td>" &  "<td>" &  Info.LastUpdate &  "</td>" &  "</tr>"
+　　│┴Next Info
+　　│#   テーブル終了
+　　〇 Print #FileNo,  "</table>"
+　　│#   HTMLフッタ
+　　◎ WriteHtmlFooter  FileNo	HTMLフッタ出力＜modHCPIndex＞
+　　〇 Close #FileNo
+　　┴End Sub
+
+========================================
+Calls (4)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+WriteHtmlHeader	HTMLヘッダ出力	modHCPIndex
+GetIndexRelativePath	INDEX相対パス取得	modHCPPath
+ProcedureList	関数一覧作成	modAnalyze
+WriteHtmlFooter	HTMLフッタ出力	modHCPIndex
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+RebuildModuleIndex	モジュールINDEX再生成	modHCPIndex

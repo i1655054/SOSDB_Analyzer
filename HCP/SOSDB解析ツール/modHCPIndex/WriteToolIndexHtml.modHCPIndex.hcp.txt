@@ -1,0 +1,90 @@
+┬
+〇│Private Sub WriteToolIndexHtml(  ByVal IndexPath As String,  ByVal ModuleCount As Long)	Tool INDEX HTML出力＜modHCPIndex＞
+┴└┐
+　　│#   出力ファイル番号
+　　□ Dim FileNo As Integer
+　　│#   HCPルート
+　　□ Dim RootPath As String
+　　│#   モジュールフォルダ名
+　　□ Dim FolderName As String
+　　│#   Procedure一覧
+　　□ Dim Procedures As Collection
+　　│#   Procedure情報
+　　□ Dim Info As clsProcedureInfo
+　　│#   Procedure総数
+　　□ Dim ProcedureCount As Long
+　　│#   HCP生成済数
+　　□ Dim GeneratedCount As Long
+　　│#   未生成数
+　　□ Dim PendingCount As Long
+　　│#   モジュール生成済数
+　　□ Dim ModuleGenerated As Long
+　　〇 FileNo = FreeFile
+　　〇 Open IndexPath  For Output As #FileNo
+　　◎ WriteHtmlHeader  FileNo,  GetCurrentToolInfo.ToolName	HTMLヘッダ出力＜modHCPIndex＞
+　　〇 Print #FileNo,  "<h1>" &  GetCurrentToolInfo.ToolName &  "</h1>"
+　　◎ RootPath =  GetHCPToolFolder()	HCPツールフォルダ取得＜modHCPPath＞
+　　│#   全体集計
+　　〇 FolderName =  Dir(  RootPath & "*",  vbDirectory)
+　　＠┐Do While FolderName <> ""
+　　│◆┐If FolderName <> "."  And FolderName <> ".." Then
+　　││◆┐If (GetAttr(  RootPath & FolderName)  And vbDirectory) <> 0 Then
+　　│││◎ Set Procedures =  GetModuleProcedureList(  FolderName)	Procedure一覧取得＜modHCPInfo＞
+　　│││〇 ProcedureCount =  ProcedureCount +  Procedures.Count
+　　│││＠┐For Each Info In Procedures
+　　││││◆┐If Info.Status =  STATUS_OK Then
+　　│││││〇 GeneratedCount =  GeneratedCount + 1
+　　││││├┐ELSE
+　　│││││〇 PendingCount =  PendingCount + 1
+　　│││││┴End If
+　　││││┴Next Info
+　　│││┴End If
+　　││┴End If
+　　│〇 FolderName = Dir()
+　　│┴Loop
+　　〇 Print #FileNo,  "<p>Module Count : " &  ModuleCount &  "</p>"
+　　〇 Print #FileNo,  "<p>Procedure Count : " &  ProcedureCount &  "</p>"
+　　〇 Print #FileNo,  "<p>Generated Count : " &  GeneratedCount &  "</p>"
+　　〇 Print #FileNo,  "<p>Pending Count : " &  PendingCount &  "</p>"
+　　〇 Print #FileNo,  "<table>"
+　　〇 Print #FileNo,  "<tr>" &  "<th>Module</th>" &  "<th>Procedures</th>" &  "<th>Generated</th>" &  "</tr>"
+　　│#   モジュール一覧
+　　〇 FolderName =  Dir(  RootPath & "*",  vbDirectory)
+　　＠┐Do While FolderName <> ""
+　　│◆┐If FolderName <> "."  And FolderName <> ".." Then
+　　││◆┐If (GetAttr(  RootPath & FolderName)  And vbDirectory) <> 0 Then
+　　│││◎ Set Procedures =  GetModuleProcedureList(  FolderName)	Procedure一覧取得＜modHCPInfo＞
+　　│││〇 ModuleGenerated = 0
+　　│││＠┐For Each Info In Procedures
+　　││││◆┐If Info.Status =  STATUS_OK Then
+　　│││││〇 ModuleGenerated =  ModuleGenerated + 1
+　　│││││┴End If
+　　││││┴Next Info
+　　│││〇 Print #FileNo,  "<tr>" &  "<td>" &  "<a href=""" &  FolderName &  "/_INDEX.html"">" &  FolderName &  "</a>" &  "</td>" &  "<td align=""right"">" &  Procedures.Count &  "</td>" &  "<td align=""right"">" &  ModuleGenerated &  "</td>" &  "</tr>"
+　　│││┴End If
+　　││┴End If
+　　│〇 FolderName = Dir()
+　　│┴Loop
+　　〇 Print #FileNo,  "</table>"
+　　◎ WriteHtmlFooter  FileNo	HTMLフッタ出力＜modHCPIndex＞
+　　〇 Close #FileNo
+　　┴End Sub
+
+========================================
+Calls (4)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+WriteHtmlHeader	HTMLヘッダ出力	modHCPIndex
+GetHCPToolFolder	HCPツールフォルダ取得	modHCPPath
+GetModuleProcedureList	Procedure一覧取得	modHCPInfo
+WriteHtmlFooter	HTMLフッタ出力	modHCPIndex
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+RebuildToolIndex	ツールINDEX再生成	modHCPIndex

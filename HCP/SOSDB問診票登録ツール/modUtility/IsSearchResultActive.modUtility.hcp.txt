@@ -1,12 +1,27 @@
-Procedure: modUtility.IsSearchResultActive  [ 検索結果表示状態確認＜modUtility＞ ]
-HCP	Business
 ┬
 〇│Public Function IsSearchResultActive() As Boolean	検索結果表示状態確認＜modUtility＞
 ┴└┐
-　　│#  検索結果表示判定
+　　│#   検索結果表示判定
 　　〇 IsSearchResultActive =  (Sheet1.DB検索.Caption <> "検索")
-　　│#  表示中警告
-　　◆┐If IsSearchResultActive Then
+　　│#   表示中警告
+　　◆┐If IsSearchResultActive Then	内部呼出:IsSearchResultActive
 　　│〇 MsgBox  "検索結果が表示されています。" & vbCrLf &  "検索結果を閉じる、または" & vbCrLf &  "「Work情報削除」を実行してください。",  vbExclamation
 　　│┴End If
 　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (4)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+新規問診票情報取り出し_Click	新規問診票読込	Sheet1
+更新問診票を開く_Click	更新問診票読込	Sheet1
+DB情報取得_Click	Redmine情報取得	Sheet1
+RedmineDB登録_Click	Redmine登録実行	Sheet1

@@ -1,8 +1,20 @@
-Procedure: UF_OccDateTimeRegist.txt問題発生日_MouseDown  [ 発生日カレンダー表示＜UF_OccDateTimeRegist＞ ]
-HCP	Business
 ┬
 〇│Private Sub txt問題発生日_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)	発生日カレンダー表示＜UF_OccDateTimeRegist＞
 ┴└┐
-　　│#  カレンダー表示
+　　│#   カレンダー表示
 　　◎ Call ShowCalendarFromTextBox2(Me.txt問題発生日)	テキストボックス日付選択＜modCalendar5＞
 　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ShowCalendarFromTextBox2	テキストボックス日付選択	modCalendar5
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

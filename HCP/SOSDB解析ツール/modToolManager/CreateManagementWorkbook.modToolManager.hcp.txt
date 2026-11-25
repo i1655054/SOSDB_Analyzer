@@ -1,0 +1,47 @@
+┬
+〇│Public Function CreateManagementWorkbook(  ByVal FilePath As String,  ByVal ToolName As String)  As Workbook	管理ブック作成＜modToolManager＞
+┴└┐
+　　□ Dim wb As Workbook
+　　☆ On Error GoTo ErrHandler
+　　│#   管理ブック生成
+　　〇 Set wb = Workbooks.Add
+　　│#   管理シート生成
+　　│#   ProcListシート作成
+　　〇 wb.Worksheets(1).Name = SHEET_PROC_LIST
+　　│#   関数トレースシート作成
+　　〇 wb.Worksheets.Add.Name = SHEET_FUNCTION_TRACE
+　　│#   関数依存関係シート作成
+　　〇 wb.Worksheets.Add.Name = SHEET_FUNCTION_DEPENDENCY
+　　│#   PathChartシート作成
+　　〇 wb.Worksheets.Add.Name = SHEET_PATH_CHART
+　　│#   PathChartTreeシート作成
+　　〇 wb.Worksheets.Add.Name = SHEET_PATH_CHART_TREE
+　　│#   保存確認抑止
+　　〇 Application.DisplayAlerts = False
+　　│#   管理ブック保存
+　　〇 wb.SaveAs FilePath
+　　│#   保存確認復元
+　　〇 Application.DisplayAlerts = True
+　　│#   管理ブック作成完了通知
+　　〇 MsgBox  "管理ファイルを作成しました。"  & vbCrLf & vbCrLf  & "対象ツール : " & ToolName  & vbCrLf  & "管理ファイル : " & FilePath,  vbInformation
+　　│#   管理ブック返却
+　　〇 Set CreateManagementWorkbook = wb
+　　→ Exit Function
+▼ ErrHandler:
+　　│#   完了通知
+　　〇 MsgBox  "管理ファイル作成失敗" & vbCrLf &  Err.Number & " : " &  Err.Description
+　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetManagementWorkbookByToolID	管理ブック取得	modToolManager

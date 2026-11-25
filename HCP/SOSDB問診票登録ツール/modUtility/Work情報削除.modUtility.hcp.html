@@ -1,67 +1,76 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
 <meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
 <title>Work情報削除</title>
 <style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
 body{font-family:Meiryo;font-size:9pt;}
 table{border-collapse:collapse;}
-th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
 td{vertical-align:top;}
 th{background:#e8f0fe;}
-colgroup col:nth-of-type(1) {}
-colgroup col:nth-of-type(2) {}
-.resize {position: relative;}
-.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
 </style>
 </head>
-<body>
+<body translate="no">
 <h1>Work情報削除</h1>
 <p>Module : modUtility</p>
-<p><a href="./_INDEX.html">← Module Index</a></p>
 <table>
-<colgroup><col/><col/></colgroup>
-<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
 <tbody>
-<tr><td>Procedure: modUtility.Work情報削除  [ ワーク情報削除＜modUtility＞ ]</td><td></td></tr>
-<tr><td>HCP</td><td>Business</td></tr>
 <tr><td>┬</td><td></td></tr>
 <tr><td>〇│Sub Work情報削除()</td><td>ワーク情報削除＜modUtility＞</td></tr>
 <tr><td>┴└┐</td><td></td></tr>
-<tr><td>　　│#  入力セル初期化</td><td></td></tr>
-<tr><td>　　◎ Call Clear_InputCellDat(True)</td><td>入力セル初期化＜modUtility＞</td></tr>
-<tr><td>　　│#  ワークファイル削除</td><td></td></tr>
-<tr><td>　　◎ Call Clear_WorkFile</td><td>ワークファイル削除＜modUtility＞</td></tr>
-<tr><td>　　│#  カーソル位置初期化</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   入力セル初期化</span></td><td></td></tr>
+<tr><td>　　◎ Call <a href="../modUtility/Clear_InputCellDat.modUtility.hcp.html">Clear_InputCellDat</a>(True)</td><td><a href="../modUtility/Clear_InputCellDat.modUtility.hcp.html">入力セル初期化＜modUtility＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│#   ワークファイル削除</span></td><td></td></tr>
+<tr><td>　　◎ Call <a href="../modUtility/Clear_WorkFile.modUtility.hcp.html">Clear_WorkFile</a></td><td><a href="../modUtility/Clear_WorkFile.modUtility.hcp.html">ワークファイル削除＜modUtility＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│#   カーソル位置初期化</span></td><td></td></tr>
 <tr><td>　　〇 Range(TARGET_VER_RANG).Select</td><td></td></tr>
 <tr><td>　　┴End Sub</td><td></td></tr>
 </tbody>
 </table>
+<hr>
+<h2>Calls (2)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modUtility/Clear_InputCellDat.modUtility.hcp.html">Clear_InputCellDat</a></td><td>入力セル初期化</td><td>modUtility</td></tr>
+<tr><td><a href="../modUtility/Clear_WorkFile.modUtility.hcp.html">Clear_WorkFile</a></td><td>ワークファイル削除</td><td>modUtility</td></tr>
+</table>
+<hr>
+<h2>Called By (2)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modUtility/ResetWorkInfo.modUtility.hcp.html">ResetWorkInfo</a></td><td>作業情報リセット</td><td>modUtility</td></tr>
+<tr><td><a href="../modStartup/InitializeApplication.modStartup.hcp.html">InitializeApplication</a></td><td>アプリケーション初期化</td><td>modStartup</td></tr>
+</table>
 <script>
-document.querySelectorAll('.resize').forEach(function (eleTh) {
+document.querySelectorAll('.resize').forEach(function(eleTh) {
 let startX;
 let startWidth;
 const eleResizer = document.createElement('div');
 eleResizer.classList.add('resizer');
-eleResizer.addEventListener('mousedown', function (e) {
-const styleTh = window.getComputedStyle(eleTh);
-const paddingLeft = parseFloat(styleTh.paddingLeft);
-const paddingRight = parseFloat(styleTh.paddingRight);
-const borderLeft = parseFloat(styleTh.borderLeftWidth);
-const borderRight = parseFloat(styleTh.borderRightWidth);
+eleResizer.addEventListener('mousedown', function(e) {
 startX = e.pageX;
-startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+startWidth = eleTh.offsetWidth;
 document.addEventListener('mousemove', onMouseMove);
 document.addEventListener('mouseup', onMouseUp);
 });
 eleTh.appendChild(eleResizer);
-function onMouseMove(e) {
-const newWidth = startWidth + (e.pageX - startX);
-eleTh.style.width = newWidth + 'px';
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
 }
-function onMouseUp() {
-document.removeEventListener('mousemove', onMouseMove);
-document.removeEventListener('mouseup', onMouseUp);
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
 }
 });
 </script>

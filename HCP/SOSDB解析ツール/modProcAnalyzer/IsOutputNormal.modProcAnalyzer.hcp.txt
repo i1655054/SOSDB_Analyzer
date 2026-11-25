@@ -1,0 +1,44 @@
+┬
+〇│Private Function IsOutputNormal(  ByVal LineText As String)  As Boolean	通常文出力判定＜modProcAnalyzer＞
+┴└┐
+　　□ Dim Text As String
+　　│#   判定対象整形
+　　〇 Text = Trim$(LineText)
+　　│#   空行除外
+　　◆→ If Text = "" Then Exit Function
+　　│#   コメント行除外
+　　◆┐If Left$(Text, 1) = "'" Then Exit Function
+　　││#   終了構文除外
+　　│◆→ If UCase$(Text) = "END SUB" Then Exit Function
+　　│◆→ If UCase$(Text) = "END FUNCTION" Then Exit Function
+　　│◆→ If UCase$(Text) = "END PROPERTY" Then Exit Function
+　　││#   CompactMode判定
+　　│◆┐If Not gHCPCompactMode Then
+　　││〇 IsOutputNormal = True
+　　││→ Exit Function
+　　││┴End If
+　　││#   宣言文除外
+　　│◆→ If Left$(Text, 6) = "Option" Then Exit Function
+　　│◆→ If Left$(Text, 4) = "Dim " Then Exit Function
+　　│◆→ If Left$(Text, 6) = "Const " Then Exit Function
+　　│◆→ If Left$(Text, 8) = "On Error" Then Exit Function
+　　│◆┐If InStr(1,  Text,  "Debug.Print",  vbTextCompare) > 0 Then
+　　││→ Exit Function
+　　││┴End If
+　　││#   通常ノード出力
+　　│〇 IsOutputNormal = True
+　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+AnalyzeProcedure	Proc解析	modProcAnalyzer

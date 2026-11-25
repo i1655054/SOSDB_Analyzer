@@ -1,30 +1,31 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
 <meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
 <title>DbSearch</title>
 <style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
 body{font-family:Meiryo;font-size:9pt;}
 table{border-collapse:collapse;}
-th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
 td{vertical-align:top;}
 th{background:#e8f0fe;}
-colgroup col:nth-of-type(1) {}
-colgroup col:nth-of-type(2) {}
-.resize {position: relative;}
-.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
 </style>
 </head>
-<body>
+<body translate="no">
 <h1>DbSearch</h1>
 <p>Module : XmlSearch</p>
-<p><a href="./_INDEX.html">← Module Index</a></p>
 <table>
-<colgroup><col/><col/></colgroup>
-<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
 <tbody>
-<tr><td>Procedure: XmlSearch.DbSearch  [ Redmine検索実行＜XmlSearch＞ ]</td><td></td></tr>
-<tr><td>HCP</td><td>Business</td></tr>
 <tr><td>┬</td><td></td></tr>
 <tr><td>〇│Sub DbSearch(SearchKey As String)</td><td>Redmine検索実行＜XmlSearch＞</td></tr>
 <tr><td>┴└┐</td><td></td></tr>
@@ -34,55 +35,63 @@ colgroup col:nth-of-type(2) {}
 <tr><td>　　□ Dim url As String</td><td></td></tr>
 <tr><td>　　□ Dim ResultMsg As String</td><td></td></tr>
 <tr><td>　　☆ On Error GoTo ErrorHandler</td><td></td></tr>
-<tr><td>　　│#  担当者取得</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   担当者取得</span></td><td></td></tr>
 <tr><td>　　〇 Author_Name = Range(TANTOU_NAME_RANG).Value</td><td></td></tr>
-<tr><td>　　│#  APIキー取得</td><td></td></tr>
-<tr><td>　　◎ apiKey = GetApiKey(Author_Name)</td><td>APIキー取得＜modIssueMapper＞</td></tr>
-<tr><td>　　│#  APIキー補完</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   APIキー取得</span></td><td></td></tr>
+<tr><td>　　◎ apiKey = <a href="../modIssueMapper/GetApiKey.modIssueMapper.hcp.html">GetApiKey</a>(Author_Name)</td><td><a href="../modIssueMapper/GetApiKey.modIssueMapper.hcp.html">APIキー取得＜modIssueMapper＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│#   APIキー補完</span></td><td></td></tr>
 <tr><td>　　◆┐If (apiKey = "") Then</td><td></td></tr>
 <tr><td>　　│〇 apiKey = Read_API_Key</td><td></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
-<tr><td>　　│#  APIキー確認</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   APIキー確認</span></td><td></td></tr>
 <tr><td>　　◆┐If apiKey = "" Then</td><td></td></tr>
 <tr><td>　　│〇 MsgBox "APIキーの取得に失敗しました。", vbCritical</td><td></td></tr>
 <tr><td>　　│→ Exit Sub</td><td></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
-<tr><td>　　│#  検索URL生成</td><td></td></tr>
-<tr><td>　　◎ SearchUrl = MakeSearchUrl(SearchKey)</td><td>検索URL生成＜XmlSearch＞</td></tr>
-<tr><td>　　│#  検索結果CSV生成</td><td></td></tr>
-<tr><td>　　◎ Call ExportRedmineIDsToCSV(SearchKey, SearchUrl, apiKey)</td><td>検索結果CSV生成＜XmlSearch＞</td></tr>
+<tr><td><span class="hcp-comment">　　│#   検索URL生成</span></td><td></td></tr>
+<tr><td>　　◎ SearchUrl = <a href="../XmlSearch/MakeSearchUrl.XmlSearch.hcp.html">MakeSearchUrl</a>(SearchKey)</td><td><a href="../XmlSearch/MakeSearchUrl.XmlSearch.hcp.html">検索URL生成＜XmlSearch＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│#   検索結果CSV生成</span></td><td></td></tr>
+<tr><td>　　◎ Call <a href="../XmlSearch/ExportRedmineIDsToCSV.XmlSearch.hcp.html">ExportRedmineIDsToCSV</a>(SearchKey, SearchUrl, apiKey)</td><td><a href="../XmlSearch/ExportRedmineIDsToCSV.XmlSearch.hcp.html">検索結果CSV生成＜XmlSearch＞</a></td></tr>
 <tr><td>　　→ Exit Sub</td><td></td></tr>
 <tr><td>▼ ErrorHandler:</td><td></td></tr>
-<tr><td>　　│#  エラーメッセージ表示</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   エラーメッセージ表示</span></td><td></td></tr>
 <tr><td>　　〇 MsgBox "検索中にエラーが発生しました。" &amp; vbCrLf &amp;  "エラー番号: " &amp; Err.Number &amp; vbCrLf &amp;  "内容: " &amp; Err.Description, vbCritical, "DbtotalCount"</td><td></td></tr>
 <tr><td>　　┴End Sub</td><td></td></tr>
 </tbody>
 </table>
+<hr>
+<h2>Calls (3)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modIssueMapper/GetApiKey.modIssueMapper.hcp.html">GetApiKey</a></td><td>APIキー取得</td><td>modIssueMapper</td></tr>
+<tr><td><a href="../XmlSearch/MakeSearchUrl.XmlSearch.hcp.html">MakeSearchUrl</a></td><td>検索URL生成</td><td>XmlSearch</td></tr>
+<tr><td><a href="../XmlSearch/ExportRedmineIDsToCSV.XmlSearch.hcp.html">ExportRedmineIDsToCSV</a></td><td>検索結果CSV生成</td><td>XmlSearch</td></tr>
+</table>
+<hr>
+<h2>Called By (1)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../UF_Search/btnTxtSearch_Click.UF_Search.hcp.html">btnTxtSearch_Click</a></td><td>Redmine検索実行</td><td>UF_Search</td></tr>
+</table>
 <script>
-document.querySelectorAll('.resize').forEach(function (eleTh) {
+document.querySelectorAll('.resize').forEach(function(eleTh) {
 let startX;
 let startWidth;
 const eleResizer = document.createElement('div');
 eleResizer.classList.add('resizer');
-eleResizer.addEventListener('mousedown', function (e) {
-const styleTh = window.getComputedStyle(eleTh);
-const paddingLeft = parseFloat(styleTh.paddingLeft);
-const paddingRight = parseFloat(styleTh.paddingRight);
-const borderLeft = parseFloat(styleTh.borderLeftWidth);
-const borderRight = parseFloat(styleTh.borderRightWidth);
+eleResizer.addEventListener('mousedown', function(e) {
 startX = e.pageX;
-startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+startWidth = eleTh.offsetWidth;
 document.addEventListener('mousemove', onMouseMove);
 document.addEventListener('mouseup', onMouseUp);
 });
 eleTh.appendChild(eleResizer);
-function onMouseMove(e) {
-const newWidth = startWidth + (e.pageX - startX);
-eleTh.style.width = newWidth + 'px';
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
 }
-function onMouseUp() {
-document.removeEventListener('mousemove', onMouseMove);
-document.removeEventListener('mouseup', onMouseUp);
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
 }
 });
 </script>

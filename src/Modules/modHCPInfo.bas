@@ -1,6 +1,9 @@
 Attribute VB_Name = "modHCPInfo"
 Option Explicit
 
+'mmodHCPInfoデバッグ出力有効化
+#Const DEBUG_MODE = False
+
 '===================================================================
 ' @JPName
 ' Procedure情報取得
@@ -562,9 +565,11 @@ Public Function GetCallList( _
                 ByVal ProcName As String) _
                 As Collection
 
-Debug.Print
-Debug.Print "GetCallList ProcName=" & ProcName
-
+    #If DEBUG_MODE Then
+        Debug.Print
+        Debug.Print "GetCallList ProcName=" & ProcName
+    #End If
+    
     '# 結果
     Dim Result As Collection
 
@@ -610,12 +615,15 @@ Debug.Print "GetCallList ProcName=" & ProcName
                 Trim$(ws.Cells(r, 1).Value), _
                 ProcName, _
                 vbTextCompare) = 0 Then
-Debug.Print _
-            "Match:" & _
-            ws.Cells(r, 1).Value & _
-            " -> " & _
-            ws.Cells(r, 3).Value
-
+        
+            #If DEBUG_MODE Then
+                
+                Debug.Print _
+                            "Match:" & _
+                            ws.Cells(r, 1).Value & _
+                            " -> " & _
+                            ws.Cells(r, 3).Value
+            #End If
 
             '# 呼出先取得
             Callee = _

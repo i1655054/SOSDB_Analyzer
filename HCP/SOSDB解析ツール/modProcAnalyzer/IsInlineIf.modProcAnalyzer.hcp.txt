@@ -1,0 +1,35 @@
+┬
+〇│Private Function IsInlineIf(  ByVal LineText As String)  As Boolean	インラインIf判定＜modProcAnalyzer＞
+┴└┐
+　　□ Dim PosThen As Long
+　　□ Dim PosComment As Long
+　　〇 LineText = Trim$(LineText)
+　　│#   コメント除外
+　　〇 PosComment = InStr(LineText, "'")
+　　◆┐If PosComment > 0 Then
+　　│〇 LineText =  Left$(  LineText,  PosComment - 1)
+　　│┴End If
+　　│#   If文判定
+　　◆→ If Left$(LineText, 2) <> "If" Then Exit Function
+　　│#   Then位置取得
+　　〇 PosThen = InStr(  1,  LineText,  " Then",  vbTextCompare)
+　　◆→ If PosThen = 0 Then Exit Function
+　　│#   インラインIf判定
+　　◆┐If Trim$(Mid$(  LineText,  PosThen + 5)) <> "" Then
+　　│〇 IsInlineIf = True
+　　│┴End If
+　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetNodeType	ノード種別判定	modProcAnalyzer

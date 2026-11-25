@@ -10,9 +10,9 @@ Option Explicit
 '--------------------------------------------------
 ' HCP生成
 '--------------------------------------------------
-
+'===================================================================
 ' @JPName
-' HCP生成
+' HCP作成
 '
 ' @Category
 ' HCP
@@ -22,17 +22,16 @@ Option Explicit
 ' ProcName(String)
 '
 ' @Output
-' なし
+' HCPファイル
 '
 ' @Summary
-' 指定プロシージャのHCPを生成し
-' HCPシートへ出力する
+' 指定Procedureの
+' HCPチャートを生成する
 '
 ' @Remarks
-' プロシージャ解析、HCP変換、
-' HCP出力を順次実行する
-' DEV_MODE時は中間情報も出力する
-'
+' エラー発生時は
+' 呼出元へ再送出する
+'===================================================================
 Public Sub CreateHCP( _
                 ByVal ModuleName As String, _
                 ByVal ProcName As String)
@@ -61,6 +60,9 @@ Public Sub CreateHCP( _
     ' ExcelRenderer
     Dim ExcelRenderer As clsExcelRenderer
 
+    ' 処理ステップ
+    Dim CurrentStep As String
+
     '# 開発モード確認
     If gDevMode Then
 
@@ -80,12 +82,22 @@ Public Sub CreateHCP( _
 
     Application.ScreenUpdating = False
 
+    '-----------------------------
+    '# Procedure一覧取得
+    '-----------------------------
+    CurrentStep = "BuildFuncList"
+
     Trace "HCP", _
         "Step=10 BuildFuncList"
 
     '# Procedure一覧取得
     Set FuncList = _
         BuildFuncList()
+
+    '-----------------------------
+    '# Procedureソース取得
+    '-----------------------------
+    CurrentStep = "GetProcedureCode"
 
     Trace "HCP", _
         "Step=20 GetProcedureCode"
@@ -96,9 +108,10 @@ Public Sub CreateHCP( _
             ModuleName, _
             ProcName)
 
-    Trace "HCP", _
-        "CodeLength=" & _
-        Len(CodeText)
+    '-----------------------------
+    '# Procedure解析
+    '-----------------------------
+    CurrentStep = "AnalyzeProcedure"
 
     Trace "HCP", _
         "Step=30 AnalyzeProcedure"
@@ -111,9 +124,6 @@ Public Sub CreateHCP( _
             ProcName, _
             FuncList)
 
-    '-----------------------------
-    '# デバッグシート初期化
-    '-----------------------------
     DeleteSheetIfExists _
         SHEET_PROC_NODES
 
@@ -122,6 +132,11 @@ Public Sub CreateHCP( _
 
     DeleteSheetIfExists _
         SHEET_HCP_NODES
+
+    '-----------------------------
+    '# ProcNode → HCPNode変換
+    '-----------------------------
+    CurrentStep = "ConvertProcToHCP"
 
     Trace "HCP", _
         "Step=40 ConvertProcToHCP"
@@ -134,6 +149,8 @@ Public Sub CreateHCP( _
     '-----------------------------
     '# RenderText生成
     '-----------------------------
+    CurrentStep = "BuildRenderText"
+
     Trace "HCP", _
         "Step=50 BuildRenderText"
 
@@ -143,9 +160,6 @@ Public Sub CreateHCP( _
     RenderBuilder.BuildRenderText _
         HCPNodes
 
-    '-----------------------------
-    '# デバッグ出力
-    '-----------------------------
     If gDevMode Then
 
         ExportProcNodes _
@@ -159,6 +173,8 @@ Public Sub CreateHCP( _
     '-----------------------------
     '# TXT出力
     '-----------------------------
+    CurrentStep = "TextRenderer"
+
     Trace "HCP", _
         "Step=60 TextRenderer"
 
@@ -176,6 +192,8 @@ Public Sub CreateHCP( _
     '-----------------------------
     '# HTML出力
     '-----------------------------
+    CurrentStep = "HtmlRenderer"
+
     Trace "HCP", _
         "Step=70 HtmlRenderer"
 
@@ -191,10 +209,12 @@ Public Sub CreateHCP( _
         ProcName, _
         HCPNodes
 
-    '-----------------------------
-    '# Excel出力
-    '-----------------------------
     If gDevMode Then
+
+        '-----------------------------
+        '# Excel出力
+        '-----------------------------
+        CurrentStep = "ExcelRenderer"
 
         Trace "HCP", _
             "Step=80 ExcelRenderer"
@@ -207,22 +227,17 @@ Public Sub CreateHCP( _
             ModuleName, _
             ProcName
 
-        gContext.ManagementBook.Worksheets( _
-            SHEET_DEBUG_NODES).Columns.AutoFit
-
     End If
 
     '-----------------------------
     '# INDEX更新
     '-----------------------------
+    CurrentStep = "RebuildIndex"
+
     RebuildModuleIndex _
         ModuleName
 
     RebuildToolIndex
-
-    Application.ScreenUpdating = True
-
-    Exit Sub
 
 ExitProc:
 
@@ -232,16 +247,23 @@ ExitProc:
 
 ErrHandler:
 
-    Trace "HCP", _
-        "CreateHCP " & _
+    Trace "ERROR", _
+        ModuleName & "." & _
+        ProcName & _
+        " Step=" & _
+        CurrentStep & _
+        " Error=" & _
         Err.Description
+        
+    Application.ScreenUpdating = True
 
-    MsgBox _
-        Err.Description, _
-        vbExclamation, _
-        "HCP生成エラー"
-
-    Resume ExitProc
+    Err.Raise _
+        Err.Number, _
+        CurrentStep, _
+        ModuleName & "." & _
+        ProcName & _
+        " : " & _
+        Err.Description
 
 End Sub
 

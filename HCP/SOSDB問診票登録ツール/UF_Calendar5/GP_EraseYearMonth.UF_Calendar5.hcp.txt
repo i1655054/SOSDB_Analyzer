@@ -1,10 +1,31 @@
-Procedure: UF_Calendar5.GP_EraseYearMonth  [ 年月選択非表示＜UF_Calendar5＞ ]
-HCP	Business
 ┬
 〇│Private Sub GP_EraseYearMonth()	年月選択非表示＜UF_Calendar5＞
 ┴└┐
-　　│#  年選択非表示
+　　│#   年選択非表示
 　　◎ Call GP_EraseYear	年選択非表示＜UF_Calendar5＞
-　　│#  月選択非表示
+　　│#   月選択非表示
 　　◎ Call GP_EraseMonth	月選択非表示＜UF_Calendar5＞
 　　┴End Sub
+
+========================================
+Calls (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GP_EraseYear	年選択非表示	UF_Calendar5
+GP_EraseMonth	月選択非表示	UF_Calendar5
+
+========================================
+Called By (7)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+CBO_MONTH_Change	カレンダー月変更	UF_Calendar5
+CBO_YEAR_Change	カレンダー年変更	UF_Calendar5
+LBL_PREV_Click	前月表示	UF_Calendar5
+LBL_NEXT_Click	翌月表示	UF_Calendar5
+UserForm_KeyDown	キーボード日付操作	UF_Calendar5
+GP_MoveDay	日付移動	UF_Calendar5
+GP_ClickCalendar	日付確定	UF_Calendar5

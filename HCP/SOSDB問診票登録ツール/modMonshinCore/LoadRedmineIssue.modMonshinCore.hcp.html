@@ -1,30 +1,31 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
 <meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
 <title>LoadRedmineIssue</title>
 <style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
 body{font-family:Meiryo;font-size:9pt;}
 table{border-collapse:collapse;}
-th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
 td{vertical-align:top;}
 th{background:#e8f0fe;}
-colgroup col:nth-of-type(1) {}
-colgroup col:nth-of-type(2) {}
-.resize {position: relative;}
-.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
 </style>
 </head>
-<body>
+<body translate="no">
 <h1>LoadRedmineIssue</h1>
 <p>Module : modMonshinCore</p>
-<p><a href="./_INDEX.html">← Module Index</a></p>
 <table>
-<colgroup><col/><col/></colgroup>
-<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
 <tbody>
-<tr><td>Procedure: modMonshinCore.LoadRedmineIssue  [ Redmine情報読込＜modMonshinCore＞ ]</td><td></td></tr>
-<tr><td>HCP</td><td>Business</td></tr>
 <tr><td>┬</td><td></td></tr>
 <tr><td>〇│Public Sub LoadRedmineIssue()</td><td>Redmine情報読込＜modMonshinCore＞</td></tr>
 <tr><td>┴└┐</td><td></td></tr>
@@ -35,56 +36,68 @@ colgroup col:nth-of-type(2) {}
 <tr><td>　　□ Dim Nend As String, nen As String, num As String</td><td></td></tr>
 <tr><td>　　□ Dim oldIssue As IssueInfo</td><td></td></tr>
 <tr><td>　　〇 glbdbgflg = False</td><td></td></tr>
-<tr><td>　　│#  IssueID検索</td><td></td></tr>
-<tr><td>　　◎ Bug_id = FindIssueIdByTroubleNum(g_CurrentIssue.AuthorName, g_CurrentIssue.TroubleNum)</td><td>トラバス管理番号検索＜modIssueService＞</td></tr>
-<tr><td>　　│#  検索結果確認</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   IssueID検索</span></td><td></td></tr>
+<tr><td>　　◎ Bug_id = <a href="../modIssueService/FindIssueIdByTroubleNum.modIssueService.hcp.html">FindIssueIdByTroubleNum</a>(g_CurrentIssue.AuthorName, g_CurrentIssue.TroubleNum)</td><td><a href="../modIssueService/FindIssueIdByTroubleNum.modIssueService.hcp.html">トラバス管理番号検索＜modIssueService＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│#   検索結果確認</span></td><td></td></tr>
 <tr><td>　　◆┐If Bug_id = "" Then</td><td></td></tr>
 <tr><td>　　│〇 MsgBox "トラバス管理番号【 " &amp; g_CurrentIssue.TroubleNum &amp; " 】を検索できませんでした"</td><td></td></tr>
 <tr><td>　　│→ Exit Sub</td><td></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
-<tr><td>　　│#  Redmine情報取得</td><td></td></tr>
-<tr><td>　　◎ Set oldIssue = modIssueMapper.Get_RedmineDataToIssueInfo(  Author_Name, Bug_id)</td><td>Redmine情報取得＜modIssueMapper＞</td></tr>
-<tr><td>　　│#  CurrentIssue更新</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   Redmine情報取得</span></td><td></td></tr>
+<tr><td>　　◎ Set oldIssue = modIssueMapper.<a href="../modIssueMapper/Get_RedmineDataToIssueInfo.modIssueMapper.hcp.html">Get_RedmineDataToIssueInfo</a>(  Author_Name, Bug_id)</td><td><a href="../modIssueMapper/Get_RedmineDataToIssueInfo.modIssueMapper.hcp.html">Redmine情報取得＜modIssueMapper＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│#   CurrentIssue更新</span></td><td></td></tr>
 <tr><td>　　〇 Set g_CurrentIssue = oldIssue</td><td></td></tr>
-<tr><td>　　│#  OriginalIssue生成</td><td></td></tr>
-<tr><td>　　◎ Set g_OriginalIssue = CloneIssue(oldIssue)</td><td>Issue複製＜modIssueMapper＞</td></tr>
-<tr><td>　　│#  デバッグ情報出力</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   OriginalIssue生成</span></td><td></td></tr>
+<tr><td>　　◎ Set g_OriginalIssue = <a href="../modIssueMapper/CloneIssue.modIssueMapper.hcp.html">CloneIssue</a>(oldIssue)</td><td><a href="../modIssueMapper/CloneIssue.modIssueMapper.hcp.html">Issue複製＜modIssueMapper＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│#   デバッグ情報出力</span></td><td></td></tr>
 <tr><td>　　◆┐If glbdbgflg Then</td><td></td></tr>
 <tr><td>　　│〇 Debug.Print "Redmine取得完了: " &amp; Bug_id</td><td></td></tr>
-<tr><td>　　│◎ oldIssue.DebugPrint</td><td>Issue情報出力＜IssueInfo＞</td></tr>
+<tr><td>　　│〇 oldIssue.DebugPrint</td><td></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
-<tr><td>　　│#  UI反映</td><td></td></tr>
-<tr><td>　　◎ Call SetIssueToUI(oldIssue)</td><td>Issue画面反映＜modUtility＞</td></tr>
-<tr><td>　　│#  ボタン制御更新</td><td></td></tr>
-<tr><td>　　◎ Call Button_Set_Check(oldIssue)</td><td>詳細表示ボタン制御＜modUtility＞</td></tr>
+<tr><td><span class="hcp-comment">　　│#   UI反映</span></td><td></td></tr>
+<tr><td>　　◎ Call <a href="../modUtility/SetIssueToUI.modUtility.hcp.html">SetIssueToUI</a>(oldIssue)</td><td><a href="../modUtility/SetIssueToUI.modUtility.hcp.html">Issue画面反映＜modUtility＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│#   ボタン制御更新</span></td><td></td></tr>
+<tr><td>　　◎ Call <a href="../modUtility/Button_Set_Check.modUtility.hcp.html">Button_Set_Check</a>(oldIssue)</td><td><a href="../modUtility/Button_Set_Check.modUtility.hcp.html">詳細表示ボタン制御＜modUtility＞</a></td></tr>
 <tr><td>　　┴End Sub</td><td></td></tr>
 </tbody>
 </table>
+<hr>
+<h2>Calls (6)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modIssueService/FindIssueIdByTroubleNum.modIssueService.hcp.html">FindIssueIdByTroubleNum</a></td><td>トラバス管理番号検索</td><td>modIssueService</td></tr>
+<tr><td><a href="../modIssueMapper/Get_RedmineDataToIssueInfo.modIssueMapper.hcp.html">Get_RedmineDataToIssueInfo</a></td><td>Redmine情報取得</td><td>modIssueMapper</td></tr>
+<tr><td><a href="../modIssueMapper/CloneIssue.modIssueMapper.hcp.html">CloneIssue</a></td><td>Issue複製</td><td>modIssueMapper</td></tr>
+<tr><td><a href="../IssueInfo/DebugPrint.IssueInfo.hcp.html">DebugPrint</a></td><td>Issue情報出力</td><td>IssueInfo</td></tr>
+<tr><td><a href="../modUtility/SetIssueToUI.modUtility.hcp.html">SetIssueToUI</a></td><td>Issue画面反映</td><td>modUtility</td></tr>
+<tr><td><a href="../modUtility/Button_Set_Check.modUtility.hcp.html">Button_Set_Check</a></td><td>詳細表示ボタン制御</td><td>modUtility</td></tr>
+</table>
+<hr>
+<h2>Called By (2)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../Sheet1/DB情報取得_Click.Sheet1.hcp.html">DB情報取得_Click</a></td><td>Redmine情報取得</td><td>Sheet1</td></tr>
+<tr><td><a href="../UF_SearchResults/btnSelect_Click.UF_SearchResults.hcp.html">btnSelect_Click</a></td><td>検索結果選択</td><td>UF_SearchResults</td></tr>
+</table>
 <script>
-document.querySelectorAll('.resize').forEach(function (eleTh) {
+document.querySelectorAll('.resize').forEach(function(eleTh) {
 let startX;
 let startWidth;
 const eleResizer = document.createElement('div');
 eleResizer.classList.add('resizer');
-eleResizer.addEventListener('mousedown', function (e) {
-const styleTh = window.getComputedStyle(eleTh);
-const paddingLeft = parseFloat(styleTh.paddingLeft);
-const paddingRight = parseFloat(styleTh.paddingRight);
-const borderLeft = parseFloat(styleTh.borderLeftWidth);
-const borderRight = parseFloat(styleTh.borderRightWidth);
+eleResizer.addEventListener('mousedown', function(e) {
 startX = e.pageX;
-startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+startWidth = eleTh.offsetWidth;
 document.addEventListener('mousemove', onMouseMove);
 document.addEventListener('mouseup', onMouseUp);
 });
 eleTh.appendChild(eleResizer);
-function onMouseMove(e) {
-const newWidth = startWidth + (e.pageX - startX);
-eleTh.style.width = newWidth + 'px';
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
 }
-function onMouseUp() {
-document.removeEventListener('mousemove', onMouseMove);
-document.removeEventListener('mouseup', onMouseUp);
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
 }
 });
 </script>

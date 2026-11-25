@@ -1,0 +1,21 @@
+┬
+〇│Public Sub BuildRenderText(  ByVal HCPNodes As Collection)	RenderText生成＜clsHCPRenderBuilder＞
+┴└┐
+　　〇 Set mNodes = HCPNodes
+　　│#   RenderText生成開始
+　　◎ BuildNode  0,  "　　"	RenderNode生成＜clsHCPRenderBuilder＞
+　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+BuildNode	RenderNode生成	clsHCPRenderBuilder
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

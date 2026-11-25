@@ -1,18 +1,28 @@
-Procedure: UF_NewInfoRegist.txt依頼元管理番号_MouseDown  [ 依頼元管理番号入力支援＜UF_NewInfoRegist＞ ]
-HCP	Business
 ┬
 〇│Private Sub txt依頼元管理番号_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)	依頼元管理番号入力支援＜UF_NewInfoRegist＞
 ┴└┐
 　　□ Dim flgChange As Boolean
 　　□ Dim frm As New UF_RequesterNumRegist
 　　〇 Set CallingForm = Me ' 呼び出し元を格納
-　　│#  問診票モード確認
+　　│#   問診票モード確認
 　　〇 flgChange = Sheet1.CheckBox1.Value
 　　◆┐If flgChange = True Then
 　　│→ Exit Sub
 　　│┴End If
-　　│#  Issue情報引渡し
+　　│#   Issue情報引渡し
 　　〇 Set frm.TargetIssue = Me.TargetIssue
-　　│#  管理番号入力支援起動
+　　│#   管理番号入力支援起動
 　　〇 frm.Show
 　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

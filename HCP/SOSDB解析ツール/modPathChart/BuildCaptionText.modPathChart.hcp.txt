@@ -1,0 +1,45 @@
+┬
+〇│Private Function BuildCaptionText(  ByVal ProcName As String,  Optional ByVal CallCount As Long = 0)  As String	ノード表示文字列生成＜modPathChart＞
+┴└┐
+　　□ Dim Proc As clsProcInfo
+　　□ Dim CaptionText As String
+　　│#   Procedure情報取得
+　　◎ Set Proc =  ResolveProcedure(  "",  ProcName)	Procedure解決＜modProcedureRepository＞
+　　│#   ノード表示文字列初期化
+　　〇 CaptionText = ProcName
+　　◆┐If Not Proc Is Nothing Then
+　　││#   モジュール名表示
+　　│◆┐If gShowModule Then
+　　││〇 CaptionText =  CaptionText &  " <" &  Proc.ModuleName &  ">"
+　　││┴End If
+　　││#   JPName表示
+　　│◆┐If Trim$(Proc.JPName) <> "" Then
+　　││〇 CaptionText =  CaptionText & vbLf &  Proc.JPName
+　　││┴End If
+　　│┴End If
+　　│#   呼出回数表示
+　　◆┐If gShowCount Then
+　　│◆┐If CallCount > 0 Then
+　　││〇 CaptionText =  CaptionText &  " (" & CallCount & ")"
+　　││┴End If
+　　│┴End If
+　　│#   ノード表示文字列返却
+　　〇 BuildCaptionText = CaptionText
+　　┴End Function
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ResolveProcedure	Procedure解決	modProcedureRepository
+
+========================================
+Called By (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+CreatePathChart_V3	パスチャート作成	modPathChart
+DrawCallTreeShape	ノード再帰描画	modPathChart

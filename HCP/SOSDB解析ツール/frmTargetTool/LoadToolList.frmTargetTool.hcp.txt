@@ -1,0 +1,37 @@
+┬
+〇│Private Sub LoadToolList()	ツール一覧読込＜frmTargetTool＞
+┴└┐
+　　□ Dim ws As Worksheet
+　　□ Dim LastRow As Long
+　　□ Dim r As Long
+　　│#   ToolManagerシート取得
+　　〇 Set ws =  ThisWorkbook.Worksheets(SHEET_TOOL_MANAGER)
+　　│#   Tool一覧最終行取得
+　　〇 LastRow =  ws.Cells(ws.Rows.Count, "A")  .End(xlUp).row
+　　│#   ツール一覧初期化
+　　〇 lstTool.Clear
+　　│#   ツール一覧生成
+　　＠┐For r = 2 To LastRow
+　　││#   ツール名追加
+　　│〇 lstTool.AddItem  ws.Cells(r, "B").Value
+　　││#   ToolID保持
+　　│〇 lstTool.List(  lstTool.ListCount - 1, 1) =  ws.Cells(r, "A").Value
+　　│┴Next r
+　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+UpdateSelectedCount	選択件数更新	frmExportTool
+
+========================================
+Called By (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+UserForm_Initialize
+cmdRefresh_Click	一覧再読込	frmExportTool

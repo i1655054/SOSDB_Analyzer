@@ -1,78 +1,85 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
 <meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
 <title>IsChanged</title>
 <style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
 body{font-family:Meiryo;font-size:9pt;}
 table{border-collapse:collapse;}
-th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
 td{vertical-align:top;}
 th{background:#e8f0fe;}
-colgroup col:nth-of-type(1) {}
-colgroup col:nth-of-type(2) {}
-.resize {position: relative;}
-.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
 </style>
 </head>
-<body>
+<body translate="no">
 <h1>IsChanged</h1>
 <p>Module : modIssueMapper</p>
-<p><a href="./_INDEX.html">← Module Index</a></p>
 <table>
-<colgroup><col/><col/></colgroup>
-<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
 <tbody>
-<tr><td>Procedure: modIssueMapper.IsChanged  [ 変更判定＜modIssueMapper＞ ]</td><td></td></tr>
-<tr><td>HCP</td><td>Business</td></tr>
 <tr><td>┬</td><td></td></tr>
 <tr><td>〇│Public Function IsChanged(  ByVal newVal As Variant,  ByVal oldVal As Variant) As Boolean</td><td>変更判定＜modIssueMapper＞</td></tr>
 <tr><td>┴└┐</td><td></td></tr>
-<tr><td>　　│#  Nullおよび空値判定</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   Nullおよび空値判定</span></td><td></td></tr>
 <tr><td>　　◆┐If (IsNull(newVal) Or isEmpty(newVal) Or newVal = "") And  (IsNull(oldVal) Or isEmpty(oldVal) Or oldVal = "") Then</td><td></td></tr>
 <tr><td>　　│〇 IsChanged = False</td><td></td></tr>
 <tr><td>　　│→ Exit Function</td><td></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
-<tr><td>　　│#  日付比較</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   日付比較</span></td><td></td></tr>
 <tr><td>　　◆┐If IsDate(newVal) And IsDate(oldVal) Then</td><td></td></tr>
 <tr><td>　　│〇 IsChanged = (CDbl(CDate(newVal)) &lt;&gt; CDbl(CDate(oldVal)))</td><td></td></tr>
 <tr><td>　　│→ Exit Function</td><td></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
-<tr><td>　　│#  数値比較</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   数値比較</span></td><td></td></tr>
 <tr><td>　　◆┐If IsNumeric(newVal) And IsNumeric(oldVal) Then</td><td></td></tr>
 <tr><td>　　│〇 IsChanged = (CDbl(newVal) &lt;&gt; CDbl(oldVal))</td><td></td></tr>
 <tr><td>　　│→ Exit Function</td><td></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
-<tr><td>　　│#  文字列比較</td><td></td></tr>
-<tr><td>　　◎ IsChanged = (Normalize(newVal) &lt;&gt; Normalize(oldVal))</td><td>文字列正規化＜modIssueMapper＞</td></tr>
+<tr><td><span class="hcp-comment">　　│#   文字列比較</span></td><td></td></tr>
+<tr><td>　　◎ IsChanged = (<a href="../modIssueMapper/Normalize.modIssueMapper.hcp.html">Normalize</a>(newVal) &lt;&gt; <a href="../modIssueMapper/Normalize.modIssueMapper.hcp.html">Normalize</a>(oldVal))</td><td><a href="../modIssueMapper/Normalize.modIssueMapper.hcp.html">文字列正規化＜modIssueMapper＞</a></td></tr>
 <tr><td>　　┴End Function</td><td></td></tr>
 </tbody>
 </table>
+<hr>
+<h2>Calls (1)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modIssueMapper/Normalize.modIssueMapper.hcp.html">Normalize</a></td><td>文字列正規化</td><td>modIssueMapper</td></tr>
+</table>
+<hr>
+<h2>Called By (1)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modIssueMapper/GetUpdateCheckResult.modIssueMapper.hcp.html">GetUpdateCheckResult</a></td><td>更新差分判定</td><td>modIssueMapper</td></tr>
+</table>
 <script>
-document.querySelectorAll('.resize').forEach(function (eleTh) {
+document.querySelectorAll('.resize').forEach(function(eleTh) {
 let startX;
 let startWidth;
 const eleResizer = document.createElement('div');
 eleResizer.classList.add('resizer');
-eleResizer.addEventListener('mousedown', function (e) {
-const styleTh = window.getComputedStyle(eleTh);
-const paddingLeft = parseFloat(styleTh.paddingLeft);
-const paddingRight = parseFloat(styleTh.paddingRight);
-const borderLeft = parseFloat(styleTh.borderLeftWidth);
-const borderRight = parseFloat(styleTh.borderRightWidth);
+eleResizer.addEventListener('mousedown', function(e) {
 startX = e.pageX;
-startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+startWidth = eleTh.offsetWidth;
 document.addEventListener('mousemove', onMouseMove);
 document.addEventListener('mouseup', onMouseUp);
 });
 eleTh.appendChild(eleResizer);
-function onMouseMove(e) {
-const newWidth = startWidth + (e.pageX - startX);
-eleTh.style.width = newWidth + 'px';
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
 }
-function onMouseUp() {
-document.removeEventListener('mousemove', onMouseMove);
-document.removeEventListener('mouseup', onMouseUp);
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
 }
 });
 </script>

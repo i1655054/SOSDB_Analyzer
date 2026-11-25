@@ -1,8 +1,18 @@
-Procedure: CRightClick.BCut_Click  [ 切り取り実行＜CRightClick＞ ]
-HCP	Business
 ┬
 〇│Private Sub BCut_Click(ByVal ctrl As Office.CommandBarButton, CancelDefault As Boolean)	切り取り実行＜CRightClick＞
 ┴└┐
-　　│#  切り取り実行
+　　│#   切り取り実行
 　　◆ If TypeName(Tb) = "TextBox" Then Tb.Cut Else Cb.Cut
 　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

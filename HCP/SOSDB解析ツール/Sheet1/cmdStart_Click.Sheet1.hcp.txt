@@ -1,0 +1,19 @@
+┬
+〇│Private Sub cmdStart_Click()	＜Sheet1＞
+┴└┐
+　　◎ Call InitializeAnalyzer	Analyzer初期化＜modStartup＞
+　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+InitializeAnalyzer	Analyzer初期化	modStartup
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

@@ -1,0 +1,22 @@
+┬
+〇│Private Sub cmdClose_Click()	ツール選択終了＜frmTargetTool＞
+┴└┐
+　　│#   ツール選択画面終了
+　　〇 Unload Me
+　　│#   メインメニュー再表示
+　　〇 frmMainMenu.Show vbModeless
+　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+RestoreMainWindowState	Main画面状態復元	modToolManager
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

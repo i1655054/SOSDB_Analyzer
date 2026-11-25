@@ -1,8 +1,20 @@
-Procedure: Sheet1.DescriptionButton_Click  [ 説明表示＜Sheet1＞ ]
-HCP	Business
 ┬
 〇│Public Sub DescriptionButton_Click()	説明表示＜Sheet1＞
 ┴└┐
 　　◆→ If g_CurrentIssue Is Nothing Then Exit Sub
 　　◎ Call modInfoDisplay.ShowDescription(g_CurrentIssue)	説明表示＜modInfoDisplay＞
 　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ShowDescription	説明表示	modInfoDisplay
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

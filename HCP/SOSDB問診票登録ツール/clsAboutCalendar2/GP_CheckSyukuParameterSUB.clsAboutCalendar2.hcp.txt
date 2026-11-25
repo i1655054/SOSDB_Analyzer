@@ -1,5 +1,3 @@
-Procedure: clsAboutCalendar2.GP_CheckSyukuParameterSUB  [ 祝日パラメータ行検証＜clsAboutCalendar2＞ ]
-HCP	Business
 ┬
 〇│Private Sub GPCheckSyukuParameterSUB(ByRef objParaSheet As Worksheet,  ByVal lngRow As Long,  ByRef lngPrevM As Long,  ByRef strMSG As String)	祝日パラメータ行検証＜clsAboutCalendar2＞
 ┴└┐
@@ -16,8 +14,8 @@ HCP	Business
 　　□ Dim strRow As String                                            ' メッセージ補助
 　　〇 strRow = CStr(lngRow) & "行目："
 　　＠┐With objParaSheet
-　　││#  月チェック
-　　│◆┐If Not FP_CheckNumber(.Cells(lngRow, 1), lngGatsu) Then
+　　││#   月チェック
+　　│◆┐If Not FP_CheckNumber(.Cells(lngRow, 1), lngGatsu) Then	内部呼出:FP_CheckNumber
 　　││〇 blnRowErr = True
 　　││◎ Call GP_AppendMessage(strRow & "「月" & cnsError02, strMSG)	メッセージ追加＜clsAboutCalendar2＞
 　　│├┐ElseIf ((lngGatsu < 1) Or (lngGatsu > 12)) Then
@@ -29,8 +27,8 @@ HCP	Business
 　　│├┐ELSE
 　　││〇 lngPrevM = lngGatsu
 　　││┴End If
-　　││#  処理区分チェック
-　　│◆┐If Not FP_CheckNumber(.Cells(lngRow, 2), lngSyoriKbn) Then
+　　││#   処理区分チェック
+　　│◆┐If Not FP_CheckNumber(.Cells(lngRow, 2), lngSyoriKbn) Then	内部呼出:FP_CheckNumber
 　　││〇 blnRowErr = True
 　　││◎ Call GP_AppendMessage(strRow & "「処理区分" & cnsError02, strMSG)	メッセージ追加＜clsAboutCalendar2＞
 　　│├┐ElseIf (((lngSyoriKbn < 0) Or (lngSyoriKbn > 2)) And (lngSyoriKbn <> 9)) Then
@@ -38,9 +36,9 @@ HCP	Business
 　　││◎ Call GP_AppendMessage(strRow & "「処理区分" & cnsError03, strMSG)	メッセージ追加＜clsAboutCalendar2＞
 　　││┴End If
 　　│◆┐If Not blnRowErr Then
-　　│││#  固定日設定チェック
+　　│││#   固定日設定チェック
 　　││◆┐If ((lngSyoriKbn = 0) Or (lngSyoriKbn = 2)) Then    ' ｢固定値｣
-　　│││◆┐If Not FP_CheckNumber(.Cells(lngRow, 3), lngValue) Then
+　　│││◆┐If Not FP_CheckNumber(.Cells(lngRow, 3), lngValue) Then	内部呼出:FP_CheckNumber
 　　││││〇 blnRowErr = True
 　　││││◎ Call GP_AppendMessage(strRow & "「[固定値]日" & cnsError02, strMSG)	メッセージ追加＜clsAboutCalendar2＞
 　　│││├┐ElseIf lngValue < 1 Then
@@ -48,6 +46,11 @@ HCP	Business
 　　││││◎ Call GP_AppendMessage(strRow & "「[固定値]日" & cnsError03, strMSG)	メッセージ追加＜clsAboutCalendar2＞
 　　│││├┐ELSE
 　　││││◆┐Select Case lngGatsu
+　　││││Case 2
+　　││││◆┐If lngValue > 28 Then
+　　│││││〇 blnRowErr = True
+　　│││││◎ Call GP_AppendMessage(strRow & "「[固定値]日" & cnsError03, strMSG)	メッセージ追加＜clsAboutCalendar2＞
+　　│││││┴End If
 　　│││││├┐Case 4, 6, 9, 11
 　　││││││◆┐If lngValue > 30 Then
 　　│││││││〇 blnRowErr = True
@@ -59,20 +62,15 @@ HCP	Business
 　　│││││││◎ Call GP_AppendMessage(strRow & "「[固定値]日" & cnsError03, strMSG)	メッセージ追加＜clsAboutCalendar2＞
 　　│││││││┴End If
 　　│││││┴End Select
-　　││││Case 2
-　　││││◆┐If lngValue > 28 Then
-　　│││││〇 blnRowErr = True
-　　│││││◎ Call GP_AppendMessage(strRow & "「[固定値]日" & cnsError03, strMSG)	メッセージ追加＜clsAboutCalendar2＞
-　　│││││┴End If
 　　││││┴End If
-　　│││◆┐If Not FP_CheckNumber(.Cells(lngRow, 4), lngValue) Then
+　　│││◆┐If Not FP_CheckNumber(.Cells(lngRow, 4), lngValue) Then	内部呼出:FP_CheckNumber
 　　││││〇 blnRowErr = True
 　　││││◎ Call GP_AppendMessage(strRow & "「[固定値]振替" & cnsError02, strMSG)	メッセージ追加＜clsAboutCalendar2＞
 　　│││├┐ElseIf ((lngValue < 0) Or (lngValue > 1)) Then
 　　││││〇 blnRowErr = True
 　　││││◎ Call GP_AppendMessage(strRow & "「[固定値]振替" & cnsError03, strMSG)	メッセージ追加＜clsAboutCalendar2＞
 　　││││┴End If
-　　││││#  HappyMonday設定チェック
+　　││││#   HappyMonday設定チェック
 　　│││◆┐If .Cells(lngRow, 5).Value <> "" Then
 　　││││〇 blnRowErr = True
 　　││││◎ Call GP_AppendMessage(strRow & "「[HM]週数" & cnsError04, strMSG)	メッセージ追加＜clsAboutCalendar2＞
@@ -80,15 +78,16 @@ HCP	Business
 　　│││◆┐If .Cells(lngRow, 6).Value <> "" Then
 　　││││〇 blnRowErr = True
 　　││││◎ Call GP_AppendMessage(strRow & "「[HM]曜日" & cnsError04, strMSG)	メッセージ追加＜clsAboutCalendar2＞
+　　││││┴End If
 　　│││├┐ElseIf lngSyoriKbn = 1 Then                         ' ｢HM｣
-　　││││◆┐If Not FP_CheckNumber(.Cells(lngRow, 5), lngValue) Then
+　　││││◆┐If Not FP_CheckNumber(.Cells(lngRow, 5), lngValue) Then	内部呼出:FP_CheckNumber
 　　│││││〇 blnRowErr = True
 　　│││││◎ Call GP_AppendMessage(strRow & "「[HM]週数" & cnsError02, strMSG)	メッセージ追加＜clsAboutCalendar2＞
 　　││││├┐ElseIf ((lngValue < 1) Or (lngValue > 5)) Then
 　　│││││〇 blnRowErr = True
 　　│││││◎ Call GP_AppendMessage(strRow & "「[HM]週数" & cnsError03, strMSG)	メッセージ追加＜clsAboutCalendar2＞
 　　│││││┴End If
-　　││││◆┐If Not FP_CheckNumber(.Cells(lngRow, 6), lngValue) Then
+　　││││◆┐If Not FP_CheckNumber(.Cells(lngRow, 6), lngValue) Then	内部呼出:FP_CheckNumber
 　　│││││〇 blnRowErr = True
 　　│││││◎ Call GP_AppendMessage(strRow & "「[HM]曜日" & cnsError02, strMSG)	メッセージ追加＜clsAboutCalendar2＞
 　　││││├┐ElseIf ((lngValue < 0) Or (lngValue > 6)) Then
@@ -103,31 +102,30 @@ HCP	Business
 　　│││││〇 blnRowErr = True
 　　│││││◎ Call GP_AppendMessage(strRow & "「[固定値]振替" & cnsError04, strMSG)	メッセージ追加＜clsAboutCalendar2＞
 　　│││││┴End If
-　　││││┴End If
 　　│││┴End If
 　　││┴End If
-　　││#  祝日名チェック
+　　││#   祝日名チェック
 　　│◆┐If Trim(.Cells(lngRow, 7).Value) = "" Then
 　　││〇 blnRowErr = True
 　　││◎ Call GP_AppendMessage(strRow & "「祝日名" & cnsError01, strMSG)	メッセージ追加＜clsAboutCalendar2＞
 　　││┴End If
-　　││#  開始年チェック
-　　│◆┐If Not FP_CheckNumber(.Cells(lngRow, 8), lngStrYear) Then
+　　││#   開始年チェック
+　　│◆┐If Not FP_CheckNumber(.Cells(lngRow, 8), lngStrYear) Then	内部呼出:FP_CheckNumber
 　　││〇 blnRowErr = True
 　　││◎ Call GP_AppendMessage(strRow & "「開始年" & cnsError02, strMSG)	メッセージ追加＜clsAboutCalendar2＞
 　　│├┐ElseIf ((lngStrYear < 0) Or (lngStrYear > (Year(Date) + 3))) Then
 　　││〇 blnRowErr = True
 　　││◎ Call GP_AppendMessage(strRow & "「開始年" & cnsError03, strMSG)	メッセージ追加＜clsAboutCalendar2＞
 　　││┴End If
-　　││#  終了年チェック
-　　│◆┐If Not FP_CheckNumber(.Cells(lngRow, 9), lngEndYear) Then
+　　││#   終了年チェック
+　　│◆┐If Not FP_CheckNumber(.Cells(lngRow, 9), lngEndYear) Then	内部呼出:FP_CheckNumber
 　　││〇 blnRowErr = True
 　　││◎ Call GP_AppendMessage(strRow & "「終了年" & cnsError02, strMSG)	メッセージ追加＜clsAboutCalendar2＞
 　　│├┐ElseIf ((lngEndYear < 1948) Or (lngEndYear > 9999)) Then
 　　││〇 blnRowErr = True
 　　││◎ Call GP_AppendMessage(strRow & "「終了年" & cnsError03, strMSG)	メッセージ追加＜clsAboutCalendar2＞
 　　││┴End If
-　　││#  有効期間チェック
+　　││#   有効期間チェック
 　　│◆┐If Not blnRowErr Then
 　　││◆┐If lngEndYear < lngStrYear Then
 　　│││〇 blnRowErr = True
@@ -136,3 +134,20 @@ HCP	Business
 　　││┴End If
 　　│┴End With
 　　┴End Sub
+
+========================================
+Calls (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+FP_CheckNumber	数値妥当性確認	clsAboutCalendar2
+GP_AppendMessage	メッセージ追加	clsAboutCalendar2
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+FP_CheckSyukuParameter	祝日パラメータ検証	clsAboutCalendar2

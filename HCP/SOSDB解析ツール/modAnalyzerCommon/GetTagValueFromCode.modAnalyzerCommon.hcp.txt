@@ -1,0 +1,47 @@
+┬
+〇│Public Function GetTagValueFromCode(  ByVal CodeText As String,  ByVal ProcName As String,  ByVal TagName As String) As String	タグ値取得＜modAnalyzerCommon＞
+┴└┐
+　　□ Dim Lines() As String
+　　□ Dim i As Long
+　　□ Dim j As Long
+　　│#   ソースコード行分割
+　　〇 Lines = Split(CodeText, vbCrLf)
+　　│#   Procedure定義検索
+　　＠┐For i = LBound(Lines) To UBound(Lines)
+　　│◆┐If IsProcedureLine(Trim$(Lines(i))) Then	内部呼出:IsProcedureLine
+　　│││#   対象Procedure一致確認
+　　││◆┐If StrComp(  ExtractProcedureName(  Trim$(Lines(i))),  ProcName,  vbTextCompare) = 0 Then	内部呼出:ExtractProcedureName
+　　││││#   コメントタグ検索
+　　│││＠┐For j = i - 1 To 0 Step -1
+　　││││◆┐If Left$(Trim$(Lines(j)), 1) <> "'" Then
+　　│││││→ Exit For
+　　│││││┴End If
+　　││││◆┐If StrComp(  Trim$(Lines(j)),  "'" & TagName,  vbTextCompare) = 0 Then
+　　│││││◆┐If j + 1 <= UBound(Lines) Then
+　　│││││││#   タグ値取得
+　　││││││〇 GetTagValueFromCode =  Trim$(Replace(  Trim$(Lines(j + 1)),  "'", ""))
+　　││││││┴End If
+　　│││││→ Exit Function
+　　│││││┴End If
+　　││││┴Next j
+　　│││┴End If
+　　││┴End If
+　　│┴Next i
+　　┴End Function
+
+========================================
+Calls (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+IsProcedureLine	プロシージャ定義判定	modAnalyze
+ExtractProcedureName	プロシージャ名抽出	modAnalyze
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetFunctions	関数一覧取得	modFunctionTrac

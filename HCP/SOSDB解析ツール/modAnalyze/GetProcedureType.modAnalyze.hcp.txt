@@ -1,0 +1,28 @@
+┬
+〇│Private Function GetProcedureType(line As String) As String	プロシージャ種別取得＜modAnalyze＞
+┴└┐
+　　│#   プロシージャ種別判定
+　　◆┐If InStr(line, "Sub") > 0 Then
+　　│〇 GetProcedureType = "Sub"
+　　├┐ElseIf InStr(line, "Function") > 0 Then
+　　│〇 GetProcedureType = "Function"
+　　├┐ElseIf InStr(line, "Property") > 0 Then
+　　│〇 GetProcedureType = "Property"
+　　├┐ELSE
+　　│〇 GetProcedureType = ""
+　　│┴End If
+　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ProcedureList	関数一覧作成	modAnalyze

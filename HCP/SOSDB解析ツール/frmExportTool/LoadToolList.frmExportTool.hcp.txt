@@ -1,0 +1,57 @@
+┬
+〇│Private Sub LoadToolList()	ツール一覧読込＜frmExportTool＞
+┴└┐
+　　□ Dim ws As Worksheet
+　　□ Dim LastRow As Long
+　　□ Dim r As Long
+　　□ Dim itm As ListItem
+　　□ Dim wb As Workbook
+　　│#   ToolManagerシート取得
+　　〇 Set ws =  ThisWorkbook.Worksheets(SHEET_TOOL_MANAGER)
+　　│#   ToolManager最終行取得
+　　〇 LastRow =  ws.Cells(ws.Rows.Count, "A")  .End(xlUp).row
+　　│#   ツール一覧初期化
+　　〇 lvwTools.ListItems.Clear
+　　│#   ツール一覧生成
+　　＠┐For r = 2 To LastRow
+　　││#   エクスポート対象判定
+　　│◆┐If ws.Cells(r, "E").Value = True Then
+　　│││#   ListView項目追加
+　　││〇 Set itm =  lvwTools.ListItems.Add(  , ,  ws.Cells(r, "A").Value)
+　　││〇 itm.SubItems(1) =  ws.Cells(r, "B").Value
+　　│││#   Workbook状態確認
+　　││〇 Set wb = Nothing
+　　││☆ On Error Resume Next
+　　││〇 Set wb =  Workbooks(ws.Cells(r, "C").Value)
+　　│││#   Workbook状態設定
+　　││◆┐If wb Is Nothing Then
+　　│││〇 itm.SubItems(2) = "Close"
+　　││├┐ELSE
+　　│││〇 itm.SubItems(2) = "Open"
+　　│││┴End If
+　　││〇 Set wb = Nothing
+　　││☆ On Error GoTo 0
+　　│││#   Repository設定
+　　││〇 itm.SubItems(3) =  ws.Cells(r, "D").Value
+　　││┴End If
+　　│┴Next r
+　　│#   選択件数更新
+　　◎ UpdateSelectedCount	選択件数更新＜frmExportTool＞
+　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+UpdateSelectedCount	選択件数更新	frmExportTool
+
+========================================
+Called By (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+UserForm_Initialize
+cmdRefresh_Click	一覧再読込	frmExportTool

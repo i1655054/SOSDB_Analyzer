@@ -1,0 +1,35 @@
+┬
+〇│Private Sub PopMergeStack(  ByVal MergeStack As Collection,  ByVal HCPNodes As Collection,  ByRef NewID As Long,  ByVal SourceLine As String,  ByVal NodeType As String)	マージスタック取得＜modHCPAnalyzer＞
+┴└┐
+　　│#   マージスタック空判定
+　　◆┐If MergeStack.Count = 0 Then
+　　│◎ Trace "ERROR",  NodeType &  " Stack Empty Line=" &  SourceLine	トレース出力＜modDebug＞
+　　│→ Exit Sub
+　　│┴End If
+　　◎ TraceStack  "POP",  MergeStack(MergeStack.Count),  MergeStack.Count	スタックトレース出力＜modDebug＞
+　　│	内部呼出:MergeStack
+　　│#   MERGEノード生成
+　　◎ AddMergeNode  HCPNodes,  NewID,  GetMergeParentID(  MergeStack(MergeStack.Count)),  SourceLine	マージノード追加＜modHCPAnalyzer＞
+　　│	内部呼出:GetMergeParentID, MergeStack
+　　│#   マージスタック削除
+　　〇 MergeStack.Remove  MergeStack.Count
+　　┴End Sub
+
+========================================
+Calls (4)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+Trace	トレース出力	modDebug
+TraceStack	スタックトレース出力	modDebug
+AddMergeNode	マージノード追加	modHCPAnalyzer
+GetMergeParentID	マージ親ID取得	modHCPAnalyzer
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ConvertProcToHCP	HCP変換	modHCPAnalyzer

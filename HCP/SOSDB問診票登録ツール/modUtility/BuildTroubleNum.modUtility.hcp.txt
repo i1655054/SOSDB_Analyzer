@@ -1,33 +1,47 @@
-Procedure: modUtility.BuildTroubleNum  [ トラブル番号生成＜modUtility＞ ]
-HCP	Business
 ┬
 〇│Public Function BuildTroubleNum(targetVer As String, numVal As Variant) As String	トラブル番号生成＜modUtility＞
 ┴└┐
 　　□ Dim nen As String
 　　□ Dim numStr As String
-　　│#  年度情報取得
+　　│#   年度情報取得
 　　〇 targetVer = Trim(targetVer)
 　　◆┐If Len(targetVer) >= 4 Then
 　　│〇 nen = Mid(targetVer, 3, 2)
 　　├┐ELSE
 　　│〇 nen = ""
 　　│┴End If
-　　│#  入力値確認
+　　│#   入力値確認
 　　◆┐If Trim(CStr(numVal)) = "" Then
 　　│〇 BuildTroubleNum = ""
 　　│→ Exit Function
 　　│┴End If
-　　│#  数値形式確認
+　　│#   数値形式確認
 　　◆┐If Not IsNumeric(numVal) Then
 　　│〇 BuildTroubleNum = ""
 　　│→ Exit Function
 　　│┴End If
-　　│#  管理番号整形
+　　│#   管理番号整形
 　　〇 numStr = Format(CLng(numVal), "000")
-　　│#  トラブル番号生成
+　　│#   トラブル番号生成
 　　◆┐If nen <> "" Then
 　　│〇 BuildTroubleNum = nen & "-" & numStr
 　　├┐ELSE
 　　│〇 BuildTroubleNum = numStr
 　　│┴End If
 　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (3)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+CommandButton1_Click
+GetUIToIssue	画面情報取得	modUtility
+ApplyMainSheetToIssue	メイン画面反映	modIssueMapper

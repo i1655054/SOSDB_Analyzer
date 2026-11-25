@@ -1,26 +1,24 @@
-Procedure: XmlLoader.PostXmlData  [ 新規登録送信＜XmlLoader＞ ]
-HCP	Business
 ┬
 〇│Public Function PostXmlData(  ByVal xmlPath As String,  ByVal issue As IssueInfo) As Variant	新規登録送信＜XmlLoader＞
 ┴└┐
 　　□ Dim apiKey As String
 　　□ Dim url As String
 　　□ Dim body As String
-　　│#  XMLファイル確認
+　　│#   XMLファイル確認
 　　◆┐If xmlPath = "" Then
 　　│〇 PostXmlData = Array("", "")
 　　│→ Exit Function
 　　│┴End If
-　　│#  APIキー取得
+　　│#   APIキー取得
 　　◎ apiKey = GetApiKey(issue.AuthorName)	APIキー取得＜modIssueMapper＞
-　　│#  APIキー補完
+　　│#   APIキー補完
 　　◆ If apiKey = "" Then apiKey = Read_API_Key
-　　│#  登録URL生成
+　　│#   登録URL生成
 　　◎ url = GetServerURL(Range(RedmineDbSev_RANG).Value) & "redmine/issues.xml?key=" & apiKey	RedmineサーバURL取得＜modIssueMapper＞
 　　│	内部呼出:Range
-　　│#  XML読込
+　　│#   XML読込
 　　◎ body = ReadTextFile(xmlPath)	UTF8テキスト読込＜modFileUtility＞
-　　│#  ユーザー登録確認
+　　│#   ユーザー登録確認
 　　＠┐With UF_RedminDbRegist
 　　│〇 .TextBox2.text = "-"
 　　│〇 .TextBox4.text = issue.TroubleNum
@@ -30,11 +28,31 @@ HCP	Business
 　　││〇 PostXmlData = Array("", "")
 　　││→ Exit Function
 　　││┴End If
-　　││#  登録画面表示
+　　││#   登録画面表示
 　　│〇 .Show vbModeless
-　　││#  フォーム前面表示
+　　││#   フォーム前面表示
 　　│◎ Call ClickMouse	マウスクリック実行＜modFileUtility＞
 　　│┴End With
-　　│#  新規登録実行
+　　│#   新規登録実行
 　　◎ PostXmlData = ExecuteRedmineRequest(  "POST", url, body, "", issue.TroubleNum, issue.MonFolder)	Redmine通信実行＜XmlLoader＞
 　　┴End Function
+
+========================================
+Calls (5)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetApiKey	APIキー取得	modIssueMapper
+GetServerURL	RedmineサーバURL取得	modIssueMapper
+ReadTextFile	UTF8テキスト読込	modFileUtility
+ClickMouse	マウスクリック実行	modFileUtility
+ExecuteRedmineRequest	Redmine通信実行	XmlLoader
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+RegisterNewIssue	新規Issue登録	modIssueService

@@ -1,13 +1,11 @@
-Procedure: modRegister.CreateUpdateXmlFromIssue  [ 更新登録XML生成＜modRegister＞ ]
-HCP	Business
 ┬
 〇│Public Function CreateUpdateXmlFromIssue(  ByVal newIssue As IssueInfo,  ByVal oldIssue As IssueInfo,  ByVal flags As Long) As String	更新登録XML生成＜modRegister＞
 ┴└┐
 　　□ Dim xml As String
-　　│#  XML開始
+　　│#   XML開始
 　　〇 xml = "<?xml version=""1.0""?>"
 　　〇 xml = xml & "<issue>"
-　　│#  基本属性差分出力
+　　│#   基本属性差分出力
 　　◆┐If (flags And flg_Status_Name) <> 0 Then
 　　│◎ xml = xml & "<status_id>" &  GetStatusId(newIssue.Status) &  "</status_id>"	ステータスID取得＜modIssueMapper＞
 　　│┴End If
@@ -20,17 +18,38 @@ HCP	Business
 　　◆┐If (flags And flg_Target_Version) <> 0 Then
 　　│◎ xml = xml & "<fixed_version_id>" &  GetVersionId(newIssue.targetVersion) &  "</fixed_version_id>"	対象バージョンID取得＜modIssueMapper＞
 　　│┴End If
-　　│#  本文差分出力
+　　│#   本文差分出力
 　　◆┐If (flags And flg_Subject_Name) <> 0 Then
 　　│◎ xml = xml & "<subject>" &  EscapeXML(newIssue.Subject) &  "</subject>"	XMLエスケープ＜XmlLoader＞
 　　│┴End If
 　　◆┐If (flags And flg_Description) <> 0 Then
 　　│◎ xml = xml & "<description>" &  EscapeXML(newIssue.Description) &  "</description>"	XMLエスケープ＜XmlLoader＞
 　　│┴End If
-　　│#  カスタムフィールド差分出力
+　　│#   カスタムフィールド差分出力
 　　◎ xml = xml & BuildCustomFieldsXmlDiff(newIssue, flags)	差分カスタムフィールドXML生成＜modRegister＞
-　　│#  XML終了
+　　│#   XML終了
 　　〇 xml = xml & "</issue>"
-　　│#  XML返却
+　　│#   XML返却
 　　〇 CreateUpdateXmlFromIssue = xml
 　　┴End Function
+
+========================================
+Calls (6)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetStatusId	ステータスID取得	modIssueMapper
+GetPriorityId	優先度ID取得	modIssueMapper
+GetUserId	ユーザーID取得	modIssueMapper
+GetVersionId	対象バージョンID取得	modIssueMapper
+EscapeXML	XMLエスケープ	XmlLoader
+BuildCustomFieldsXmlDiff	差分カスタムフィールドXML生成	modRegister
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+UpdateExistingIssue	Issue更新登録	modIssueService

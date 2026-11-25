@@ -1,0 +1,42 @@
+┬
+〇│Public Function CreateTreeNode(  ByVal ProcName As String,  ByVal ParentProcName As String,  ByVal Level As Long,  ByVal TreeText As String)  As clsTreeNode	ツリーノード生成＜modPathChartCommon＞
+┴└┐
+　　□ Dim Node As clsTreeNode
+　　□ Dim Proc As clsProcInfo
+　　│#   TreeNode生成
+　　〇 Set Node = New clsTreeNode
+　　│#   TreeNode基本情報
+　　│#   TreeNode基本情報設定
+　　〇 Node.Level = Level
+　　〇 Node.ProcName = ProcName
+　　〇 Node.ParentProcName = ParentProcName
+　　〇 Node.TreeText = TreeText
+　　│#   Procedure情報取得
+　　◎ Set Proc =  ResolveProcedure(  "",  ProcName)	Procedure解決＜modProcedureRepository＞
+　　│#   Procedure詳細情報設定
+　　◆┐If Not Proc Is Nothing Then
+　　│〇 Node.JPName = Proc.JPName
+　　│〇 Node.Category = Proc.Category
+　　│〇 Node.ModuleName = Proc.ModuleName
+　　│〇 Node.Summary = Proc.Summary
+　　│┴End If
+　　│#   TreeNode返却
+　　〇 Set CreateTreeNode = Node
+　　┴End Function
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ResolveProcedure	Procedure解決	modProcedureRepository
+
+========================================
+Called By (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+AddRootNode	ルートノード追加	modPathChartText
+BuildTreeText	ツリー構造生成	modPathChartText

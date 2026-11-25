@@ -1,7 +1,22 @@
-Procedure: modCalendar5.FP_GetDPIX  [ 水平DPI取得＜modCalendar5＞ ]
-HCP	Business
 ┬
 〇│Private Function FP_GetDPIX() As Long	水平DPI取得＜modCalendar5＞
 ┴└┐
 　　◎ FP_GetDPIX = FP_GetDPI(LOGPIXELSX)	DPI取得＜modCalendar5＞
 　　┴End Function
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+FP_GetDPI	DPI取得	modCalendar5
+
+========================================
+Called By (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ShowCalendarFromTextBox2	テキストボックス日付選択	modCalendar5
+FP_GetFormPosition	フォーム表示位置算出	modCalendar5

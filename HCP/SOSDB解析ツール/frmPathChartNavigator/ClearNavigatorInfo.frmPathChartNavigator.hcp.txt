@@ -1,0 +1,28 @@
+┬
+〇│Public Sub ClearNavigatorInfo()	ナビゲータ情報初期化＜frmPathChartNavigator＞
+┴└┐
+　　│#   現在ノード表示初期化
+　　〇 txtCurrentNode.Text = "-"
+　　│#   Procedure情報表示初期化
+　　〇 lblJPName.Caption = ""
+　　〇 lblCategory.Caption = ""
+　　〇 lblModule.Caption = ""
+　　│#   概要表示初期化
+　　〇 txtSummary.Text = ""
+　　│#   状態表示初期化
+　　〇 txtStatus.Text = ""
+　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+UserForm_Activate	ナビゲータ表示	frmPathChartNavigator

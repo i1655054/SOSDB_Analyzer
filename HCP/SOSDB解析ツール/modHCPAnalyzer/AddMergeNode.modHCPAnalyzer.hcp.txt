@@ -1,0 +1,28 @@
+┬
+〇│Private Sub AddMergeNode(  ByVal HCPNodes As Collection,  ByRef NewID As Long,  ByVal ParentID As Long,  ByVal Text As String)	マージノード追加＜modHCPAnalyzer＞
+┴└┐
+　　□ Dim HCPNode As clsHCPNode
+　　│#   MERGEノード生成
+　　〇 Set HCPNode = New clsHCPNode
+　　〇 HCPNode.NodeID = NewID
+　　〇 NewID = NewID + 1
+　　〇 HCPNode.ParentID = ParentID
+　　〇 HCPNode.NodeType = NODE_MERGE
+　　〇 HCPNode.Text = Text
+　　│#   MERGEノード登録
+　　〇 HCPNodes.Add HCPNode
+　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+PopMergeStack	マージスタック取得	modHCPAnalyzer

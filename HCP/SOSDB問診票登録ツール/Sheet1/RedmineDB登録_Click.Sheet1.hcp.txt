@@ -1,13 +1,27 @@
-Procedure: Sheet1.RedmineDB登録_Click  [ Redmine登録実行＜Sheet1＞ ]
-HCP	Business
 ┬
 〇│Private Sub RedmineDB登録_Click()	Redmine登録実行＜Sheet1＞
 ┴└┐
 　　◆→ If modUtility.IsSearchResultActive Then Exit Sub
 　　☆ On Error GoTo ErrHandler
-　　◆→ If Not PrepareIssueFor("REGISTER") Then Exit Sub
+　　◆→ If Not PrepareIssueFor("REGISTER") Then Exit Sub	内部呼出:PrepareIssueFor
 　　◎ Call RegisterIssueFromUI	Issue登録実行＜modIssueService＞
 　　→ Exit Sub
 ▼ ErrHandler:
 　　〇 MsgBox "エラー: " & Err.Description
 　　┴End Sub
+
+========================================
+Calls (3)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+IsSearchResultActive	検索結果表示状態確認	modUtility
+PrepareIssueFor	事前処理実行	modUtility
+RegisterIssueFromUI	Issue登録実行	modIssueService
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

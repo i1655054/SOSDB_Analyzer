@@ -1,24 +1,38 @@
-Procedure: modIssueMapper.GetTargetPath  [ 対象バージョン保存先取得＜modIssueMapper＞ ]
-HCP	Business
 ┬
 〇│Public Function GetTargetPath(  ByVal targetVersion As String) As String	対象バージョン保存先取得＜modIssueMapper＞
 ┴└┐
-　　│#  Sysdataシート取得
+　　│#   Sysdataシート取得
 　　□ Dim sht As Worksheet
 　　〇 Set sht = ThisWorkbook.Sheets(SheetName_Sysdata)
 　　□ Dim i As Long
-　　│#  マスタ検索
+　　│#   マスタ検索
 　　＠┐For i = 2 To sht.Cells(sht.Rows.count, Versionid_Col).End(xlUp).row
 　　│□ Dim versionName As String
-　　││#  マスタ情報取得
+　　││#   マスタ情報取得
 　　│〇 versionName = Trim(sht.Cells(i, Versionid_Col + 1).Value)
-　　││#  一致判定
+　　││#   一致判定
 　　│◆┐If versionName = targetVersion Then
-　　│││#  取得値返却
+　　│││#   取得値返却
 　　││〇 GetTargetPath = Trim(sht.Cells(i, Versionid_Col + 3).Value)
 　　││→ Exit Function
 　　││┴End If
 　　│┴Next i
-　　│#  未検出時初期値返却
+　　│#   未検出時初期値返却
 　　〇 GetTargetPath = ""
 　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (3)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+get_MonshinFile	問診票ファイル選択	modFileUtility
+get_MonshinFile2	問診票ファイル選択	modFileUtility
+GetSaveFolder	保存先フォルダ選択	modFileUtility

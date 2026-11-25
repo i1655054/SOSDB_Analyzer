@@ -1,13 +1,28 @@
-Procedure: modFileUtility.GetDocumentFolderPath  [ ドキュメントフォルダ取得＜modFileUtility＞ ]
-HCP	Business
 ┬
 〇│Public Function GetDocumentFolderPath() As String	ドキュメントフォルダ取得＜modFileUtility＞
 ┴└┐
 　　□ Dim WSH As Object
-　　│#  WSH生成
+　　│#   WSH生成
 　　〇 Set WSH = CreateObject("WScript.Shell")
-　　│#  マイドキュメント取得
+　　│#   マイドキュメント取得
 　　〇 GetDocumentFolderPath = WSH.SpecialFolders("MyDocuments")
-　　│#  オブジェクト解放
+　　│#   オブジェクト解放
 　　〇 Set WSH = Nothing
 　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (4)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ExportRedmineIDsToCSV	検索結果CSV生成	XmlSearch
+AutomaticTextOutput	XMLファイル出力	modFileUtility
+Clear_WorkFile	ワークファイル削除	modUtility
+Clear_InputCellDat	入力セル初期化	modUtility

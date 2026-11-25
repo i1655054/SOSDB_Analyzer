@@ -1,0 +1,22 @@
+┬
+〇│Public Function GetCurrentTargetBook()  As Workbook	現在対象ブック取得＜modToolManager＞
+┴└┐
+　　│#   現在対象ブック取得
+　　◎ Set GetCurrentTargetBook =  GetWorkbookByToolID(gTargetToolID)	対象ブック取得＜modToolManager＞
+　　┴End Function
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetWorkbookByToolID	対象ブック取得	modToolManager
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+CreateAnalyzeContext	解析コンテキスト生成	modAnalyzerCommon

@@ -1,0 +1,22 @@
+┬
+〇│Private Function GetRenderText(  ByVal Node As clsHCPNode)  As String	描画文字列取得＜clsHCPRenderBuilder＞
+┴└┐
+　　│#   HCP描画文字列取得
+　　◎ GetRenderText =  FormatHCPText(Node.Text)	HCP文字列整形＜clsHCPRenderBuilder＞
+　　┴End Function
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+FormatHCPText	HCP文字列整形	clsHCPRenderBuilder
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetDisplayText	表示文字列取得	clsHCPRenderBuilder

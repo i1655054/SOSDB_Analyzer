@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
+<title>ExtractProcedureName</title>
+<style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
+</style>
+</head>
+<body translate="no">
+<h1>ExtractProcedureName</h1>
+<p>Module : modAnalyze</p>
+<table>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
+<tbody>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Public Function ExtractProcedureName(line As String) As String</td><td>プロシージャ名抽出＜modAnalyze＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　□ Dim tmp As String</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   Procedure宣言文字列正規化</span></td><td></td></tr>
+<tr><td>　　〇 tmp = line</td><td></td></tr>
+<tr><td>　　〇 tmp = Replace(tmp, "Public ", "")</td><td></td></tr>
+<tr><td>　　〇 tmp = Replace(tmp, "Private ", "")</td><td></td></tr>
+<tr><td>　　〇 tmp = Replace(tmp, "Sub ", "")</td><td></td></tr>
+<tr><td>　　〇 tmp = Replace(tmp, "Function ", "")</td><td></td></tr>
+<tr><td>　　〇 tmp = Replace(tmp, "Property Get ", "")</td><td></td></tr>
+<tr><td>　　〇 tmp = Replace(tmp, "Property Let ", "")</td><td></td></tr>
+<tr><td>　　〇 tmp = Replace(tmp, "Property Set ", "")</td><td></td></tr>
+<tr><td>　　〇 tmp = Replace(tmp, "Friend ", "")</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   引数部除去</span></td><td></td></tr>
+<tr><td>　　◆┐If InStr(tmp, "(") &gt; 0 Then</td><td></td></tr>
+<tr><td>　　│〇 tmp = Left(tmp, InStr(tmp, "(") - 1)</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   Procedure名返却</span></td><td></td></tr>
+<tr><td>　　〇 ExtractProcedureName = Trim(tmp)</td><td></td></tr>
+<tr><td>　　┴End Function</td><td></td></tr>
+</tbody>
+</table>
+<hr>
+<h2>Calls (0)</h2>
+<p>呼出先なし</p>
+<hr>
+<h2>Called By (4)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modAnalyze/ProcedureList.modAnalyze.hcp.html">ProcedureList</a></td><td>関数一覧作成</td><td>modAnalyze</td></tr>
+<tr><td><a href="../modFunctionTrac/GetFunctions.modFunctionTrac.hcp.html">GetFunctions</a></td><td>関数一覧取得</td><td>modFunctionTrac</td></tr>
+<tr><td><a href="../modFunctionTrac/GetProcedureName.modFunctionTrac.hcp.html">GetProcedureName</a></td><td>現在関数取得</td><td>modFunctionTrac</td></tr>
+<tr><td><a href="../modAnalyzerCommon/GetTagValueFromCode.modAnalyzerCommon.hcp.html">GetTagValueFromCode</a></td><td>タグ値取得</td><td>modAnalyzerCommon</td></tr>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function(eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function(e) {
+startX = e.pageX;
+startWidth = eleTh.offsetWidth;
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
+}
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
+}
+});
+</script>
+</body>
+</html>

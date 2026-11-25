@@ -1,26 +1,39 @@
-Procedure: modIssueMapper.GetStatusId  [ ステータスID取得＜modIssueMapper＞ ]
-HCP	Business
 ┬
 〇│Public Function GetStatusId(  ByVal statusName As String) As Long	ステータスID取得＜modIssueMapper＞
 ┴└┐
-　　│#  Sysdataシート取得
+　　│#   Sysdataシート取得
 　　□ Dim sht As Worksheet
 　　〇 Set sht = ThisWorkbook.Sheets(SheetName_Sysdata)
 　　□ Dim i As Long
-　　│#  マスタ検索
+　　│#   マスタ検索
 　　＠┐For i = 2 To sht.Cells(sht.Rows.count, Statusid_Col).End(xlUp).row
 　　│□ Dim id As Variant
 　　│□ Dim name As String
-　　││#  マスタ情報取得
+　　││#   マスタ情報取得
 　　│〇 id = sht.Cells(i, Statusid_Col).Value
 　　│〇 name = Trim(sht.Cells(i, Statusid_Col + 1).Value)
-　　││#  一致判定
+　　││#   一致判定
 　　│◆┐If name = statusName Then
-　　│││#  取得値返却
+　　│││#   取得値返却
 　　││〇 GetStatusId = id
 　　││→ Exit Function
 　　││┴End If
 　　│┴Next i
-　　│#  未検出時初期値返却
+　　│#   未検出時初期値返却
 　　〇 GetStatusId = 0
 　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+CreateIssueXmlFromIssue	新規登録XML生成	modRegister
+CreateUpdateXmlFromIssue	更新登録XML生成	modRegister

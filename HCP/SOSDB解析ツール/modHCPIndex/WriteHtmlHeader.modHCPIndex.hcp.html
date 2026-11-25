@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
+<title>WriteHtmlHeader</title>
+<style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
+</style>
+</head>
+<body translate="no">
+<h1>WriteHtmlHeader</h1>
+<p>Module : modHCPIndex</p>
+<table>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
+<tbody>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Public Sub WriteHtmlHeader(  ByVal FileNo As Integer,  ByVal Title As String,  Optional ByVal LineHeight As Single = 1.5,  Optional ByVal EnableResize As Boolean = False)</td><td>HTMLヘッダ出力＜modHCPIndex＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   HTML開始</span></td><td></td></tr>
+<tr><td>　　〇 Print #FileNo, "&lt;!DOCTYPE html&gt;"</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   日本語ページ指定</span></td><td></td></tr>
+<tr><td>　　〇 Print #FileNo, "&lt;html lang=""ja""&gt;"</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   HEAD開始</span></td><td></td></tr>
+<tr><td>　　〇 Print #FileNo, "&lt;head&gt;"</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   文字コード</span></td><td></td></tr>
+<tr><td>　　〇 Print #FileNo,  "&lt;meta charset=""shift_jis""&gt;"</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   Google翻訳抑止</span></td><td></td></tr>
+<tr><td>　　〇 Print #FileNo,  "&lt;meta name=""google"" content=""notranslate""&gt;"</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   電話番号リンク化抑止</span></td><td></td></tr>
+<tr><td>　　〇 Print #FileNo,  "&lt;meta name=""format-detection"" content=""telephone=no""&gt;"</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   ブラウザ言語指定</span></td><td></td></tr>
+<tr><td>　　〇 Print #FileNo,  "&lt;meta http-equiv=""Content-Language"" content=""ja""&gt;"</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   タイトル</span></td><td></td></tr>
+<tr><td>　　〇 Print #FileNo,  "&lt;title&gt;" &amp;  Title &amp;  "&lt;/title&gt;"</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   CSS開始</span></td><td></td></tr>
+<tr><td>　　〇 Print #FileNo,  "&lt;style&gt;"</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   翻訳抑止</span></td><td></td></tr>
+<tr><td>　　〇 Print #FileNo,  ".notranslate{" &amp;  "translate:no;" &amp;  "}"</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   コメント色付け</span></td><td></td></tr>
+<tr><td>　　〇 Print #FileNo,  ".hcp-comment{" &amp;  "color:#008000;" &amp;  "font-style:italic;" &amp;  "white-space:pre;" &amp;  "}"</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   Body</span></td><td></td></tr>
+<tr><td>　　〇 Print #FileNo,  "body{font-family:Meiryo;font-size:9pt;}"</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   Table</span></td><td></td></tr>
+<tr><td>　　〇 Print #FileNo,  "table{border-collapse:collapse;}"</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   Cell</span></td><td></td></tr>
+<tr><td>　　〇 Print #FileNo,  "th,td{border:1px solid #cccccc;" &amp;  "padding:1px 4px;" &amp;  "line-height:" &amp;  Line_Height &amp; ";}"</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   DataCell</span></td><td></td></tr>
+<tr><td>　　〇 Print #FileNo,  "td{vertical-align:top;}"</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   HeaderCell</span></td><td></td></tr>
+<tr><td>　　〇 Print #FileNo,  "th{background:#e8f0fe;}"</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   列幅変更CSS</span></td><td></td></tr>
+<tr><td>　　◆┐If EnableResize Then</td><td></td></tr>
+<tr><td>　　│◎ <a href="../modHCPIndex/WriteColumnResizerCss.modHCPIndex.hcp.html">WriteColumnResizerCss</a>  FileNo</td><td><a href="../modHCPIndex/WriteColumnResizerCss.modHCPIndex.hcp.html">列幅変更CSS出力＜modHCPIndex＞</a></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   CSS終了</span></td><td></td></tr>
+<tr><td>　　〇 Print #FileNo,  "&lt;/style&gt;"</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   HEAD終了</span></td><td></td></tr>
+<tr><td>　　〇 Print #FileNo,  "&lt;/head&gt;"</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   BODY開始</span></td><td></td></tr>
+<tr><td>　　〇 Print #FileNo,  "&lt;body translate=""no""&gt;"</td><td></td></tr>
+<tr><td>　　┴End Sub</td><td></td></tr>
+</tbody>
+</table>
+<hr>
+<h2>Calls (1)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modHCPIndex/WriteColumnResizerCss.modHCPIndex.hcp.html">WriteColumnResizerCss</a></td><td>列幅変更CSS出力</td><td>modHCPIndex</td></tr>
+</table>
+<hr>
+<h2>Called By (3)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modHCPIndex/WriteHtmlIndexFile.modHCPIndex.hcp.html">WriteHtmlIndexFile</a></td><td>Module INDEX HTML出力</td><td>modHCPIndex</td></tr>
+<tr><td><a href="../modHCPIndex/WriteToolIndexHtml.modHCPIndex.hcp.html">WriteToolIndexHtml</a></td><td>Tool INDEX HTML出力</td><td>modHCPIndex</td></tr>
+<tr><td><a href="../clsTextRenderer/Export.clsTextRenderer.hcp.html">Export</a></td><td></td><td></td></tr>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function(eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function(e) {
+startX = e.pageX;
+startWidth = eleTh.offsetWidth;
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
+}
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
+}
+});
+</script>
+</body>
+</html>

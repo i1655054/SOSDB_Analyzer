@@ -1,0 +1,22 @@
+┬
+〇│Public Sub CreateFolderIfNotExists(  ByVal FolderPath As String)	フォルダ作成＜modHCPPath＞
+┴└┐
+　　◆┐If Dir(  FolderPath,  vbDirectory) = "" Then
+　　│〇 MkDir FolderPath
+　　│┴End If
+　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetHCPOutputFolder	HCP出力フォルダ取得	modHCPPath
+GetHCPToolFolder	HCPツールフォルダ取得	modHCPPath

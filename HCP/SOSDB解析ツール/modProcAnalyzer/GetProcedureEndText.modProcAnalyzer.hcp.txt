@@ -1,0 +1,31 @@
+┬
+〇│Private Function GetProcedureEndText(  ByVal ProcHeader As String)  As String	終了構文取得＜modProcAnalyzer＞
+┴└┐
+　　│#   Procedure種別判定
+　　◆┐If StartsWithKeyword(  ProcHeader,  "Public Function")  Or StartsWithKeyword(  ProcHeader,  "Private Function")  Or StartsWithKeyword(  ProcHeader,  "Friend Function") Then	内部呼出:StartsWithKeyword
+　　││#   End Function返却
+　　│〇 GetProcedureEndText =  "End Function"
+　　├┐ElseIf StartsWithKeyword(  ProcHeader,  "Public Property")  Or StartsWithKeyword(  ProcHeader,  "Private Property")  Or StartsWithKeyword(  ProcHeader,  "Friend Property") Then	内部呼出:StartsWithKeyword
+　　││#   End Property返却
+　　│〇 GetProcedureEndText =  "End Property"
+　　├┐ELSE
+　　││#   End Sub返却
+　　│〇 GetProcedureEndText =  "End Sub"
+　　│┴End If
+　　┴End Function
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+StartsWithKeyword	キーワード前方一致判定	modProcAnalyzer
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+AnalyzeProcedure	Proc解析	modProcAnalyzer

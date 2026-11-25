@@ -1,0 +1,55 @@
+┬
+〇│Public Function GetChartRange() As Range	チャート範囲取得＜modPathChart＞
+┴└┐
+　　□ Dim ws As Worksheet
+　　□ Dim shp As Shape
+　　□ Dim MaxRight As Double
+　　□ Dim MaxBottom As Double
+　　□ Dim LastCol As Long
+　　□ Dim LastRow As Long
+　　│#   PathChartシート取得
+　　〇 Set ws = gContext.ManagementBook.Worksheets(
+　　│ SHEET_PATH_CHART)
+　　│#   描画範囲初期化
+　　〇 MaxRight = ws.Range(ROOT_CELL).Left
+　　〇 MaxBottom = ws.Range(ROOT_CELL).Top
+　　│#   図形配置範囲取得
+　　＠┐For Each shp In ws.Shapes
+　　│◆┐If Left$(shp.Name, 2) = "N_"  Or Left$(shp.Name, 2) = "C_" Then
+　　││◆┐If shp.Left + shp.Width > MaxRight Then
+　　│││〇 MaxRight = shp.Left + shp.Width
+　　│││┴End If
+　　││◆┐If shp.Top + shp.Height > MaxBottom Then
+　　│││〇 MaxBottom = shp.Top + shp.Height
+　　│││┴End If
+　　││┴End If
+　　│┴Next shp
+　　〇 LastCol = 1
+　　│#   最終列算出
+　　＠┐Do While ws.Columns(LastCol).Left < MaxRight
+　　│〇 LastCol = LastCol + 1
+　　│┴Loop
+　　〇 LastRow = 1
+　　│#   最終行算出
+　　＠┐Do While ws.Rows(LastRow).Top < MaxBottom
+　　│〇 LastRow = LastRow + 1
+　　│┴Loop
+　　│#   PathChart範囲返却
+　　〇 Set GetChartRange =  ws.Range(  ws.Range(ROOT_CELL),  ws.Cells(LastRow + 1,  LastCol + 1))
+　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (3)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+CreatePathChart_V3	パスチャート作成	modPathChart
+CreatePowerPointPathChart	PowerPoint出力	modPowerPointChart
+ExportPathChartToPNG	PNG出力	modPowerPointChart

@@ -1,0 +1,34 @@
+┬
+〇│Private Sub HighlightSiblingConnectors(  ByVal ParentShapeName As String)	兄弟接続線強調＜modPathChart＞
+┴└┐
+　　□ Dim Ary As Variant
+　　□ Dim ChildName As Variant
+　　◆→ If gChildMap Is Nothing Then Exit Sub
+　　◆┐If Not gChildMap.Exists(ParentShapeName) Then
+　　│→ Exit Sub
+　　│┴End If
+　　〇 Ary = Split(  gChildMap(ParentShapeName),  "|")
+　　│#   兄弟接続線強調表示
+　　＠┐For Each ChildName In Ary
+　　│◆┐If CStr(ChildName) <> gCurrentShapeName Then
+　　││◎ HighlightConnector  ParentShapeName,  CStr(ChildName),  SIBLING_LINE_COLOR,  SIBLING_CONNECTOR_WEIGHT	接続線強調＜modPathChart＞
+　　│││	内部呼出:CStr
+　　││┴End If
+　　│┴Next ChildName
+　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+HighlightConnector	接続線強調	modPathChart
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+HighlightNode	ノード強調表示	modPathChart

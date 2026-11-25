@@ -1,0 +1,29 @@
+┬
+〇│Private Sub AddTrueNode(  ByVal HCPNodes As Collection,  ByRef NewID As Long,  ByVal IfNodeID As Long)	TRUEノード追加＜modHCPAnalyzer＞
+┴└┐
+　　□ Dim TrueNode As clsHCPNode
+　　│#   TRUEノード生成
+　　〇 Set TrueNode = New clsHCPNode
+　　〇 TrueNode.NodeID = NewID
+　　〇 NewID = NewID + 1
+　　〇 TrueNode.ParentID =  -IfNodeID
+　　〇 TrueNode.NodeType =  NODE_TRUE
+　　〇 TrueNode.BranchType =  BRANCH_TRUE
+　　〇 TrueNode.Text =  "TRUE"
+　　│#   TRUEノード登録
+　　〇 HCPNodes.Add TrueNode
+　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ConvertProcToHCP	HCP変換	modHCPAnalyzer

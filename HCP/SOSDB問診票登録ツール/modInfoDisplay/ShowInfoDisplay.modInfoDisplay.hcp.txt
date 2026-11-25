@@ -1,21 +1,44 @@
-Procedure: modInfoDisplay.ShowInfoDisplay  [ 情報表示フォーム表示＜modInfoDisplay＞ ]
-HCP	Business
 ┬
 〇│Private Sub ShowInfoDisplay(ByVal uf As UF_InfoWebDisplay)	情報表示フォーム表示＜modInfoDisplay＞
 ┴└┐
 　　☆ On Error Resume Next
-　　│#  フォームサイズ復元
-　　◎ uf.RestoreCurrentSize	フォームサイズ復元＜UF_InfoWebDisplay＞
-　　│#  編集モード解除
+　　│#   フォームサイズ復元
+　　〇 uf.RestoreCurrentSize
+　　│#   編集モード解除
 　　◆┐If Not uf.CommandButtonEdit.Visible Then
-　　│◎ uf.ResetEditMode	編集モード解除＜UF_InfoWebDisplay＞
+　　│〇 uf.ResetEditMode
 　　│┴End If
-　　│#  表示中フォーム再描画
+　　│#   表示中フォーム再描画
 　　◆┐If uf.Visible Then
-　　│◎ uf.RenderHTML	HTML表示＜UF_InfoWebDisplay＞
+　　│〇 uf.RenderHTML
 　　│〇 uf.Repaint
 　　├┐ELSE
-　　││#  フォーム表示
+　　││#   フォーム表示
 　　│〇 uf.Show vbModeless
 　　│┴End If
 　　┴End Sub
+
+========================================
+Calls (3)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+RestoreCurrentSize	フォームサイズ復元	UF_InfoWebDisplay
+ResetEditMode	編集モード解除	UF_InfoWebDisplay
+RenderHTML	HTML表示	UF_InfoWebDisplay
+
+========================================
+Called By (8)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ShowPhenomenon	事象名表示	modInfoDisplay
+ShowRequesterNum	依頼元管理番号表示	modInfoDisplay
+ShowRequesterPro	依頼者表示	modInfoDisplay
+ShowCause	原因詳細表示	modInfoDisplay
+ShowCope	対処内容表示	modInfoDisplay
+ShowRemarks	備考表示	modInfoDisplay
+ShowDescription	説明表示	modInfoDisplay
+ShowKeyWordX	キーワード表示編集	modInfoDisplay

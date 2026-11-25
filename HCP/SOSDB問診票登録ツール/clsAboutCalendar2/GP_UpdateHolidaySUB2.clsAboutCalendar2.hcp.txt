@@ -1,20 +1,34 @@
-Procedure: clsAboutCalendar2.GP_UpdateHolidaySUB2  [ HappyMonday祝日設定＜clsAboutCalendar2＞ ]
-HCP	Business
 ┬
 〇│Private Sub GPUpdateHolidaySUB2(ByVal lngSyusu As Long,  ByVal lngYobi As Long,  ByVal strName As String,  ByVal lngHoli As Long,  ByVal lngFurikaeKbn As Long,  ByVal lngCalStrIx As Long,  ByVal lngIxSyuku As Long,  ByRef lngFuriDIxMax As Long,  ByRef tblFuriDIx() As gtypFuriDIx,  ByRef tblCalendar() As g_typAboutCalendar2)	HappyMonday祝日設定＜clsAboutCalendar2＞
 ┴└┐
 　　□ Dim lngIx As Long                                           ' テーブルINDEX
 　　〇 lngIx = lngCalStrIx
-　　│#  対象日検索
+　　│#   対象日検索
 　　＠┐Do While lngIx <= UBound(tblCalendar)
-　　││#  HappyMonday該当判定
+　　││#   HappyMonday該当判定
 　　│◆┐If ((tblCalendar(lngIx).HmSyusu = lngSyusu) And (tblCalendar(lngIx).Yobi = lngYobi)) Then
-　　│││#  固定日祝日設定処理呼出
+　　│││#   固定日祝日設定処理呼出
 　　││◎ Call GP_UpdateHolidaySUB1(Day(tblCalendar(lngIx).Hiduke),  strName,  lngHoli,  lngFurikaeKbn,  lngCalStrIx,  lngIxSyuku,  lngFuriDIxMax,  tblFuriDIx,  tblCalendar)	固定日祝日設定＜clsAboutCalendar2＞
 　　│││	内部呼出:Day, tblCalendar
 　　││→ Exit Do
 　　││┴End If
-　　││#  次日検索
+　　││#   次日検索
 　　│〇 lngIx = lngIx + 1
 　　│┴Loop
 　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GP_UpdateHolidaySUB1	固定日祝日設定	clsAboutCalendar2
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GP_UpdateHolidayToCalendar	祝日反映処理	clsAboutCalendar2

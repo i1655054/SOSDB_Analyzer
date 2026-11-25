@@ -1,0 +1,53 @@
+┬
+〇│Public Function GetChildrenList(  ByVal ParentProc As String)  As Collection	子関数一覧取得＜modPathChartCommon＞
+┴└┐
+　　□ Dim Col As Collection
+　　□ Dim wsDep As Worksheet
+　　□ Dim LastRow As Long
+　　□ Dim r As Long
+　　□ Dim ChildProc As String
+　　□ Dim ParentModule As String
+　　□ Dim ChildModule As String
+　　│#   初期化
+　　│#   子Procedure一覧初期化
+　　〇 Set Col = New Collection
+　　│#   関数依存関係取得
+　　│#   関数依存関係シート取得
+　　〇 Set wsDep =  gContext.ManagementBook.Worksheets(
+　　│   SHEET_FUNCTION_DEPENDENCY)
+　　│#   関数依存関係最終行取得
+　　〇 LastRow =  wsDep.Cells(  wsDep.Rows.Count,  "A").End(xlUp).row
+　　│#   子Procedure探索
+　　＠┐For r = 2 To LastRow
+　　││#   親Procedure一致判定
+　　│◆┐If StrComp(  Trim$(wsDep.Cells(r, 1).Value),  ParentProc,  vbTextCompare) = 0 Then
+　　│││#   呼出関係情報取得
+　　││〇 ChildProc =  Trim$(wsDep.Cells(r, 3).Value)
+　　││〇 ParentModule =  Trim$(wsDep.Cells(r, 6).Value)
+　　││〇 ChildModule =  Trim$(wsDep.Cells(r, 7).Value)
+　　│││#   出力対象判定
+　　││◆┐If IsTargetRelation(  ParentProc,  ChildProc,  ParentModule,  ChildModule) Then	内部呼出:IsTargetRelation
+　　││││#   子Procedure追加
+　　│││〇 Col.Add ChildProc
+　　│││┴End If
+　　││┴End If
+　　│┴Next r
+　　│#   子Procedure一覧返却
+　　〇 Set GetChildrenList = Col
+　　┴End Function
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+IsTargetRelation	出力対象判定	modPathChartCommon
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+BuildTreeText	ツリー構造生成	modPathChartText

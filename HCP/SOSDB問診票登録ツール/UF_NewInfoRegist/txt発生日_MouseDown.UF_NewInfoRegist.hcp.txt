@@ -1,8 +1,20 @@
-Procedure: UF_NewInfoRegist.txt発生日_MouseDown  [ 発生日カレンダー表示＜UF_NewInfoRegist＞ ]
-HCP	Business
 ┬
 〇│Private Sub txt発生日_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)	発生日カレンダー表示＜UF_NewInfoRegist＞
 ┴└┐
-　　│#  発生日カレンダー表示
+　　│#   発生日カレンダー表示
 　　◎ Call ShowCalendarFromTextBox2(Me.txt発生日)	テキストボックス日付選択＜modCalendar5＞
 　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ShowCalendarFromTextBox2	テキストボックス日付選択	modCalendar5
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

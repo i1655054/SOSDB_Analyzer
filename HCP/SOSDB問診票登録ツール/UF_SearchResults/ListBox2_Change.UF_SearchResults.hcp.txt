@@ -1,9 +1,7 @@
-Procedure: UF_SearchResults.ListBox2_Change  [ 一覧選択同期IssueID＜UF_SearchResults＞ ]
-HCP	Business
 ┬
 〇│Private Sub ListBox2_Change()	一覧選択同期IssueID＜UF_SearchResults＞
 ┴└┐
-　　│#  行選択同期
+　　│#   行選択同期
 　　〇 ListBox1.ListIndex = ListBox2.ListIndex
 　　〇 ListBox3.ListIndex = ListBox2.ListIndex
 　　〇 ListBox4.ListIndex = ListBox2.ListIndex
@@ -11,3 +9,15 @@ HCP	Business
 　　〇 ListBox6.ListIndex = ListBox2.ListIndex
 　　〇 ListBox7.ListIndex = ListBox2.ListIndex
 　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

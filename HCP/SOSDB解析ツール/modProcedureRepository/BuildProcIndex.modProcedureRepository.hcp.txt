@@ -1,0 +1,35 @@
+┬
+〇│Private Sub BuildProcIndex(  ByVal Info As clsProcInfo)	Procedure索引作成＜modProcedureRepository＞
+┴└┐
+　　□ Dim Col As Collection
+　　│#   Procedure索引取得
+　　◆┐If gContext.ProcIndexDic.Exists(  Info.ProcName) Then
+　　│〇 Set Col =  gContext.ProcIndexDic(  Info.ProcName)
+　　├┐ELSE
+　　││#   Procedure索引生成
+　　│〇 Set Col = New Collection
+　　│〇 gContext.ProcIndexDic.Add  Info.ProcName,  Col
+　　│┴End If
+　　│#   モジュール索引登録
+　　│#   モジュール重複確認
+　　◆┐If Not ExistsModule(Col, Info.ModuleName) Then	内部呼出:ExistsModule
+　　││#   モジュール索引登録
+　　│〇 Col.Add Info.ModuleName
+　　│┴End If
+　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ExistsModule	モジュール存在判定	modProcedureRepository
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+BuildProcInfoDictionary	Procedure辞書作成	modProcedureRepository

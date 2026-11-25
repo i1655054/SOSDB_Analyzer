@@ -1,5 +1,3 @@
-Procedure: UF_SearchResults.btnSelect_Click  [ 検索結果選択＜UF_SearchResults＞ ]
-HCP	Business
 ┬
 〇│Private Sub btnSelect_Click()	検索結果選択＜UF_SearchResults＞
 ┴└┐
@@ -11,37 +9,52 @@ HCP	Business
 　　□ Dim result As VbMsgBoxResult
 　　〇 Set sht = ThisWorkbook.Sheets(SheetName_Main) ' 対象のシート名を指定
 　　＠┐With Me.ListBox3
-　　││#  選択状態確認
+　　││#   選択状態確認
 　　│◆┐If .ListIndex <> -1 Then ' 何か選択されているかチェック
-　　│││#  選択値取得
+　　│││#   選択値取得
 　　││〇 selectedValue = .List(.ListIndex) ' 選択行の値を取得
-　　│││#  ユーザー確認
+　　│││#   ユーザー確認
 　　││〇 result = MsgBox("選択された値は「" & selectedValue & "」です。", vbYesNo + vbQuestion, "DB情報取得確認")
-　　│││#  実行判定
+　　│││#   実行判定
 　　││◆┐If result = vbYes Then
-　　││││#  管理番号分解
+　　││││#   管理番号分解
 　　│││〇 parts = Split(selectedValue, "-")
 　　│││〇 yearPart = parts(0)
 　　│││〇 serialPart = parts(1)
-　　││││#  検索条件反映
+　　││││#   検索条件反映
 　　│││〇 sht.Range(TARGET_VER_RANG) = Format(yearPart, "20##年度")
 　　│││〇 sht.Range(TORBLE_NUM_RANG) = serialPart
-　　││││#  検索結果画面非表示
+　　││││#   検索結果画面非表示
 　　│││〇 Me.Hide
-　　││││#  検索状態設定
+　　││││#   検索状態設定
 　　│││＠┐With Sheet1
 　　││││〇 .CheckBox1.Value = True
 　　││││〇 .DB検索.Caption = "検索結果"
 　　││││〇 .DB検索.BackColor = &HC0C0FF
 　　││││┴End With
-　　││││#  Issue情報更新
+　　││││#   Issue情報更新
 　　│││◎ Call GetUIToIssue(g_CurrentIssue)	画面情報取得＜modUtility＞
-　　││││#  Redmine情報取得
+　　││││#   Redmine情報取得
 　　│││◎ Call LoadRedmineIssue	Redmine情報読込＜modMonshinCore＞
 　　│││┴End If
 　　│├┐ELSE
-　　│││#  未選択警告
+　　│││#   未選択警告
 　　││〇 MsgBox "アイテムが選択されていません。"
 　　││┴End If
 　　│┴End With
 　　┴End Sub
+
+========================================
+Calls (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetUIToIssue	画面情報取得	modUtility
+LoadRedmineIssue	Redmine情報読込	modMonshinCore
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

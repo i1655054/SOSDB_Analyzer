@@ -1,41 +1,42 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
 <meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
 <title>LBL_MONTH_Click</title>
 <style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
 body{font-family:Meiryo;font-size:9pt;}
 table{border-collapse:collapse;}
-th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
 td{vertical-align:top;}
 th{background:#e8f0fe;}
-colgroup col:nth-of-type(1) {}
-colgroup col:nth-of-type(2) {}
-.resize {position: relative;}
-.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
 </style>
 </head>
-<body>
+<body translate="no">
 <h1>LBL_MONTH_Click</h1>
 <p>Module : UF_Calendar5</p>
-<p><a href="./_INDEX.html">← Module Index</a></p>
 <table>
-<colgroup><col/><col/></colgroup>
-<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
 <tbody>
-<tr><td>Procedure: UF_Calendar5.LBL_MONTH_Click  [ 月選択表示＜UF_Calendar5＞ ]</td><td></td></tr>
-<tr><td>HCP</td><td>Business</td></tr>
 <tr><td>┬</td><td></td></tr>
 <tr><td>〇│Private Sub LBL_MONTH_Click()</td><td>月選択表示＜UF_Calendar5＞</td></tr>
 <tr><td>┴└┐</td><td></td></tr>
 <tr><td>　　□ Dim intMonth As Integer</td><td></td></tr>
 <tr><td>　　□ Dim IX As Long, CUR As Long</td><td></td></tr>
-<tr><td>　　│#  年選択非表示</td><td></td></tr>
-<tr><td>　　◎ Call GP_EraseYear</td><td>年選択非表示＜UF_Calendar5＞</td></tr>
+<tr><td><span class="hcp-comment">　　│#   年選択非表示</span></td><td></td></tr>
+<tr><td>　　◎ Call <a href="../UF_Calendar5/GP_EraseYear.UF_Calendar5.hcp.html">GP_EraseYear</a></td><td><a href="../UF_Calendar5/GP_EraseYear.UF_Calendar5.hcp.html">年選択非表示＜UF_Calendar5＞</a></td></tr>
 <tr><td>　　〇 g_swBatch = True</td><td></td></tr>
-<tr><td>　　│#  月選択一覧生成</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   月選択一覧生成</span></td><td></td></tr>
 <tr><td>　　＠┐With CBO_MONTH</td><td></td></tr>
-<tr><td>　　│◎ .Clear</td><td>Issue情報初期化＜IssueInfo＞</td></tr>
+<tr><td>　　│〇 .Clear</td><td></td></tr>
 <tr><td>　　│＠┐For intMonth = 1 To 12</td><td></td></tr>
 <tr><td>　　││〇 .AddItem Format(intMonth, "00")</td><td></td></tr>
 <tr><td>　　││◆ If intMonth = g_intCurMonth Then CUR = IX</td><td></td></tr>
@@ -43,38 +44,42 @@ colgroup col:nth-of-type(2) {}
 <tr><td>　　││┴Next intMonth</td><td></td></tr>
 <tr><td>　　│〇 .ListIndex = CUR</td><td></td></tr>
 <tr><td>　　│〇 .Visible = True</td><td></td></tr>
-<tr><td>　　││#  月選択表示</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   月選択表示</span></td><td></td></tr>
 <tr><td>　　│〇 g_VisibleMonth = True</td><td></td></tr>
 <tr><td>　　│┴End With</td><td></td></tr>
 <tr><td>　　〇 g_swBatch = False</td><td></td></tr>
 <tr><td>　　┴End Sub</td><td></td></tr>
 </tbody>
 </table>
+<hr>
+<h2>Calls (2)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../UF_Calendar5/GP_EraseYear.UF_Calendar5.hcp.html">GP_EraseYear</a></td><td>年選択非表示</td><td>UF_Calendar5</td></tr>
+<tr><td><a href="../IssueInfo/Clear.IssueInfo.hcp.html">Clear</a></td><td>Issue情報初期化</td><td>IssueInfo</td></tr>
+</table>
+<hr>
+<h2>Called By (0)</h2>
+<p>呼出元なし</p>
 <script>
-document.querySelectorAll('.resize').forEach(function (eleTh) {
+document.querySelectorAll('.resize').forEach(function(eleTh) {
 let startX;
 let startWidth;
 const eleResizer = document.createElement('div');
 eleResizer.classList.add('resizer');
-eleResizer.addEventListener('mousedown', function (e) {
-const styleTh = window.getComputedStyle(eleTh);
-const paddingLeft = parseFloat(styleTh.paddingLeft);
-const paddingRight = parseFloat(styleTh.paddingRight);
-const borderLeft = parseFloat(styleTh.borderLeftWidth);
-const borderRight = parseFloat(styleTh.borderRightWidth);
+eleResizer.addEventListener('mousedown', function(e) {
 startX = e.pageX;
-startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+startWidth = eleTh.offsetWidth;
 document.addEventListener('mousemove', onMouseMove);
 document.addEventListener('mouseup', onMouseUp);
 });
 eleTh.appendChild(eleResizer);
-function onMouseMove(e) {
-const newWidth = startWidth + (e.pageX - startX);
-eleTh.style.width = newWidth + 'px';
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
 }
-function onMouseUp() {
-document.removeEventListener('mousemove', onMouseMove);
-document.removeEventListener('mouseup', onMouseUp);
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
 }
 });
 </script>

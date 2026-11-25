@@ -1,0 +1,51 @@
+┬
+〇│Private Function ExtractCallNames(  ByVal LineText As String,  ByVal FuncList As Object)  As Collection	呼出関数一覧取得＜modProcAnalyzer＞
+┴└┐
+　　□ Dim Names As Collection
+　　□ Dim Key As Variant
+　　│#   呼出関数一覧初期化
+　　〇 Set Names = New Collection
+　　〇 LineText = Trim$(LineText)
+　　│#   Procedure宣言行除外
+　　◆┐If IsProcedureLine(LineText) Then	内部呼出:IsProcedureLine
+　　│〇 Set ExtractCallNames = Names
+　　│→ Exit Function
+　　│┴End If
+　　│#   コメント行除外
+　　◆┐If Left$(LineText, 1) = "'" Then
+　　│〇 Set ExtractCallNames = Names
+　　│→ Exit Function
+　　│┴End If
+　　│#   登録Procedure探索
+　　＠┐For Each Key In FuncList.Keys
+　　││#   オブジェクトメソッド除外
+　　│◆┐If IsObjectMethodCall(  LineText,  CStr(Key)) Then	内部呼出:IsObjectMethodCall
+　　││→ GoTo ContinueKey
+　　││┴End If
+　　│◆┐If IsFunctionCall(  LineText,  CStr(Key)) Then	内部呼出:IsFunctionCall
+　　│││#   呼出関数登録
+　　││〇 Names.Add CStr(Key)
+　　││┴End If
+▼ ContinueKey:
+　　│┴Next Key
+　　│#   呼出関数一覧返却
+　　〇 Set ExtractCallNames = Names
+　　┴End Function
+
+========================================
+Calls (3)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+IsProcedureLine	プロシージャ定義判定	modAnalyze
+IsObjectMethodCall	オブジェクトメソッド判定	modAnalyzerCommon
+IsFunctionCall	関数呼出判定	modAnalyzerCommon
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+AnalyzeProcedure	Proc解析	modProcAnalyzer

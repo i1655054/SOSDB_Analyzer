@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
+<title>IsEventProcedure</title>
+<style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
+</style>
+</head>
+<body translate="no">
+<h1>IsEventProcedure</h1>
+<p>Module : modAnalyze</p>
+<table>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
+<tbody>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Private Function IsEventProcedure(  ByVal ProcName As String)  As Boolean</td><td>イベントプロシージャ判定＜modAnalyze＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   イベントプロシージャ判定</span></td><td></td></tr>
+<tr><td>　　〇 IsEventProcedure =  ProcName Like "Workbook_*"  Or ProcName Like "Worksheet_*"  Or ProcName Like "UserForm_*"  Or ProcName Like "Class_*"  Or ProcName Like "*_Click"  Or ProcName Like "*_DblClick"  Or ProcName Like "*_Change"  Or ProcName Like "*_MouseDown"  Or ProcName Like "*_MouseUp"  Or ProcName Like "*_MouseMove"  Or ProcName Like "*_KeyDown"  Or ProcName Like "*_KeyUp"  Or ProcName Like "*_KeyPress"  Or ProcName Like "*_ItemCheck"  Or ProcName Like "*_ItemClick"</td><td></td></tr>
+<tr><td>　　┴End Function</td><td></td></tr>
+</tbody>
+</table>
+<hr>
+<h2>Calls (0)</h2>
+<p>呼出先なし</p>
+<hr>
+<h2>Called By (1)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modAnalyze/GetUsageStatus.modAnalyze.hcp.html">GetUsageStatus</a></td><td>使用状況判定</td><td>modAnalyze</td></tr>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function(eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function(e) {
+startX = e.pageX;
+startWidth = eleTh.offsetWidth;
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
+}
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
+}
+});
+</script>
+</body>
+</html>

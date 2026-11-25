@@ -1,36 +1,51 @@
-Procedure: UF_InfoWebDisplay.RestoreCurrentSize  [ フォームサイズ復元＜UF_InfoWebDisplay＞ ]
-HCP	Business
 ┬
 〇│Public Sub RestoreCurrentSize()	フォームサイズ復元＜UF_InfoWebDisplay＞
 ┴└┐
-　　│#  サイズ管理初期化
+　　│#   サイズ管理初期化
 　　◎ Call InitFormSize	フォームサイズ管理初期化＜UF_InfoWebDisplay＞
-　　│#  表示種別確認
+　　│#   表示種別確認
 　　◆→ If CallingInfoDisplay = "" Then Exit Sub
-　　│#  保存済サイズ確認
+　　│#   保存済サイズ確認
 　　◆┐If m_FormSizeDic.Exists(CallingInfoDisplay) Then
 　　│□ Dim sz As Variant
-　　││#  保存サイズ復元
+　　││#   保存サイズ復元
 　　│〇 sz = m_FormSizeDic(CallingInfoDisplay)
 　　│〇 m_IsRestoring = True
 　　│〇 Me.Width = sz(0)
 　　│〇 Me.Height = sz(1)
 　　│〇 m_IsRestoring = False
-　　│〇 m_IsRestoring = False
 　　├┐ELSE
-　　││#  デフォルトサイズ設定
+　　││#   デフォルトサイズ設定
 　　│〇 m_IsRestoring = True
 　　│〇 Me.Width = m_DefaultWidth
 　　│〇 Me.Height = m_DefaultHeight
-　　││#  表示種別別サイズ調整
+　　││#   表示種別別サイズ調整
 　　│◆┐Select Case CallingInfoDisplay
-　　││┴End Select
 　　│Case "ShowPhenomenon", "ShowRequesterNum"
 　　│〇 Me.Height = 140
 　　│Case "ShowRequesterPro"
 　　│〇 Me.Height = 180
 　　│Case Else
+　　││┴End Select
+　　│〇 m_IsRestoring = False
 　　│┴End If
-　　│#  レイアウト再構築
+　　│#   レイアウト再構築
 　　◎ UserForm_Resize	フォームサイズ変更＜UF_InfoWebDisplay＞
 　　┴End Sub
+
+========================================
+Calls (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+InitFormSize	フォームサイズ管理初期化	UF_InfoWebDisplay
+UserForm_Resize	フォームサイズ変更	UF_InfoWebDisplay
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ShowInfoDisplay	情報表示フォーム表示	modInfoDisplay

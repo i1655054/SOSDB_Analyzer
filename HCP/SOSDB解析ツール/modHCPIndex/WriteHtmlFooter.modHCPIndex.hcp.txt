@@ -1,0 +1,30 @@
+┬
+〇│Public Sub WriteHtmlFooter(  ByVal FileNo As Integer,  Optional ByVal EnableResize As Boolean = False)	HTMLフッタ出力＜modHCPIndex＞
+┴└┐
+　　│#   列幅変更Script
+　　◆┐If EnableResize Then
+　　│◎ WriteColumnResizerScript  FileNo	列幅変更Script出力＜modHCPIndex＞
+　　│┴End If
+　　│#   BODY終了
+　　〇 Print #FileNo,  "</body>"
+　　│#   HTML終了
+　　〇 Print #FileNo,  "</html>"
+　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+WriteColumnResizerScript	列幅変更Script出力	modHCPIndex
+
+========================================
+Called By (3)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+WriteHtmlIndexFile	Module INDEX HTML出力	modHCPIndex
+WriteToolIndexHtml	Tool INDEX HTML出力	modHCPIndex
+Export

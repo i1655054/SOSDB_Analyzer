@@ -1,9 +1,7 @@
-Procedure: IssueInfo.CopyFrom  [ Issue情報コピー＜IssueInfo＞ ]
-HCP	Business
 ┬
 〇│Public Sub CopyFrom(ByVal src As IssueInfo)	Issue情報コピー＜IssueInfo＞
 ┴└┐
-　　│#  基本項目コピー
+　　│#   基本項目コピー
 　　〇 Me.IssueId = src.IssueId
 　　〇 Me.Subject = src.Subject
 　　〇 Me.Description = src.Description
@@ -13,7 +11,7 @@ HCP	Business
 　　〇 Me.AuthorName = src.AuthorName
 　　〇 Me.AssignedTo = src.AssignedTo
 　　〇 Me.targetVersion = src.targetVersion
-　　│#  カスタムフィールドコピー
+　　│#   カスタムフィールドコピー
 　　〇 Me.OccurrenceDateTime = src.OccurrenceDateTime
 　　〇 Me.ProblemBuilding = src.ProblemBuilding
 　　〇 Me.HostName = src.HostName
@@ -34,3 +32,20 @@ HCP	Business
 　　〇 Me.Key_Word = src.Key_Word
 　　〇 Me.EqProduct = src.EqProduct
 　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (4)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+UpdateMonshinHandler	問診票更新処理	modMonshinCore
+Clone	Issue情報複製	IssueInfo
+RegisterNewIssue	新規Issue登録	modIssueService
+UpdateExistingIssue	Issue更新登録	modIssueService

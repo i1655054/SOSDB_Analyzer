@@ -1,0 +1,23 @@
+┬
+〇│Private Function IsMergeNode(  ByVal NodeType As String)  As Boolean	マージ対象判定＜modHCPAnalyzer＞
+┴└┐
+　　│#   マージ対象判定
+　　◆┐Select Case NodeType
+　　│├┐Case NODE_IF,  NODE_FOR,  NODE_SELECT,  NODE_DO,  NODE_WITH,  NODE_WHILE,  NODE_COMPILE_IF
+　　││〇 IsMergeNode = True
+　　│┴End Select
+　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ConvertProcToHCP	HCP変換	modHCPAnalyzer

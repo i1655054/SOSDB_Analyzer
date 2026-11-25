@@ -1,0 +1,24 @@
+┬
+〇│Public Function GetIndexRelativePath(  ByVal Level As Long)  As String	INDEX相対パス取得＜modHCPPath＞
+┴└┐
+　　│#   走査用
+　　□ Dim i As Long
+　　＠┐For i = 1 To Level
+　　│〇 GetIndexRelativePath =  GetIndexRelativePath & "../"
+　　│┴Next i
+　　〇 GetIndexRelativePath =  GetIndexRelativePath &  "_INDEX.html"
+　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+WriteHtmlIndexFile	Module INDEX HTML出力	modHCPIndex

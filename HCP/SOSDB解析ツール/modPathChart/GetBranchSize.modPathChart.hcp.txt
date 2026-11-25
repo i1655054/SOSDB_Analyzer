@@ -1,0 +1,50 @@
+┬
+〇│Private Function GetBranchSize(  ByVal ParentFunc As String,  Optional ByVal PathText As String = "")  As Long	分岐サイズ取得＜modPathChart＞
+┴└┐
+　　□ Dim wsDep As Worksheet
+　　□ Dim LastRow As Long
+　　□ Dim r As Long
+　　□ Dim ChildFunc As String
+　　□ Dim Size As Long
+　　│#   再帰判定用パス生成
+　　◆┐If PathText = "" Then
+　　│〇 PathText =  "|" & UCase$(ParentFunc) & "|"
+　　│┴End If
+　　│#   関数依存関係取得
+　　〇 Set wsDep =  gContext.ManagementBook.Worksheets(
+　　│ SHEET_FUNCTION_DEPENDENCY)
+　　〇 LastRow =  wsDep.Cells(  wsDep.Rows.Count,  "A").End(xlUp).row
+　　│#   子孫ノード数集計
+　　＠┐For r = 2 To LastRow
+　　│◆┐If wsDep.Cells(r, 1).Value = ParentFunc Then
+　　││〇 ChildFunc =  Trim$(wsDep.Cells(r, 3).Value)
+　　││◆┐If InStr(  1,  PathText,  "|" & UCase$(ChildFunc) & "|",  vbTextCompare) > 0 Then
+　　│││→ GoTo NextChild
+　　│││┴End If
+　　│││#   分岐サイズ加算
+　　││◎ Size =  Size +  GetBranchSize(  ChildFunc,  PathText &  UCase$(ChildFunc) & "|")	分岐サイズ取得＜modPathChart＞
+　　││┴End If
+▼ NextChild:
+　　│┴Next r
+　　│#   分岐サイズ返却
+　　◆┐If Size = 0 Then
+　　│〇 GetBranchSize = 1
+　　├┐ELSE
+　　│〇 GetBranchSize = Size
+　　│┴End If
+　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+CreatePathChart_V3	パスチャート作成	modPathChart
+DrawCallTreeShape	ノード再帰描画	modPathChart

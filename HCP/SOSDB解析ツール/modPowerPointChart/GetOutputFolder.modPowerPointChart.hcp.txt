@@ -1,0 +1,33 @@
+┬
+〇│Public Function GetOutputFolder() As String	出力フォルダ取得＜modPowerPointChart＞
+┴└┐
+　　□ Dim Folder As String
+　　│#   出力フォルダ生成
+　　〇 Folder =  Environ$("USERPROFILE") &  "\OneDrive - east.ntt.co.jp\" &  "ドキュメント\GitHub\SOSDB_Analyzer\"
+　　│#   フォルダ存在確認
+　　│#   出力フォルダ存在確認
+　　◆┐If Dir(Folder, vbDirectory) = "" Then
+　　││#   出力フォルダ作成
+　　│〇 MkDir Folder
+　　│┴End If
+　　│#   出力フォルダ返却
+　　〇 GetOutputFolder = Folder
+　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (5)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+CreatePowerPointPathChart	PowerPoint出力	modPowerPointChart
+ExportPathChartToPNG	PNG出力	modPowerPointChart
+GetManagementFilePathByToolID	管理ファイルパス取得	modToolManager
+GetHCPOutputFolder	HCP出力フォルダ取得	modHCPPath
+GetHCPToolFolder	HCPツールフォルダ取得	modHCPPath

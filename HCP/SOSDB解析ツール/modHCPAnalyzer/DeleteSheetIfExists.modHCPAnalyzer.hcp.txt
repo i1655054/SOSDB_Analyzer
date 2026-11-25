@@ -1,0 +1,30 @@
+┬
+〇│Public Sub DeleteSheetIfExists(  ByVal SheetName As String)	シート削除＜modHCPAnalyzer＞
+┴└┐
+　　□ Dim ws As Worksheet
+　　☆ On Error Resume Next
+　　│#   削除対象シート取得
+　　〇 Set ws =  gContext.ManagementBook.Worksheets(  SheetName)
+　　☆ On Error GoTo 0
+　　│#   シート存在確認
+　　◆→ If ws Is Nothing Then Exit Sub
+　　│#   削除確認ダイアログ抑止
+　　〇 Application.DisplayAlerts = False
+　　│#   シート削除
+　　〇 ws.Delete
+　　〇 Application.DisplayAlerts = True
+　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+CreateHCP	HCP作成	modHCPAnalyzer

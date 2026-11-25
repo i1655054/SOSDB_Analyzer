@@ -1,0 +1,39 @@
+┬
+〇│Public Sub InitializeAnalyzer()	Analyzer初期化＜modStartup＞
+┴└┐
+　　│#   Analyzer環境初期化
+　　│#   PathChartショートカット登録
+　　◎ RegisterShortcut	ショートカット登録＜modPathChart＞
+　　│#   PathChart設定読込
+　　◎ LoadPathChartConfig	PathChart設定読込＜modPathChartConfig＞
+　　│#   Excel画面状態保存
+　　◎ SaveMainWindowState	Main画面状態保存＜modToolManager＞
+　　│#   メイン画面表示
+　　│#   メインシート表示
+　　〇 ThisWorkbook.Worksheets(SHEET_MAIN).Activate
+　　│#   メイン画面サイズ調整
+　　◎ ResizeMainWindow	Main画面サイズ変更＜modToolManager＞
+　　│#   メインメニュー表示
+　　〇 frmMainMenu.Show vbModeless
+　　┴End Sub
+
+========================================
+Calls (4)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+RegisterShortcut	ショートカット登録	modPathChart
+LoadPathChartConfig	PathChart設定読込	modPathChartConfig
+SaveMainWindowState	Main画面状態保存	modToolManager
+ResizeMainWindow	Main画面サイズ変更	modToolManager
+
+========================================
+Called By (3)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+Workbook_Open	Workbook起動	ThisWorkbook
+cmdStart_Click		Sheet1
+TestStartup		modUnitTest

@@ -1,0 +1,45 @@
+┬
+〇│Private Sub HighlightChildNodes(  ByVal ParentShapeName As String)	子ノード強調＜modPathChart＞
+┴└┐
+　　□ Dim ws As Worksheet
+　　□ Dim Ary As Variant
+　　□ Dim ChildName As Variant
+　　◆→ If gContext Is Nothing Then Exit Sub
+　　◆→ If gChildMap Is Nothing Then Exit Sub
+　　〇 Set ws = gContext.ManagementBook.Worksheets(
+　　│ SHEET_PATH_CHART)
+　　◆→ If gChildMap Is Nothing Then Exit Sub
+　　◆→ If Not gChildMap.Exists(ParentShapeName) Then Exit Sub
+　　│#   子ノード一覧取得
+　　〇 Ary = Split(  gChildMap(ParentShapeName),  "|")
+　　│#   子ノード強調表示
+　　＠┐For Each ChildName In Ary
+　　│◆┐If CStr(ChildName) <> gCurrentShapeName Then
+　　││＠┐With ws.Shapes(CStr(ChildName))
+　　│││〇 .line.ForeColor.RGB = CHILD_LINE_COLOR
+　　│││〇 .line.Weight = CHILD_LINE_WEIGHT
+　　│││〇 .Fill.ForeColor.RGB = CHILD_FILL_COLOR
+　　│││〇 .TextFrame.Characters.Font.Color = CHILD_FONT_COLOR
+　　│││┴End With
+　　│││#   子接続線強調表示
+　　││◎ HighlightConnector  ParentShapeName,  CStr(ChildName),  CHILD_CONNECTOR_COLOR,  CHILD_CONNECTOR_WEIGHT	接続線強調＜modPathChart＞
+　　│││	内部呼出:CStr
+　　││┴End If
+　　│┴Next ChildName
+　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+HighlightConnector	接続線強調	modPathChart
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+HighlightNode	ノード強調表示	modPathChart

@@ -1,11 +1,9 @@
-Procedure: IssueInfo.GetDiffFlags  [ 差分フラグ取得＜IssueInfo＞ ]
-HCP	Business
 ┬
 〇│Public Function GetDiffFlags(other As IssueInfo) As Long	差分フラグ取得＜IssueInfo＞
 ┴└┐
 　　□ Dim result As Long
 　　〇 result = 0
-　　│#  基本項目差分判定
+　　│#   基本項目差分判定
 　　◆┐If Me.Subject <> other.Subject Then
 　　│〇 result = result Or flg_Subject_Name
 　　│┴End If
@@ -27,7 +25,7 @@ HCP	Business
 　　◆┐If Me.targetVersion <> other.targetVersion Then
 　　│〇 result = result Or flg_Target_Version
 　　│┴End If
-　　│#  カスタムフィールド差分判定
+　　│#   カスタムフィールド差分判定
 　　◆┐If Me.OccurrenceDateTime <> other.OccurrenceDateTime Then
 　　│〇 result = result Or flg_OccurrenceDateTime
 　　│┴End If
@@ -85,6 +83,18 @@ HCP	Business
 　　◆┐If Me.EqProduct <> other.EqProduct Then
 　　│〇 result = result Or flg_EqProduct
 　　│┴End If
-　　│#  差分フラグ返却
+　　│#   差分フラグ返却
 　　〇 GetDiffFlags = result
 　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

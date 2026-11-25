@@ -1,0 +1,38 @@
+┬
+〇│Public Sub DumpHCPNodes(  ByVal Title As String,  ByVal Nodes As Collection)	＜modHCPAnalyzer＞
+┴└┐
+　　□ Dim ws As Worksheet
+　　□ Dim RowOut As Long
+　　□ Dim Node As clsHCPNode
+　　│#   DBG_NODES取得
+　　〇 Set ws =  gContext.ManagementBook.Worksheets(
+　　│   SHEET_DEBUG_NODES)
+　　│#   出力開始行取得
+　　◎ RowOut = GetDebugRow()	DBG_NODES出力行取得＜modHCPAnalyzer＞
+　　│#   HCPNode一覧出力
+　　＠┐For Each Node In Nodes
+　　│〇 ws.Cells(RowOut, 1).Value = Title
+　　│〇 ws.Cells(RowOut, 2).Value = Node.NodeID
+　　│〇 ws.Cells(RowOut, 3).Value = Node.ParentID
+　　│〇 ws.Cells(RowOut, 4).Value = Node.Level
+　　│〇 ws.Cells(RowOut, 5).Value = Node.BranchType
+　　│〇 ws.Cells(RowOut, 6).Value = Node.NodeType
+　　│〇 ws.Cells(RowOut, 7).Value = Node.Text
+　　│〇 ws.Cells(RowOut, 8).Value = Node.SourceLine
+　　│〇 RowOut = RowOut + 1
+　　│┴Next Node
+　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetDebugRow	DBG_NODES出力行取得	modHCPAnalyzer
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

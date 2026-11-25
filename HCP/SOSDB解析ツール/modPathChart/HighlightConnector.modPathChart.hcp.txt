@@ -1,0 +1,34 @@
+┬
+〇│Private Sub HighlightConnector(  ByVal ParentShapeName As String,  ByVal ChildShapeName As String,  ByVal LineColor As Long,  ByVal LineWeight As Double)	接続線強調＜modPathChart＞
+┴└┐
+　　□ Dim ws As Worksheet
+　　□ Dim ConnectorName As String
+　　〇 Set ws = gContext.ManagementBook.Worksheets(
+　　│ SHEET_PATH_CHART)
+　　│#   接続線名称生成
+　　〇 ConnectorName =  "C_" &  ParentShapeName & "_" &  ChildShapeName
+　　☆ On Error Resume Next
+　　│#   接続線強調表示
+　　＠┐With ws.Shapes(ConnectorName)
+　　│〇 .line.ForeColor.RGB = LineColor
+　　│〇 .line.Weight = LineWeight
+　　│┴End With
+　　☆ On Error GoTo 0
+　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (4)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+HighlightParentConnector	親接続線強調	modPathChart
+HighlightChildNodes	子ノード強調	modPathChart
+HighlightSiblingNodes	兄弟ノード強調	modPathChart
+HighlightSiblingConnectors	兄弟接続線強調	modPathChart

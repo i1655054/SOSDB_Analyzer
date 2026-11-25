@@ -1,0 +1,93 @@
+┬
+〇│Public Sub ExportVBABook(  ByVal TargetBook As Workbook,  ByVal ToolID As Long)	VBAソース出力＜modExportVBA＞
+┴└┐
+　　□ Dim VBComp As Object
+　　□ Dim RootPath As String
+　　□ Dim ModulesPath As String
+　　□ Dim ClassesPath As String
+　　□ Dim FormsPath As String
+　　□ Dim DocumentsPath As String
+　　□ Dim FSO As Object
+　　□ Dim ExportFile As String
+　　│#   Git管理フォルダ取得
+　　◎ RootPath = GetGitRootPathByToolID(ToolID)	Git管理フォルダ取得＜modExportVBA＞
+　　│#   モジュール出力先設定
+　　〇 ModulesPath = RootPath & "\src\Modules\"
+　　〇 ClassesPath = RootPath & "\src\Classes\"
+　　〇 FormsPath = RootPath & "\src\Forms\"
+　　〇 DocumentsPath = RootPath & "\src\Documents\"
+　　│#   フォルダ操作オブジェクト生成
+　　〇 Set FSO = CreateObject("Scripting.FileSystemObject")
+　　│#   srcフォルダ存在確認
+　　◆┐If Not FSO.FolderExists(RootPath & "\src") Then
+　　│〇 FSO.CreateFolder RootPath & "\src"
+　　│┴End If
+　　│#   Modulesフォルダ作成
+　　◆┐If Not FSO.FolderExists(ModulesPath) Then
+　　│〇 FSO.CreateFolder ModulesPath
+　　│┴End If
+　　│#   Classesフォルダ作成
+　　◆┐If Not FSO.FolderExists(ClassesPath) Then
+　　│〇 FSO.CreateFolder ClassesPath
+　　│┴End If
+　　│#   Formsフォルダ作成
+　　◆┐If Not FSO.FolderExists(FormsPath) Then
+　　│〇 FSO.CreateFolder FormsPath
+　　│┴End If
+　　│#   Documentsフォルダ作成
+　　◆┐If Not FSO.FolderExists(DocumentsPath) Then
+　　│〇 FSO.CreateFolder DocumentsPath
+　　│┴End If
+　　◆┐#If DEBUG_MODE Then
+　　│〇 Debug.Print "ModulesPath=" & ModulesPath
+　　│〇 Debug.Print "ClassesPath=" & ClassesPath
+　　│〇 Debug.Print "FormsPath=" & FormsPath
+　　│〇 Debug.Print "DocumentsPath=" & DocumentsPath
+　　│┴#End If
+　　│#   VBAコンポーネント出力開始
+　　＠┐For Each VBComp In TargetBook.VBProject.VBComponents
+　　││#   コンポーネント種別毎に出力先決定
+　　│◆┐Select Case VBComp.Type
+　　││├┐Case VBEXT_CT_STDMODULE
+　　│││〇 ExportFile = ModulesPath & VBComp.Name & ".bas"
+　　││├┐Case VBEXT_CT_CLASSMODULE
+　　│││〇 ExportFile = ClassesPath & VBComp.Name & ".cls"
+　　││├┐Case VBEXT_CT_MSFORM
+　　│││〇 ExportFile = FormsPath & VBComp.Name & ".frm"
+　　││├┐Case VBEXT_CT_DOCUMENT
+　　│││〇 ExportFile = DocumentsPath & VBComp.Name & ".cls"
+　　││├┐Case Else
+　　│││〇 ExportFile = ""
+　　││┴End Select
+　　│◆┐If ExportFile <> "" Then
+　　│││#   既存ソース削除
+　　││◆┐If Dir(ExportFile) <> "" Then
+　　│││〇 Kill ExportFile
+　　│││┴End If
+　　││◆┐#If DEBUG_MODE Then
+　　│││〇 Debug.Print "--------------------------------"
+　　│││〇 Debug.Print "VBComp.Name=" & VBComp.Name
+　　│││〇 Debug.Print "ExportFile=" & ExportFile
+　　│││〇 Debug.Print "Exists=" & (Dir$(Left$(ExportFile, InStrRev(ExportFile, "\") - 1), vbDirectory) <> "")
+　　│││┴#End If
+　　│││#   VBAソースエクスポート
+　　││〇 VBComp.Export ExportFile
+　　││┴End If
+　　│┴Next VBComp
+　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetGitRootPathByToolID	Git管理フォルダ取得	modExportVBA
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+cmdExport_Click

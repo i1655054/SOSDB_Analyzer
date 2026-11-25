@@ -1,91 +1,103 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
 <meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
 <title>CreateUpdateXmlFromIssue</title>
 <style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
 body{font-family:Meiryo;font-size:9pt;}
 table{border-collapse:collapse;}
-th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
 td{vertical-align:top;}
 th{background:#e8f0fe;}
-colgroup col:nth-of-type(1) {}
-colgroup col:nth-of-type(2) {}
-.resize {position: relative;}
-.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
 </style>
 </head>
-<body>
+<body translate="no">
 <h1>CreateUpdateXmlFromIssue</h1>
 <p>Module : modRegister</p>
-<p><a href="./_INDEX.html">← Module Index</a></p>
 <table>
-<colgroup><col/><col/></colgroup>
-<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
 <tbody>
-<tr><td>Procedure: modRegister.CreateUpdateXmlFromIssue  [ 更新登録XML生成＜modRegister＞ ]</td><td></td></tr>
-<tr><td>HCP</td><td>Business</td></tr>
 <tr><td>┬</td><td></td></tr>
 <tr><td>〇│Public Function CreateUpdateXmlFromIssue(  ByVal newIssue As IssueInfo,  ByVal oldIssue As IssueInfo,  ByVal flags As Long) As String</td><td>更新登録XML生成＜modRegister＞</td></tr>
 <tr><td>┴└┐</td><td></td></tr>
 <tr><td>　　□ Dim xml As String</td><td></td></tr>
-<tr><td>　　│#  XML開始</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   XML開始</span></td><td></td></tr>
 <tr><td>　　〇 xml = "&lt;?xml version=""1.0""?&gt;"</td><td></td></tr>
 <tr><td>　　〇 xml = xml &amp; "&lt;issue&gt;"</td><td></td></tr>
-<tr><td>　　│#  基本属性差分出力</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   基本属性差分出力</span></td><td></td></tr>
 <tr><td>　　◆┐If (flags And flg_Status_Name) &lt;&gt; 0 Then</td><td></td></tr>
-<tr><td>　　│◎ xml = xml &amp; "&lt;status_id&gt;" &amp;  GetStatusId(newIssue.Status) &amp;  "&lt;/status_id&gt;"</td><td>ステータスID取得＜modIssueMapper＞</td></tr>
+<tr><td>　　│◎ xml = xml &amp; "&lt;status_id&gt;" &amp;  <a href="../modIssueMapper/GetStatusId.modIssueMapper.hcp.html">GetStatusId</a>(newIssue.Status) &amp;  "&lt;/status_id&gt;"</td><td><a href="../modIssueMapper/GetStatusId.modIssueMapper.hcp.html">ステータスID取得＜modIssueMapper＞</a></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
 <tr><td>　　◆┐If (flags And flg_Priority_Name) &lt;&gt; 0 Then</td><td></td></tr>
-<tr><td>　　│◎ xml = xml &amp; "&lt;priority_id&gt;" &amp;  GetPriorityId(newIssue.Priority) &amp;  "&lt;/priority_id&gt;"</td><td>優先度ID取得＜modIssueMapper＞</td></tr>
+<tr><td>　　│◎ xml = xml &amp; "&lt;priority_id&gt;" &amp;  <a href="../modIssueMapper/GetPriorityId.modIssueMapper.hcp.html">GetPriorityId</a>(newIssue.Priority) &amp;  "&lt;/priority_id&gt;"</td><td><a href="../modIssueMapper/GetPriorityId.modIssueMapper.hcp.html">優先度ID取得＜modIssueMapper＞</a></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
 <tr><td>　　◆┐If (flags And flg_Assigned_to_Name) &lt;&gt; 0 Then</td><td></td></tr>
-<tr><td>　　│◎ xml = xml &amp; "&lt;assigned_to_id&gt;" &amp;  GetUserId(newIssue.AssignedTo) &amp;  "&lt;/assigned_to_id&gt;"</td><td>ユーザーID取得＜modIssueMapper＞</td></tr>
+<tr><td>　　│◎ xml = xml &amp; "&lt;assigned_to_id&gt;" &amp;  <a href="../modIssueMapper/GetUserId.modIssueMapper.hcp.html">GetUserId</a>(newIssue.AssignedTo) &amp;  "&lt;/assigned_to_id&gt;"</td><td><a href="../modIssueMapper/GetUserId.modIssueMapper.hcp.html">ユーザーID取得＜modIssueMapper＞</a></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
 <tr><td>　　◆┐If (flags And flg_Target_Version) &lt;&gt; 0 Then</td><td></td></tr>
-<tr><td>　　│◎ xml = xml &amp; "&lt;fixed_version_id&gt;" &amp;  GetVersionId(newIssue.targetVersion) &amp;  "&lt;/fixed_version_id&gt;"</td><td>対象バージョンID取得＜modIssueMapper＞</td></tr>
+<tr><td>　　│◎ xml = xml &amp; "&lt;fixed_version_id&gt;" &amp;  <a href="../modIssueMapper/GetVersionId.modIssueMapper.hcp.html">GetVersionId</a>(newIssue.targetVersion) &amp;  "&lt;/fixed_version_id&gt;"</td><td><a href="../modIssueMapper/GetVersionId.modIssueMapper.hcp.html">対象バージョンID取得＜modIssueMapper＞</a></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
-<tr><td>　　│#  本文差分出力</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   本文差分出力</span></td><td></td></tr>
 <tr><td>　　◆┐If (flags And flg_Subject_Name) &lt;&gt; 0 Then</td><td></td></tr>
-<tr><td>　　│◎ xml = xml &amp; "&lt;subject&gt;" &amp;  EscapeXML(newIssue.Subject) &amp;  "&lt;/subject&gt;"</td><td>XMLエスケープ＜XmlLoader＞</td></tr>
+<tr><td>　　│◎ xml = xml &amp; "&lt;subject&gt;" &amp;  <a href="../XmlLoader/EscapeXML.XmlLoader.hcp.html">EscapeXML</a>(newIssue.Subject) &amp;  "&lt;/subject&gt;"</td><td><a href="../XmlLoader/EscapeXML.XmlLoader.hcp.html">XMLエスケープ＜XmlLoader＞</a></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
 <tr><td>　　◆┐If (flags And flg_Description) &lt;&gt; 0 Then</td><td></td></tr>
-<tr><td>　　│◎ xml = xml &amp; "&lt;description&gt;" &amp;  EscapeXML(newIssue.Description) &amp;  "&lt;/description&gt;"</td><td>XMLエスケープ＜XmlLoader＞</td></tr>
+<tr><td>　　│◎ xml = xml &amp; "&lt;description&gt;" &amp;  <a href="../XmlLoader/EscapeXML.XmlLoader.hcp.html">EscapeXML</a>(newIssue.Description) &amp;  "&lt;/description&gt;"</td><td><a href="../XmlLoader/EscapeXML.XmlLoader.hcp.html">XMLエスケープ＜XmlLoader＞</a></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
-<tr><td>　　│#  カスタムフィールド差分出力</td><td></td></tr>
-<tr><td>　　◎ xml = xml &amp; BuildCustomFieldsXmlDiff(newIssue, flags)</td><td>差分カスタムフィールドXML生成＜modRegister＞</td></tr>
-<tr><td>　　│#  XML終了</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   カスタムフィールド差分出力</span></td><td></td></tr>
+<tr><td>　　◎ xml = xml &amp; <a href="../modRegister/BuildCustomFieldsXmlDiff.modRegister.hcp.html">BuildCustomFieldsXmlDiff</a>(newIssue, flags)</td><td><a href="../modRegister/BuildCustomFieldsXmlDiff.modRegister.hcp.html">差分カスタムフィールドXML生成＜modRegister＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│#   XML終了</span></td><td></td></tr>
 <tr><td>　　〇 xml = xml &amp; "&lt;/issue&gt;"</td><td></td></tr>
-<tr><td>　　│#  XML返却</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   XML返却</span></td><td></td></tr>
 <tr><td>　　〇 CreateUpdateXmlFromIssue = xml</td><td></td></tr>
 <tr><td>　　┴End Function</td><td></td></tr>
 </tbody>
 </table>
+<hr>
+<h2>Calls (6)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modIssueMapper/GetStatusId.modIssueMapper.hcp.html">GetStatusId</a></td><td>ステータスID取得</td><td>modIssueMapper</td></tr>
+<tr><td><a href="../modIssueMapper/GetPriorityId.modIssueMapper.hcp.html">GetPriorityId</a></td><td>優先度ID取得</td><td>modIssueMapper</td></tr>
+<tr><td><a href="../modIssueMapper/GetUserId.modIssueMapper.hcp.html">GetUserId</a></td><td>ユーザーID取得</td><td>modIssueMapper</td></tr>
+<tr><td><a href="../modIssueMapper/GetVersionId.modIssueMapper.hcp.html">GetVersionId</a></td><td>対象バージョンID取得</td><td>modIssueMapper</td></tr>
+<tr><td><a href="../XmlLoader/EscapeXML.XmlLoader.hcp.html">EscapeXML</a></td><td>XMLエスケープ</td><td>XmlLoader</td></tr>
+<tr><td><a href="../modRegister/BuildCustomFieldsXmlDiff.modRegister.hcp.html">BuildCustomFieldsXmlDiff</a></td><td>差分カスタムフィールドXML生成</td><td>modRegister</td></tr>
+</table>
+<hr>
+<h2>Called By (1)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modIssueService/UpdateExistingIssue.modIssueService.hcp.html">UpdateExistingIssue</a></td><td>Issue更新登録</td><td>modIssueService</td></tr>
+</table>
 <script>
-document.querySelectorAll('.resize').forEach(function (eleTh) {
+document.querySelectorAll('.resize').forEach(function(eleTh) {
 let startX;
 let startWidth;
 const eleResizer = document.createElement('div');
 eleResizer.classList.add('resizer');
-eleResizer.addEventListener('mousedown', function (e) {
-const styleTh = window.getComputedStyle(eleTh);
-const paddingLeft = parseFloat(styleTh.paddingLeft);
-const paddingRight = parseFloat(styleTh.paddingRight);
-const borderLeft = parseFloat(styleTh.borderLeftWidth);
-const borderRight = parseFloat(styleTh.borderRightWidth);
+eleResizer.addEventListener('mousedown', function(e) {
 startX = e.pageX;
-startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+startWidth = eleTh.offsetWidth;
 document.addEventListener('mousemove', onMouseMove);
 document.addEventListener('mouseup', onMouseUp);
 });
 eleTh.appendChild(eleResizer);
-function onMouseMove(e) {
-const newWidth = startWidth + (e.pageX - startX);
-eleTh.style.width = newWidth + 'px';
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
 }
-function onMouseUp() {
-document.removeEventListener('mousemove', onMouseMove);
-document.removeEventListener('mouseup', onMouseUp);
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
 }
 });
 </script>

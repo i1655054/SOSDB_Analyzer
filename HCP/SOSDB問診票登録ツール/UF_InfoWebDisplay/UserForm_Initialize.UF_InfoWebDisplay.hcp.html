@@ -1,55 +1,56 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
 <meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
 <title>UserForm_Initialize</title>
 <style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
 body{font-family:Meiryo;font-size:9pt;}
 table{border-collapse:collapse;}
-th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
 td{vertical-align:top;}
 th{background:#e8f0fe;}
-colgroup col:nth-of-type(1) {}
-colgroup col:nth-of-type(2) {}
-.resize {position: relative;}
-.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
 </style>
 </head>
-<body>
+<body translate="no">
 <h1>UserForm_Initialize</h1>
 <p>Module : UF_InfoWebDisplay</p>
-<p><a href="./_INDEX.html">← Module Index</a></p>
 <table>
-<colgroup><col/><col/></colgroup>
-<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
 <tbody>
-<tr><td>Procedure: UF_InfoWebDisplay.UserForm_Initialize  [ 情報表示フォーム初期化＜UF_InfoWebDisplay＞ ]</td><td></td></tr>
-<tr><td>HCP</td><td>Business</td></tr>
 <tr><td>┬</td><td></td></tr>
 <tr><td>〇│Private Sub UserForm_Initialize()</td><td>情報表示フォーム初期化＜UF_InfoWebDisplay＞</td></tr>
 <tr><td>┴└┐</td><td></td></tr>
 <tr><td>　　□ Dim hWnd As LongPtr</td><td></td></tr>
 <tr><td>　　□ Dim hStyle As LongPtr</td><td></td></tr>
 <tr><td>　　□ Dim flgChange As Boolean</td><td></td></tr>
-<tr><td>　　│#  デフォルトサイズ保存</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   デフォルトサイズ保存</span></td><td></td></tr>
 <tr><td>　　〇 m_DefaultWidth = Me.Width</td><td></td></tr>
 <tr><td>　　〇 m_DefaultHeight = Me.Height</td><td></td></tr>
-<tr><td>　　│#  表示モード初期化</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   表示モード初期化</span></td><td></td></tr>
 <tr><td>　　〇 IsScrollEnabled = True  ' 初期状態：改行あり</td><td></td></tr>
-<tr><td>　　│#  フォント設定初期化</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   フォント設定初期化</span></td><td></td></tr>
 <tr><td>　　〇 FontSize = 12  ' 初期サイズ</td><td></td></tr>
 <tr><td>　　〇 Me.SpinButton1.Value = FontSize</td><td></td></tr>
 <tr><td>　　〇 Me.SpinButton1.Min = 8</td><td></td></tr>
 <tr><td>　　〇 Me.SpinButton1.Max = 20</td><td></td></tr>
-<tr><td>　　│#  HTML本文生成</td><td></td></tr>
-<tr><td>　　◎ Call BuildHTMLContent(bodyText)   ' ← 先にやっておくのがポイント</td><td>HTML本文生成＜UF_InfoWebDisplay＞</td></tr>
+<tr><td><span class="hcp-comment">　　│#   HTML本文生成</span></td><td></td></tr>
+<tr><td>　　◎ Call <a href="../UF_InfoWebDisplay/BuildHTMLContent.UF_InfoWebDisplay.hcp.html">BuildHTMLContent</a>(bodyText)   ' ← 先にやっておくのがポイント</td><td><a href="../UF_InfoWebDisplay/BuildHTMLContent.UF_InfoWebDisplay.hcp.html">HTML本文生成＜UF_InfoWebDisplay＞</a></td></tr>
 <tr><td>　　〇 flgChange = Sheet1.CheckBox1.Value</td><td></td></tr>
-<tr><td>　　│#  フォームスタイル設定</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   フォームスタイル設定</span></td><td></td></tr>
 <tr><td>　　〇 hWnd = FindWindow("ThunderDFrame", Me.Caption)</td><td></td></tr>
 <tr><td>　　〇 hStyle = GetWindowLongPtr(hWnd, GWL_STYLE)</td><td></td></tr>
 <tr><td>　　〇 hStyle = hStyle Or WS_THICKFRAME Or WS_MAXIMIZEBOX Or WS_MINIMIZEBOX</td><td></td></tr>
 <tr><td>　　〇 Call SetWindowLongPtr(hWnd, GWL_STYLE, hStyle)</td><td></td></tr>
-<tr><td>　　│#  ボタン配置</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   ボタン配置</span></td><td></td></tr>
 <tr><td>　　＠┐With Me.CommandButton1</td><td></td></tr>
 <tr><td>　　│〇 .Top = Me.Frame1.Top + Me.Frame1.Height + margin</td><td></td></tr>
 <tr><td>　　│〇 .Left = Me.Frame1.Left + Me.Frame1.Width - btWidth</td><td></td></tr>
@@ -66,19 +67,19 @@ colgroup col:nth-of-type(2) {}
 <tr><td>　　│〇 .Top = Me.Frame1.Top + Me.Frame1.Height + margin</td><td></td></tr>
 <tr><td>　　│〇 .Left = margin</td><td></td></tr>
 <tr><td>　　│┴End With</td><td></td></tr>
-<tr><td>　　│#  表示モード設定</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   表示モード設定</span></td><td></td></tr>
 <tr><td>　　◆┐If IsScrollEnabled Then</td><td></td></tr>
 <tr><td>　　│＠┐With CommandButton2</td><td></td></tr>
 <tr><td>　　││〇 .Caption = "改行なし"</td><td></td></tr>
 <tr><td>　　││┴End With</td><td></td></tr>
 <tr><td>　　│〇 Label4.Caption = "表示mode:改行あり"</td><td></td></tr>
-<tr><td>　　│〇 Label4.Caption = "表示mode:改行なし"</td><td></td></tr>
 <tr><td>　　├┐ELSE</td><td></td></tr>
 <tr><td>　　│＠┐With CommandButton2</td><td></td></tr>
-<tr><td>　　││┴End With</td><td></td></tr>
 <tr><td>　　│〇 .Caption = "改行あり"</td><td></td></tr>
+<tr><td>　　││┴End With</td><td></td></tr>
+<tr><td>　　│〇 Label4.Caption = "表示mode:改行なし"</td><td></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
-<tr><td>　　│#  フォント操作部配置</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   フォント操作部配置</span></td><td></td></tr>
 <tr><td>　　＠┐With SpinButton1</td><td></td></tr>
 <tr><td>　　│〇 .Top = margin - 4</td><td></td></tr>
 <tr><td>　　│〇 .Left = Me.Frame1.Left + Me.Frame1.Width - 2 * margin</td><td></td></tr>
@@ -101,37 +102,44 @@ colgroup col:nth-of-type(2) {}
 <tr><td>　　│〇 .Left = Frame1.Width / 2 - Label4.Width / 2</td><td></td></tr>
 <tr><td>　　│〇 .Visible = False             ' ラベルを非表示に設定</td><td></td></tr>
 <tr><td>　　│┴End With</td><td></td></tr>
-<tr><td>　　│#  右クリック機能初期化</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   右クリック機能初期化</span></td><td></td></tr>
 <tr><td>　　〇 Static dcp As New CRightClick</td><td></td></tr>
-<tr><td>　　◎ dcp.Initialize Me</td><td>右クリック機能初期化＜CRightClick＞</td></tr>
+<tr><td>　　〇 dcp.Initialize Me</td><td></td></tr>
 <tr><td>　　┴End Sub</td><td></td></tr>
 </tbody>
 </table>
+<hr>
+<h2>Calls (5)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../clsUF_Cal5Label1/NewClass.clsUF_Cal5Label1.hcp.html">NewClass</a></td><td></td><td></td></tr>
+<tr><td><a href="../modAboutCalendar2/FP_GetCalendarTable3.modAboutCalendar2.hcp.html">FP_GetCalendarTable3</a></td><td>三か月カレンダーテーブル取得</td><td>modAboutCalendar2</td></tr>
+<tr><td><a href="../UF_RequesterNumRegist/RequesterNumDivision.UF_RequesterNumRegist.hcp.html">RequesterNumDivision</a></td><td>依頼元管理番号解析</td><td>UF_RequesterNumRegist</td></tr>
+<tr><td><a href="../CRightClick/Initialize.CRightClick.hcp.html">Initialize</a></td><td>右クリック機能初期化</td><td>CRightClick</td></tr>
+<tr><td><a href="../UF_InfoWebDisplay/BuildHTMLContent.UF_InfoWebDisplay.hcp.html">BuildHTMLContent</a></td><td>HTML本文生成</td><td>UF_InfoWebDisplay</td></tr>
+</table>
+<hr>
+<h2>Called By (0)</h2>
+<p>呼出元なし</p>
 <script>
-document.querySelectorAll('.resize').forEach(function (eleTh) {
+document.querySelectorAll('.resize').forEach(function(eleTh) {
 let startX;
 let startWidth;
 const eleResizer = document.createElement('div');
 eleResizer.classList.add('resizer');
-eleResizer.addEventListener('mousedown', function (e) {
-const styleTh = window.getComputedStyle(eleTh);
-const paddingLeft = parseFloat(styleTh.paddingLeft);
-const paddingRight = parseFloat(styleTh.paddingRight);
-const borderLeft = parseFloat(styleTh.borderLeftWidth);
-const borderRight = parseFloat(styleTh.borderRightWidth);
+eleResizer.addEventListener('mousedown', function(e) {
 startX = e.pageX;
-startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+startWidth = eleTh.offsetWidth;
 document.addEventListener('mousemove', onMouseMove);
 document.addEventListener('mouseup', onMouseUp);
 });
 eleTh.appendChild(eleResizer);
-function onMouseMove(e) {
-const newWidth = startWidth + (e.pageX - startX);
-eleTh.style.width = newWidth + 'px';
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
 }
-function onMouseUp() {
-document.removeEventListener('mousemove', onMouseMove);
-document.removeEventListener('mouseup', onMouseUp);
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
 }
 });
 </script>

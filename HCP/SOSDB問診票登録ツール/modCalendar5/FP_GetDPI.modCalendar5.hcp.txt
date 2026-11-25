@@ -1,9 +1,27 @@
-Procedure: modCalendar5.FP_GetDPI  [ DPI取得＜modCalendar5＞ ]
-HCP	Business
 ┬
 〇│Private Function FP_GetDPI(ByVal nFlag As Long) As Long	DPI取得＜modCalendar5＞
 ┴└┐
+　　◆┐#If VBA7 Then
+　　│□ Dim lngHdc As LongPtr                                           ' ウィンドウハンドルのDC
+　　│#Else
+　　│□ Dim lngHdc As Long                                              ' ウィンドウハンドルのDC
+　　│┴#End If
 　　〇 lngHdc = GetDC(Application.hWnd)
 　　〇 FP_GetDPI = GetDeviceCaps(lngHdc, nFlag)
 　　〇 Call ReleaseDC(&H0, lngHdc)
 　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+FP_GetDPIX	水平DPI取得	modCalendar5
+FP_GetDPIY	垂直DPI取得	modCalendar5

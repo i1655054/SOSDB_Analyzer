@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
+<title>GetProcedureEndText</title>
+<style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
+</style>
+</head>
+<body translate="no">
+<h1>GetProcedureEndText</h1>
+<p>Module : modProcAnalyzer</p>
+<table>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
+<tbody>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Private Function GetProcedureEndText(  ByVal ProcHeader As String)  As String</td><td>終了構文取得＜modProcAnalyzer＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   Procedure種別判定</span></td><td></td></tr>
+<tr><td>　　◆┐If <a href="../modProcAnalyzer/StartsWithKeyword.modProcAnalyzer.hcp.html">StartsWithKeyword</a>(  ProcHeader,  "Public Function")  Or <a href="../modProcAnalyzer/StartsWithKeyword.modProcAnalyzer.hcp.html">StartsWithKeyword</a>(  ProcHeader,  "Private Function")  Or <a href="../modProcAnalyzer/StartsWithKeyword.modProcAnalyzer.hcp.html">StartsWithKeyword</a>(  ProcHeader,  "Friend Function") Then</td><td>内部呼出:<a href="../modProcAnalyzer/StartsWithKeyword.modProcAnalyzer.hcp.html">StartsWithKeyword</a></td></tr>
+<tr><td><span class="hcp-comment">　　││#   End Function返却</span></td><td></td></tr>
+<tr><td>　　│〇 GetProcedureEndText =  "End Function"</td><td></td></tr>
+<tr><td>　　├┐ElseIf <a href="../modProcAnalyzer/StartsWithKeyword.modProcAnalyzer.hcp.html">StartsWithKeyword</a>(  ProcHeader,  "Public Property")  Or <a href="../modProcAnalyzer/StartsWithKeyword.modProcAnalyzer.hcp.html">StartsWithKeyword</a>(  ProcHeader,  "Private Property")  Or <a href="../modProcAnalyzer/StartsWithKeyword.modProcAnalyzer.hcp.html">StartsWithKeyword</a>(  ProcHeader,  "Friend Property") Then</td><td>内部呼出:<a href="../modProcAnalyzer/StartsWithKeyword.modProcAnalyzer.hcp.html">StartsWithKeyword</a></td></tr>
+<tr><td><span class="hcp-comment">　　││#   End Property返却</span></td><td></td></tr>
+<tr><td>　　│〇 GetProcedureEndText =  "End Property"</td><td></td></tr>
+<tr><td>　　├┐ELSE</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   End Sub返却</span></td><td></td></tr>
+<tr><td>　　│〇 GetProcedureEndText =  "End Sub"</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　┴End Function</td><td></td></tr>
+</tbody>
+</table>
+<hr>
+<h2>Calls (1)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modProcAnalyzer/StartsWithKeyword.modProcAnalyzer.hcp.html">StartsWithKeyword</a></td><td>キーワード前方一致判定</td><td>modProcAnalyzer</td></tr>
+</table>
+<hr>
+<h2>Called By (1)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modProcAnalyzer/AnalyzeProcedure.modProcAnalyzer.hcp.html">AnalyzeProcedure</a></td><td>Proc解析</td><td>modProcAnalyzer</td></tr>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function(eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function(e) {
+startX = e.pageX;
+startWidth = eleTh.offsetWidth;
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
+}
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
+}
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
+<title>WriteToolIndexHtml</title>
+<style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
+</style>
+</head>
+<body translate="no">
+<h1>WriteToolIndexHtml</h1>
+<p>Module : modHCPIndex</p>
+<table>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
+<tbody>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Private Sub WriteToolIndexHtml(  ByVal IndexPath As String,  ByVal ModuleCount As Long)</td><td>Tool INDEX HTML出力＜modHCPIndex＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   出力ファイル番号</span></td><td></td></tr>
+<tr><td>　　□ Dim FileNo As Integer</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   HCPルート</span></td><td></td></tr>
+<tr><td>　　□ Dim RootPath As String</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   モジュールフォルダ名</span></td><td></td></tr>
+<tr><td>　　□ Dim FolderName As String</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   Procedure一覧</span></td><td></td></tr>
+<tr><td>　　□ Dim Procedures As Collection</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   Procedure情報</span></td><td></td></tr>
+<tr><td>　　□ Dim Info As clsProcedureInfo</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   Procedure総数</span></td><td></td></tr>
+<tr><td>　　□ Dim ProcedureCount As Long</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   HCP生成済数</span></td><td></td></tr>
+<tr><td>　　□ Dim GeneratedCount As Long</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   未生成数</span></td><td></td></tr>
+<tr><td>　　□ Dim PendingCount As Long</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   モジュール生成済数</span></td><td></td></tr>
+<tr><td>　　□ Dim ModuleGenerated As Long</td><td></td></tr>
+<tr><td>　　〇 FileNo = FreeFile</td><td></td></tr>
+<tr><td>　　〇 Open IndexPath  For Output As #FileNo</td><td></td></tr>
+<tr><td>　　◎ <a href="../modHCPIndex/WriteHtmlHeader.modHCPIndex.hcp.html">WriteHtmlHeader</a>  FileNo,  GetCurrentToolInfo.ToolName</td><td><a href="../modHCPIndex/WriteHtmlHeader.modHCPIndex.hcp.html">HTMLヘッダ出力＜modHCPIndex＞</a></td></tr>
+<tr><td>　　〇 Print #FileNo,  "&lt;h1&gt;" &amp;  GetCurrentToolInfo.ToolName &amp;  "&lt;/h1&gt;"</td><td></td></tr>
+<tr><td>　　◎ RootPath =  <a href="../modHCPPath/GetHCPToolFolder.modHCPPath.hcp.html">GetHCPToolFolder</a>()</td><td><a href="../modHCPPath/GetHCPToolFolder.modHCPPath.hcp.html">HCPツールフォルダ取得＜modHCPPath＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│#   全体集計</span></td><td></td></tr>
+<tr><td>　　〇 FolderName =  Dir(  RootPath &amp; "*",  vbDirectory)</td><td></td></tr>
+<tr><td>　　＠┐Do While FolderName &lt;&gt; ""</td><td></td></tr>
+<tr><td>　　│◆┐If FolderName &lt;&gt; "."  And FolderName &lt;&gt; ".." Then</td><td></td></tr>
+<tr><td>　　││◆┐If (GetAttr(  RootPath &amp; FolderName)  And vbDirectory) &lt;&gt; 0 Then</td><td></td></tr>
+<tr><td>　　│││◎ Set Procedures =  <a href="../modHCPInfo/GetModuleProcedureList.modHCPInfo.hcp.html">GetModuleProcedureList</a>(  FolderName)</td><td><a href="../modHCPInfo/GetModuleProcedureList.modHCPInfo.hcp.html">Procedure一覧取得＜modHCPInfo＞</a></td></tr>
+<tr><td>　　│││〇 ProcedureCount =  ProcedureCount +  Procedures.Count</td><td></td></tr>
+<tr><td>　　│││＠┐For Each Info In Procedures</td><td></td></tr>
+<tr><td>　　││││◆┐If Info.Status =  STATUS_OK Then</td><td></td></tr>
+<tr><td>　　│││││〇 GeneratedCount =  GeneratedCount + 1</td><td></td></tr>
+<tr><td>　　││││├┐ELSE</td><td></td></tr>
+<tr><td>　　│││││〇 PendingCount =  PendingCount + 1</td><td></td></tr>
+<tr><td>　　│││││┴End If</td><td></td></tr>
+<tr><td>　　││││┴Next Info</td><td></td></tr>
+<tr><td>　　│││┴End If</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td>　　│〇 FolderName = Dir()</td><td></td></tr>
+<tr><td>　　│┴Loop</td><td></td></tr>
+<tr><td>　　〇 Print #FileNo,  "&lt;p&gt;Module Count : " &amp;  ModuleCount &amp;  "&lt;/p&gt;"</td><td></td></tr>
+<tr><td>　　〇 Print #FileNo,  "&lt;p&gt;Procedure Count : " &amp;  ProcedureCount &amp;  "&lt;/p&gt;"</td><td></td></tr>
+<tr><td>　　〇 Print #FileNo,  "&lt;p&gt;Generated Count : " &amp;  GeneratedCount &amp;  "&lt;/p&gt;"</td><td></td></tr>
+<tr><td>　　〇 Print #FileNo,  "&lt;p&gt;Pending Count : " &amp;  PendingCount &amp;  "&lt;/p&gt;"</td><td></td></tr>
+<tr><td>　　〇 Print #FileNo,  "&lt;table&gt;"</td><td></td></tr>
+<tr><td>　　〇 Print #FileNo,  "&lt;tr&gt;" &amp;  "&lt;th&gt;Module&lt;/th&gt;" &amp;  "&lt;th&gt;Procedures&lt;/th&gt;" &amp;  "&lt;th&gt;Generated&lt;/th&gt;" &amp;  "&lt;/tr&gt;"</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   モジュール一覧</span></td><td></td></tr>
+<tr><td>　　〇 FolderName =  Dir(  RootPath &amp; "*",  vbDirectory)</td><td></td></tr>
+<tr><td>　　＠┐Do While FolderName &lt;&gt; ""</td><td></td></tr>
+<tr><td>　　│◆┐If FolderName &lt;&gt; "."  And FolderName &lt;&gt; ".." Then</td><td></td></tr>
+<tr><td>　　││◆┐If (GetAttr(  RootPath &amp; FolderName)  And vbDirectory) &lt;&gt; 0 Then</td><td></td></tr>
+<tr><td>　　│││◎ Set Procedures =  <a href="../modHCPInfo/GetModuleProcedureList.modHCPInfo.hcp.html">GetModuleProcedureList</a>(  FolderName)</td><td><a href="../modHCPInfo/GetModuleProcedureList.modHCPInfo.hcp.html">Procedure一覧取得＜modHCPInfo＞</a></td></tr>
+<tr><td>　　│││〇 ModuleGenerated = 0</td><td></td></tr>
+<tr><td>　　│││＠┐For Each Info In Procedures</td><td></td></tr>
+<tr><td>　　││││◆┐If Info.Status =  STATUS_OK Then</td><td></td></tr>
+<tr><td>　　│││││〇 ModuleGenerated =  ModuleGenerated + 1</td><td></td></tr>
+<tr><td>　　│││││┴End If</td><td></td></tr>
+<tr><td>　　││││┴Next Info</td><td></td></tr>
+<tr><td>　　│││〇 Print #FileNo,  "&lt;tr&gt;" &amp;  "&lt;td&gt;" &amp;  "&lt;a href=""" &amp;  FolderName &amp;  "/_INDEX.html""&gt;" &amp;  FolderName &amp;  "&lt;/a&gt;" &amp;  "&lt;/td&gt;" &amp;  "&lt;td align=""right""&gt;" &amp;  Procedures.Count &amp;  "&lt;/td&gt;" &amp;  "&lt;td align=""right""&gt;" &amp;  ModuleGenerated &amp;  "&lt;/td&gt;" &amp;  "&lt;/tr&gt;"</td><td></td></tr>
+<tr><td>　　│││┴End If</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td>　　│〇 FolderName = Dir()</td><td></td></tr>
+<tr><td>　　│┴Loop</td><td></td></tr>
+<tr><td>　　〇 Print #FileNo,  "&lt;/table&gt;"</td><td></td></tr>
+<tr><td>　　◎ <a href="../modHCPIndex/WriteHtmlFooter.modHCPIndex.hcp.html">WriteHtmlFooter</a>  FileNo</td><td><a href="../modHCPIndex/WriteHtmlFooter.modHCPIndex.hcp.html">HTMLフッタ出力＜modHCPIndex＞</a></td></tr>
+<tr><td>　　〇 Close #FileNo</td><td></td></tr>
+<tr><td>　　┴End Sub</td><td></td></tr>
+</tbody>
+</table>
+<hr>
+<h2>Calls (4)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modHCPIndex/WriteHtmlHeader.modHCPIndex.hcp.html">WriteHtmlHeader</a></td><td>HTMLヘッダ出力</td><td>modHCPIndex</td></tr>
+<tr><td><a href="../modHCPPath/GetHCPToolFolder.modHCPPath.hcp.html">GetHCPToolFolder</a></td><td>HCPツールフォルダ取得</td><td>modHCPPath</td></tr>
+<tr><td><a href="../modHCPInfo/GetModuleProcedureList.modHCPInfo.hcp.html">GetModuleProcedureList</a></td><td>Procedure一覧取得</td><td>modHCPInfo</td></tr>
+<tr><td><a href="../modHCPIndex/WriteHtmlFooter.modHCPIndex.hcp.html">WriteHtmlFooter</a></td><td>HTMLフッタ出力</td><td>modHCPIndex</td></tr>
+</table>
+<hr>
+<h2>Called By (1)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modHCPIndex/RebuildToolIndex.modHCPIndex.hcp.html">RebuildToolIndex</a></td><td>ツールINDEX再生成</td><td>modHCPIndex</td></tr>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function(eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function(e) {
+startX = e.pageX;
+startWidth = eleTh.offsetWidth;
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
+}
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
+}
+});
+</script>
+</body>
+</html>

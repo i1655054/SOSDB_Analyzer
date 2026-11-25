@@ -1,0 +1,30 @@
+┬
+〇│Private Function ExistsModule(  ByVal Col As Collection,  ByVal ModuleName As String)  As Boolean	モジュール存在判定＜modProcedureRepository＞
+┴└┐
+　　□ Dim V As Variant
+　　│#   モジュール存在確認
+　　＠┐For Each V In Col
+　　││#   モジュール一致判定
+　　│◆┐If StrComp(  CStr(V),  ModuleName,  vbTextCompare) = 0 Then
+　　│││#   モジュール存在返却
+　　││〇 ExistsModule = True
+　　││→ Exit Function
+　　││┴End If
+　　│┴Next V
+　　│#   モジュール未存在
+　　〇 ExistsModule = False
+　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+BuildProcIndex	Procedure索引作成	modProcedureRepository

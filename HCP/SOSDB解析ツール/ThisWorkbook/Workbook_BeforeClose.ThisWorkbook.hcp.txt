@@ -1,0 +1,24 @@
+┬
+〇│Private Sub Workbook_BeforeClose(Cancel As Boolean)	Workbook終了＜ThisWorkbook＞
+┴└┐
+　　☆ On Error Resume Next
+　　│#   Main画面状態復元
+　　◎ RestoreMainWindowState	Main画面状態復元＜modToolManager＞
+　　│#   ショートカット解除
+　　◎ UnRegisterShortcut	ショートカット解除＜modPathChart＞
+　　┴End Sub
+
+========================================
+Calls (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+RestoreMainWindowState	Main画面状態復元	modToolManager
+UnRegisterShortcut	ショートカット解除	modPathChart
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

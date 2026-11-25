@@ -1,17 +1,15 @@
-Procedure: UF_InfoWebDisplay.RenderHTML  [ HTML表示＜UF_InfoWebDisplay＞ ]
-HCP	Business
 ┬
 〇│Public Sub RenderHTML()	HTML表示＜UF_InfoWebDisplay＞
 ┴└┐
-　　│#  初期文字サイズ取得
+　　│#   初期文字サイズ取得
 　　□ Dim initPt As Long: initPt = FontSize
 　　□ Dim html As String
-　　│#  HTML生成開始
+　　│#   HTML生成開始
 　　〇 html = "<!doctype html><html>" & vbLf
 　　〇 html = html & "<head>" & vbLf
 　　〇 html = html & "<meta http='X-UA-Compatible' content='IE=edge'>" & vbLf
 　　〇 html = html & "<style id='appStyle'></style>" & vbLf
-　　│#  JavaScript生成
+　　│#   JavaScript生成
 　　〇 html = html & "<script>" & vbLf
 　　〇 html = html & "(function(){" & vbLf
 　　〇 html = html & "  var sizePt=" & CStr(initPt) & ";" & vbLf
@@ -41,24 +39,44 @@ HCP	Business
 　　〇 html = html & "<input id='fsMin' type='hidden' value='" & CStr(FONT_MIN_PT) & "' />" & vbLf
 　　〇 html = html & "<input id='fsMax' type='hidden' value='" & CStr(FONT_MAX_PT) & "' />" & vbLf
 　　〇 html = html & "<input id='fsValue' type='hidden' value='" & CStr(initPt) & "' />" & vbLf
-　　│#  本文生成
+　　│#   本文生成
 　　〇 html = html & "<div id='content'>"
 　　◎ html = html & ConvertNewLinesToHTML(bodyText)	改行HTML変換＜UF_InfoWebDisplay＞
 　　〇 html = html & "</div>"
 　　〇 html = html & "</body></html>"
-　　│#  WebBrowser初期化
+　　│#   WebBrowser初期化
 　　◆┐If WebBrowser1.document Is Nothing Then
 　　│〇 WebBrowser1.navigate "about:blank"
 　　│＠┐Do While WebBrowser1.readyState <> 4
 　　││〇 DoEvents
 　　││┴Loop
 　　│┴End If
-　　│#  HTML描画
+　　│#   HTML描画
 　　＠┐With WebBrowser1.document
 　　│〇 .Open
 　　│〇 .Write html
 　　│〇 .Close
 　　│┴End With
-　　│#  CSS適用
+　　│#   CSS適用
 　　◎ ApplyCss FontSize	CSS適用＜UF_InfoWebDisplay＞
 　　┴End Sub
+
+========================================
+Calls (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ConvertNewLinesToHTML	改行HTML変換	UF_InfoWebDisplay
+ApplyCss	CSS適用	UF_InfoWebDisplay
+
+========================================
+Called By (4)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ShowInfoDisplay	情報表示フォーム表示	modInfoDisplay
+UserForm_Activate
+CommandButton2_Click
+SaveEditedTextIntoVba	編集内容保存	UF_InfoWebDisplay

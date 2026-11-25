@@ -1,30 +1,31 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
 <meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
 <title>FP_GetHoliParameter</title>
 <style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
 body{font-family:Meiryo;font-size:9pt;}
 table{border-collapse:collapse;}
-th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
 td{vertical-align:top;}
 th{background:#e8f0fe;}
-colgroup col:nth-of-type(1) {}
-colgroup col:nth-of-type(2) {}
-.resize {position: relative;}
-.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
 </style>
 </head>
-<body>
+<body translate="no">
 <h1>FP_GetHoliParameter</h1>
 <p>Module : clsAboutCalendar2</p>
-<p><a href="./_INDEX.html">← Module Index</a></p>
 <table>
-<colgroup><col/><col/></colgroup>
-<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
 <tbody>
-<tr><td>Procedure: clsAboutCalendar2.FP_GetHoliParameter  [ 祝日パラメータ読込＜clsAboutCalendar2＞ ]</td><td></td></tr>
-<tr><td>HCP</td><td>Business</td></tr>
 <tr><td>┬</td><td></td></tr>
 <tr><td>〇│Private Function FP_GetHoliParameter(Optional ByVal blnOmitCheck As Boolean = False) As Boolean</td><td>祝日パラメータ読込＜clsAboutCalendar2＞</td></tr>
 <tr><td>┴└┐</td><td></td></tr>
@@ -35,30 +36,30 @@ colgroup col:nth-of-type(2) {}
 <tr><td>　　□ Dim lngPrevM As Long                                            ' 直前月</td><td></td></tr>
 <tr><td>　　□ Dim objParaSheet As Worksheet                                   ' 祝日パラメータシート</td><td></td></tr>
 <tr><td>　　〇 FP_GetHoliParameter = False</td><td></td></tr>
-<tr><td>　　│#  状態初期化</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   状態初期化</span></td><td></td></tr>
 <tr><td>　　〇 g_blnParaReaded = False</td><td></td></tr>
 <tr><td>　　〇 g_blnParaChecked = False</td><td></td></tr>
 <tr><td>　　☆ On Error Resume Next</td><td></td></tr>
-<tr><td>　　│#  パラメータシート取得</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   パラメータシート取得</span></td><td></td></tr>
 <tr><td>　　〇 Set objParaSheet = ThisWorkbook.Worksheets(g_cnsParaSheet)</td><td></td></tr>
-<tr><td>　　│#  シート存在確認</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   シート存在確認</span></td><td></td></tr>
 <tr><td>　　◆┐If Err.Number &lt;&gt; 0 Then</td><td></td></tr>
 <tr><td>　　│〇 MsgBox "「" &amp; g_cnsParaSheet &amp; "」シートが参照できません。", vbCritical, g_cnsTitle</td><td></td></tr>
 <tr><td>　　│☆ On Error GoTo 0</td><td></td></tr>
 <tr><td>　　│→ Exit Function</td><td></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
 <tr><td>　　☆ On Error GoTo 0</td><td></td></tr>
-<tr><td>　　│#  パラメータ検証</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   パラメータ検証</span></td><td></td></tr>
 <tr><td>　　◆┐If Not g_blnParaChecked And Not blnOmitCheck Then</td><td></td></tr>
-<tr><td>　　│◆→ If Not FP_CheckSyukuParameter(objParaSheet, lngRowMax) Then Exit Function</td><td></td></tr>
+<tr><td>　　│◆→ If Not <a href="../clsAboutCalendar2/FP_CheckSyukuParameter.clsAboutCalendar2.hcp.html">FP_CheckSyukuParameter</a>(objParaSheet, lngRowMax) Then Exit Function</td><td>内部呼出:<a href="../clsAboutCalendar2/FP_CheckSyukuParameter.clsAboutCalendar2.hcp.html">FP_CheckSyukuParameter</a></td></tr>
 <tr><td>　　├┐ELSE</td><td></td></tr>
 <tr><td>　　│＠┐With objParaSheet</td><td></td></tr>
-<tr><td>　　││┴End With</td><td></td></tr>
 <tr><td>　　│〇 lngRowMax = .Range("$A$" &amp; .Rows.count).End(xlUp).row</td><td></td></tr>
+<tr><td>　　││┴End With</td><td></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
-<tr><td>　　│#  テーブル領域確保</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   テーブル領域確保</span></td><td></td></tr>
 <tr><td>　　〇 ReDim g_tblParamater(lngRowMax - 3)</td><td></td></tr>
-<tr><td>　　│#  月別位置テーブル初期化</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   月別位置テーブル初期化</span></td><td></td></tr>
 <tr><td>　　＠┐For lngIx = 1 To 12</td><td></td></tr>
 <tr><td>　　│＠┐With g_tblParamMMPos(lngIx)</td><td></td></tr>
 <tr><td>　　││〇 .StrIx = -1</td><td></td></tr>
@@ -69,29 +70,29 @@ colgroup col:nth-of-type(2) {}
 <tr><td>　　〇 lngRow = 3</td><td></td></tr>
 <tr><td>　　＠┐With objParaSheet                                                 ' ｢祝日パラメータ｣シート</td><td></td></tr>
 <tr><td>　　│〇 lngCurrM = .Cells(lngRow, 1).Value</td><td></td></tr>
-<tr><td>　　││#  パラメータ読込</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   パラメータ読込</span></td><td></td></tr>
 <tr><td>　　│＠┐Do While lngRow &lt;= lngRowMax</td><td></td></tr>
-<tr><td>　　│││#  月開始位置設定</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│││#   月開始位置設定</span></td><td></td></tr>
 <tr><td>　　││〇 lngPrevM = lngCurrM</td><td></td></tr>
 <tr><td>　　││〇 g_tblParamMMPos(lngPrevM).StrIx = lngIx</td><td></td></tr>
-<tr><td>　　│││#  月内パラメータ読込</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│││#   月内パラメータ読込</span></td><td></td></tr>
 <tr><td>　　││＠┐Do While lngCurrM = lngPrevM</td><td></td></tr>
 <tr><td>　　│││＠┐With g_tblParamater(lngIx)</td><td></td></tr>
 <tr><td>　　││││〇 .Getsu = lngPrevM                               ' 月</td><td></td></tr>
-<tr><td>　　││││◎ .SyoriKbn = FP_GetNumber(objParaSheet.Cells(lngRow, 2))     ' 処理区分</td><td>数値取得＜clsAboutCalendar2＞</td></tr>
+<tr><td>　　││││◎ .SyoriKbn = <a href="../clsAboutCalendar2/FP_GetNumber.clsAboutCalendar2.hcp.html">FP_GetNumber</a>(objParaSheet.Cells(lngRow, 2))     ' 処理区分</td><td><a href="../clsAboutCalendar2/FP_GetNumber.clsAboutCalendar2.hcp.html">数値取得＜clsAboutCalendar2＞</a></td></tr>
 <tr><td>　　│││││</td><td>内部呼出:Cells</td></tr>
-<tr><td>　　││││◎ .Hiduke = FP_GetNumber(objParaSheet.Cells(lngRow, 3))       ' [固定日]日</td><td>数値取得＜clsAboutCalendar2＞</td></tr>
+<tr><td>　　││││◎ .Hiduke = <a href="../clsAboutCalendar2/FP_GetNumber.clsAboutCalendar2.hcp.html">FP_GetNumber</a>(objParaSheet.Cells(lngRow, 3))       ' [固定日]日</td><td><a href="../clsAboutCalendar2/FP_GetNumber.clsAboutCalendar2.hcp.html">数値取得＜clsAboutCalendar2＞</a></td></tr>
 <tr><td>　　│││││</td><td>内部呼出:Cells</td></tr>
-<tr><td>　　││││◎ .FurikaeKbn = FP_GetNumber(objParaSheet.Cells(lngRow, 4))   ' [固定日]振替区分</td><td>数値取得＜clsAboutCalendar2＞</td></tr>
+<tr><td>　　││││◎ .FurikaeKbn = <a href="../clsAboutCalendar2/FP_GetNumber.clsAboutCalendar2.hcp.html">FP_GetNumber</a>(objParaSheet.Cells(lngRow, 4))   ' [固定日]振替区分</td><td><a href="../clsAboutCalendar2/FP_GetNumber.clsAboutCalendar2.hcp.html">数値取得＜clsAboutCalendar2＞</a></td></tr>
 <tr><td>　　│││││</td><td>内部呼出:Cells</td></tr>
-<tr><td>　　││││◎ .HmSyusu = FP_GetNumber(objParaSheet.Cells(lngRow, 5))      ' [HM]週数</td><td>数値取得＜clsAboutCalendar2＞</td></tr>
+<tr><td>　　││││◎ .HmSyusu = <a href="../clsAboutCalendar2/FP_GetNumber.clsAboutCalendar2.hcp.html">FP_GetNumber</a>(objParaSheet.Cells(lngRow, 5))      ' [HM]週数</td><td><a href="../clsAboutCalendar2/FP_GetNumber.clsAboutCalendar2.hcp.html">数値取得＜clsAboutCalendar2＞</a></td></tr>
 <tr><td>　　│││││</td><td>内部呼出:Cells</td></tr>
-<tr><td>　　││││◎ .HmYobi = FP_GetNumber(objParaSheet.Cells(lngRow, 6))       ' [HM]曜日</td><td>数値取得＜clsAboutCalendar2＞</td></tr>
+<tr><td>　　││││◎ .HmYobi = <a href="../clsAboutCalendar2/FP_GetNumber.clsAboutCalendar2.hcp.html">FP_GetNumber</a>(objParaSheet.Cells(lngRow, 6))       ' [HM]曜日</td><td><a href="../clsAboutCalendar2/FP_GetNumber.clsAboutCalendar2.hcp.html">数値取得＜clsAboutCalendar2＞</a></td></tr>
 <tr><td>　　│││││</td><td>内部呼出:Cells</td></tr>
 <tr><td>　　││││〇 .SyukuNm = Trim(objParaSheet.Cells(lngRow, 7).Value)        ' 祝日名</td><td></td></tr>
-<tr><td>　　││││◎ .StrYear = FP_GetNumber(objParaSheet.Cells(lngRow, 8))      ' 開始年</td><td>数値取得＜clsAboutCalendar2＞</td></tr>
+<tr><td>　　││││◎ .StrYear = <a href="../clsAboutCalendar2/FP_GetNumber.clsAboutCalendar2.hcp.html">FP_GetNumber</a>(objParaSheet.Cells(lngRow, 8))      ' 開始年</td><td><a href="../clsAboutCalendar2/FP_GetNumber.clsAboutCalendar2.hcp.html">数値取得＜clsAboutCalendar2＞</a></td></tr>
 <tr><td>　　│││││</td><td>内部呼出:Cells</td></tr>
-<tr><td>　　││││◎ .EndYear = FP_GetNumber(objParaSheet.Cells(lngRow, 9))      ' 終了年</td><td>数値取得＜clsAboutCalendar2＞</td></tr>
+<tr><td>　　││││◎ .EndYear = <a href="../clsAboutCalendar2/FP_GetNumber.clsAboutCalendar2.hcp.html">FP_GetNumber</a>(objParaSheet.Cells(lngRow, 9))      ' 終了年</td><td><a href="../clsAboutCalendar2/FP_GetNumber.clsAboutCalendar2.hcp.html">数値取得＜clsAboutCalendar2＞</a></td></tr>
 <tr><td>　　│││││</td><td>内部呼出:Cells</td></tr>
 <tr><td>　　││││┴End With</td><td></td></tr>
 <tr><td>　　│││〇 lngIx = lngIx + 1</td><td></td></tr>
@@ -102,42 +103,49 @@ colgroup col:nth-of-type(2) {}
 <tr><td>　　││││〇 lngCurrM = 99</td><td></td></tr>
 <tr><td>　　││││┴End If</td><td></td></tr>
 <tr><td>　　│││┴Loop</td><td></td></tr>
-<tr><td>　　│││#  月終了位置設定</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│││#   月終了位置設定</span></td><td></td></tr>
 <tr><td>　　││〇 g_tblParamMMPos(lngPrevM).EndIx = lngIx - 1</td><td></td></tr>
 <tr><td>　　││┴Loop</td><td></td></tr>
 <tr><td>　　│┴End With</td><td></td></tr>
-<tr><td>　　│#  読込完了</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   読込完了</span></td><td></td></tr>
 <tr><td>　　〇 g_blnParaReaded = True</td><td></td></tr>
 <tr><td>　　〇 g_blnParaChecked = True</td><td></td></tr>
 <tr><td>　　〇 FP_GetHoliParameter = True</td><td></td></tr>
 <tr><td>　　┴End Function</td><td></td></tr>
 </tbody>
 </table>
+<hr>
+<h2>Calls (2)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../clsAboutCalendar2/FP_CheckSyukuParameter.clsAboutCalendar2.hcp.html">FP_CheckSyukuParameter</a></td><td>祝日パラメータ検証</td><td>clsAboutCalendar2</td></tr>
+<tr><td><a href="../clsAboutCalendar2/FP_GetNumber.clsAboutCalendar2.hcp.html">FP_GetNumber</a></td><td>数値取得</td><td>clsAboutCalendar2</td></tr>
+</table>
+<hr>
+<h2>Called By (1)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../clsAboutCalendar2/MakeHoliParamater.clsAboutCalendar2.hcp.html">MakeHoliParamater</a></td><td>祝日パラメータ作成</td><td>clsAboutCalendar2</td></tr>
+</table>
 <script>
-document.querySelectorAll('.resize').forEach(function (eleTh) {
+document.querySelectorAll('.resize').forEach(function(eleTh) {
 let startX;
 let startWidth;
 const eleResizer = document.createElement('div');
 eleResizer.classList.add('resizer');
-eleResizer.addEventListener('mousedown', function (e) {
-const styleTh = window.getComputedStyle(eleTh);
-const paddingLeft = parseFloat(styleTh.paddingLeft);
-const paddingRight = parseFloat(styleTh.paddingRight);
-const borderLeft = parseFloat(styleTh.borderLeftWidth);
-const borderRight = parseFloat(styleTh.borderRightWidth);
+eleResizer.addEventListener('mousedown', function(e) {
 startX = e.pageX;
-startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+startWidth = eleTh.offsetWidth;
 document.addEventListener('mousemove', onMouseMove);
 document.addEventListener('mouseup', onMouseUp);
 });
 eleTh.appendChild(eleResizer);
-function onMouseMove(e) {
-const newWidth = startWidth + (e.pageX - startX);
-eleTh.style.width = newWidth + 'px';
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
 }
-function onMouseUp() {
-document.removeEventListener('mousemove', onMouseMove);
-document.removeEventListener('mouseup', onMouseUp);
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
 }
 });
 </script>

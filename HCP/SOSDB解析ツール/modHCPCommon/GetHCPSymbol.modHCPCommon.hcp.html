@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
+<title>GetHCPSymbol</title>
+<style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
+</style>
+</head>
+<body translate="no">
+<h1>GetHCPSymbol</h1>
+<p>Module : modHCPCommon</p>
+<table>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
+<tbody>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Public Function GetHCPSymbol(  ByVal Node As clsHCPNode)  As String</td><td>HCP記号取得＜modHCPCommon＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   HCP記号判定</span></td><td></td></tr>
+<tr><td>　　◆┐Select Case Node.NodeType</td><td></td></tr>
+<tr><td>　　│├┐Case NODE_START</td><td></td></tr>
+<tr><td>　　││〇 GetHCPSymbol = "〇│"</td><td></td></tr>
+<tr><td>　　│├┐Case NODE_DECLARE</td><td></td></tr>
+<tr><td>　　││〇 GetHCPSymbol = "□ "</td><td></td></tr>
+<tr><td>　　│├┐Case NODE_REFERENCE</td><td></td></tr>
+<tr><td>　　││〇 GetHCPSymbol = "◇ "</td><td></td></tr>
+<tr><td>　　│├┐Case NODE_CONTROL</td><td></td></tr>
+<tr><td>　　││〇 GetHCPSymbol = "☆ "</td><td></td></tr>
+<tr><td>　　│├┐Case NODE_NORMAL</td><td></td></tr>
+<tr><td>　　││〇 GetHCPSymbol = "〇 "</td><td></td></tr>
+<tr><td>　　│├┐Case NODE_CALL</td><td></td></tr>
+<tr><td>　　││〇 GetHCPSymbol = "◎ "</td><td></td></tr>
+<tr><td>　　│├┐Case NODE_IF</td><td></td></tr>
+<tr><td>　　││〇 GetHCPSymbol = "◆ "</td><td></td></tr>
+<tr><td>　　│├┐Case NODE_INLINE_IF</td><td></td></tr>
+<tr><td>　　││◆┐If InStr(1,  Node.Text,  "Exit ",  vbTextCompare) &gt; 0 Then</td><td></td></tr>
+<tr><td>　　│││〇 GetHCPSymbol = "◆→ "</td><td></td></tr>
+<tr><td>　　││├┐ELSE</td><td></td></tr>
+<tr><td>　　│││〇 GetHCPSymbol = "◆ "</td><td></td></tr>
+<tr><td>　　│││┴End If</td><td></td></tr>
+<tr><td>　　│├┐Case NODE_TRUE</td><td></td></tr>
+<tr><td>　　││〇 GetHCPSymbol = "THEN "</td><td></td></tr>
+<tr><td>　　│├┐Case NODE_FALSE</td><td></td></tr>
+<tr><td>　　││〇 GetHCPSymbol = "ELSE "</td><td></td></tr>
+<tr><td>　　│├┐Case NODE_FOR</td><td></td></tr>
+<tr><td>　　││〇 GetHCPSymbol = "＠ "</td><td></td></tr>
+<tr><td>　　│├┐Case NODE_DO</td><td></td></tr>
+<tr><td>　　││〇 GetHCPSymbol = "＠ "</td><td></td></tr>
+<tr><td>　　│├┐Case NODE_WITH</td><td></td></tr>
+<tr><td>　　││〇 GetHCPSymbol = "＠ "</td><td></td></tr>
+<tr><td>　　│├┐Case NODE_WHILE</td><td></td></tr>
+<tr><td>　　││〇 GetHCPSymbol = "＠ "</td><td></td></tr>
+<tr><td>　　│├┐Case NODE_SELECT</td><td></td></tr>
+<tr><td>　　││〇 GetHCPSymbol = "◆ "</td><td></td></tr>
+<tr><td>　　│├┐Case NODE_CASE</td><td></td></tr>
+<tr><td>　　││〇 GetHCPSymbol = ""</td><td></td></tr>
+<tr><td>　　│├┐Case NODE_MERGE</td><td></td></tr>
+<tr><td>　　││〇 GetHCPSymbol = ""</td><td></td></tr>
+<tr><td>　　│├┐Case NODE_END</td><td></td></tr>
+<tr><td>　　││〇 GetHCPSymbol = "┴"</td><td></td></tr>
+<tr><td>　　│├┐Case NODE_GOTO</td><td></td></tr>
+<tr><td>　　││〇 GetHCPSymbol = "→ "</td><td></td></tr>
+<tr><td>　　│├┐Case NODE_EXIT</td><td></td></tr>
+<tr><td>　　││〇 GetHCPSymbol = "→ "</td><td></td></tr>
+<tr><td>　　│├┐Case NODE_LABEL</td><td></td></tr>
+<tr><td>　　││〇 GetHCPSymbol = "▼ "</td><td></td></tr>
+<tr><td>　　│├┐Case NODE_RESUME</td><td></td></tr>
+<tr><td>　　││〇 GetHCPSymbol = "☆ "</td><td></td></tr>
+<tr><td>　　│├┐Case Else</td><td></td></tr>
+<tr><td>　　││〇 GetHCPSymbol = ""</td><td></td></tr>
+<tr><td>　　│┴End Select</td><td></td></tr>
+<tr><td>　　┴End Function</td><td></td></tr>
+</tbody>
+</table>
+<hr>
+<h2>Calls (0)</h2>
+<p>呼出先なし</p>
+<hr>
+<h2>Called By (1)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../clsHCPRenderBuilder/BuildOutputNode.clsHCPRenderBuilder.hcp.html">BuildOutputNode</a></td><td>通常ノード RenderText生成</td><td>clsHCPRenderBuilder</td></tr>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function(eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function(e) {
+startX = e.pageX;
+startWidth = eleTh.offsetWidth;
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
+}
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
+}
+});
+</script>
+</body>
+</html>

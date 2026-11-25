@@ -1,0 +1,34 @@
+┬
+〇│Private Sub SortStringArray(  ByRef Arr As Variant)	文字列配列ソート＜frmHCPGenerator＞
+┴└┐
+　　□ Dim i As Long
+　　□ Dim j As Long
+　　□ Dim Temp As String
+　　│#   文字列配列ソート
+　　＠┐For i = LBound(Arr) To UBound(Arr) - 1
+　　│＠┐For j = i + 1 To UBound(Arr)
+　　│││#   配列要素比較
+　　││◆┐If StrComp(  Arr(i),  Arr(j),  vbTextCompare) > 0 Then
+　　││││#   配列要素入替
+　　│││〇 Temp = Arr(i)
+　　│││〇 Arr(i) = Arr(j)
+　　│││〇 Arr(j) = Temp
+　　│││┴End If
+　　││┴Next j
+　　│┴Next i
+　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+LoadModuleList	モジュール一覧読込	frmHCPGenerator
+LoadProcedureList	プロシージャ一覧読込	frmHCPGenerator

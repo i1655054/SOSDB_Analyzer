@@ -1,0 +1,32 @@
+┬
+〇│Private Sub SetupListView()	ListView初期化＜frmExportTool＞
+┴└┐
+　　│#   ListView表示設定
+　　＠┐With lvwTools
+　　│〇 .View = lvwReport
+　　│〇 .FullRowSelect = True
+　　│〇 .Gridlines = True
+　　│〇 .CheckBoxes = True
+　　││#   ListView列初期化
+　　│〇 .ColumnHeaders.Clear
+　　││#   ListView列設定
+　　│〇 .ColumnHeaders.Add , , "ID", 35
+　　│〇 .ColumnHeaders.Add , , "ツール名", 160
+　　│〇 .ColumnHeaders.Add , , "状態", 60
+　　│〇 .ColumnHeaders.Add , , "Repository", 120
+　　│┴End With
+　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+UserForm_Initialize

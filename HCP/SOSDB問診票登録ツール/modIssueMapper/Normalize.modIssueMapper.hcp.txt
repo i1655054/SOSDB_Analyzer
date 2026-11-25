@@ -1,36 +1,48 @@
-Procedure: modIssueMapper.Normalize  [ 文字列正規化＜modIssueMapper＞ ]
-HCP	Business
 ┬
 〇│Private Function Normalize(V As Variant) As String	文字列正規化＜modIssueMapper＞
 ┴└┐
-　　│#  文字列化
+　　│#   文字列化
 　　□ Dim s As String
 　　◆┐If IsNull(V) Or isEmpty(V) Then
 　　│〇 s = ""
 　　├┐ELSE
 　　│〇 s = CStr(V)
 　　│┴End If
-　　│#  改行コード統一
+　　│#   改行コード統一
 　　〇 s = Replace(s, vbCrLf, vbLf)
 　　〇 s = Replace(s, vbCr, vbLf)
-　　│#  タブ変換(タブ→空白)
+　　│#   タブ変換(タブ→空白)
 　　〇 s = Replace(s, vbTab, " ")
-　　│#  全角スペース変換(全角スペース→半角)
+　　│#   全角スペース変換(全角スペース→半角)
 　　〇 s = Replace(s, "　", " ")
-　　│#  行単位トリム
+　　│#   行単位トリム
 　　□ Dim arr, i As Long
 　　〇 arr = Split(s, vbLf)
 　　＠┐For i = 0 To UBound(arr)
 　　│〇 arr(i) = Trim(arr(i))
 　　│┴Next i
-　　│#  行結合
+　　│#   行結合
 　　〇 s = Join(arr, vbLf)
-　　│#  連続改行圧縮
+　　│#   連続改行圧縮
 　　＠┐Do While InStr(s, vbLf & vbLf & vbLf) > 0
 　　│〇 s = Replace(s, vbLf & vbLf & vbLf, vbLf & vbLf)
 　　│┴Loop
-　　│#  前後空白除去
+　　│#   前後空白除去
 　　〇 s = Trim(s)
-　　│#  正規化結果返却
+　　│#   正規化結果返却
 　　〇 Normalize = s
 　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+IsChanged	変更判定	modIssueMapper

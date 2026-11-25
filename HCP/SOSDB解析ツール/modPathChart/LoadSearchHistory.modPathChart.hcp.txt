@@ -1,0 +1,26 @@
+┬
+〇│Public Sub LoadSearchHistory(  ByVal cbo As MSForms.ComboBox)	検索履歴読込＜modPathChart＞
+┴└┐
+　　□ Dim V As Variant
+　　◎ InitSearchHistory	検索履歴初期化＜modPathChart＞
+　　│#   検索履歴読込
+　　＠┐For Each V In gSearchHistory
+　　│〇 cbo.AddItem V
+　　│┴Next
+　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+InitSearchHistory	検索履歴初期化	modPathChart
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+UserForm_Initialize

@@ -1,0 +1,44 @@
+┬
+〇│Private Sub cmdOK_Click()	ツール選択確定＜frmTargetTool＞
+┴└┐
+　　│#   対象ツール選択確認
+　　◆┐If lstTool.ListIndex < 0 Then
+　　│〇 MsgBox  "対象ツールを選択してください。"
+　　│→ Exit Sub
+　　│┴End If
+　　│#   選択ツール取得
+　　〇 gTargetToolID =  CLng(lstTool.List(  lstTool.ListIndex,  1))
+　　│#   解析コンテキスト生成
+　　◎ Set gContext =  CreateAnalyzeContext()	解析コンテキスト生成＜modAnalyzerCommon＞
+　　│#   対象ブック確認
+　　◆┐If Not ValidateTargetBook("対象ツール選択") Then	内部呼出:ValidateTargetBook
+　　│→ Exit Sub
+　　│┴End If
+　　│#   ProcedureRepository初期化解除
+　　◎ ClearProcedureRepository	ProcedureRepository初期化解除＜modProcedureRepository＞
+　　│#   ツール選択画面終了
+　　〇 Unload Me
+　　│#   AnalyzerBookアクティブ化
+　　◎ ActivateAnalyzerBook	解析ツールBookアクティブ化＜modToolManager＞
+　　│#   関数管理画面表示
+　　〇 frmFunctionManager.Show vbModeless
+　　┴End Sub
+
+========================================
+Calls (6)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+SetOptionValue	出力オプション設定	frmPathChartOption
+SavePathChartConfig	PathChart設定保存	modPathChartConfig
+CreateAnalyzeContext	解析コンテキスト生成	modAnalyzerCommon
+ValidateTargetBook	対象ブック存在確認	modToolManager
+ClearProcedureRepository	ProcedureRepository初期化解除	modProcedureRepository
+ActivateAnalyzerBook	解析ツールBookアクティブ化	modToolManager
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

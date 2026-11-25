@@ -1,0 +1,23 @@
+┬
+〇│Public Sub InitSearchHistory()	検索履歴初期化＜modPathChart＞
+┴└┐
+　　│#   検索履歴初期化
+　　◆┐If gSearchHistory Is Nothing Then
+　　│〇 Set gSearchHistory = New Collection
+　　│┴End If
+　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+AddSearchHistory	検索履歴追加	modPathChart
+LoadSearchHistory	検索履歴読込	modPathChart

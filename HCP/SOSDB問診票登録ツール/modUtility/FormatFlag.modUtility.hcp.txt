@@ -1,9 +1,23 @@
-Procedure: modUtility.FormatFlag  [ フラグ表示形式生成＜modUtility＞ ]
-HCP	Business
 ┬
 〇│Private Function FormatFlag(flag As Long) As String	フラグ表示形式生成＜modUtility＞
 ┴└┐
-　　│#  フラグ表示文字列生成
+　　│#   フラグ表示文字列生成
 　　◎ FormatFlag = " (&H" & Hex(flag) & " / " & GetBitPosition(flag) & ")"	ビット位置取得＜modUtility＞
 　　│	内部呼出:Hex
 　　┴End Function
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetBitPosition	ビット位置取得	modUtility
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetDiffFlagNames	差分名称取得	modUtility

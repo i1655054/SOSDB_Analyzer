@@ -1,39 +1,40 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
 <meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
 <title>DeleteFileSafe</title>
 <style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
 body{font-family:Meiryo;font-size:9pt;}
 table{border-collapse:collapse;}
-th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
 td{vertical-align:top;}
 th{background:#e8f0fe;}
-colgroup col:nth-of-type(1) {}
-colgroup col:nth-of-type(2) {}
-.resize {position: relative;}
-.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
 </style>
 </head>
-<body>
+<body translate="no">
 <h1>DeleteFileSafe</h1>
 <p>Module : modUtility</p>
-<p><a href="./_INDEX.html">← Module Index</a></p>
 <table>
-<colgroup><col/><col/></colgroup>
-<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
 <tbody>
-<tr><td>Procedure: modUtility.DeleteFileSafe  [ 安全ファイル削除＜modUtility＞ ]</td><td></td></tr>
-<tr><td>HCP</td><td>Business</td></tr>
 <tr><td>┬</td><td></td></tr>
 <tr><td>〇│Public Sub DeleteFileSafe(ByVal filePath As String)</td><td>安全ファイル削除＜modUtility＞</td></tr>
 <tr><td>┴└┐</td><td></td></tr>
 <tr><td>　　☆ On Error Resume Next</td><td></td></tr>
-<tr><td>　　│#  ファイル存在確認</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   ファイル存在確認</span></td><td></td></tr>
 <tr><td>　　◆┐If Trim(filePath) &lt;&gt; "" And Dir(filePath) &lt;&gt; "" Then</td><td></td></tr>
-<tr><td>　　││#  ファイル削除</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   ファイル削除</span></td><td></td></tr>
 <tr><td>　　│〇 Kill filePath</td><td></td></tr>
-<tr><td>　　││#  削除結果確認</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   削除結果確認</span></td><td></td></tr>
 <tr><td>　　│◆┐If Err.Number &lt;&gt; 0 Then</td><td></td></tr>
 <tr><td>　　││〇 Debug.Print "削除失敗: " &amp; filePath &amp; " / " &amp; Err.Description</td><td></td></tr>
 <tr><td>　　│├┐ELSE</td><td></td></tr>
@@ -43,31 +44,36 @@ colgroup col:nth-of-type(2) {}
 <tr><td>　　┴End Sub</td><td></td></tr>
 </tbody>
 </table>
+<hr>
+<h2>Calls (0)</h2>
+<p>呼出先なし</p>
+<hr>
+<h2>Called By (3)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modUtility/Clear_WorkFile.modUtility.hcp.html">Clear_WorkFile</a></td><td>ワークファイル削除</td><td>modUtility</td></tr>
+<tr><td><a href="../modIssueService/RegisterNewIssue.modIssueService.hcp.html">RegisterNewIssue</a></td><td>新規Issue登録</td><td>modIssueService</td></tr>
+<tr><td><a href="../modIssueService/UpdateExistingIssue.modIssueService.hcp.html">UpdateExistingIssue</a></td><td>Issue更新登録</td><td>modIssueService</td></tr>
+</table>
 <script>
-document.querySelectorAll('.resize').forEach(function (eleTh) {
+document.querySelectorAll('.resize').forEach(function(eleTh) {
 let startX;
 let startWidth;
 const eleResizer = document.createElement('div');
 eleResizer.classList.add('resizer');
-eleResizer.addEventListener('mousedown', function (e) {
-const styleTh = window.getComputedStyle(eleTh);
-const paddingLeft = parseFloat(styleTh.paddingLeft);
-const paddingRight = parseFloat(styleTh.paddingRight);
-const borderLeft = parseFloat(styleTh.borderLeftWidth);
-const borderRight = parseFloat(styleTh.borderRightWidth);
+eleResizer.addEventListener('mousedown', function(e) {
 startX = e.pageX;
-startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+startWidth = eleTh.offsetWidth;
 document.addEventListener('mousemove', onMouseMove);
 document.addEventListener('mouseup', onMouseUp);
 });
 eleTh.appendChild(eleResizer);
-function onMouseMove(e) {
-const newWidth = startWidth + (e.pageX - startX);
-eleTh.style.width = newWidth + 'px';
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
 }
-function onMouseUp() {
-document.removeEventListener('mousemove', onMouseMove);
-document.removeEventListener('mouseup', onMouseUp);
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
 }
 });
 </script>

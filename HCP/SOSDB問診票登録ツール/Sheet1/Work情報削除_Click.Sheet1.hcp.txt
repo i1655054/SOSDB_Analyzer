@@ -1,8 +1,21 @@
-Procedure: Sheet1.Work情報削除_Click  [ Work情報削除＜Sheet1＞ ]
-HCP	Business
 ┬
 〇│Private Sub Work情報削除_Click()	Work情報削除＜Sheet1＞
 ┴└┐
-　　◎ Call modUtility.ClearMultiLineAlerts	複数行注意表示解除＜modUtility＞
-　　◎ Call modUtility.ResetWorkInfo	作業情報リセット＜modUtility＞
+　　〇 Call modUtility.ClearMultiLineAlerts
+　　〇 Call modUtility.ResetWorkInfo
 　　┴End Sub
+
+========================================
+Calls (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ClearMultiLineAlerts	複数行注意表示解除	modUtility
+ResetWorkInfo	作業情報リセット	modUtility
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

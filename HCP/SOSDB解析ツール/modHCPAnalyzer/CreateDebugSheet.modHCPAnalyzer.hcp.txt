@@ -1,0 +1,38 @@
+┬
+〇│Public Sub CreateDebugSheet()	デバッグシート作成＜modHCPAnalyzer＞
+┴└┐
+　　□ Dim ws As Worksheet
+　　☆ On Error Resume Next
+　　│#   DBG_NODES取得
+　　〇 Set ws =  gContext.ManagementBook.Worksheets(
+　　│   SHEET_DEBUG_NODES)
+　　☆ On Error GoTo 0
+　　│#   DBG_NODES作成
+　　◆┐If ws Is Nothing Then
+　　│〇 Set ws =  gContext.ManagementBook.Worksheets.Add
+　　│〇 ws.Name =  SHEET_DEBUG_NODES
+　　│┴End If
+　　│#   デバッグシート初期化
+　　〇 ws.Cells.Clear
+　　│#   ヘッダ出力
+　　〇 ws.Range("A1:H1").Value = Array(
+　　│   "Section",  "NodeID",  "ParentID",  "Level",  "BranchType",  "NodeType",  "Text",  "SourceLine")
+　　│#   ヘッダ強調
+　　〇 ws.Rows(1).Font.Bold = True
+　　│#   列幅自動調整
+　　〇 ws.Columns("A:H").AutoFit
+　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+CreateHCP	HCP作成	modHCPAnalyzer

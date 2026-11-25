@@ -1,0 +1,23 @@
+┬
+〇│Private Sub UserForm_Activate()	ナビゲータ表示＜frmPathChartNavigator＞
+┴└┐
+　　│#   ナビゲータ表示位置設定
+　　〇 Me.Left =  Application.Left +  Application.Width -  Me.Width - 30
+　　〇 Me.Top =  Application.Top + 80
+　　│#   ノード情報初期化
+　　◎ Call ClearNavigatorInfo	ナビゲータ情報初期化＜frmPathChartNavigator＞
+　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ClearNavigatorInfo	ナビゲータ情報初期化	frmPathChartNavigator
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

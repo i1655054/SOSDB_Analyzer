@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
+<title>WriteHtmlIndexFile</title>
+<style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
+</style>
+</head>
+<body translate="no">
+<h1>WriteHtmlIndexFile</h1>
+<p>Module : modHCPIndex</p>
+<table>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
+<tbody>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Public Sub WriteHtmlIndexFile(  ByVal IndexPath As String,  ByVal HeaderText As String,  ByVal ProcedureList As Collection)</td><td>Module INDEX HTML出力＜modHCPIndex＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   出力ファイル番号</span></td><td></td></tr>
+<tr><td>　　□ Dim FileNo As Integer</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   Procedure情報</span></td><td></td></tr>
+<tr><td>　　□ Dim Info As clsProcedureInfo</td><td></td></tr>
+<tr><td>　　〇 FileNo = FreeFile</td><td></td></tr>
+<tr><td>　　〇 Open IndexPath  For Output As #FileNo</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   HTMLヘッダ</span></td><td></td></tr>
+<tr><td>　　◎ <a href="../modHCPIndex/WriteHtmlHeader.modHCPIndex.hcp.html">WriteHtmlHeader</a>  FileNo,  HeaderText</td><td><a href="../modHCPIndex/WriteHtmlHeader.modHCPIndex.hcp.html">HTMLヘッダ出力＜modHCPIndex＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│#   Tool Indexへ戻る</span></td><td></td></tr>
+<tr><td>　　◎ Print #FileNo,  "&lt;p&gt;" &amp;  "&lt;a href=""" &amp;  <a href="../modHCPPath/GetIndexRelativePath.modHCPPath.hcp.html">GetIndexRelativePath</a>(1) &amp;  """&gt;← Tool Index&lt;/a&gt;" &amp;  "&lt;/p&gt;"</td><td><a href="../modHCPPath/GetIndexRelativePath.modHCPPath.hcp.html">INDEX相対パス取得＜modHCPPath＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│#   見出し</span></td><td></td></tr>
+<tr><td>　　〇 Print #FileNo,  "&lt;h1&gt;" &amp;  HeaderText &amp;  "&lt;/h1&gt;"</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   件数</span></td><td></td></tr>
+<tr><td>　　〇 Print #FileNo,  "&lt;p&gt;Procedure Count : " &amp;  ProcedureList.Count &amp;  "&lt;/p&gt;"</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   テーブル開始</span></td><td></td></tr>
+<tr><td>　　〇 Print #FileNo,  "&lt;table&gt;"</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   ヘッダ行</span></td><td></td></tr>
+<tr><td>　　〇 Print #FileNo,  "&lt;tr&gt;" &amp;  "&lt;th&gt;Procedure&lt;/th&gt;" &amp;  "&lt;th&gt;JPName&lt;/th&gt;" &amp;  "&lt;th&gt;Status&lt;/th&gt;" &amp;  "&lt;th&gt;Updated&lt;/th&gt;" &amp;  "&lt;/tr&gt;"</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   明細行</span></td><td></td></tr>
+<tr><td>　　＠┐For Each Info In <a href="../modAnalyze/ProcedureList.modAnalyze.hcp.html">ProcedureList</a></td><td>内部呼出:<a href="../modAnalyze/ProcedureList.modAnalyze.hcp.html">ProcedureList</a></td></tr>
+<tr><td>　　│〇 Print #FileNo,  "&lt;tr&gt;" &amp;  "&lt;td&gt;&lt;a href=""" &amp;  Info.FileName &amp;  ".hcp.html""&gt;" &amp;  Info.ProcedureName &amp;  "&lt;/a&gt;&lt;/td&gt;" &amp;  "&lt;td&gt;" &amp;  Info.JPName &amp;  "&lt;/td&gt;" &amp;  "&lt;td&gt;" &amp;  Info.Status &amp;  "&lt;/td&gt;" &amp;  "&lt;td&gt;" &amp;  Info.LastUpdate &amp;  "&lt;/td&gt;" &amp;  "&lt;/tr&gt;"</td><td></td></tr>
+<tr><td>　　│┴Next Info</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   テーブル終了</span></td><td></td></tr>
+<tr><td>　　〇 Print #FileNo,  "&lt;/table&gt;"</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   HTMLフッタ</span></td><td></td></tr>
+<tr><td>　　◎ <a href="../modHCPIndex/WriteHtmlFooter.modHCPIndex.hcp.html">WriteHtmlFooter</a>  FileNo</td><td><a href="../modHCPIndex/WriteHtmlFooter.modHCPIndex.hcp.html">HTMLフッタ出力＜modHCPIndex＞</a></td></tr>
+<tr><td>　　〇 Close #FileNo</td><td></td></tr>
+<tr><td>　　┴End Sub</td><td></td></tr>
+</tbody>
+</table>
+<hr>
+<h2>Calls (4)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modHCPIndex/WriteHtmlHeader.modHCPIndex.hcp.html">WriteHtmlHeader</a></td><td>HTMLヘッダ出力</td><td>modHCPIndex</td></tr>
+<tr><td><a href="../modHCPPath/GetIndexRelativePath.modHCPPath.hcp.html">GetIndexRelativePath</a></td><td>INDEX相対パス取得</td><td>modHCPPath</td></tr>
+<tr><td><a href="../modAnalyze/ProcedureList.modAnalyze.hcp.html">ProcedureList</a></td><td>関数一覧作成</td><td>modAnalyze</td></tr>
+<tr><td><a href="../modHCPIndex/WriteHtmlFooter.modHCPIndex.hcp.html">WriteHtmlFooter</a></td><td>HTMLフッタ出力</td><td>modHCPIndex</td></tr>
+</table>
+<hr>
+<h2>Called By (1)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modHCPIndex/RebuildModuleIndex.modHCPIndex.hcp.html">RebuildModuleIndex</a></td><td>モジュールINDEX再生成</td><td>modHCPIndex</td></tr>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function(eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function(e) {
+startX = e.pageX;
+startWidth = eleTh.offsetWidth;
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
+}
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
+}
+});
+</script>
+</body>
+</html>

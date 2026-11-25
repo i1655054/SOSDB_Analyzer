@@ -1,9 +1,7 @@
-Procedure: IssueInfo.MergeFromMonshin  [ 問診票情報優先マージ＜IssueInfo＞ ]
-HCP	Business
 ┬
 〇│Public Sub MergeFromMonshin(ByVal src As IssueInfo)	問診票情報優先マージ＜IssueInfo＞
 ┴└┐
-　　│#  問診票情報反映
+　　│#   問診票情報反映
 　　〇 Me.Description = src.Description
 　　〇 Me.ProblemBuilding = src.ProblemBuilding
 　　〇 Me.HostName = src.HostName
@@ -16,6 +14,20 @@ HCP	Business
 　　〇 Me.Equipment = src.Equipment
 　　〇 Me.Countermeasure = src.Countermeasure
 　　〇 Me.RequesterNum = src.RequesterNum
-　　│#  発生日時反映
+　　│#   発生日時反映
 　　〇 Me.OccurrenceDateTime = src.OccurrenceDateTime
 　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+UpdateMonshinHandler	問診票更新処理	modMonshinCore

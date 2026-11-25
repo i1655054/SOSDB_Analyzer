@@ -1,0 +1,28 @@
+┬
+〇│Private Sub cmdFind_Click()	ノード検索＜frmPathChartNavigator＞
+┴└┐
+　　│#   検索文字列取得
+　　◎ gSearchText = GetProcNameFromDisplay(  Trim$(cmbSearch.Text))	関数名抽出＜modAnalyzerCommon＞
+　　│#   完全一致検索設定
+　　〇 gExactMatch = chkExactMatch.Value
+　　│#   検索履歴登録
+　　◎ AddSearchHistory gSearchText	検索履歴追加＜modPathChart＞
+　　│#   ノード検索実行
+　　◎ FindNode	ノード検索＜modPathChart＞
+　　┴End Sub
+
+========================================
+Calls (3)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetProcNameFromDisplay	関数名抽出	modAnalyzerCommon
+AddSearchHistory	検索履歴追加	modPathChart
+FindNode	ノード検索	modPathChart
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

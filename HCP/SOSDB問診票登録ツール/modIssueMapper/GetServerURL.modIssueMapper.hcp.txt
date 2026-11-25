@@ -1,21 +1,19 @@
-Procedure: modIssueMapper.GetServerURL  [ RedmineサーバURL取得＜modIssueMapper＞ ]
-HCP	Business
 ┬
 〇│Public Function GetServerURL(  ByVal serverName As String) As String	RedmineサーバURL取得＜modIssueMapper＞
 ┴└┐
-　　│#  Sysdataシート取得
+　　│#   Sysdataシート取得
 　　□ Dim sht As Worksheet
 　　〇 Set sht = ThisWorkbook.Sheets(SheetName_Sysdata)
 　　□ Dim i As Long
 　　□ Dim srvIP As String
-　　│#  マスタ検索
+　　│#   マスタ検索
 　　＠┐For i = 2 To sht.Cells(sht.Rows.count, RedmineDB_Col).End(xlUp).row
 　　│□ Dim name As String
-　　││#  マスタ情報取得
+　　││#   マスタ情報取得
 　　│〇 name = Trim(sht.Cells(i, RedmineDB_Col).Value)
-　　││#  一致判定
+　　││#   一致判定
 　　│◆┐If name = serverName Then
-　　│││#  取得値返却
+　　│││#   取得値返却
 　　││〇 srvIP = Trim(sht.Cells(i, RedmineDB_Col + 1).Value)
 　　││◆┐If srvIP <> "" Then
 　　│││〇 GetServerURL = "http://" & srvIP & "/"
@@ -25,6 +23,25 @@ HCP	Business
 　　││→ Exit Function
 　　││┴End If
 　　│┴Next i
-　　│#  未検出時初期値返却
+　　│#   未検出時初期値返却
 　　〇 GetServerURL = "http://10.8.186.4/"
 　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (6)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+PostXmlData	新規登録送信	XmlLoader
+SendXmlData	更新送信	XmlLoader
+MakeSearchUrl	検索URL生成	XmlSearch
+Get_RedmineDataToIssueInfo	Redmine情報取得	modIssueMapper
+FindIssueIdByTroubleNum	トラバス管理番号検索	modIssueService
+ValidateIssueIdByTroubleNum	管理番号一致確認	modIssueService

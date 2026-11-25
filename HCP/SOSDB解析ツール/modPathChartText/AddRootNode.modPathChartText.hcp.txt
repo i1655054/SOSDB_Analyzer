@@ -1,0 +1,38 @@
+┬
+〇│Private Sub AddRootNode(  ByVal StartProc As String)	ルートノード追加＜modPathChartText＞
+┴└┐
+　　│#   TreeNode生成
+　　□ Dim Node As clsTreeNode
+　　│#   ルートTreeNode生成
+　　◎ Set Node = CreateTreeNode(  StartProc,  "",  0,  StartProc)	ツリーノード生成＜modPathChartCommon＞
+　　│#   表示情報設定
+　　│#   モジュール名表示設定
+　　◆┐If Trim$(Node.ModuleName) <> "" Then
+　　│◆┐If gShowModule Then
+　　││〇 Node.TreeText =  Node.TreeText &  " <" &  Node.ModuleName &  ">"
+　　││┴End If
+　　│┴End If
+　　│#   日本語表示設定
+　　◆┐If Trim$(Node.JPName) <> "" Then
+　　│〇 Node.JPLine =  TREE_BAR &  Node.JPName
+　　│┴End If
+　　│#   TreeNode登録
+　　│#   ルートノード登録
+　　〇 gTreeNodes.Add Node
+　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+CreateTreeNode	ツリーノード生成	modPathChartCommon
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ExportPathChartToText	テキストチャート出力	modPathChartText

@@ -1,5 +1,3 @@
-Procedure: XmlSearch.MakeSearchUrl  [ 検索URL生成＜XmlSearch＞ ]
-HCP	Business
 ┬
 〇│Private Function MakeSearchUrl(ByVal SearchKey As String) As String	検索URL生成＜XmlSearch＞
 ┴└┐
@@ -8,13 +6,30 @@ HCP	Business
 　　□ Dim url As String
 　　□ Dim SearchKey_Utf8 As String
 　　□ Dim RedmineDB As String
-　　│#  検索文字列UTF8変換
+　　│#   検索文字列UTF8変換
 　　◎ SearchKey_Utf8 = URLEncode_UTF8(SearchKey)	UTF8URLエンコード＜XmlSearch＞
-　　│#  Redmine接続先取得
+　　│#   Redmine接続先取得
 　　◎ RedmineDB = GetServerURL(Range(RedmineDbSev_RANG).Value)	RedmineサーバURL取得＜modIssueMapper＞
 　　│	内部呼出:Range
-　　│#  検索APIURL生成
+　　│#   検索APIURL生成
 　　〇 api = RedmineDB & "redmine/projects/trabas_ngn/"
-　　│#  検索URL返却
+　　│#   検索URL返却
 　　〇 MakeSearchUrl = api & "search.xml?utf8=%E2%9C%93&q=" & SearchKey_Utf8
 　　┴End Function
+
+========================================
+Calls (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+URLEncode_UTF8	UTF8URLエンコード	XmlSearch
+GetServerURL	RedmineサーバURL取得	modIssueMapper
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+DbSearch	Redmine検索実行	XmlSearch

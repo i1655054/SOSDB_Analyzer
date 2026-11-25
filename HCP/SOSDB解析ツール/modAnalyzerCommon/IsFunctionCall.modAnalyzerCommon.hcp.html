@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
+<title>IsFunctionCall</title>
+<style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
+</style>
+</head>
+<body translate="no">
+<h1>IsFunctionCall</h1>
+<p>Module : modAnalyzerCommon</p>
+<table>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
+<tbody>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Public Function IsFunctionCall(  ByVal LineText As String,  ByVal FuncName As String) As Boolean</td><td>関数呼出判定＜modAnalyzerCommon＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　□ Dim RegEx As Object</td><td></td></tr>
+<tr><td>　　□ Dim WorkText As String</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   Procedure定義行除外</span></td><td></td></tr>
+<tr><td>　　◆┐If <a href="../modAnalyze/IsProcedureLine.modAnalyze.hcp.html">IsProcedureLine</a>(LineText) Then</td><td>内部呼出:<a href="../modAnalyze/IsProcedureLine.modAnalyze.hcp.html">IsProcedureLine</a></td></tr>
+<tr><td>　　│→ Exit Function</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　〇 LineText = Trim$(LineText)</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   コメント行除外</span></td><td></td></tr>
+<tr><td>　　◆┐If Left$(LineText, 1) = "'" Then Exit Function</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   API説明行除外</span></td><td></td></tr>
+<tr><td>　　│◆→ If Left$(LineText, 1) = "■" Then Exit Function</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   RegEx生成</span></td><td></td></tr>
+<tr><td>　　│〇 Set RegEx = CreateObject("VBScript.RegExp")</td><td></td></tr>
+<tr><td>　　│〇 RegEx.IgnoreCase = True</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   関数戻り値代入除外</span></td><td></td></tr>
+<tr><td>　　│〇 RegEx.Pattern =  "^\s*" &amp;  FuncName &amp;  "\s*="</td><td></td></tr>
+<tr><td>　　│◆┐If RegEx.Test(LineText) Then</td><td></td></tr>
+<tr><td>　　││→ Exit Function</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   Call構文判定</span></td><td></td></tr>
+<tr><td>　　│〇 RegEx.Pattern =  "(^|\s)Call\s+" &amp;  FuncName &amp;  "(\s*\(|\s|$)"</td><td></td></tr>
+<tr><td>　　│◆┐If RegEx.Test(LineText) Then</td><td></td></tr>
+<tr><td>　　││〇 IsFunctionCall = True</td><td></td></tr>
+<tr><td>　　││→ Exit Function</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   オブジェクトメソッド除外</span></td><td></td></tr>
+<tr><td>　　│◆┐If <a href="../modAnalyzerCommon/IsObjectMethodCall.modAnalyzerCommon.hcp.html">IsObjectMethodCall</a>(  LineText,  FuncName) Then</td><td>内部呼出:<a href="../modAnalyzerCommon/IsObjectMethodCall.modAnalyzerCommon.hcp.html">IsObjectMethodCall</a></td></tr>
+<tr><td>　　││→ Exit Function</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   Function呼出判定</span></td><td></td></tr>
+<tr><td>　　│〇 RegEx.Pattern =  "(^|[\s=\(,])" &amp;  FuncName &amp;  "\s*\("</td><td></td></tr>
+<tr><td>　　│◆┐If RegEx.Test(LineText) Then</td><td></td></tr>
+<tr><td>　　││〇 IsFunctionCall = True</td><td></td></tr>
+<tr><td>　　││→ Exit Function</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   行継続呼出判定</span></td><td></td></tr>
+<tr><td>　　│◆┐If right$(Trim$(LineText), 1) = "_" Then</td><td></td></tr>
+<tr><td>　　││〇 WorkText = Trim$(LineText)</td><td></td></tr>
+<tr><td>　　││◆┐If Left$(WorkText, Len(FuncName)) = FuncName Then</td><td></td></tr>
+<tr><td>　　│││◆┐If Len(WorkText) = Len(FuncName) + 1 Then</td><td></td></tr>
+<tr><td>　　││││〇 IsFunctionCall = True</td><td></td></tr>
+<tr><td>　　││││→ Exit Function</td><td></td></tr>
+<tr><td>　　││││┴End If</td><td></td></tr>
+<tr><td>　　│││◆┐Select Case Mid$(  WorkText,  Len(FuncName) + 1,  1)</td><td></td></tr>
+<tr><td>　　││││├┐Case " ", "(", vbTab</td><td></td></tr>
+<tr><td>　　│││││〇 IsFunctionCall = True</td><td></td></tr>
+<tr><td>　　│││││→ Exit Function</td><td></td></tr>
+<tr><td>　　││││┴End Select</td><td></td></tr>
+<tr><td>　　│││┴End If</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   Sub呼出判定</span></td><td></td></tr>
+<tr><td>　　│〇 RegEx.Pattern =  "^\s*" &amp;  FuncName &amp;  "\s+.+$"</td><td></td></tr>
+<tr><td>　　│◆┐If RegEx.Test(LineText) Then</td><td></td></tr>
+<tr><td>　　││〇 IsFunctionCall = True</td><td></td></tr>
+<tr><td>　　││→ Exit Function</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   モジュール修飾呼出判定</span></td><td></td></tr>
+<tr><td>　　│◆┐If <a href="../modAnalyzerCommon/IsProjectModuleCall.modAnalyzerCommon.hcp.html">IsProjectModuleCall</a>(  LineText,  FuncName) Then</td><td>内部呼出:<a href="../modAnalyzerCommon/IsProjectModuleCall.modAnalyzerCommon.hcp.html">IsProjectModuleCall</a></td></tr>
+<tr><td>　　││〇 IsFunctionCall = True</td><td></td></tr>
+<tr><td>　　││→ Exit Function</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   Call Module.Procedure(...)</span></td><td></td></tr>
+<tr><td>　　│〇 RegEx.Pattern =  "(^|\s)Call\s+(\w+\.)+" &amp;  FuncName &amp;  "\s*\("</td><td></td></tr>
+<tr><td>　　│◆┐If RegEx.Test(LineText) Then</td><td></td></tr>
+<tr><td>　　││〇 IsFunctionCall = True</td><td></td></tr>
+<tr><td>　　││→ Exit Function</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   Function単独参照</span></td><td></td></tr>
+<tr><td>　　│〇 RegEx.Pattern =  "^\s*" &amp;  FuncName &amp;  "\s*$"</td><td></td></tr>
+<tr><td>　　│◆┐If RegEx.Test(LineText) Then</td><td></td></tr>
+<tr><td>　　││〇 IsFunctionCall = True</td><td></td></tr>
+<tr><td>　　││→ Exit Function</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   Function参照判定</span></td><td></td></tr>
+<tr><td>　　│〇 RegEx.Pattern =  "(^|\s)(Not\s+)?" &amp;  FuncName &amp;  "(\s+Then|\s+And|\s+Or|\)|$)"</td><td></td></tr>
+<tr><td>　　│◆┐If RegEx.Test(LineText) Then</td><td></td></tr>
+<tr><td>　　││〇 IsFunctionCall = True</td><td></td></tr>
+<tr><td>　　││→ Exit Function</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td>　　┴End Function</td><td></td></tr>
+</tbody>
+</table>
+<hr>
+<h2>Calls (3)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modAnalyze/IsProcedureLine.modAnalyze.hcp.html">IsProcedureLine</a></td><td>プロシージャ定義判定</td><td>modAnalyze</td></tr>
+<tr><td><a href="../modAnalyzerCommon/IsObjectMethodCall.modAnalyzerCommon.hcp.html">IsObjectMethodCall</a></td><td>オブジェクトメソッド判定</td><td>modAnalyzerCommon</td></tr>
+<tr><td><a href="../modAnalyzerCommon/IsProjectModuleCall.modAnalyzerCommon.hcp.html">IsProjectModuleCall</a></td><td></td><td>modAnalyzerCommon</td></tr>
+</table>
+<hr>
+<h2>Called By (4)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modAnalyze/CountUsage.modAnalyze.hcp.html">CountUsage</a></td><td>使用回数集計</td><td>modAnalyze</td></tr>
+<tr><td><a href="../modFunctionTrac/TraceModule.modFunctionTrac.hcp.html">TraceModule</a></td><td>関数呼出解析</td><td>modFunctionTrac</td></tr>
+<tr><td><a href="../modUnitTest/Test_IsFunctionCall.modUnitTest.hcp.html">Test_IsFunctionCall</a></td><td></td><td>modUnitTest</td></tr>
+<tr><td><a href="../modProcAnalyzer/ExtractCallNames.modProcAnalyzer.hcp.html">ExtractCallNames</a></td><td>呼出関数一覧取得</td><td>modProcAnalyzer</td></tr>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function(eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function(e) {
+startX = e.pageX;
+startWidth = eleTh.offsetWidth;
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
+}
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
+}
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+┬
+〇│Private Sub BuildRenderCommentNode(  ByVal Node As clsHCPNode,  ByVal Prefix As String)	コメント RenderText生成＜clsHCPRenderBuilder＞
+┴└┐
+　　│#   コメントRenderText生成
+　　◎ Node.RenderText =  Prefix &  "│#  " &  GetDisplayText(  Node,  Prefix)	表示文字列取得＜clsHCPRenderBuilder＞
+　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetDisplayText	表示文字列取得	clsHCPRenderBuilder
+
+========================================
+Called By (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+BuildNode	RenderNode生成	clsHCPRenderBuilder
+BuildRenderControlNode	制御ノード RenderText生成	clsHCPRenderBuilder

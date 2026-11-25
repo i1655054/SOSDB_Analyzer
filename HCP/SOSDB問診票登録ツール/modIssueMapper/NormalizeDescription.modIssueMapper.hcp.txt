@@ -1,31 +1,43 @@
-Procedure: modIssueMapper.NormalizeDescription  [ 説明文正規化＜modIssueMapper＞ ]
-HCP	Business
 ┬
 〇│Private Function NormalizeDescription(V As Variant) As String	説明文正規化＜modIssueMapper＞
 ┴└┐
-　　│#  文字列化
+　　│#   文字列化
 　　□ Dim s As String
 　　◆┐If IsNull(V) Or isEmpty(V) Then
 　　│〇 s = ""
 　　├┐ELSE
 　　│〇 s = CStr(V)
 　　│┴End If
-　　│#  改行コード統一
+　　│#   改行コード統一
 　　〇 s = Replace(s, vbCrLf, vbLf)
 　　〇 s = Replace(s, vbCr, vbLf)
-　　│#  改行除去
+　　│#   改行除去
 　　〇 s = Replace(s, vbLf, "")
-　　│#  区切り記号除去
+　　│#   区切り記号除去
 　　〇 s = Replace(s, "＝＝＝", "")
-　　│#  半角変換(全角→半角（揺れ吸収）)
+　　│#   半角変換(全角→半角（揺れ吸収）)
 　　〇 s = StrConv(s, vbNarrow)
-　　│#  空白整理
+　　│#   空白整理
 　　〇 s = Replace(s, vbTab, " ")
 　　〇 s = Replace(s, "　", " ")
 　　＠┐Do While InStr(s, "  ") > 0
 　　│〇 s = Replace(s, "  ", " ")
 　　│┴Loop
 　　〇 s = Trim(s)
-　　│#  正規化結果返却
+　　│#   正規化結果返却
 　　〇 NormalizeDescription = s
 　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+IsChangedDescription	説明文変更判定	modIssueMapper

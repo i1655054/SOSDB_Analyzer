@@ -1,0 +1,29 @@
+┬
+〇│Private Sub SetOptionValue()	出力オプション設定＜frmPathChartOption＞
+┴└┐
+　　│#   PowerPoint向き設定
+　　◆┐If optPptAuto.Value Then
+　　││#   自動向き設定
+　　│〇 gPptOrientation = PPT_ORIENT_AUTO
+　　├┐ElseIf optPptPortrait.Value Then
+　　││#   縦向き設定
+　　│〇 gPptOrientation = PPT_ORIENT_PORTRAIT
+　　├┐ElseIf optPptLandscape.Value Then
+　　││#   横向き設定
+　　│〇 gPptOrientation = PPT_ORIENT_LANDSCAPE
+　　│┴End If
+　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+cmdOK_Click

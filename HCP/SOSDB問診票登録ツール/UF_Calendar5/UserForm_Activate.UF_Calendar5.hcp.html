@@ -1,88 +1,95 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
 <meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
 <title>UserForm_Activate</title>
 <style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
 body{font-family:Meiryo;font-size:9pt;}
 table{border-collapse:collapse;}
-th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
 td{vertical-align:top;}
 th{background:#e8f0fe;}
-colgroup col:nth-of-type(1) {}
-colgroup col:nth-of-type(2) {}
-.resize {position: relative;}
-.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
 </style>
 </head>
-<body>
+<body translate="no">
 <h1>UserForm_Activate</h1>
 <p>Module : UF_Calendar5</p>
-<p><a href="./_INDEX.html">← Module Index</a></p>
 <table>
-<colgroup><col/><col/></colgroup>
-<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
 <tbody>
-<tr><td>Procedure: UF_Calendar5.UserForm_Activate  [ カレンダー表示初期化＜UF_Calendar5＞ ]</td><td></td></tr>
-<tr><td>HCP</td><td>Business</td></tr>
 <tr><td>┬</td><td></td></tr>
 <tr><td>〇│Private Sub UserForm_Activate()</td><td>カレンダー表示初期化＜UF_Calendar5＞</td></tr>
 <tr><td>┴└┐</td><td></td></tr>
-<tr><td>　　│#  年月選択初期化</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   年月選択初期化</span></td><td></td></tr>
 <tr><td>　　〇 CBO_YEAR.Visible = False</td><td></td></tr>
 <tr><td>　　〇 CBO_MONTH.Visible = False</td><td></td></tr>
 <tr><td>　　〇 g_VisibleYear = False</td><td></td></tr>
 <tr><td>　　〇 g_VisibleMonth = False</td><td></td></tr>
 <tr><td>　　〇 g_FormDate1 = 0</td><td></td></tr>
-<tr><td>　　│#  初期日付取得</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   初期日付取得</span></td><td></td></tr>
 <tr><td>　　◆┐If g_intEntMode = 1 Then</td><td></td></tr>
-<tr><td>　　││#  TextBox日付取得</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   TextBox日付取得</span></td><td></td></tr>
 <tr><td>　　│◆┐If IsDate(Trim(g_objTextBox.text)) Then</td><td></td></tr>
 <tr><td>　　││〇 g_FormDate1 = CDate(Trim(g_objTextBox.text))</td><td></td></tr>
 <tr><td>　　││┴End If</td><td></td></tr>
-<tr><td>　　│☆ On Error GoTo 0</td><td></td></tr>
 <tr><td>　　├┐ELSE</td><td></td></tr>
-<tr><td>　　││#  セル日付取得</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   セル日付取得</span></td><td></td></tr>
 <tr><td>　　│☆ On Error Resume Next</td><td></td></tr>
 <tr><td>　　│◆┐If IsDate(Trim(g_objRange.Cells(1).Value)) Then</td><td></td></tr>
 <tr><td>　　││〇 g_FormDate1 = CDate(Trim(g_objRange.Cells(1).Value))</td><td></td></tr>
 <tr><td>　　││┴End If</td><td></td></tr>
+<tr><td>　　│☆ On Error GoTo 0</td><td></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
-<tr><td>　　│#  初期日付補完</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   初期日付補完</span></td><td></td></tr>
 <tr><td>　　◆ If g_FormDate1 = 0 Then g_FormDate1 = Date</td><td></td></tr>
-<tr><td>　　│#  カレンダー生成</td><td></td></tr>
-<tr><td>　　◎ Call GP_MakeCalendar</td><td>カレンダー生成＜UF_Calendar5＞</td></tr>
-<tr><td>　　│#  ガイド初期化</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   カレンダー生成</span></td><td></td></tr>
+<tr><td>　　◎ Call <a href="../UF_Calendar5/GP_MakeCalendar.UF_Calendar5.hcp.html">GP_MakeCalendar</a></td><td><a href="../UF_Calendar5/GP_MakeCalendar.UF_Calendar5.hcp.html">カレンダー生成＜UF_Calendar5＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│#   ガイド初期化</span></td><td></td></tr>
 <tr><td>　　〇 LBL_GUIDE.Caption = cnsDefaultGuide             ' ガイド表示</td><td></td></tr>
 <tr><td>　　◆ If Me.StartUpPosition &lt;&gt; 0 Then Me.StartUpPosition = 0</td><td></td></tr>
 <tr><td>　　┴End Sub</td><td></td></tr>
 </tbody>
 </table>
+<hr>
+<h2>Calls (4)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../UF_Calendar5/GP_MakeCalendar.UF_Calendar5.hcp.html">GP_MakeCalendar</a></td><td>カレンダー生成</td><td>UF_Calendar5</td></tr>
+<tr><td><a href="../UF_InfoWebDisplay/RenderHTML.UF_InfoWebDisplay.hcp.html">RenderHTML</a></td><td>HTML表示</td><td>UF_InfoWebDisplay</td></tr>
+<tr><td><a href="../UF_InfoWebDisplay/ApplyCss.UF_InfoWebDisplay.hcp.html">ApplyCss</a></td><td>CSS適用</td><td>UF_InfoWebDisplay</td></tr>
+<tr><td><a href="../ModuleFontSync/StartPollTimer.ModuleFontSync.hcp.html">StartPollTimer</a></td><td>フォント監視開始</td><td>ModuleFontSync</td></tr>
+</table>
+<hr>
+<h2>Called By (0)</h2>
+<p>呼出元なし</p>
 <script>
-document.querySelectorAll('.resize').forEach(function (eleTh) {
+document.querySelectorAll('.resize').forEach(function(eleTh) {
 let startX;
 let startWidth;
 const eleResizer = document.createElement('div');
 eleResizer.classList.add('resizer');
-eleResizer.addEventListener('mousedown', function (e) {
-const styleTh = window.getComputedStyle(eleTh);
-const paddingLeft = parseFloat(styleTh.paddingLeft);
-const paddingRight = parseFloat(styleTh.paddingRight);
-const borderLeft = parseFloat(styleTh.borderLeftWidth);
-const borderRight = parseFloat(styleTh.borderRightWidth);
+eleResizer.addEventListener('mousedown', function(e) {
 startX = e.pageX;
-startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+startWidth = eleTh.offsetWidth;
 document.addEventListener('mousemove', onMouseMove);
 document.addEventListener('mouseup', onMouseUp);
 });
 eleTh.appendChild(eleResizer);
-function onMouseMove(e) {
-const newWidth = startWidth + (e.pageX - startX);
-eleTh.style.width = newWidth + 'px';
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
 }
-function onMouseUp() {
-document.removeEventListener('mousemove', onMouseMove);
-document.removeEventListener('mouseup', onMouseUp);
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
 }
 });
 </script>

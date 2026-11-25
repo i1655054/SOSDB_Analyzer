@@ -1,0 +1,31 @@
+┬
+〇│Public Sub ExportPathChartToText(  ByVal StartProc As String,  ByVal MaxDepth As Long)	テキストチャート出力＜modPathChartText＞
+┴└┐
+　　│#   TreeNode生成
+　　│#   TreeNode一覧初期化
+　　〇 Set gTreeNodes = New Collection
+　　│#   ルートノード生成
+　　◎ AddRootNode StartProc	ルートノード追加＜modPathChartText＞
+　　│#   ツリー構造生成
+　　◎ BuildTreeText  StartProc,  "",  1,  MaxDepth	ツリー構造生成＜modPathChartText＞
+　　│#   Treeシート出力
+　　◎ OutputTreeNodeList	ツリー一覧出力＜modPathChartText＞
+　　┴End Sub
+
+========================================
+Calls (3)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+AddRootNode	ルートノード追加	modPathChartText
+BuildTreeText	ツリー構造生成	modPathChartText
+OutputTreeNodeList	ツリー一覧出力	modPathChartText
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+CreatePathChart_V3	パスチャート作成	modPathChart

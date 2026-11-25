@@ -1,18 +1,31 @@
-Procedure: modFileUtility.ReadTextFile  [ UTF8テキスト読込＜modFileUtility＞ ]
-HCP	Business
 ┬
 〇│Public Function ReadTextFile(ByVal filePath As String) As String	UTF8テキスト読込＜modFileUtility＞
 ┴└┐
 　　□ Dim adoSt As Object
-　　│#  UTF-8ストリーム初期化
+　　│#   UTF-8ストリーム初期化
 　　〇 Set adoSt = CreateObject("ADODB.Stream")
 　　＠┐With adoSt
 　　│〇 .Type = 2 ' text
 　　│〇 .CharSet = "UTF-8"
 　　│〇 .Open
 　　│〇 .LoadFromFile filePath
-　　││#  テキスト読込
+　　││#   テキスト読込
 　　│〇 ReadTextFile = .ReadText
 　　│〇 .Close
 　　│┴End With
 　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+PostXmlData	新規登録送信	XmlLoader
+SendXmlData	更新送信	XmlLoader

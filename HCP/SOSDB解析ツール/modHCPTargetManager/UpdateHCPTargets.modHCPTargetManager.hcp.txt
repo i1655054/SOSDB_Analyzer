@@ -1,0 +1,95 @@
+┬
+〇│Public Sub UpdateHCPTargets(  Optional ByVal Silent As Boolean = False)	HCP_TARGETS更新＜modHCPTargetManager＞
+┴└┐
+　　□ Dim wsProc As Worksheet
+　　□ Dim wsTarget As Worksheet
+　　□ Dim Dict As Object
+　　□ Dim ProcDict As Object
+　　□ Dim LastProcRow As Long
+　　□ Dim LastTargetRow As Long
+　　□ Dim RowOut As Long
+　　□ Dim r As Long
+　　□ Dim ProcModule As String
+　　□ Dim ProcName As String
+　　□ Dim Key As String
+　　□ Dim AddCount As Long
+　　□ Dim DeleteCount As Long
+　　◎ Trace "HCP",  "UpdateHCPTargets"	トレース出力＜modDebug＞
+　　│#   Dictionary初期化
+　　〇 Set Dict =  CreateObject("Scripting.Dictionary")
+　　〇 Set ProcDict =  CreateObject("Scripting.Dictionary")
+　　│#   シート取得
+　　│#   ProcList取得
+　　〇 Set wsProc =  gContext.ManagementBook.Worksheets(
+　　│   SHEET_PROC_LIST)
+　　│#   HCP_TARGETS取得
+　　〇 Set wsTarget =  gContext.ManagementBook.Worksheets(
+　　│   SHEET_HCP_TARGETS)
+　　│#   ProcList最終行取得
+　　〇 LastProcRow =  wsProc.Cells(  wsProc.Rows.Count,  COL_PROCLIST_MODULE).End(xlUp).row
+　　│#   ProcList読込
+　　＠┐For r = 2 To LastProcRow
+　　│〇 ProcModule =  Trim$(wsProc.Cells(  r,  COL_PROCLIST_MODULE).Value)
+　　│〇 ProcName =  Trim$(wsProc.Cells(  r,  COL_PROCLIST_NAME).Value)
+　　│◆┐If ProcModule <> ""  And ProcName <> "" Then
+　　││〇 Key =  ProcModule & "|" &  ProcName
+　　││〇 ProcDict(Key) = True
+　　││┴End If
+　　│┴Next r
+　　│#   HCP_TARGETS最終行取得
+　　〇 LastTargetRow =  wsTarget.Cells(  wsTarget.Rows.Count,  2).End(xlUp).row
+　　│#   不要行削除
+　　＠┐For r = LastTargetRow To 2 Step -1
+　　│〇 Key =  Trim$(wsTarget.Cells(r, 2).Value) &  "|" &  Trim$(wsTarget.Cells(r, 3).Value)
+　　│◆┐If Not ProcDict.Exists(Key) Then
+　　││◎ Trace "HCP",  "Delete " &  Key	トレース出力＜modDebug＞
+　　││〇 wsTarget.Rows(r).Delete
+　　││〇 DeleteCount =  DeleteCount + 1
+　　││┴End If
+　　│┴Next r
+　　│#   HCP_TARGETS再読込
+　　〇 LastTargetRow =  wsTarget.Cells(  wsTarget.Rows.Count,  2).End(xlUp).row
+　　＠┐For r = 2 To LastTargetRow
+　　│〇 Key =  Trim$(wsTarget.Cells(r, 2).Value) &  "|" &  Trim$(wsTarget.Cells(r, 3).Value)
+　　│〇 Dict(Key) = True
+　　│┴Next r
+　　〇 RowOut =  LastTargetRow + 1
+　　│#   ProcListとの差分追加
+　　＠┐For r = 2 To LastProcRow
+　　│〇 ProcModule =  Trim$(wsProc.Cells(  r,  COL_PROCLIST_MODULE).Value)
+　　│〇 ProcName =  Trim$(wsProc.Cells(  r,  COL_PROCLIST_NAME).Value)
+　　│◆┐If ProcModule <> ""  And ProcName <> "" Then
+　　││〇 Key =  ProcModule & "|" &  ProcName
+　　││◆┐If Not Dict.Exists(Key) Then
+　　│││◎ Trace "HCP",  "Add " &  ProcModule & "." &  ProcName	トレース出力＜modDebug＞
+　　│││〇 wsTarget.Cells(RowOut, 2).Value =  ProcModule
+　　│││〇 wsTarget.Cells(RowOut, 3).Value =  ProcName
+　　│││〇 RowOut =  RowOut + 1
+　　│││〇 AddCount =  AddCount + 1
+　　│││┴End If
+　　││┴End If
+　　│┴Next r
+　　│#   表示更新
+　　〇 wsTarget.Columns("A:G").AutoFit
+　　◎ Trace "HCP",  "UpdateHCPTargets Add=" &  AddCount &  " Delete=" &  DeleteCount	トレース出力＜modDebug＞
+　　│#   完了通知
+　　◆┐If Not Silent Then
+　　│〇 MsgBox  "HCP_TARGETS更新完了" & vbCrLf &  "追加件数 : " &  AddCount & vbCrLf &  "削除件数 : " &  DeleteCount & vbCrLf &  "現在件数 : " &  RowOut - 2,  vbInformation
+　　│┴End If
+　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+Trace	トレース出力	modDebug
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+cmdHCPTargets_Click	HCP_TARGETS更新	frmHCPGenerator

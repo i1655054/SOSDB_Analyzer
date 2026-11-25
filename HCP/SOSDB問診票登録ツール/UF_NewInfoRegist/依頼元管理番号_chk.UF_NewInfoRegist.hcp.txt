@@ -1,16 +1,28 @@
-Procedure: UF_NewInfoRegist.依頼元管理番号_chk  [ 依頼元管理番号確認＜UF_NewInfoRegist＞ ]
-HCP	Business
 ┬
 〇│Private Function 依頼元管理番号_chk() As Boolean	依頼元管理番号確認＜UF_NewInfoRegist＞
 ┴└┐
 　　〇 依頼元管理番号_chk = True
-　　│#  入力有無確認
+　　│#   入力有無確認
 　　◆┐If Trim(Me.txt依頼元管理番号.Value) = "" Then
-　　││#  エラー表示
+　　││#   エラー表示
 　　│〇 依頼元管理番号_chk = False
 　　│〇 Me.txt依頼元管理番号.BackColor = &HC0C0FF
 　　├┐ELSE
-　　││#  表示復元
+　　││#   表示復元
 　　│〇 Me.txt依頼元管理番号.BackColor = &H80000005
 　　│┴End If
 　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+CommandButton1_Click

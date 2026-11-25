@@ -1,0 +1,35 @@
+┬
+〇│Public Function GetNodeHtmlText(  ByVal Node As clsHCPNode)  As String	ノードHTML文字列取得＜clsHtmlRenderer＞
+┴└┐
+　　│#   描画対象ではないノードを除外
+　　◆┐If Trim$(Node.RenderText) = "" Then
+　　│〇 GetNodeHtmlText = ""
+　　│→ Exit Function
+　　│┴End If
+　　◆┐Select Case Node.NodeType
+　　│├┐Case NODE_CALL
+　　││◎ GetNodeHtmlText =  GetCallNodeHtml(Node)	CALLノードHTML取得＜clsHtmlRenderer＞
+　　│├┐Case NODE_COMMENT
+　　││◎ GetNodeHtmlText =  "<span class=""hcp-comment"">" &  HtmlEncode(Node.RenderText) &  "</span>"	HTMLエンコード＜clsHtmlRenderer＞
+　　│├┐Case Else
+　　││◎ GetNodeHtmlText =  GetNormalNodeHtml(Node)	通常ノードHTML取得＜clsHtmlRenderer＞
+　　│┴End Select
+　　┴End Function
+
+========================================
+Calls (3)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetCallNodeHtml	CALLノードHTML取得	clsHtmlRenderer
+HtmlEncode	HTMLエンコード	clsHtmlRenderer
+GetNormalNodeHtml	通常ノードHTML取得	clsHtmlRenderer
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+OutputHCPNodes	HCPノードHTML出力	clsHtmlRenderer

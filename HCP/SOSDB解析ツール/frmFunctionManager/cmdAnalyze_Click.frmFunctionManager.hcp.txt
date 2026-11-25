@@ -1,0 +1,32 @@
+┬
+〇│Private Sub cmdAnalyze_Click()	解析実行＜frmFunctionManager＞
+┴└┐
+　　│#   解析対象ブック確認
+　　◆┐If Not ValidateTargetBook("関数解析") Then	内部呼出:ValidateTargetBook
+　　│→ Exit Sub
+　　│┴End If
+　　│#   関数解析実行
+　　◎ AnalyzeAll	全解析実行＜modAnalyzerCommon＞
+　　│#   ProcedureRepository初期化解除
+　　◎ ClearProcedureRepository	ProcedureRepository初期化解除＜modProcedureRepository＞
+　　┴End Sub
+
+========================================
+Calls (7)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+AddLog	ログ追加	frmPathChart
+SaveDefaultMaxDepth	既定深度保存	modPathChartConfig
+SaveDefaultStartProcedure	開始関数保存	modPathChartConfig
+ExecutePathChart	パスチャート実行	modPathChart
+ValidateTargetBook	対象ブック存在確認	modToolManager
+AnalyzeAll	全解析実行	modAnalyzerCommon
+ClearProcedureRepository	ProcedureRepository初期化解除	modProcedureRepository
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

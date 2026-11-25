@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
+<title>OutputTreeNodeList</title>
+<style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
+</style>
+</head>
+<body translate="no">
+<h1>OutputTreeNodeList</h1>
+<p>Module : modPathChartText</p>
+<table>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
+<tbody>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Public Sub OutputTreeNodeList()</td><td>ツリー一覧出力＜modPathChartText＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　□ Dim ws As Worksheet</td><td></td></tr>
+<tr><td>　　□ Dim Node As clsTreeNode</td><td></td></tr>
+<tr><td>　　□ Dim RowNo As Long</td><td></td></tr>
+<tr><td>　　□ Dim LastRow As Long</td><td></td></tr>
+<tr><td>　　□ Dim LastCol As Long</td><td></td></tr>
+<tr><td>　　☆ On Error Resume Next</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   Treeシート準備</span></td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   Treeシート取得</span></td><td></td></tr>
+<tr><td>　　〇 Set ws =  gContext.ManagementBook.Worksheets(<br>　　│   SHEET_PATH_CHART_TREE)</td><td></td></tr>
+<tr><td>　　☆ On Error GoTo 0</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   Treeシート取得</span></td><td></td></tr>
+<tr><td>　　◆┐If ws Is Nothing Then</td><td></td></tr>
+<tr><td>　　│〇 Set ws =  gContext.ManagementBook.Worksheets.Add(<br>　　││   After:=gContext.ManagementBook.Worksheets(<br>　　││   gContext.ManagementBook.Worksheets.Count))</td><td></td></tr>
+<tr><td>　　│〇 ws.Name = SHEET_PATH_CHART_TREE</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   Treeシート初期化</span></td><td></td></tr>
+<tr><td>　　〇 ws.Cells.Clear</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   Treeヘッダ出力</span></td><td></td></tr>
+<tr><td>　　〇 ws.Cells(1, 1).Value = "Tree"</td><td></td></tr>
+<tr><td>　　〇 ws.Cells(1, 2).Value = "Level"</td><td></td></tr>
+<tr><td>　　〇 ws.Cells(1, 3).Value = "Procedure"</td><td></td></tr>
+<tr><td>　　〇 ws.Cells(1, 4).Value = "JPName"</td><td></td></tr>
+<tr><td>　　〇 ws.Cells(1, 5).Value = "ParentProcedure"</td><td></td></tr>
+<tr><td>　　〇 ws.Cells(1, 6).Value = "Module"</td><td></td></tr>
+<tr><td>　　〇 ws.Cells(1, 7).Value = "Category"</td><td></td></tr>
+<tr><td>　　〇 RowNo = 2</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   TreeNode一覧出力</span></td><td></td></tr>
+<tr><td>　　＠┐For Each Node In gTreeNodes</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   英語Tree行出力</span></td><td></td></tr>
+<tr><td>　　│〇 ws.Cells(RowNo, 1).Value =  Node.TreeText</td><td></td></tr>
+<tr><td>　　│〇 ws.Cells(RowNo, 2).Value =  Node.Level</td><td></td></tr>
+<tr><td>　　│〇 ws.Cells(RowNo, 3).Value =  Node.ProcName</td><td></td></tr>
+<tr><td>　　│〇 ws.Cells(RowNo, 4).Value =  Node.JPName</td><td></td></tr>
+<tr><td>　　│〇 ws.Cells(RowNo, 5).Value =  Node.ParentProcName</td><td></td></tr>
+<tr><td>　　│〇 ws.Cells(RowNo, 6).Value =  Node.ModuleName</td><td></td></tr>
+<tr><td>　　│〇 ws.Cells(RowNo, 7).Value =  Node.Category</td><td></td></tr>
+<tr><td>　　│〇 RowNo = RowNo + 1</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   日本語Tree行出力</span></td><td></td></tr>
+<tr><td>　　│◆┐If Trim$(Node.JPLine) &lt;&gt; "" Then</td><td></td></tr>
+<tr><td>　　││〇 ws.Cells(RowNo, 1).Value =  Node.JPLine</td><td></td></tr>
+<tr><td>　　││〇 ws.Cells(RowNo, 1).Font.Color =  TREE_JP_FONT_COLOR</td><td></td></tr>
+<tr><td>　　││〇 RowNo = RowNo + 1</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td>　　│┴Next Node</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   Treeシート体裁設定</span></td><td></td></tr>
+<tr><td>　　〇 ws.Rows(1).Font.Bold = True</td><td></td></tr>
+<tr><td>　　〇 ws.Columns("A:G").AutoFit</td><td></td></tr>
+<tr><td>　　〇 ws.Columns("A").ColumnWidth = TREE_COLUMN_WIDTH</td><td></td></tr>
+<tr><td>　　〇 ws.Cells.Font.Name =  TREE_FONT_NAME</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   フィルタ設定</span></td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   オートフィルタ範囲取得</span></td><td></td></tr>
+<tr><td>　　〇 LastRow = ws.Cells(  ws.Rows.Count,  1).End(xlUp).row</td><td></td></tr>
+<tr><td>　　〇 LastCol = ws.Cells(  1,  ws.Columns.Count).End(xlToLeft).Column</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   オートフィルタ設定</span></td><td></td></tr>
+<tr><td>　　〇 ws.Range(  ws.Cells(1, 1),  ws.Cells(LastRow, LastCol)).AutoFilter</td><td></td></tr>
+<tr><td>　　┴End Sub</td><td></td></tr>
+</tbody>
+</table>
+<hr>
+<h2>Calls (0)</h2>
+<p>呼出先なし</p>
+<hr>
+<h2>Called By (1)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modPathChartText/ExportPathChartToText.modPathChartText.hcp.html">ExportPathChartToText</a></td><td>テキストチャート出力</td><td>modPathChartText</td></tr>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function(eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function(e) {
+startX = e.pageX;
+startWidth = eleTh.offsetWidth;
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
+}
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
+}
+});
+</script>
+</body>
+</html>

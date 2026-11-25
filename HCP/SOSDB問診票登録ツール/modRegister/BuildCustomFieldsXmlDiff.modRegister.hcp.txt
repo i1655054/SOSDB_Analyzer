@@ -1,12 +1,10 @@
-Procedure: modRegister.BuildCustomFieldsXmlDiff  [ 差分カスタムフィールドXML生成＜modRegister＞ ]
-HCP	Business
 ┬
 〇│Public Function BuildCustomFieldsXmlDiff(  ByVal issue As IssueInfo,  ByVal flags As Long) As String	差分カスタムフィールドXML生成＜modRegister＞
 ┴└┐
 　　□ Dim body As String
-　　│#  差分カスタムフィールド生成開始
+　　│#   差分カスタムフィールド生成開始
 　　〇 body = ""
-　　│#  問診情報差分出力
+　　│#   問診情報差分出力
 　　◆┐If (flags And flg_OccurrenceDateTime) <> 0 Then
 　　│◎ body = body & BuildCustomFieldXmlEx("発生時間", CF_OCCURRENCE_DATETIME, issue.OccurrenceDateTime)	カスタムフィールドXML要素生成＜modRegister＞
 　　│┴End If
@@ -22,7 +20,7 @@ HCP	Business
 　　◆┐If (flags And flg_Cause) <> 0 Then
 　　│◎ body = body & BuildCustomFieldXmlEx("詳細原因", CF_CAUSE, issue.CauseDetail)	カスタムフィールドXML要素生成＜modRegister＞
 　　│┴End If
-　　│#  管理情報差分出力
+　　│#   管理情報差分出力
 　　◆┐If (flags And flg_Mondainum_Pro) <> 0 Then
 　　│◎ body = body & BuildCustomFieldXmlEx("問処番号", CF_MONDAINUM, issue.Mondainum_Pro)	カスタムフィールドXML要素生成＜modRegister＞
 　　│┴End If
@@ -35,7 +33,7 @@ HCP	Business
 　　◆┐If (flags And flg_Close_Date) <> 0 Then
 　　│◎ body = body & BuildCustomFieldXmlEx("完了日(トラバス)", CF_CLOSE_DATE, issue.Close_Date)	カスタムフィールドXML要素生成＜modRegister＞
 　　│┴End If
-　　│#  業務情報差分出力
+　　│#   業務情報差分出力
 　　◆┐If (flags And flg_Requester_Pro) <> 0 Then
 　　│◎ body = body & BuildCustomFieldXmlEx("問合せ者", CF_REQUESTER_PRO, issue.Requester_Pro)	カスタムフィールドXML要素生成＜modRegister＞
 　　│┴End If
@@ -51,7 +49,7 @@ HCP	Business
 　　◆┐If (flags And flg_Cope) <> 0 Then
 　　│◎ body = body & BuildCustomFieldXmlEx("対処内容", CF_COUNTERMEASURE, issue.Countermeasure)	カスタムフィールドXML要素生成＜modRegister＞
 　　│┴End If
-　　│#  拡張情報差分出力
+　　│#   拡張情報差分出力
 　　◆┐If (flags And flg_RequesterNum) <> 0 Then
 　　│◎ body = body & BuildCustomFieldXmlEx("依頼元管理番号", CF_REQUESTER_NUM, issue.RequesterNum)	カスタムフィールドXML要素生成＜modRegister＞
 　　│┴End If
@@ -67,10 +65,26 @@ HCP	Business
 　　◆┐If (flags And flg_EqProduct) <> 0 Then
 　　│◎ body = body & BuildCustomFieldXmlEx("プロダクト装置／サービス", CF_EQ_PRODUCT, issue.EqProduct)	カスタムフィールドXML要素生成＜modRegister＞
 　　│┴End If
-　　│#  カスタムフィールドタグ生成
+　　│#   カスタムフィールドタグ生成
 　　◆┐If body <> "" Then
 　　│〇 BuildCustomFieldsXmlDiff = "<custom_fields type=""array"">" &  body &  "</custom_fields>"
 　　├┐ELSE
 　　│〇 BuildCustomFieldsXmlDiff = ""
 　　│┴End If
 　　┴End Function
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+BuildCustomFieldXmlEx	カスタムフィールドXML要素生成	modRegister
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+CreateUpdateXmlFromIssue	更新登録XML生成	modRegister

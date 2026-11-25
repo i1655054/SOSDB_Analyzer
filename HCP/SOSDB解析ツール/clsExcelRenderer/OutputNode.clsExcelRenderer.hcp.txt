@@ -1,0 +1,45 @@
+┬
+〇│Private Sub OutputNode(  ByVal Node As clsHCPNode)	ノード出力＜clsExcelRenderer＞
+┴└┐
+　　□ Dim Lines() As String
+　　□ Dim i As Long
+　　│#   RenderText未生成
+　　◆┐If Trim$(Node.RenderText) = "" Then
+　　│→ Exit Sub
+　　│┴End If
+　　│#   Businessなし
+　　◆┐If Trim$(Node.BusinessText) = "" Then
+　　│〇 mWorksheet.Cells(mRowOut, 1).Value =  Node.RenderText
+　　│〇 mRowOut = mRowOut + 1
+　　│→ Exit Sub
+　　│┴End If
+　　│#   Business分割
+　　〇 Lines = Split(  Node.BusinessText,  vbCrLf)
+　　│#   1行目
+　　〇 mWorksheet.Cells(mRowOut, 1).Value =  Node.RenderText
+　　〇 mWorksheet.Cells(mRowOut, 2).Value =  Lines(0)
+　　〇 mRowOut = mRowOut + 1
+　　│#   2行目以降
+　　＠┐For i = 1 To UBound(Lines)
+　　│◎ mWorksheet.Cells(mRowOut, 1).Value =  GetBusinessPrefix(  Node.RenderText)	Business継続プレフィックス取得＜modHCPCommon＞
+　　││	内部呼出:Cells
+　　│〇 mWorksheet.Cells(mRowOut, 2).Value =  Lines(i)
+　　│〇 mRowOut = mRowOut + 1
+　　│┴Next i
+　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetBusinessPrefix	Business継続プレフィックス取得	modHCPCommon
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+Export

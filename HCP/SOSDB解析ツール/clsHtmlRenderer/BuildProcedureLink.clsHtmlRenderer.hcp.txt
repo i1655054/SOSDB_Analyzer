@@ -1,0 +1,38 @@
+┬
+〇│Public Function BuildProcedureLink(  ByVal ProcName As String)  As String	Procedureリンク生成＜clsHtmlRenderer＞
+┴└┐
+　　│#   HTMLパス
+　　□ Dim HtmlPath As String
+　　│#   Procedure名確認
+　　◆┐If Trim$(ProcName) = "" Then
+　　│〇 BuildProcedureLink = ""
+　　│→ Exit Function
+　　│┴End If
+　　│#   Procedure HTMLパス取得
+　　◎ HtmlPath =  GetProcedureHtmlPath(  ProcName)	ProcedureHTMLパス取得＜modHCPInfo＞
+　　│#   Procedure未登録
+　　◆┐If HtmlPath = "" Then
+　　│〇 BuildProcedureLink =  ProcName
+　　│→ Exit Function
+　　│┴End If
+　　│#   Procedureリンク生成
+　　〇 BuildProcedureLink =  "<a href=""" &  HtmlPath &  """>" &  ProcName &  "</a>"
+　　┴End Function
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetProcedureHtmlPath	ProcedureHTMLパス取得	modHCPInfo
+
+========================================
+Called By (3)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetCallNodeHtml	CALLノードHTML取得	clsHtmlRenderer
+GetNormalNodeHtml	通常ノードHTML取得	clsHtmlRenderer
+GetBusinessHtml	Business HTML取得	clsHtmlRenderer

@@ -1,0 +1,57 @@
+┬
+〇│Public Sub RebuildAllIndexes()	INDEX一括再生成＜modHCPIndex＞
+┴└┐
+　　│#   HCP_TARGETS
+　　□ Dim ws As Worksheet
+　　│#   最終行
+　　□ Dim LastRow As Long
+　　│#   行番号
+　　□ Dim r As Long
+　　│#   モジュール名
+　　□ Dim ModuleName As String
+　　│#   モジュール管理
+　　□ Dim Modules As Object
+　　│#   Dictionaryキー
+　　□ Dim Key As Variant
+　　◎ Trace "INDEX",  "RebuildAllIndexes"	トレース出力＜modDebug＞
+　　〇 Set Modules =  CreateObject(  "Scripting.Dictionary")
+　　〇 Set ws =  gContext.ManagementBook.Worksheets(
+　　│   SHEET_HCP_TARGETS)
+　　〇 LastRow =  ws.Cells(  ws.Rows.Count,  COL_HCP_MODULE).End(xlUp).row
+　　│#   モジュール一覧作成
+　　＠┐For r = 2 To LastRow
+　　│〇 ModuleName =  Trim$(  ws.Cells(  r,  COL_HCP_MODULE).Value)
+　　│◆┐If ModuleName <> "" Then
+　　││◆┐If Not Modules.Exists(  ModuleName) Then
+　　│││〇 Modules.Add  ModuleName,  True
+　　│││┴End If
+　　││┴End If
+　　│┴Next r
+　　│#   モジュールINDEX再生成
+　　＠┐For Each Key In Modules.Keys
+　　│◎ RebuildModuleIndex  CStr(Key)	モジュールINDEX再生成＜modHCPIndex＞
+　　││	内部呼出:CStr
+　　│┴Next Key
+　　│#   ツールINDEX再生成
+　　◎ RebuildToolIndex	ツールINDEX再生成＜modHCPIndex＞
+　　┴End Sub
+
+========================================
+Calls (3)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+Trace	トレース出力	modDebug
+RebuildModuleIndex	モジュールINDEX再生成	modHCPIndex
+RebuildToolIndex	ツールINDEX再生成	modHCPIndex
+
+========================================
+Called By (3)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+RefreshHCPIndexes		modUnitTest
+CreateHCPTargets	HCP_TARGETS作成	modHCPTargetManager
+GenerateHCPBatch	HCP一括生成	modHCPTargetManager

@@ -1,0 +1,34 @@
+┬
+〇│Private Sub RebuildLinks(  ByVal HCPNodes As Collection)	ノードリンク再構築＜modHCPAnalyzer＞
+┴└┐
+　　□ Dim i As Long
+　　□ Dim Node As clsHCPNode
+　　│#   ノード前後関係再構築
+　　＠┐For i = 1 To HCPNodes.Count
+　　│〇 Set Node = HCPNodes(i)
+　　│◆┐If i = 1 Then
+　　││〇 Node.PrevNodeID = 0
+　　│├┐ELSE
+　　││〇 Node.PrevNodeID =  HCPNodes(i - 1).NodeID
+　　││┴End If
+　　│◆┐If i = HCPNodes.Count Then
+　　││〇 Node.NextNodeID = 0
+　　│├┐ELSE
+　　││〇 Node.NextNodeID =  HCPNodes(i + 1).NodeID
+　　││┴End If
+　　│┴Next i
+　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ConvertProcToHCP	HCP変換	modHCPAnalyzer

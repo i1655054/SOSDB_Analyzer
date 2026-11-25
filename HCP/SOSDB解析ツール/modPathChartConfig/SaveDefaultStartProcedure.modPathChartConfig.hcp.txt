@@ -1,0 +1,24 @@
+┬
+〇│Public Sub SaveDefaultStartProcedure(  ByVal StartProc As String)	開始関数保存＜modPathChartConfig＞
+┴└┐
+　　│#   PathChartConfig取得
+　　□ Dim ws As Worksheet
+　　│#   PathChart設定シート取得
+　　〇 Set ws =  ThisWorkbook.Worksheets(SHEET_PATH_CHART_CONFIG)
+　　│#   開始Procedure保存
+　　〇 ws.Range(CFG_START_PROC).Value = StartProc
+　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+cmdAnalyze_Click

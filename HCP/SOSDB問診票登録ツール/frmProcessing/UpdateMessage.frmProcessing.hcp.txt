@@ -1,10 +1,22 @@
-Procedure: frmProcessing.UpdateMessage  [ メッセージ更新＜frmProcessing＞ ]
-HCP	Business
 ┬
 〇│Public Sub UpdateMessage(ByVal msg As String)	メッセージ更新＜frmProcessing＞
 ┴└┐
-　　│#  メッセージ表示更新
+　　│#   メッセージ表示更新
 　　〇 lblMessage.Caption = msg
-　　│#  画面再描画
+　　│#   画面再描画
 　　〇 DoEvents ' UI更新を即時反映
 　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ScheduleNextMessage	進捗メッセージ更新	modProcessing

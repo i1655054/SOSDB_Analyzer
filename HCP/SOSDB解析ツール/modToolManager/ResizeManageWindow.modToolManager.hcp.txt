@@ -1,0 +1,30 @@
+┬
+〇│Public Sub ResizeManageWindow(  ByVal wb As Workbook)	管理画面サイズ変更＜modToolManager＞
+┴└┐
+　　│#   管理ブック表示
+　　〇 wb.Activate
+　　│#   管理画面サイズ変更
+　　＠┐With ActiveWindow
+　　│〇 .WindowState = xlNormal
+　　││#   管理画面位置設定
+　　│〇 .Left = MANAGE_LEFT
+　　│〇 .Top = MANAGE_TOP
+　　││#   管理画面サイズ設定
+　　│〇 .Width = MANAGE_WIDTH
+　　│〇 .Height = MANAGE_HEIGHT
+　　│┴End With
+　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetManagementWorkbookByToolID	管理ブック取得	modToolManager

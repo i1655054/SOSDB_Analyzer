@@ -1,8 +1,21 @@
-Procedure: ThisWorkbook.Workbook_Open  [ ブック起動初期化＜ThisWorkbook＞ ]
-HCP	Business
 ┬
 〇│Private Sub Workbook_Open()	ブック起動初期化＜ThisWorkbook＞
 ┴└┐
 　　◎ Call ClearMultiLineAlerts	複数行注意表示解除＜modUtility＞
 　　◎ Call InitializeApplication	アプリケーション初期化＜modStartup＞
 　　┴End Sub
+
+========================================
+Calls (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ClearMultiLineAlerts	複数行注意表示解除	modUtility
+InitializeApplication	アプリケーション初期化	modStartup
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

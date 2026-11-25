@@ -1,0 +1,49 @@
+┬
+〇│Public Function GetManagementWorkbookByToolID(  ByVal ToolID As Long)  As Workbook	管理ブック取得＜modToolManager＞
+┴└┐
+　　□ Dim Tool As clsToolInfo
+　　□ Dim FullPath As String
+　　│#   ツール情報取得
+　　◎ Set Tool = GetToolInfo(ToolID)	ツール情報取得＜modToolManager＞
+　　☆ On Error Resume Next
+　　│#   管理ブック取得
+　　〇 Set GetManagementWorkbookByToolID =  Workbooks(Tool.ManagementFile)
+　　☆ On Error GoTo 0
+　　│#   管理ブック未存在時処理
+　　◆┐If GetManagementWorkbookByToolID Is Nothing Then
+　　││#   管理ファイルパス取得
+　　│◎ FullPath =  GetManagementFilePathByToolID(ToolID)	管理ファイルパス取得＜modToolManager＞
+　　││#   管理ファイル存在確認
+　　│◆┐If Dir(FullPath) = "" Then
+　　│││#   管理ブック作成
+　　││◎ Set GetManagementWorkbookByToolID =  CreateManagementWorkbook(FullPath, Tool.ToolName)	管理ブック作成＜modToolManager＞
+　　│││#   管理画面サイズ設定
+　　││◎ ResizeManageWindow  GetManagementWorkbookByToolID	管理画面サイズ変更＜modToolManager＞
+　　││→ Exit Function
+　　│├┐ELSE
+　　│││#   管理ブックオープン
+　　││〇 Set GetManagementWorkbookByToolID =  Workbooks.Open(FullPath)
+　　│││#   管理画面サイズ設定
+　　││◎ ResizeManageWindow  GetManagementWorkbookByToolID	管理画面サイズ変更＜modToolManager＞
+　　││┴End If
+　　│┴End If
+　　┴End Function
+
+========================================
+Calls (4)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetToolInfo	ツール情報取得	modToolManager
+GetManagementFilePathByToolID	管理ファイルパス取得	modToolManager
+CreateManagementWorkbook	管理ブック作成	modToolManager
+ResizeManageWindow	管理画面サイズ変更	modToolManager
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetCurrentManagementWorkbook	現在管理ブック取得	modToolManager

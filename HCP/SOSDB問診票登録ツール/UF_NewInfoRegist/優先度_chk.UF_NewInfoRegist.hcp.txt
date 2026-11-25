@@ -1,16 +1,28 @@
-Procedure: UF_NewInfoRegist.優先度_chk  [ 優先度入力確認＜UF_NewInfoRegist＞ ]
-HCP	Business
 ┬
 〇│Private Function 優先度_chk() As Boolean	優先度入力確認＜UF_NewInfoRegist＞
 ┴└┐
 　　〇 優先度_chk = True
-　　│#  入力有無確認
+　　│#   入力有無確認
 　　◆┐If Trim(Me.cmb優先度.Value) = "" Then
-　　││#  エラー表示
+　　││#   エラー表示
 　　│〇 優先度_chk = False
 　　│〇 Me.cmb優先度.BackColor = &HC0C0FF
 　　├┐ELSE
-　　││#  表示復元
+　　││#   表示復元
 　　│〇 Me.cmb優先度.BackColor = &H80000005
 　　│┴End If
 　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+CommandButton1_Click

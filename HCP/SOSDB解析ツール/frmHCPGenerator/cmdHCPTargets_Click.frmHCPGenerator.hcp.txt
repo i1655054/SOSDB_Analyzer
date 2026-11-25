@@ -1,0 +1,40 @@
+┬
+〇│Private Sub cmdHCPTargets_Click()	HCP_TARGETS更新＜frmHCPGenerator＞
+┴└┐
+　　□ Dim ws As Worksheet
+　　◆┐If gContext Is Nothing Then
+　　│〇 MsgBox  "先に関数分析を実行してください。",  vbExclamation
+　　│→ Exit Sub
+　　│┴End If
+　　〇 gContext.ManagementBook.Activate
+　　☆ On Error Resume Next
+　　〇 Set ws =  gContext.ManagementBook.Worksheets(
+　　│   SHEET_HCP_TARGETS)
+　　☆ On Error GoTo 0
+　　◆┐If ws Is Nothing Then
+　　│◎ Trace "HCP",  "Create HCP_TARGETS"	トレース出力＜modDebug＞
+　　│◎ CreateHCPTargets	HCP_TARGETS作成＜modHCPTargetManager＞
+　　├┐ELSE
+　　│◎ Trace "HCP",  "Update HCP_TARGETS"	トレース出力＜modDebug＞
+　　│◎ UpdateHCPTargets	HCP_TARGETS更新＜modHCPTargetManager＞
+　　│┴End If
+　　〇 Set ws =  gContext.ManagementBook.Worksheets(
+　　│   SHEET_HCP_TARGETS)
+　　〇 ws.Activate
+　　┴End Sub
+
+========================================
+Calls (3)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+Trace	トレース出力	modDebug
+CreateHCPTargets	HCP_TARGETS作成	modHCPTargetManager
+UpdateHCPTargets	HCP_TARGETS更新	modHCPTargetManager
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

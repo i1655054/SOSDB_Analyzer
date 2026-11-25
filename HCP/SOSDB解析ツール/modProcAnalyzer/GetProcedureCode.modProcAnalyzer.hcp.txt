@@ -1,0 +1,35 @@
+┬
+〇│Public Function GetProcedureCode(  ByVal ModuleName As String,  ByVal ProcName As String)  As String	Procedureソース取得＜modProcAnalyzer＞
+┴└┐
+　　□ Dim VBComp As Object
+　　□ Dim CodeMod As Object
+　　│#   モジュール探索
+　　＠┐For Each VBComp In  gContext.TargetBook.VBProject.VBComponents
+　　│◆┐If StrComp(  VBComp.Name,  ModuleName,  vbTextCompare) = 0 Then
+　　│││#   コードモジュール取得
+　　││〇 Set CodeMod =  VBComp.CodeModule
+　　││→ Exit For
+　　││┴End If
+　　│┴Next VBComp
+　　│#   モジュール存在確認
+　　◆┐If CodeMod Is Nothing Then
+　　│〇 MsgBox  "モジュールが存在しません。" &  vbCrLf &  ModuleName,  vbExclamation
+　　│→ Exit Function
+　　│┴End If
+　　│#   Procedureソース取得
+　　〇 GetProcedureCode =  CodeMod.Lines(  CodeMod.ProcStartLine(  ProcName,  PROC_KIND),  CodeMod.ProcCountLines(  ProcName,  PROC_KIND))
+　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+CreateHCP	HCP作成	modHCPAnalyzer

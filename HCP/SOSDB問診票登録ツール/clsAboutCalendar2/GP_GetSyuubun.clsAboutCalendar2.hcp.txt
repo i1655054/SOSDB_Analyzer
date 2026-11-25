@@ -1,12 +1,10 @@
-Procedure: clsAboutCalendar2.GP_GetSyuubun  [ 秋分の日算出＜clsAboutCalendar2＞ ]
-HCP	Business
 ┬
 〇│Private Sub GPGetSyuubun(ByVal lngY As Long,  ByVal lngCalStrIx As Long,  ByVal lngIxSyuku As Long,  ByRef lngFuriDIxMax As Long,  ByRef tblFuriDIx() As gtypFuriDIx,  ByRef tblCalendar() As g_typAboutCalendar2)	秋分の日算出＜clsAboutCalendar2＞
 ┴└┐
 　　□ Dim lngD As Long                                                ' 算出日
 　　□ Dim lngY2 As Long                                               ' 年算出WORK
 　　〇 lngY2 = lngY - 1980
-　　│#  秋分日算出
+　　│#   秋分日算出
 　　◆┐Select Case lngY
 　　│├┐Case Is <= 1979
 　　││〇 lngD = Int(23.2588 + (0.242194 * lngY2) - Int(lngY2 / 4))
@@ -15,6 +13,22 @@ HCP	Business
 　　│├┐Case Else
 　　││〇 lngD = Int(24.2488 + (0.242194 * lngY2) - Int(lngY2 / 4))
 　　│┴End Select
-　　│#  秋分の日設定
+　　│#   秋分の日設定
 　　◎ Call GP_UpdateHolidaySUB1(lngD,  "秋分の日",  1,  0,  lngCalStrIx,  lngIxSyuku,  lngFuriDIxMax,  tblFuriDIx,  tblCalendar)	固定日祝日設定＜clsAboutCalendar2＞
 　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GP_UpdateHolidaySUB1	固定日祝日設定	clsAboutCalendar2
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GP_UpdateHolidayToCalendar	祝日反映処理	clsAboutCalendar2

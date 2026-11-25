@@ -1,62 +1,35 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
 <meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
 <title>UF_RequesterNumRegist</title>
 <style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
 body{font-family:Meiryo;font-size:9pt;}
 table{border-collapse:collapse;}
-th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.5;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.5;}
 td{vertical-align:top;}
 th{background:#e8f0fe;}
-colgroup col:nth-of-type(1) {}
-colgroup col:nth-of-type(2) {}
-.resize {position: relative;}
-.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
 </style>
 </head>
-<body>
+<body translate="no">
 <p><a href="../_INDEX.html">← Tool Index</a></p>
 <h1>UF_RequesterNumRegist</h1>
 <p>Procedure Count : 8</p>
 <table>
 <tr><th>Procedure</th><th>JPName</th><th>Status</th><th>Updated</th></tr>
-<tr><td><a href="UserForm_Initialize.UF_RequesterNumRegist.hcp.html">UserForm_Initialize</a></td><td>依頼元管理番号フォーム初期化</td><td>[OK]</td><td>2026/11/13 17:14:54</td></tr>
-<tr><td><a href="CommandButton1_Click.UF_RequesterNumRegist.hcp.html">CommandButton1_Click</a></td><td>依頼元管理番号登録</td><td>[OK]</td><td>2026/11/13 17:14:58</td></tr>
-<tr><td><a href="CommandButton2_Click.UF_RequesterNumRegist.hcp.html">CommandButton2_Click</a></td><td>依頼元管理番号取消</td><td>[OK]</td><td>2026/11/13 17:15:02</td></tr>
-<tr><td><a href="RequesterNumDivision.UF_RequesterNumRegist.hcp.html">RequesterNumDivision</a></td><td>依頼元管理番号解析</td><td>[OK]</td><td>2026/11/13 17:15:05</td></tr>
-<tr><td><a href="OptionButton1_Click.UF_RequesterNumRegist.hcp.html">OptionButton1_Click</a></td><td>問診票管理番号入力切替</td><td>[OK]</td><td>2026/11/13 17:15:09</td></tr>
-<tr><td><a href="OptionButton2_Click.UF_RequesterNumRegist.hcp.html">OptionButton2_Click</a></td><td>故障票番号入力切替</td><td>[OK]</td><td>2026/11/13 17:15:12</td></tr>
-<tr><td><a href="TextBox1_Change.UF_RequesterNumRegist.hcp.html">TextBox1_Change</a></td><td>問診票管理番号同期</td><td>[OK]</td><td>2026/11/13 17:15:15</td></tr>
-<tr><td><a href="TextBox2_Change.UF_RequesterNumRegist.hcp.html">TextBox2_Change</a></td><td>故障票番号同期</td><td>[OK]</td><td>2026/11/13 17:15:18</td></tr>
+<tr><td><a href="UserForm_Initialize.UF_RequesterNumRegist.hcp.html">UserForm_Initialize</a></td><td>依頼元管理番号フォーム初期化</td><td>[OK]</td><td>2026/11/25 11:31:51</td></tr>
+<tr><td><a href="CommandButton1_Click.UF_RequesterNumRegist.hcp.html">CommandButton1_Click</a></td><td>依頼元管理番号登録</td><td>[OK]</td><td>2026/11/25 11:31:54</td></tr>
+<tr><td><a href="CommandButton2_Click.UF_RequesterNumRegist.hcp.html">CommandButton2_Click</a></td><td>依頼元管理番号取消</td><td>[OK]</td><td>2026/11/25 11:31:57</td></tr>
+<tr><td><a href="RequesterNumDivision.UF_RequesterNumRegist.hcp.html">RequesterNumDivision</a></td><td>依頼元管理番号解析</td><td>[OK]</td><td>2026/11/25 11:32:01</td></tr>
+<tr><td><a href="OptionButton1_Click.UF_RequesterNumRegist.hcp.html">OptionButton1_Click</a></td><td>問診票管理番号入力切替</td><td>[OK]</td><td>2026/11/25 11:32:05</td></tr>
+<tr><td><a href="OptionButton2_Click.UF_RequesterNumRegist.hcp.html">OptionButton2_Click</a></td><td>故障票番号入力切替</td><td>[OK]</td><td>2026/11/25 11:32:09</td></tr>
+<tr><td><a href="TextBox1_Change.UF_RequesterNumRegist.hcp.html">TextBox1_Change</a></td><td>問診票管理番号同期</td><td>[OK]</td><td>2026/11/25 11:32:12</td></tr>
+<tr><td><a href="TextBox2_Change.UF_RequesterNumRegist.hcp.html">TextBox2_Change</a></td><td>故障票番号同期</td><td>[OK]</td><td>2026/11/25 11:32:16</td></tr>
 </table>
-<script>
-document.querySelectorAll('.resize').forEach(function (eleTh) {
-let startX;
-let startWidth;
-const eleResizer = document.createElement('div');
-eleResizer.classList.add('resizer');
-eleResizer.addEventListener('mousedown', function (e) {
-const styleTh = window.getComputedStyle(eleTh);
-const paddingLeft = parseFloat(styleTh.paddingLeft);
-const paddingRight = parseFloat(styleTh.paddingRight);
-const borderLeft = parseFloat(styleTh.borderLeftWidth);
-const borderRight = parseFloat(styleTh.borderRightWidth);
-startX = e.pageX;
-startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
-document.addEventListener('mousemove', onMouseMove);
-document.addEventListener('mouseup', onMouseUp);
-});
-eleTh.appendChild(eleResizer);
-function onMouseMove(e) {
-const newWidth = startWidth + (e.pageX - startX);
-eleTh.style.width = newWidth + 'px';
-}
-function onMouseUp() {
-document.removeEventListener('mousemove', onMouseMove);
-document.removeEventListener('mouseup', onMouseUp);
-}
-});
-</script>
 </body>
 </html>

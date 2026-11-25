@@ -1,0 +1,22 @@
+┬
+〇│Public Function ExistsToolIndex()  As Boolean	ツールINDEX存在確認＜modHCPIndex＞
+┴└┐
+　　│#   INDEXファイル
+　　□ Dim IndexPath As String
+　　◎ IndexPath =  GetHCPToolFolder() &  "_INDEX.html"	HCPツールフォルダ取得＜modHCPPath＞
+　　〇 ExistsToolIndex =  (Dir(IndexPath) <> "")
+　　┴End Function
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetHCPToolFolder	HCPツールフォルダ取得	modHCPPath
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

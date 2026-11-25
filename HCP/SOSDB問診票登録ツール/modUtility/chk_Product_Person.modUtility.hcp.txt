@@ -1,10 +1,22 @@
-Procedure: modUtility.chk_Product_Person  [ プロダクト担当者確認＜modUtility＞ ]
-HCP	Business
 ┬
 〇│Public Function chk_Product_Person(ByVal issue As IssueInfo) As Boolean	プロダクト担当者確認＜modUtility＞
 ┴└┐
-　　│#  プロダクト担当者確認
+　　│#   プロダクト担当者確認
 　　◎ chk_Product_Person = ValidateAndHighlight(  issue.ProductTantou,  PRODUCT_TANTOU_RANG,  COLOR_CONFIRM)	入力確認強調表示＜modUtility＞
-　　│#  確認項目扱い
+　　│#   確認項目扱い
 　　〇 chk_Product_Person = True
 　　┴End Function
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ValidateAndHighlight	入力確認強調表示	modUtility
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

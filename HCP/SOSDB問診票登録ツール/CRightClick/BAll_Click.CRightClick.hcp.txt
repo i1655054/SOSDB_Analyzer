@@ -1,14 +1,24 @@
-Procedure: CRightClick.BAll_Click  [ 全選択実行＜CRightClick＞ ]
-HCP	Business
 ┬
 〇│Private Sub BAll_Click(ByVal ctrl As Office.CommandBarButton, CancelDefault As Boolean)	全選択実行＜CRightClick＞
 ┴└┐
 　　□ Dim bx As Object
-　　│#  対象コントロール取得
+　　│#   対象コントロール取得
 　　◆ If TypeName(Tb) = "TextBox" Then Set bx = Tb Else Set bx = Cb
-　　│#  全選択実行
+　　│#   全選択実行
 　　＠┐With bx
 　　│〇 .SelStart = 0
 　　│〇 .SelLength = Len(.Value)
 　　│┴End With
 　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

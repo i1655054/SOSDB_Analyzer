@@ -1,24 +1,42 @@
-Procedure: modIssueMapper.GetApiKey  [ APIキー取得＜modIssueMapper＞ ]
-HCP	Business
 ┬
 〇│Public Function GetApiKey(  ByVal userName As String) As String	APIキー取得＜modIssueMapper＞
 ┴└┐
-　　│#  Sysdataシート取得
+　　│#   Sysdataシート取得
 　　□ Dim sht As Worksheet
 　　〇 Set sht = ThisWorkbook.Sheets(SheetName_Sysdata)
 　　□ Dim i As Long
-　　│#  マスタ検索
+　　│#   マスタ検索
 　　＠┐For i = 2 To sht.Cells(sht.Rows.count, Nameid_Col).End(xlUp).row
 　　│□ Dim name As String
-　　││#  マスタ情報取得
+　　││#   マスタ情報取得
 　　│〇 name = Trim(sht.Cells(i, Nameid_Col + 1).Value)
-　　││#  一致判定
+　　││#   一致判定
 　　│◆┐If name = userName Then
-　　│││#  取得値返却
+　　│││#   取得値返却
 　　││〇 GetApiKey = Trim(sht.Cells(i, Nameid_Col + 3).Value)
 　　││→ Exit Function
 　　││┴End If
 　　│┴Next i
-　　│#  未検出時初期値返却
+　　│#   未検出時初期値返却
 　　〇 GetApiKey = ""
 　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (7)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+PostXmlData	新規登録送信	XmlLoader
+SendXmlData	更新送信	XmlLoader
+DbSearch	Redmine検索実行	XmlSearch
+btnDbAccess_Click	Redmine画面表示	UF_SearchResults
+Get_RedmineDataToIssueInfo	Redmine情報取得	modIssueMapper
+FindIssueIdByTroubleNum	トラバス管理番号検索	modIssueService
+ValidateIssueIdByTroubleNum	管理番号一致確認	modIssueService

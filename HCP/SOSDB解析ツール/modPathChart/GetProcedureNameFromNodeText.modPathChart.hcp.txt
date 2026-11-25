@@ -1,0 +1,30 @@
+┬
+〇│Public Function GetProcedureNameFromNodeText(  ByVal NodeText As String)  As String	関数名取得＜modPathChart＞
+┴└┐
+　　□ Dim ProcName As String
+　　│#   表示文字列先頭行取得
+　　〇 ProcName = Split(NodeText, vbLf)(0)
+　　│#   モジュール名除去
+　　〇 ProcName = Split(ProcName, " <")(0)
+　　│#   Procedure名返却
+　　〇 GetProcedureNameFromNodeText = Trim$(ProcName)
+　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (6)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+FindNodeCore	ノード検索実行	modPathChart
+SelectNode	ノード選択	modPathChart
+MoveToParentNode	親ノード移動	modPathChart
+MoveToChildNode	子ノード移動	modPathChart
+MoveToSiblingNode	兄弟ノード移動	modPathChart
+LoadSearchNodeList	検索候補読込	modPathChart

@@ -1,0 +1,37 @@
+┬
+〇│Public Function IsObjectMethodCall(  ByVal LineText As String,  ByVal FuncName As String)  As Boolean	オブジェクトメソッド判定＜modAnalyzerCommon＞
+┴└┐
+　　□ Dim Pos As Long
+　　□ Dim ObjName As String
+　　□ Dim i As Long
+　　〇 Pos = InStr(  1,  LineText,  "." & FuncName & "(",  vbTextCompare)
+　　◆→ If Pos = 0 Then Exit Function
+　　〇 i = Pos - 1
+　　＠┐Do While i > 0
+　　│◆┐If Mid$(LineText, i, 1) Like "[A-Za-z0-9_]" Then
+　　││〇 ObjName =  Mid$(LineText, i, 1) & ObjName
+　　││〇 i = i - 1
+　　│├┐ELSE
+　　││→ Exit Do
+　　││┴End If
+　　│┴Loop
+　　◆┐Select Case UCase$(ObjName)
+　　│├┐Case "REGEX",  "DICTIONARY",  "COLLECTION",  "WORKSHEET",  "WORKBOOK"
+　　││〇 IsObjectMethodCall = True
+　　│┴End Select
+　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+IsFunctionCall	関数呼出判定	modAnalyzerCommon
+ExtractCallNames	呼出関数一覧取得	modProcAnalyzer

@@ -1,0 +1,21 @@
+┬
+〇│Public Sub Test_ObjectMethod()	＜modUnitTest＞
+┴└┐
+　　□ Dim RegEx As Object
+　　〇 Set RegEx =  CreateObject("VBScript.RegExp")
+　　◆┐If RegEx.Test("ABC") Then
+　　│〇 Debug.Print "OK"
+　　│┴End If
+　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

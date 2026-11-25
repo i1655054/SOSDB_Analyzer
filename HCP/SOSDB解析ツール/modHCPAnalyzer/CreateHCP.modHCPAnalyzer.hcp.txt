@@ -1,0 +1,110 @@
+┬
+〇│Public Sub CreateHCP(  ByVal ModuleName As String,  ByVal ProcName As String)	HCP作成＜modHCPAnalyzer＞
+┴└┐
+　　□ Dim CodeText As String
+　　□ Dim ProcNodes As Collection
+　　□ Dim HCPNodes As Collection
+　　□ Dim FuncList As Object
+　　□ Dim RenderBuilder As clsHCPRenderBuilder
+　　□ Dim TextRenderer As clsTextRenderer
+　　□ Dim HtmlRenderer As clsHtmlRenderer
+　　□ Dim ExcelRenderer As clsExcelRenderer
+　　□ Dim CurrentStep As String
+　　│#   開発モード確認
+　　◆┐If gDevMode Then
+　　│◎ CreateDebugSheet	デバッグシート作成＜modHCPAnalyzer＞
+　　├┐ELSE
+　　│◎ DeleteSheetIfExists  SHEET_DEBUG_NODES	シート削除＜modHCPAnalyzer＞
+　　│┴End If
+　　◎ Trace "HCP",  ModuleName & "." & ProcName	トレース出力＜modDebug＞
+　　☆ On Error GoTo ErrHandler
+　　〇 Application.ScreenUpdating = False
+　　│#   Procedure一覧取得
+　　〇 CurrentStep = "BuildFuncList"
+　　◎ Trace "HCP",  "Step=10 BuildFuncList"	トレース出力＜modDebug＞
+　　│#   Procedure一覧取得
+　　◎ Set FuncList =  BuildFuncList()	Function一覧作成＜modProcAnalyzer＞
+　　│#   Procedureソース取得
+　　〇 CurrentStep = "GetProcedureCode"
+　　◎ Trace "HCP",  "Step=20 GetProcedureCode"	トレース出力＜modDebug＞
+　　│#   Procedureソース取得
+　　◎ CodeText =  GetProcedureCode(  ModuleName,  ProcName)	Procedureソース取得＜modProcAnalyzer＞
+　　│#   Procedure解析
+　　〇 CurrentStep = "AnalyzeProcedure"
+　　◎ Trace "HCP",  "Step=30 AnalyzeProcedure"	トレース出力＜modDebug＞
+　　│#   Procedure解析
+　　◎ Set ProcNodes =  AnalyzeProcedure(  CodeText,  ModuleName,  ProcName,  FuncList)	Proc解析＜modProcAnalyzer＞
+　　◎ DeleteSheetIfExists  SHEET_PROC_NODES	シート削除＜modHCPAnalyzer＞
+　　◎ DeleteSheetIfExists  SHEET_PROC_CHART	シート削除＜modHCPAnalyzer＞
+　　◎ DeleteSheetIfExists  SHEET_HCP_NODES	シート削除＜modHCPAnalyzer＞
+　　│#   ProcNode → HCPNode変換
+　　〇 CurrentStep = "ConvertProcToHCP"
+　　◎ Trace "HCP",  "Step=40 ConvertProcToHCP"	トレース出力＜modDebug＞
+　　│#   ProcNode → HCPNode変換
+　　◎ Set HCPNodes =  ConvertProcToHCP(  ProcNodes)	HCP変換＜modHCPAnalyzer＞
+　　│#   RenderText生成
+　　〇 CurrentStep = "BuildRenderText"
+　　◎ Trace "HCP",  "Step=50 BuildRenderText"	トレース出力＜modDebug＞
+　　〇 Set RenderBuilder =  New clsHCPRenderBuilder
+　　〇 RenderBuilder.BuildRenderText  HCPNodes
+　　◆┐If gDevMode Then
+　　│◎ ExportProcNodes  ProcNodes	ProcNode出力＜modProcAnalyzer＞
+　　│◎ ExportHCPNodes  HCPNodes	HCPノード出力＜modHCPAnalyzer＞
+　　│┴End If
+　　│#   TXT出力
+　　〇 CurrentStep = "TextRenderer"
+　　◎ Trace "HCP",  "Step=60 TextRenderer"	トレース出力＜modDebug＞
+　　〇 Set TextRenderer =  New clsTextRenderer
+　　◎ TextRenderer.Export  GetHCPOutputFolder(ModuleName) &  ProcName & "." &  ModuleName &  ".hcp.txt",  ProcName,  HCPNodes	HCP出力フォルダ取得＜modHCPPath＞
+　　│#   HTML出力
+　　〇 CurrentStep = "HtmlRenderer"
+　　◎ Trace "HCP",  "Step=70 HtmlRenderer"	トレース出力＜modDebug＞
+　　〇 Set HtmlRenderer =  New clsHtmlRenderer
+　　◎ HtmlRenderer.Export  GetHCPOutputFolder(ModuleName) &  ProcName & "." &  ModuleName &  ".hcp.html",  ModuleName,  ProcName,  HCPNodes	HCP出力フォルダ取得＜modHCPPath＞
+　　◆┐If gDevMode Then
+　　││#   Excel出力
+　　│〇 CurrentStep = "ExcelRenderer"
+　　│◎ Trace "HCP",  "Step=80 ExcelRenderer"	トレース出力＜modDebug＞
+　　│〇 Set ExcelRenderer =  New clsExcelRenderer
+　　│〇 ExcelRenderer.Export  HCPNodes,  ModuleName,  ProcName
+　　│┴End If
+　　│#   INDEX更新
+　　〇 CurrentStep = "RebuildIndex"
+　　◎ RebuildModuleIndex  ModuleName	モジュールINDEX再生成＜modHCPIndex＞
+　　◎ RebuildToolIndex	ツールINDEX再生成＜modHCPIndex＞
+▼ ExitProc:
+　　〇 Application.ScreenUpdating = True
+　　→ Exit Sub
+▼ ErrHandler:
+　　◎ Trace "ERROR",  ModuleName & "." &  ProcName &  " Step=" &  CurrentStep &  " Error=" &  Err.Description	トレース出力＜modDebug＞
+　　〇 Application.ScreenUpdating = True
+　　〇 Err.Raise  Err.Number,  CurrentStep,  ModuleName & "." &  ProcName &  " : " &  Err.Description
+　　┴End Sub
+
+========================================
+Calls (12)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+CreateDebugSheet	デバッグシート作成	modHCPAnalyzer
+DeleteSheetIfExists	シート削除	modHCPAnalyzer
+Trace	トレース出力	modDebug
+BuildFuncList	Function一覧作成	modProcAnalyzer
+GetProcedureCode	Procedureソース取得	modProcAnalyzer
+AnalyzeProcedure	Proc解析	modProcAnalyzer
+ConvertProcToHCP	HCP変換	modHCPAnalyzer
+ExportProcNodes	ProcNode出力	modProcAnalyzer
+ExportHCPNodes	HCPノード出力	modHCPAnalyzer
+GetHCPOutputFolder	HCP出力フォルダ取得	modHCPPath
+RebuildModuleIndex	モジュールINDEX再生成	modHCPIndex
+RebuildToolIndex	ツールINDEX再生成	modHCPIndex
+
+========================================
+Called By (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+cmdGenerate_Click	HCP生成	frmHCPGenerator
+GenerateHCPBatch	HCP一括生成	modHCPTargetManager

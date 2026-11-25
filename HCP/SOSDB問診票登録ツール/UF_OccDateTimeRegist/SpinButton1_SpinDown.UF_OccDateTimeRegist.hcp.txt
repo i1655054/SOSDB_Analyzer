@@ -1,17 +1,27 @@
-Procedure: UF_OccDateTimeRegist.SpinButton1_SpinDown  [ 時刻減少＜UF_OccDateTimeRegist＞ ]
-HCP	Business
 ┬
 〇│Private Sub SpinButton1_SpinDown()	時刻減少＜UF_OccDateTimeRegist＞
 ┴└┐
-　　│#  入力対象判定
+　　│#   入力対象判定
 　　◆┐Select Case flgTime
 　　│├┐Case "txt時刻_時"
-　　│││#  時減算
+　　│││#   時減算
 　　││〇 datTime = DateAdd("h", -1, datTime)
 　　││〇 txt時刻_時.text = Format(datTime, "hh")
 　　│├┐Case "txt時刻_分"
-　　│││#  分減算
+　　│││#   分減算
 　　││〇 datTime = DateAdd("n", -1, datTime)
 　　││〇 txt時刻_分.text = Format(datTime, "nn")
 　　│┴End Select
 　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

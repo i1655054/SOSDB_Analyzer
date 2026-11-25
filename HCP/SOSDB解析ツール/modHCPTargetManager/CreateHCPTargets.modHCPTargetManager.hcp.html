@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
+<title>CreateHCPTargets</title>
+<style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
+</style>
+</head>
+<body translate="no">
+<h1>CreateHCPTargets</h1>
+<p>Module : modHCPTargetManager</p>
+<table>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
+<tbody>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Public Sub CreateHCPTargets()</td><td>HCP_TARGETS作成＜modHCPTargetManager＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　□ Dim wsProc As Worksheet</td><td></td></tr>
+<tr><td>　　□ Dim wsTarget As Worksheet</td><td></td></tr>
+<tr><td>　　□ Dim LastRow As Long</td><td></td></tr>
+<tr><td>　　□ Dim RowOut As Long</td><td></td></tr>
+<tr><td>　　□ Dim r As Long</td><td></td></tr>
+<tr><td>　　□ Dim CreateCount As Long</td><td></td></tr>
+<tr><td>　　□ Dim ProcModule As String</td><td></td></tr>
+<tr><td>　　□ Dim ProcName As String</td><td></td></tr>
+<tr><td>　　◎ <a href="../modDebug/Trace.modDebug.hcp.html">Trace</a> "HCP",  "CreateHCPTargets"</td><td><a href="../modDebug/Trace.modDebug.hcp.html">トレース出力＜modDebug＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│#   シート取得</span></td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   ProcList取得</span></td><td></td></tr>
+<tr><td>　　〇 Set wsProc =  gContext.ManagementBook.Worksheets(<br>　　│   SHEET_PROC_LIST)</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   初期化</span></td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   HCP_TARGETS取得</span></td><td></td></tr>
+<tr><td>　　☆ On Error Resume Next</td><td></td></tr>
+<tr><td>　　〇 Set wsTarget =  gContext.ManagementBook.Worksheets(<br>　　│   SHEET_HCP_TARGETS)</td><td></td></tr>
+<tr><td>　　☆ On Error GoTo 0</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   HCP_TARGETS未存在なら作成</span></td><td></td></tr>
+<tr><td>　　◆┐If wsTarget Is Nothing Then</td><td></td></tr>
+<tr><td>　　│〇 Set wsTarget =  gContext.ManagementBook.Worksheets.Add(<br>　　││   After:=gContext.ManagementBook.Worksheets(<br>　　││   gContext.ManagementBook.Worksheets.Count))</td><td></td></tr>
+<tr><td>　　│〇 wsTarget.Name =  SHEET_HCP_TARGETS</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   HCP_TARGETS初期化</span></td><td></td></tr>
+<tr><td>　　◎ Call <a href="../modHCPTargetManager/InitializeHCPTargetSheet.modHCPTargetManager.hcp.html">InitializeHCPTargetSheet</a>(wsTarget)</td><td><a href="../modHCPTargetManager/InitializeHCPTargetSheet.modHCPTargetManager.hcp.html">HCP_TARGETS初期化＜modHCPTargetManager＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│#   ProcList最終行取得</span></td><td></td></tr>
+<tr><td>　　〇 LastRow =  wsProc.Cells(  wsProc.Rows.Count,  COL_PROCLIST_MODULE).End(xlUp).row</td><td></td></tr>
+<tr><td>　　〇 RowOut = 2</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   ProcList走査</span></td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   ProcList → HCP_TARGETS</span></td><td></td></tr>
+<tr><td>　　＠┐For r = 2 To LastRow</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   Module名取得</span></td><td></td></tr>
+<tr><td>　　│〇 ProcModule =  Trim$(wsProc.Cells(  r,  COL_PROCLIST_MODULE).Value)</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   Procedure名取得</span></td><td></td></tr>
+<tr><td>　　│〇 ProcName =  Trim$(wsProc.Cells(  r,  COL_PROCLIST_NAME).Value)</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   Procedure名未設定は除外</span></td><td></td></tr>
+<tr><td>　　│◆┐If ProcModule &lt;&gt; ""  And ProcName &lt;&gt; "" Then</td><td></td></tr>
+<tr><td>　　││〇 wsTarget.Cells(RowOut, 2).Value =  ProcModule</td><td></td></tr>
+<tr><td>　　││〇 wsTarget.Cells(RowOut, 3).Value =  ProcName</td><td></td></tr>
+<tr><td>　　││〇 RowOut = RowOut + 1</td><td></td></tr>
+<tr><td>　　││〇 CreateCount = CreateCount + 1</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td>　　│┴Next r</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   体裁設定</span></td><td></td></tr>
+<tr><td>　　〇 wsTarget.Columns("A:E").AutoFit</td><td></td></tr>
+<tr><td>　　◎ <a href="../modDebug/Trace.modDebug.hcp.html">Trace</a> "HCP",  "CreateHCPTargets Count=" &amp;  CreateCount</td><td><a href="../modDebug/Trace.modDebug.hcp.html">トレース出力＜modDebug＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│#   INDEX再生成</span></td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   INDEX更新</span></td><td></td></tr>
+<tr><td>　　◎ <a href="../modHCPIndex/RebuildAllIndexes.modHCPIndex.hcp.html">RebuildAllIndexes</a></td><td><a href="../modHCPIndex/RebuildAllIndexes.modHCPIndex.hcp.html">INDEX一括再生成＜modHCPIndex＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│#   完了通知</span></td><td></td></tr>
+<tr><td>　　〇 MsgBox  "HCP_TARGETSを作成しました。" &amp; vbCrLf &amp;  "対象件数 : " &amp; CreateCount,  vbInformation</td><td></td></tr>
+<tr><td>　　┴End Sub</td><td></td></tr>
+</tbody>
+</table>
+<hr>
+<h2>Calls (3)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modDebug/Trace.modDebug.hcp.html">Trace</a></td><td>トレース出力</td><td>modDebug</td></tr>
+<tr><td><a href="../modHCPTargetManager/InitializeHCPTargetSheet.modHCPTargetManager.hcp.html">InitializeHCPTargetSheet</a></td><td>HCP_TARGETS初期化</td><td>modHCPTargetManager</td></tr>
+<tr><td><a href="../modHCPIndex/RebuildAllIndexes.modHCPIndex.hcp.html">RebuildAllIndexes</a></td><td>INDEX一括再生成</td><td>modHCPIndex</td></tr>
+</table>
+<hr>
+<h2>Called By (1)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../frmHCPGenerator/cmdHCPTargets_Click.frmHCPGenerator.hcp.html">cmdHCPTargets_Click</a></td><td>HCP_TARGETS更新</td><td>frmHCPGenerator</td></tr>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function(eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function(e) {
+startX = e.pageX;
+startWidth = eleTh.offsetWidth;
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
+}
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
+}
+});
+</script>
+</body>
+</html>

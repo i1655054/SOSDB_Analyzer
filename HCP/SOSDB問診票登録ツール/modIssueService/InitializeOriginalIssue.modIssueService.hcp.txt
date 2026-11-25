@@ -1,10 +1,23 @@
-Procedure: modIssueService.InitializeOriginalIssue  [ OriginalIssue初期化＜modIssueService＞ ]
-HCP	Business
 ┬
 〇│Sub InitializeOriginalIssue()	OriginalIssue初期化＜modIssueService＞
 ┴└┐
-　　│#  OriginalIssue生成
+　　│#   OriginalIssue生成
 　　◆┐If g_OriginalIssue Is Nothing Then
 　　│〇 Set g_OriginalIssue = New IssueInfo
 　　│┴End If
 　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+RegisterNewIssue	新規Issue登録	modIssueService
+UpdateExistingIssue	Issue更新登録	modIssueService

@@ -1,0 +1,24 @@
+┬
+〇│Public Sub SaveDefaultMaxDepth(  ByVal MaxDepth As Long)	既定深度保存＜modPathChartConfig＞
+┴└┐
+　　│#   PathChartConfig取得
+　　□ Dim ws As Worksheet
+　　│#   PathChart設定シート取得
+　　〇 Set ws =  ThisWorkbook.Worksheets(SHEET_PATH_CHART_CONFIG)
+　　│#   既定探索深度保存
+　　〇 ws.Range(CFG_MAX_DEPTH).Value = MaxDepth
+　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+cmdAnalyze_Click

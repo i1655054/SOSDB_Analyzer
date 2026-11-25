@@ -1,21 +1,38 @@
-Procedure: modUtility.GetDefaultColor  [ 標準背景色取得＜modUtility＞ ]
-HCP	Business
 ┬
 〇│Public Function GetDefaultColor(rngName As String) As Long	標準背景色取得＜modUtility＞
 ┴└┐
-　　│#  セル種別判定
+　　│#   セル種別判定
 　　◆┐Select Case rngName
 　　│├┐Case TARGET_VER_RANG, TANTOU_NAME_RANG
 　　││〇 GetDefaultColor = COLOR_KEYITEM
+　　│││#   マスタ項目色返却
 　　│├┐Case TANTOU_RANG, DB_ID_RANG
 　　││〇 GetDefaultColor = COLOR_MASTER
+　　│││#   システム項目色返却
 　　│├┐Case DB_STATUS_RANG, TORBLE_NUM_RANG, PRIORITY_RANG,  EQID_RANG, EQ_PRODUCT_RANG
 　　││〇 GetDefaultColor = COLOR_SYSTEM
+　　│││#   任意項目色返却
 　　│├┐Case PRODUCT_TANTOU_RANG, ESCALE_DAY_RANG, CLOSE_DAY_RANG
 　　││〇 GetDefaultColor = COLOR_OPTIONAL
+　　│││#   通常項目色返却
 　　│├┐Case MONDAINUM_RANG, MONDAIPRO_RANG, KIHENSIN_RANG,  KIKAKU_DAY_RANG, SERVICE_IMPACT_RANG, PROBLEM_YMDHM_RANG,  PROBLEM_BUILDING_RANG, HOST_NAME_RANG, PROBLEM_EQUIPMENT_RANG
 　　││〇 GetDefaultColor = COLOR_NORMAL
+　　│││#   未定義項目色返却
 　　│├┐Case Else
 　　││〇 GetDefaultColor = COLOR_NONE
 　　│┴End Select
 　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+RestoreColor	セル色復元	modUtility

@@ -1,5 +1,3 @@
-Procedure: clsAboutCalendar2.GP_UpdateFuriKokuminKyu  [ 振替休日国民の休日設定＜clsAboutCalendar2＞ ]
-HCP	Business
 ┬
 〇│Private Sub GPUpdateFuriKokuminKyu(tblFuriDIx() As gtypFuriDIx,  ByRef tblCalendar() As g_typAboutCalendar2)	振替休日国民の休日設定＜clsAboutCalendar2＞
 ┴└┐
@@ -9,13 +7,13 @@ HCP	Business
 　　□ Dim lngIxCMax As Long                                           ' カレンダーテーブルINDEX上限
 　　〇 lngIxFMax = UBound(tblFuriDIx)
 　　〇 lngIxCMax = UBound(tblCalendar)
-　　│#  振替休日候補走査
+　　│#   振替休日候補走査
 　　＠┐Do While lngIxF <= lngIxFMax
-　　││#  翌日算出
+　　││#   翌日算出
 　　│〇 lngIxC = tblFuriDIx(lngIxF).CalIx + 1
-　　││#  休日種別判定
+　　││#   休日種別判定
 　　│◆┐If tblFuriDIx(lngIxF).Syubetsu = 0 Then
-　　│││#  振替休日設定
+　　│││#   振替休日設定
 　　││＠┐Do While lngIxC <= lngIxCMax
 　　│││◆┐If ((tblCalendar(lngIxC).Syuku = 0) Or (tblCalendar(lngIxC).Syuku = 3)) Then
 　　││││〇 tblCalendar(lngIxC).Syuku = 2
@@ -27,11 +25,25 @@ HCP	Business
 　　│││〇 lngIxC = lngIxC + 1
 　　│││┴Loop
 　　││〇 Else    ' 国民の休日
-　　│││#  国民の休日設定
+　　│││#   国民の休日設定
 　　││〇 tblCalendar(lngIxC).Syuku = 1
 　　││〇 tblCalendar(lngIxC).SyukuNm = g_cnsKyu2                 ' 国民の休日
 　　││┴End If
-　　││#  次候補処理
+　　││#   次候補処理
 　　│〇 lngIxF = lngIxF + 1
 　　│┴Loop
 　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GP_GetCalendarSub	単月カレンダー生成内部処理	clsAboutCalendar2

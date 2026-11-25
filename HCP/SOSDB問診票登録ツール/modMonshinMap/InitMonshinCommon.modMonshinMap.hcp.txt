@@ -1,10 +1,26 @@
-Procedure: modMonshinMap.InitMonshinCommon  [ 問診票共通初期化＜modMonshinMap＞ ]
-HCP	Business
 ┬
 〇│Public Sub InitMonshinCommon()	問診票共通初期化＜modMonshinMap＞
 ┴└┐
-　　│#  シート定義初期化
+　　│#   シート定義初期化
 　　◎ InitMonShinSheetID	問診票シート定義初期化＜modMonshinMap＞
-　　│#  問診票マッピング初期化
+　　│#   問診票マッピング初期化
 　　◎ InitMonshinMap	問診票マッピング初期化＜modMonshinMap＞
 　　┴End Sub
+
+========================================
+Calls (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+InitMonShinSheetID	問診票シート定義初期化	modMonshinMap
+InitMonshinMap	問診票マッピング初期化	modMonshinMap
+
+========================================
+Called By (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+Get_MonshinInfo	問診情報取得	modMonshinCore
+InitializeApplication	アプリケーション初期化	modStartup

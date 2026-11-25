@@ -1,0 +1,41 @@
+┬
+〇│Private Function ExtractProcedureHeader(  ByVal CodeText As String)  As String	Procedure宣言取得＜modProcAnalyzer＞
+┴└┐
+　　□ Dim Lines() As String
+　　□ Dim i As Long
+　　□ Dim Header As String
+　　□ Dim Text As String
+　　│#   ソース行分解
+　　〇 Lines = Split(CodeText, vbCrLf)
+　　│#   Procedure宣言探索
+　　＠┐For i = LBound(Lines) To UBound(Lines)
+　　│〇 Text = Trim$(Lines(i))
+　　│◆┐If IsProcedureLine(Text) Then	内部呼出:IsProcedureLine
+　　││〇 Header = Text
+　　│││#   行継続結合
+　　││＠┐Do While  right$(Trim$(Lines(i)), 1) = "_"
+　　│││〇 i = i + 1
+　　│││〇 Header =  Replace(Header, "_", "") &  " " &  Trim$(Lines(i))
+　　│││┴Loop
+　　│││#   Procedure宣言返却
+　　││〇 ExtractProcedureHeader = Header
+　　││→ Exit Function
+　　││┴End If
+　　│┴Next i
+　　┴End Function
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+IsProcedureLine	プロシージャ定義判定	modAnalyze
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+AnalyzeProcedure	Proc解析	modProcAnalyzer

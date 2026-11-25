@@ -1,5 +1,3 @@
-Procedure: UF_RequesterNumRegist.CommandButton1_Click  [ 依頼元管理番号登録＜UF_RequesterNumRegist＞ ]
-HCP	Business
 ┬
 〇│Private Sub CommandButton1_Click()	依頼元管理番号登録＜UF_RequesterNumRegist＞
 ┴└┐
@@ -8,29 +6,54 @@ HCP	Business
 　　□ Dim faultRepNum As String
 　　□ Dim tmp As Variant
 　　□ Dim position As Long
-　　│#  入力内容確認
+　　│#   入力内容確認
 　　◆┐If TextBox1.text <> "" And TextBox2.text <> "" Then
-　　││#  管理番号取得
+　　││#   管理番号取得
 　　│〇 MonShinNum = TextBox1.text
 　　│〇 faultRepNum = TextBox2.text
-　　││#  依頼元管理番号生成
+　　││#   依頼元管理番号生成
 　　│〇 RequesterNum = "問診票管理番号=" & MonShinNum & "  / 故障票番号=" & faultRepNum
-　　││#  呼出元判定
+　　││#   呼出元判定
 　　│◆┐If CallingForm.name = "UF_NewInfoRegist" Then
-　　│││#  呼出元フォーム反映
+　　│││#   呼出元フォーム反映
 　　││〇 UF_NewInfoRegist.txt依頼元管理番号.Value = RequesterNum
 　　│├┐ELSE
-　　│││#  Issue情報反映
+　　│││#   Issue情報反映
 　　││◆┐If Not TargetIssue Is Nothing Then
 　　│││〇 TargetIssue.RequesterNum = RequesterNum
 　　│││┴End If
 　　││┴End If
 　　├┐ELSE
-　　││#  Issue情報反映
+　　││#   Issue情報反映
 　　│◆┐If Not TargetIssue Is Nothing Then
 　　││〇 TargetIssue.RequesterNum = RequesterNum
 　　││┴End If
 　　│┴End If
-　　│#  フォーム終了
+　　│#   フォーム終了
 　　〇 Unload Me
 　　┴End Sub
+
+========================================
+Calls (12)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+管理番号_子番号_chk	管理番号入力確認	UF_NewInfoRegist
+優先度_chk	優先度入力確認	UF_NewInfoRegist
+装置プロダクト_chk	装置プロダクト確認	UF_NewInfoRegist
+プロダクト担当者_chk	プロダクト担当者確認	UF_NewInfoRegist
+発生日_chk	発生日入力確認	UF_NewInfoRegist
+事象名_chk	事象名入力確認	UF_NewInfoRegist
+依頼元管理番号_chk	依頼元管理番号確認	UF_NewInfoRegist
+依頼者_chk	依頼者入力確認	UF_NewInfoRegist
+説明_chk	説明入力確認	UF_NewInfoRegist
+Clear_chk	入力エラー表示解除	UF_NewInfoRegist
+BuildTroubleNum	トラブル番号生成	modUtility
+IsUserFormOpen	フォーム起動状態確認	modUtility
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
+<title>cmdOK_Click</title>
+<style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
+</style>
+</head>
+<body translate="no">
+<h1>cmdOK_Click</h1>
+<p>Module : frmPathChartOption</p>
+<table>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
+<tbody>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Private Sub cmdOK_Click()</td><td>オプション保存＜frmPathChartOption＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   解析対象設定保存</span></td><td></td></tr>
+<tr><td>　　〇 gProperty = chkProperty.Value</td><td></td></tr>
+<tr><td>　　〇 gPrivate = chkPrivate.Value</td><td></td></tr>
+<tr><td>　　〇 gPublic = chkPublic.Value</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   モジュール種別設定保存</span></td><td></td></tr>
+<tr><td>　　〇 gStdModule = chkStdModule.Value</td><td></td></tr>
+<tr><td>　　〇 gUserForm = chkUserForm.Value</td><td></td></tr>
+<tr><td>　　〇 gClassModule = chkClassModule.Value</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   除外条件設定保存</span></td><td></td></tr>
+<tr><td>　　〇 gIgnoreAPI = chkIgnoreAPI.Value</td><td></td></tr>
+<tr><td>　　〇 gIgnoreExcel = chkIgnoreExcel.Value</td><td></td></tr>
+<tr><td>　　〇 gIgnoreSelf = chkIgnoreSelf.Value</td><td></td></tr>
+<tr><td>　　〇 gSameModuleOnly = chkSameModuleOnly.Value</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   PathChart表示設定保存</span></td><td></td></tr>
+<tr><td>　　〇 gSkipCommon = chkSkipCommon.Value</td><td></td></tr>
+<tr><td>　　〇 gShowCount = chkShowCount.Value</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   出力設定保存</span></td><td></td></tr>
+<tr><td>　　〇 gPowerPoint = chkPowerPoint.Value</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   PowerPoint向き設定保存</span></td><td></td></tr>
+<tr><td>　　◎ <a href="../frmPathChartOption/SetOptionValue.frmPathChartOption.hcp.html">SetOptionValue</a></td><td><a href="../frmPathChartOption/SetOptionValue.frmPathChartOption.hcp.html">出力オプション設定＜frmPathChartOption＞</a></td></tr>
+<tr><td>　　〇 gPngOutput = chkPngOutput.Value</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   モジュール表示設定保存</span></td><td></td></tr>
+<tr><td>　　〇 gShowModule = chkShowModule.Value</td><td></td></tr>
+<tr><td>　　〇 gColorModule = chkColorModule.Value</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   テーマ設定保存</span></td><td></td></tr>
+<tr><td>　　〇 gColorTheme = cmbColorTheme.Value</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   制限値設定保存</span></td><td></td></tr>
+<tr><td>　　〇 gMaxNode = Val(txtMaxNode.Text)</td><td></td></tr>
+<tr><td>　　〇 gMaxEdge = Val(txtMaxEdge.Text)</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   PathChart設定保存</span></td><td></td></tr>
+<tr><td>　　◎ <a href="../modPathChartConfig/SavePathChartConfig.modPathChartConfig.hcp.html">SavePathChartConfig</a></td><td><a href="../modPathChartConfig/SavePathChartConfig.modPathChartConfig.hcp.html">PathChart設定保存＜modPathChartConfig＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│#   オプション画面終了</span></td><td></td></tr>
+<tr><td>　　〇 Me.Hide</td><td></td></tr>
+<tr><td>　　┴End Sub</td><td></td></tr>
+</tbody>
+</table>
+<hr>
+<h2>Calls (6)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../frmPathChartOption/SetOptionValue.frmPathChartOption.hcp.html">SetOptionValue</a></td><td>出力オプション設定</td><td>frmPathChartOption</td></tr>
+<tr><td><a href="../modPathChartConfig/SavePathChartConfig.modPathChartConfig.hcp.html">SavePathChartConfig</a></td><td>PathChart設定保存</td><td>modPathChartConfig</td></tr>
+<tr><td><a href="../modAnalyzerCommon/CreateAnalyzeContext.modAnalyzerCommon.hcp.html">CreateAnalyzeContext</a></td><td>解析コンテキスト生成</td><td>modAnalyzerCommon</td></tr>
+<tr><td><a href="../modToolManager/ValidateTargetBook.modToolManager.hcp.html">ValidateTargetBook</a></td><td>対象ブック存在確認</td><td>modToolManager</td></tr>
+<tr><td><a href="../modProcedureRepository/ClearProcedureRepository.modProcedureRepository.hcp.html">ClearProcedureRepository</a></td><td>ProcedureRepository初期化解除</td><td>modProcedureRepository</td></tr>
+<tr><td><a href="../modToolManager/ActivateAnalyzerBook.modToolManager.hcp.html">ActivateAnalyzerBook</a></td><td>解析ツールBookアクティブ化</td><td>modToolManager</td></tr>
+</table>
+<hr>
+<h2>Called By (0)</h2>
+<p>呼出元なし</p>
+<script>
+document.querySelectorAll('.resize').forEach(function(eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function(e) {
+startX = e.pageX;
+startWidth = eleTh.offsetWidth;
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
+}
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
+}
+});
+</script>
+</body>
+</html>

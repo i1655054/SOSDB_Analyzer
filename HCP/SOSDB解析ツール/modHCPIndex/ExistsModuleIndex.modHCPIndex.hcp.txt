@@ -1,0 +1,22 @@
+┬
+〇│Public Function ExistsModuleIndex(  ByVal ModuleName As String)  As Boolean	モジュールINDEX存在確認＜modHCPIndex＞
+┴└┐
+　　│#   INDEXファイル
+　　□ Dim IndexPath As String
+　　◎ IndexPath =  GetHCPOutputFolder(  ModuleName) &  "_INDEX.html"	HCP出力フォルダ取得＜modHCPPath＞
+　　〇 ExistsModuleIndex =  (Dir(IndexPath) <> "")
+　　┴End Function
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetHCPOutputFolder	HCP出力フォルダ取得	modHCPPath
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

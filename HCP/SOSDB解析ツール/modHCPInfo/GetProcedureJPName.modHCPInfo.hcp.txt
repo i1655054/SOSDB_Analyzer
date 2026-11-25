@@ -1,0 +1,36 @@
+┬
+〇│Public Function GetProcedureJPName(  ByVal ModuleName As String,  ByVal ProcName As String)  As String	ProcedureJPName取得＜modHCPInfo＞
+┴└┐
+　　│#   ProcList
+　　□ Dim ws As Worksheet
+　　│#   最終行
+　　□ Dim LastRow As Long
+　　│#   行番号
+　　□ Dim r As Long
+　　〇 Set ws =  gContext.ManagementBook.Worksheets(
+　　│   SHEET_PROC_LIST)
+　　〇 LastRow =  ws.Cells(  ws.Rows.Count,  COL_MODULE).End(xlUp).row
+　　＠┐For r = 2 To LastRow
+　　│◆┐If StrComp(  Trim$(ws.Cells(  r,  COL_MODULE).Value),  ModuleName,  vbTextCompare) = 0 Then
+　　││◆┐If StrComp(  Trim$(ws.Cells(  r,  COL_PROC).Value),  ProcName,  vbTextCompare) = 0 Then
+　　│││〇 GetProcedureJPName =  Trim$(ws.Cells(  r,  COL_JPNAME).Value)
+　　│││→ Exit Function
+　　│││┴End If
+　　││┴End If
+　　│┴Next r
+　　〇 GetProcedureJPName =  "[JPName未設定]"
+　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetModuleProcedureList	Procedure一覧取得	modHCPInfo

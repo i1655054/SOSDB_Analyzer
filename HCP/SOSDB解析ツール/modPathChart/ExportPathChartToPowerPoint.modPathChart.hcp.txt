@@ -1,0 +1,22 @@
+┬
+〇│Private Sub ExportPathChartToPowerPoint(  ByVal StartProc As String,  ByVal MaxDepth As Long)	PowerPoint出力＜modPathChart＞
+┴└┐
+　　│#   PowerPoint出力実行
+　　◎ Call modPowerPointChart.CreatePowerPointPathChart(  StartProc,  MaxDepth)	PowerPoint出力＜modPowerPointChart＞
+　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+CreatePowerPointPathChart	PowerPoint出力	modPowerPointChart
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+CreatePathChart_V3	パスチャート作成	modPathChart

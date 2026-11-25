@@ -1,0 +1,54 @@
+┬
+〇│Public Sub SavePathChartConfig()	PathChart設定保存＜modPathChartConfig＞
+┴└┐
+　　□ Dim ws As Worksheet
+　　│#   PathChart設定シート取得
+　　〇 Set ws =  ThisWorkbook.Worksheets(SHEET_PATH_CHART_CONFIG)
+　　│#   共通設定保存
+　　〇 ws.Range(CFG_SKIP_COMMON).Value = gSkipCommon
+　　〇 ws.Range(CFG_SHOW_COUNT).Value = gShowCount
+　　│#   出力設定保存
+　　│#   PowerPoint設定保存
+　　〇 ws.Range(CFG_POWERPOINT).Value = gPowerPoint
+　　〇 ws.Range(CFG_PPT_ORIENTATION).Value = gPptOrientation
+　　〇 ws.Range(CFG_PNG_OUTPUT).Value = gPngOutput
+　　〇 ws.Range(CFG_SHOW_MODULE).Value = gShowModule
+　　〇 ws.Range(CFG_COLOR_MODULE).Value = gColorModule
+　　│#   解析対象設定保存
+　　〇 ws.Range(CFG_PROPERTY).Value = gProperty
+　　〇 ws.Range(CFG_PRIVATE).Value = gPrivate
+　　〇 ws.Range(CFG_PUBLIC).Value = gPublic
+　　〇 ws.Range(CFG_STD_MODULE).Value = gStdModule
+　　〇 ws.Range(CFG_USER_FORM).Value = gUserForm
+　　〇 ws.Range(CFG_CLASS_MODULE).Value = gClassModule
+　　│#   除外条件設定保存
+　　〇 ws.Range(CFG_IGNORE_API).Value = gIgnoreAPI
+　　〇 ws.Range(CFG_IGNORE_EXCEL).Value = gIgnoreExcel
+　　〇 ws.Range(CFG_IGNORE_SELF).Value = gIgnoreSelf
+　　〇 ws.Range(CFG_SAME_MODULE_ONLY).Value = gSameModuleOnly
+　　│#   色設定保存
+　　〇 ws.Range(CFG_COLOR_THEME).Value = gColorTheme
+　　│#   制限値保存
+　　〇 ws.Range(CFG_MAX_NODE).Value = gMaxNode
+　　〇 ws.Range(CFG_MAX_EDGE).Value = gMaxEdge
+　　│#   呼出条件設定保存
+　　〇 ws.Range(CFG_EXTERNAL).Value = gExternal
+　　〇 ws.Range(CFG_RECURSIVE).Value = gRecursive
+　　│#   表示設定保存
+　　〇 ws.Range(CFG_SHOW_JPNAME).Value = gShowJPName
+　　〇 ws.Range(CFG_SHOW_CATEGORY).Value = gShowCategory
+　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+cmdOK_Click

@@ -1,42 +1,43 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
 <meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
 <title>RenderHTML</title>
 <style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
 body{font-family:Meiryo;font-size:9pt;}
 table{border-collapse:collapse;}
-th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
 td{vertical-align:top;}
 th{background:#e8f0fe;}
-colgroup col:nth-of-type(1) {}
-colgroup col:nth-of-type(2) {}
-.resize {position: relative;}
-.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
 </style>
 </head>
-<body>
+<body translate="no">
 <h1>RenderHTML</h1>
 <p>Module : UF_InfoWebDisplay</p>
-<p><a href="./_INDEX.html">← Module Index</a></p>
 <table>
-<colgroup><col/><col/></colgroup>
-<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
 <tbody>
-<tr><td>Procedure: UF_InfoWebDisplay.RenderHTML  [ HTML表示＜UF_InfoWebDisplay＞ ]</td><td></td></tr>
-<tr><td>HCP</td><td>Business</td></tr>
 <tr><td>┬</td><td></td></tr>
 <tr><td>〇│Public Sub RenderHTML()</td><td>HTML表示＜UF_InfoWebDisplay＞</td></tr>
 <tr><td>┴└┐</td><td></td></tr>
-<tr><td>　　│#  初期文字サイズ取得</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   初期文字サイズ取得</span></td><td></td></tr>
 <tr><td>　　□ Dim initPt As Long: initPt = FontSize</td><td></td></tr>
 <tr><td>　　□ Dim html As String</td><td></td></tr>
-<tr><td>　　│#  HTML生成開始</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   HTML生成開始</span></td><td></td></tr>
 <tr><td>　　〇 html = "&lt;!doctype html&gt;&lt;html&gt;" &amp; vbLf</td><td></td></tr>
 <tr><td>　　〇 html = html &amp; "&lt;head&gt;" &amp; vbLf</td><td></td></tr>
 <tr><td>　　〇 html = html &amp; "&lt;meta http='X-UA-Compatible' content='IE=edge'&gt;" &amp; vbLf</td><td></td></tr>
 <tr><td>　　〇 html = html &amp; "&lt;style id='appStyle'&gt;&lt;/style&gt;" &amp; vbLf</td><td></td></tr>
-<tr><td>　　│#  JavaScript生成</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   JavaScript生成</span></td><td></td></tr>
 <tr><td>　　〇 html = html &amp; "&lt;script&gt;" &amp; vbLf</td><td></td></tr>
 <tr><td>　　〇 html = html &amp; "(function(){" &amp; vbLf</td><td></td></tr>
 <tr><td>　　〇 html = html &amp; "  var sizePt=" &amp; CStr(initPt) &amp; ";" &amp; vbLf</td><td></td></tr>
@@ -66,54 +67,64 @@ colgroup col:nth-of-type(2) {}
 <tr><td>　　〇 html = html &amp; "&lt;input id='fsMin' type='hidden' value='" &amp; CStr(FONT_MIN_PT) &amp; "' /&gt;" &amp; vbLf</td><td></td></tr>
 <tr><td>　　〇 html = html &amp; "&lt;input id='fsMax' type='hidden' value='" &amp; CStr(FONT_MAX_PT) &amp; "' /&gt;" &amp; vbLf</td><td></td></tr>
 <tr><td>　　〇 html = html &amp; "&lt;input id='fsValue' type='hidden' value='" &amp; CStr(initPt) &amp; "' /&gt;" &amp; vbLf</td><td></td></tr>
-<tr><td>　　│#  本文生成</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   本文生成</span></td><td></td></tr>
 <tr><td>　　〇 html = html &amp; "&lt;div id='content'&gt;"</td><td></td></tr>
-<tr><td>　　◎ html = html &amp; ConvertNewLinesToHTML(bodyText)</td><td>改行HTML変換＜UF_InfoWebDisplay＞</td></tr>
+<tr><td>　　◎ html = html &amp; <a href="../UF_InfoWebDisplay/ConvertNewLinesToHTML.UF_InfoWebDisplay.hcp.html">ConvertNewLinesToHTML</a>(bodyText)</td><td><a href="../UF_InfoWebDisplay/ConvertNewLinesToHTML.UF_InfoWebDisplay.hcp.html">改行HTML変換＜UF_InfoWebDisplay＞</a></td></tr>
 <tr><td>　　〇 html = html &amp; "&lt;/div&gt;"</td><td></td></tr>
 <tr><td>　　〇 html = html &amp; "&lt;/body&gt;&lt;/html&gt;"</td><td></td></tr>
-<tr><td>　　│#  WebBrowser初期化</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   WebBrowser初期化</span></td><td></td></tr>
 <tr><td>　　◆┐If WebBrowser1.document Is Nothing Then</td><td></td></tr>
 <tr><td>　　│〇 WebBrowser1.navigate "about:blank"</td><td></td></tr>
 <tr><td>　　│＠┐Do While WebBrowser1.readyState &lt;&gt; 4</td><td></td></tr>
 <tr><td>　　││〇 DoEvents</td><td></td></tr>
 <tr><td>　　││┴Loop</td><td></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
-<tr><td>　　│#  HTML描画</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   HTML描画</span></td><td></td></tr>
 <tr><td>　　＠┐With WebBrowser1.document</td><td></td></tr>
 <tr><td>　　│〇 .Open</td><td></td></tr>
 <tr><td>　　│〇 .Write html</td><td></td></tr>
 <tr><td>　　│〇 .Close</td><td></td></tr>
 <tr><td>　　│┴End With</td><td></td></tr>
-<tr><td>　　│#  CSS適用</td><td></td></tr>
-<tr><td>　　◎ ApplyCss FontSize</td><td>CSS適用＜UF_InfoWebDisplay＞</td></tr>
+<tr><td><span class="hcp-comment">　　│#   CSS適用</span></td><td></td></tr>
+<tr><td>　　◎ <a href="../UF_InfoWebDisplay/ApplyCss.UF_InfoWebDisplay.hcp.html">ApplyCss</a> FontSize</td><td><a href="../UF_InfoWebDisplay/ApplyCss.UF_InfoWebDisplay.hcp.html">CSS適用＜UF_InfoWebDisplay＞</a></td></tr>
 <tr><td>　　┴End Sub</td><td></td></tr>
 </tbody>
 </table>
+<hr>
+<h2>Calls (2)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../UF_InfoWebDisplay/ConvertNewLinesToHTML.UF_InfoWebDisplay.hcp.html">ConvertNewLinesToHTML</a></td><td>改行HTML変換</td><td>UF_InfoWebDisplay</td></tr>
+<tr><td><a href="../UF_InfoWebDisplay/ApplyCss.UF_InfoWebDisplay.hcp.html">ApplyCss</a></td><td>CSS適用</td><td>UF_InfoWebDisplay</td></tr>
+</table>
+<hr>
+<h2>Called By (4)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modInfoDisplay/ShowInfoDisplay.modInfoDisplay.hcp.html">ShowInfoDisplay</a></td><td>情報表示フォーム表示</td><td>modInfoDisplay</td></tr>
+<tr><td><a href="../UF_Calendar5/UserForm_Activate.UF_Calendar5.hcp.html">UserForm_Activate</a></td><td></td><td></td></tr>
+<tr><td><a href="../UF_RedminDbRegist/CommandButton2_Click.UF_RedminDbRegist.hcp.html">CommandButton2_Click</a></td><td></td><td></td></tr>
+<tr><td><a href="../UF_InfoWebDisplay/SaveEditedTextIntoVba.UF_InfoWebDisplay.hcp.html">SaveEditedTextIntoVba</a></td><td>編集内容保存</td><td>UF_InfoWebDisplay</td></tr>
+</table>
 <script>
-document.querySelectorAll('.resize').forEach(function (eleTh) {
+document.querySelectorAll('.resize').forEach(function(eleTh) {
 let startX;
 let startWidth;
 const eleResizer = document.createElement('div');
 eleResizer.classList.add('resizer');
-eleResizer.addEventListener('mousedown', function (e) {
-const styleTh = window.getComputedStyle(eleTh);
-const paddingLeft = parseFloat(styleTh.paddingLeft);
-const paddingRight = parseFloat(styleTh.paddingRight);
-const borderLeft = parseFloat(styleTh.borderLeftWidth);
-const borderRight = parseFloat(styleTh.borderRightWidth);
+eleResizer.addEventListener('mousedown', function(e) {
 startX = e.pageX;
-startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+startWidth = eleTh.offsetWidth;
 document.addEventListener('mousemove', onMouseMove);
 document.addEventListener('mouseup', onMouseUp);
 });
 eleTh.appendChild(eleResizer);
-function onMouseMove(e) {
-const newWidth = startWidth + (e.pageX - startX);
-eleTh.style.width = newWidth + 'px';
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
 }
-function onMouseUp() {
-document.removeEventListener('mousemove', onMouseMove);
-document.removeEventListener('mouseup', onMouseUp);
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
 }
 });
 </script>

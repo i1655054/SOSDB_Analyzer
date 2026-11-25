@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
+<title>cmdExport_Click</title>
+<style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
+</style>
+</head>
+<body translate="no">
+<h1>cmdExport_Click</h1>
+<p>Module : frmExportTool</p>
+<table>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
+<tbody>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Private Sub cmdExport_Click()</td><td>VBAエクスポート実行＜frmExportTool＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　□ Dim itm As ListItem</td><td></td></tr>
+<tr><td>　　□ Dim ToolID As Long</td><td></td></tr>
+<tr><td>　　□ Dim wb As Workbook</td><td></td></tr>
+<tr><td>　　□ Dim Count As Long</td><td></td></tr>
+<tr><td>　　□ Dim ExportCount As Long</td><td></td></tr>
+<tr><td>　　□ Dim LastRootPath As String</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   エクスポート対象走査</span></td><td></td></tr>
+<tr><td>　　＠┐For Each itm In lvwTools.ListItems</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   選択状態判定</span></td><td></td></tr>
+<tr><td>　　│◆┐If itm.Checked Then</td><td></td></tr>
+<tr><td>　　││〇 ToolID = CLng(itm.Text)</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│││#   対象Workbook取得</span></td><td></td></tr>
+<tr><td>　　││◎ Set wb =  <a href="../modToolManager/GetWorkbookByToolID.modToolManager.hcp.html">GetWorkbookByToolID</a>(ToolID)</td><td><a href="../modToolManager/GetWorkbookByToolID.modToolManager.hcp.html">対象ブック取得＜modToolManager＞</a></td></tr>
+<tr><td>　　││◆┐If Not wb Is Nothing Then</td><td></td></tr>
+<tr><td>　　│││〇 ExportCount = ExportCount + 1</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││││#   Git出力先取得</span></td><td></td></tr>
+<tr><td>　　│││◎ LastRootPath =  <a href="../modExportVBA/GetGitRootPathByToolID.modExportVBA.hcp.html">GetGitRootPathByToolID</a>(ToolID)</td><td><a href="../modExportVBA/GetGitRootPathByToolID.modExportVBA.hcp.html">Git管理フォルダ取得＜modExportVBA＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　││││#   VBAエクスポート実行</span></td><td></td></tr>
+<tr><td>　　│││◎ <a href="../modExportVBA/ExportVBABook.modExportVBA.hcp.html">ExportVBABook</a> wb, ToolID</td><td><a href="../modExportVBA/ExportVBABook.modExportVBA.hcp.html">VBAソース出力＜modExportVBA＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　││││#   エクスポート件数更新</span></td><td></td></tr>
+<tr><td>　　│││〇 Count = Count + 1</td><td></td></tr>
+<tr><td>　　││├┐ELSE</td><td></td></tr>
+<tr><td>　　│││〇 Debug.Print "Workbook Not Found"</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││││#   Workbook未オープン通知</span></td><td></td></tr>
+<tr><td>　　│││〇 MsgBox  "対象ブックが開かれていません。"  &amp; vbCrLf  &amp; itm.SubItems(1),  vbExclamation</td><td></td></tr>
+<tr><td>　　│││┴End If</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td>　　│┴Next itm</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   エクスポート対象確認</span></td><td></td></tr>
+<tr><td>　　◆┐If Count = 0 Then</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   Workbook未選択通知</span></td><td></td></tr>
+<tr><td>　　│〇 MsgBox  "選択されたツールはありません。",  vbInformation</td><td></td></tr>
+<tr><td>　　│→ Exit Sub</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   エクスポート完了通知</span></td><td></td></tr>
+<tr><td>　　〇 MsgBox  Count &amp; " 件のエクスポートが完了しました。",  vbInformation</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   Git PowerShell起動</span></td><td></td></tr>
+<tr><td>　　◆┐If ExportCount = 1 Then</td><td></td></tr>
+<tr><td>　　│◎ <a href="../modExportVBA/OpenGitPowerShell.modExportVBA.hcp.html">OpenGitPowerShell</a> LastRootPath</td><td><a href="../modExportVBA/OpenGitPowerShell.modExportVBA.hcp.html">Gitフォルダ起動＜modExportVBA＞</a></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　┴End Sub</td><td></td></tr>
+</tbody>
+</table>
+<hr>
+<h2>Calls (4)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modToolManager/GetWorkbookByToolID.modToolManager.hcp.html">GetWorkbookByToolID</a></td><td>対象ブック取得</td><td>modToolManager</td></tr>
+<tr><td><a href="../modExportVBA/GetGitRootPathByToolID.modExportVBA.hcp.html">GetGitRootPathByToolID</a></td><td>Git管理フォルダ取得</td><td>modExportVBA</td></tr>
+<tr><td><a href="../modExportVBA/ExportVBABook.modExportVBA.hcp.html">ExportVBABook</a></td><td>VBAソース出力</td><td>modExportVBA</td></tr>
+<tr><td><a href="../modExportVBA/OpenGitPowerShell.modExportVBA.hcp.html">OpenGitPowerShell</a></td><td>Gitフォルダ起動</td><td>modExportVBA</td></tr>
+</table>
+<hr>
+<h2>Called By (0)</h2>
+<p>呼出元なし</p>
+<script>
+document.querySelectorAll('.resize').forEach(function(eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function(e) {
+startX = e.pageX;
+startWidth = eleTh.offsetWidth;
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
+}
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
+}
+});
+</script>
+</body>
+</html>

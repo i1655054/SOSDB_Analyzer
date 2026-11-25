@@ -1,0 +1,27 @@
+┬
+〇│Public Sub Test_Select()	＜modUnitTest＞
+┴└┐
+　　□ Dim x As Integer
+　　◆┐Select Case x
+　　│├┐Case 1
+　　│││#   CASE1
+　　││◎ Call FuncA	FuncA＜modUnitTest＞
+　　│├┐Case 2
+　　│││#   CASE2
+　　││◎ Call FuncA	FuncA＜modUnitTest＞
+　　│┴End Select
+　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+FuncA		modUnitTest
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

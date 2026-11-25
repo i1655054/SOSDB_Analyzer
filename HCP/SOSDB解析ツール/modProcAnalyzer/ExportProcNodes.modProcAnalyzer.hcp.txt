@@ -1,0 +1,75 @@
+┬
+〇│Public Sub ExportProcNodes(  ByVal Nodes As Collection)	ProcNode出力＜modProcAnalyzer＞
+┴└┐
+　　□ Dim ws As Worksheet
+　　□ Dim Node As clsProcNode
+　　□ Dim RowOut As Long
+　　☆ On Error Resume Next
+　　│#   ProcNodesシート取得
+　　〇 Set ws =  gContext.ManagementBook.Worksheets(
+　　│   SHEET_PROC_NODES)
+　　☆ On Error GoTo 0
+　　│#   gDevMode 時 ProcNode構造ダンプ
+　　◆┐If gDevMode Then
+　　│◎ DumpProcNodes  "AnalyzeProcedure Result",  Nodes	DumpProcNodes＜modHCPAnalyzer＞
+　　│┴End If
+　　◆┐If gContext Is Nothing Then
+　　│☆ On Error Resume Next
+　　│〇 Set ws = gContext.ManagementBook.Worksheets(
+　　││   SHEET_PROC_NODES)
+　　│☆ On Error GoTo 0
+　　││#   ProcNodesシート作成
+　　│◆┐If ws Is Nothing Then
+　　││〇 Set ws =  gContext.ManagementBook.Worksheets.Add
+　　││〇 ws.Name =  SHEET_PROC_NODES
+　　││┴End If
+　　├┐ELSE
+　　│☆ On Error Resume Next
+　　│〇 Set ws =  gContext.ManagementBook.Worksheets(
+　　││   SHEET_PROC_NODES)
+　　│☆ On Error GoTo 0
+　　│◆┐If ws Is Nothing Then
+　　││〇 Set ws =  gContext.ManagementBook.Worksheets.Add
+　　││〇 ws.Name =  SHEET_PROC_NODES
+　　││┴End If
+　　│┴End If
+　　│#   ProcNodesシート初期化
+　　〇 ws.Range("A:H").Value = ""
+　　〇 ws.Range("A:H").ClearFormats
+　　│#   ProcNodesヘッダ出力
+　　〇 ws.Range("A1:I1").Value = Array(
+　　│   "NodeID",  "ParentID",  "PrevNodeID",  "NextNodeID",  "Level",  "NodeType",  "BranchType",  "Text",  "SourceText")
+　　〇 RowOut = 2
+　　│#   ProcNode一覧出力
+　　＠┐For Each Node In Nodes
+　　│〇 ws.Cells(RowOut, 1) = Node.NodeID
+　　│〇 ws.Cells(RowOut, 2) = Node.ParentID
+　　│〇 ws.Cells(RowOut, 3) = Node.PrevNodeID
+　　│〇 ws.Cells(RowOut, 4) = Node.NextNodeID
+　　│〇 ws.Cells(RowOut, 5) = Node.Level
+　　│〇 ws.Cells(RowOut, 6) = Node.NodeType
+　　│〇 ws.Cells(RowOut, 7) = Node.BranchType
+　　│〇 ws.Cells(RowOut, 8) = Node.NodeText
+　　│〇 ws.Cells(RowOut, 9) = Node.SourceLine
+　　│〇 RowOut = RowOut + 1
+　　│┴Next Node
+　　│#   ProcNodesシート体裁設定
+　　〇 ws.Rows(1).Font.Bold = True
+　　〇 ws.Columns.AutoFit
+　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+DumpProcNodes		modHCPAnalyzer
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+CreateHCP	HCP作成	modHCPAnalyzer

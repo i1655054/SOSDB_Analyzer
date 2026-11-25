@@ -1,0 +1,37 @@
+┬
+〇│Public Sub DumpProcNodeRange(  ByVal Title As String,  ByVal Nodes As Collection,  ByVal StartID As Long,  ByVal EndID As Long)	＜modHCPAnalyzer＞
+┴└┐
+　　□ Dim ws As Worksheet
+　　□ Dim RowOut As Long
+　　□ Dim Node As clsProcNode
+　　〇 Set ws =  gContext.ManagementBook.Worksheets(
+　　│   SHEET_DEBUG_NODES)
+　　◎ RowOut = GetDebugRow()	DBG_NODES出力行取得＜modHCPAnalyzer＞
+　　＠┐For Each Node In Nodes
+　　│◆┐If Node.NodeID >= StartID  And Node.NodeID <= EndID Then
+　　││〇 ws.Cells(RowOut, 1).Value = Title
+　　││〇 ws.Cells(RowOut, 2).Value = Node.NodeID
+　　││〇 ws.Cells(RowOut, 3).Value = Node.ParentID
+　　││〇 ws.Cells(RowOut, 4).Value = Node.Level
+　　││〇 ws.Cells(RowOut, 5).Value = Node.BranchType
+　　││〇 ws.Cells(RowOut, 6).Value = Node.NodeType
+　　││〇 ws.Cells(RowOut, 7).Value = Node.NodeText
+　　││〇 ws.Cells(RowOut, 8).Value = Node.SourceLine
+　　││〇 RowOut = RowOut + 1
+　　││┴End If
+　　│┴Next Node
+　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetDebugRow	DBG_NODES出力行取得	modHCPAnalyzer
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

@@ -1,0 +1,26 @@
+┬
+〇│Private Function ExistsInCollection(  ByVal Col As Collection,  ByVal Value As String) As Boolean	Collection存在確認＜clsProcInfo＞
+┴└┐
+　　□ Dim V As Variant
+　　＠┐For Each V In Col
+　　│◆┐If StrComp(  CStr(V),  Value,  vbTextCompare) = 0 Then
+　　││〇 ExistsInCollection = True
+　　││→ Exit Function
+　　││┴End If
+　　│┴Next V
+　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+AddCalledBy	呼出元追加	clsProcInfo
+AddCall	呼出先追加	clsProcInfo

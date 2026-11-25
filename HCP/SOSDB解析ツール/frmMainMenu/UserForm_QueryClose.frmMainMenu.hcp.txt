@@ -1,0 +1,23 @@
+┬
+〇│Private Sub UserFormQueryClose(  Cancel As Integer,  CloseMode As Integer)	メインメニュー終了制御＜frmMainMenu＞
+┴└┐
+　　│#   ×ボタン終了判定
+　　◆┐If CloseMode = vbFormControlMenu Then
+　　││#   Main画面状態復元
+　　│◎ RestoreMainWindowState	Main画面状態復元＜modToolManager＞
+　　│┴End If
+　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+RestoreMainWindowState	Main画面状態復元	modToolManager
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

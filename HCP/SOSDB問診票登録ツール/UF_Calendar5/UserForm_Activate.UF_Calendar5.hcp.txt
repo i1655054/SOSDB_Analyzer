@@ -1,33 +1,48 @@
-Procedure: UF_Calendar5.UserForm_Activate  [ カレンダー表示初期化＜UF_Calendar5＞ ]
-HCP	Business
 ┬
 〇│Private Sub UserForm_Activate()	カレンダー表示初期化＜UF_Calendar5＞
 ┴└┐
-　　│#  年月選択初期化
+　　│#   年月選択初期化
 　　〇 CBO_YEAR.Visible = False
 　　〇 CBO_MONTH.Visible = False
 　　〇 g_VisibleYear = False
 　　〇 g_VisibleMonth = False
 　　〇 g_FormDate1 = 0
-　　│#  初期日付取得
+　　│#   初期日付取得
 　　◆┐If g_intEntMode = 1 Then
-　　││#  TextBox日付取得
+　　││#   TextBox日付取得
 　　│◆┐If IsDate(Trim(g_objTextBox.text)) Then
 　　││〇 g_FormDate1 = CDate(Trim(g_objTextBox.text))
 　　││┴End If
-　　│☆ On Error GoTo 0
 　　├┐ELSE
-　　││#  セル日付取得
+　　││#   セル日付取得
 　　│☆ On Error Resume Next
 　　│◆┐If IsDate(Trim(g_objRange.Cells(1).Value)) Then
 　　││〇 g_FormDate1 = CDate(Trim(g_objRange.Cells(1).Value))
 　　││┴End If
+　　│☆ On Error GoTo 0
 　　│┴End If
-　　│#  初期日付補完
+　　│#   初期日付補完
 　　◆ If g_FormDate1 = 0 Then g_FormDate1 = Date
-　　│#  カレンダー生成
+　　│#   カレンダー生成
 　　◎ Call GP_MakeCalendar	カレンダー生成＜UF_Calendar5＞
-　　│#  ガイド初期化
+　　│#   ガイド初期化
 　　〇 LBL_GUIDE.Caption = cnsDefaultGuide             ' ガイド表示
 　　◆ If Me.StartUpPosition <> 0 Then Me.StartUpPosition = 0
 　　┴End Sub
+
+========================================
+Calls (4)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GP_MakeCalendar	カレンダー生成	UF_Calendar5
+RenderHTML	HTML表示	UF_InfoWebDisplay
+ApplyCss	CSS適用	UF_InfoWebDisplay
+StartPollTimer	フォント監視開始	ModuleFontSync
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

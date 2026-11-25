@@ -1,25 +1,37 @@
-Procedure: modUtility.BuildMondainumPro  [ 問処番号生成＜modUtility＞ ]
-HCP	Business
 ┬
 〇│Public Function BuildMondainumPro() As String	問処番号生成＜modUtility＞
 ┴└┐
 　　□ Dim numVal As String
 　　□ Dim proVal As String
-　　│#  問処番号取得
+　　│#   問処番号取得
 　　〇 numVal = Trim(Range(MONDAINUM_RANG).Value)
-　　│#  発行元取得
+　　│#   発行元取得
 　　〇 proVal = Trim(Range(MONDAIPRO_RANG).Value)
-　　│#  入力状態判定
+　　│#   入力状態判定
 　　◆┐If numVal = "" And proVal = "" Then
 　　│〇 BuildMondainumPro = ""
 　　├┐ElseIf proVal = "" Then
-　　││#  問処番号のみ返却
+　　││#   問処番号のみ返却
 　　│〇 BuildMondainumPro = numVal
 　　├┐ElseIf numVal = "" Then
-　　││#  発行元のみ返却
+　　││#   発行元のみ返却
 　　│〇 BuildMondainumPro = proVal
 　　├┐ELSE
-　　││#  問処番号文字列生成
+　　││#   問処番号文字列生成
 　　│〇 BuildMondainumPro = numVal & " / " & proVal
 　　│┴End If
 　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ApplyMainSheetToIssue	メイン画面反映	modIssueMapper

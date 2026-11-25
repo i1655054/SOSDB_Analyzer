@@ -1,0 +1,59 @@
+┬
+〇│Public Sub SelectNode()	ノード選択＜modPathChart＞
+┴└┐
+　　│#   親子関係情報確認
+　　◆┐If gParentMap Is Nothing Then
+　　│〇 MsgBox  "パスチャート情報が初期化されています。" & vbCrLf &  "PathChartを再生成してください。"
+　　│→ Exit Sub
+　　│┴End If
+　　◆┐If gChildMap Is Nothing Then
+　　│〇 MsgBox  "パスチャート情報が初期化されています。" & vbCrLf &  "PathChartを再生成してください。"
+　　│→ Exit Sub
+　　│┴End If
+　　□ Dim ws As Worksheet
+　　□ Dim shp As Shape
+　　□ Dim ShapeName As String
+　　〇 Set ws = gContext.ManagementBook.Worksheets(
+　　│ SHEET_PATH_CHART)
+　　│#   選択Shape取得
+　　〇 ShapeName = CStr(Application.Caller)
+　　☆ On Error Resume Next
+　　〇 Set shp = ws.Shapes(ShapeName)
+　　☆ On Error GoTo 0
+　　◆→ If shp Is Nothing Then Exit Sub
+　　│#   Procedure情報表示更新
+　　◎ UpdateCurrentNodeInfo  GetProcedureNameFromNodeText(  shp.TextFrame.Characters.Text)	関数名取得＜modPathChart＞
+　　│#   現在ノード設定
+　　〇 gCurrentShapeName = shp.Name
+　　〇 gCurrentParentWithChildren = shp.Name
+　　〇 gCurrentChildIndex = 0
+　　◆┐If Not gParentMap Is Nothing Then
+　　││#   親ノード取得
+　　│◆┐If gParentMap.Exists(shp.Name) Then
+　　││〇 gCurrentParentShapeName =  gParentMap(shp.Name)
+　　│├┐ELSE
+　　││〇 gCurrentParentShapeName = ""
+　　││┴End If
+　　│┴End If
+　　│#   ノード強調表示
+　　◎ HighlightNode shp	ノード強調表示＜modPathChart＞
+　　│#   Navigator状態更新
+　　◎ UpdateNavigatorStatus  "Current : " &  GetProcedureNameFromNodeText(  shp.TextFrame.Characters.Text)	関数名取得＜modPathChart＞
+　　┴End Sub
+
+========================================
+Calls (4)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+UpdateCurrentNodeInfo	ノード情報更新	modPathChart
+GetProcedureNameFromNodeText	関数名取得	modPathChart
+HighlightNode	ノード強調表示	modPathChart
+UpdateNavigatorStatus	Navigator状態更新	modPathChart
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

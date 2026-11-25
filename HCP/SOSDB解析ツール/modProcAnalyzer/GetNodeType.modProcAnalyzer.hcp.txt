@@ -1,0 +1,122 @@
+┬
+〇│Private Function GetNodeType(  ByVal LineText As String)  As String	ノード種別判定＜modProcAnalyzer＞
+┴└┐
+　　│#   判定対象整形
+　　〇 LineText = Trim$(LineText)
+　　│#   ノード種別判定
+　　│#   条件コンパイル判定
+　　◆┐If StartsWithKeyword(LineText, "#ElseIf") Then	内部呼出:StartsWithKeyword
+　　││#   #ElseIf
+　　│〇 GetNodeType = NODE_COMPILE_ELSEIF
+　　├┐ElseIf StrComp(  LineText,  "#Else",  vbTextCompare) = 0 Then
+　　││#   #Else
+　　│〇 GetNodeType = NODE_COMPILE_ELSE
+　　├┐ElseIf StrComp(  LineText,  "#End If",  vbTextCompare) = 0 Then
+　　││#   #End If
+　　│〇 GetNodeType = NODE_COMPILE_ENDIF
+　　├┐ElseIf StartsWithKeyword(LineText, "#If") Then	内部呼出:StartsWithKeyword
+　　││#   #If
+　　│〇 GetNodeType = NODE_COMPILE_IF
+　　││#   宣言・制御判定
+　　├┐ElseIf StartsWithKeyword(LineText, "Dim") Then	内部呼出:StartsWithKeyword
+　　││#   変数宣言
+　　│〇 GetNodeType = NODE_DECLARE
+　　├┐ElseIf StartsWithKeyword(LineText, "Const") Then	内部呼出:StartsWithKeyword
+　　││#   定数宣言
+　　│〇 GetNodeType = NODE_DECLARE
+　　├┐ElseIf StartsWithKeyword(LineText, "On Error") Then	内部呼出:StartsWithKeyword
+　　││#   エラー制御
+　　│〇 GetNodeType = NODE_CONTROL
+　　││#   IF構造判定
+　　├┐ElseIf StartsWithKeyword(LineText, "If") Then	内部呼出:StartsWithKeyword
+　　││#   1行If判定
+　　│◆┐If IsInlineIf(LineText) Then	内部呼出:IsInlineIf
+　　│││#   インラインIf
+　　││〇 GetNodeType = NODE_INLINE_IF
+　　│├┐ELSE
+　　│││#   ブロックIf
+　　││〇 GetNodeType = NODE_IF
+　　││┴End If
+　　├┐ElseIf StrComp(LineText,  "End If",  vbTextCompare) = 0 Then
+　　││#   End If
+　　│〇 GetNodeType = NODE_ENDIF
+　　├┐ElseIf StartsWithKeyword(LineText, "ElseIf") Then	内部呼出:StartsWithKeyword
+　　││#   ElseIf
+　　│〇 GetNodeType = NODE_ELSEIF
+　　├┐ElseIf StrComp(LineText,  "Else",  vbTextCompare) = 0 Then
+　　││#   Else
+　　│〇 GetNodeType = NODE_ELSE
+　　││#   FOR構造判定
+　　├┐ElseIf StartsWithKeyword(LineText, "For") Then	内部呼出:StartsWithKeyword
+　　││#   For
+　　│〇 GetNodeType = NODE_FOR
+　　├┐ElseIf StartsWithKeyword(LineText, "Next") Then	内部呼出:StartsWithKeyword
+　　││#   Next
+　　│〇 GetNodeType = NODE_NEXT
+　　││#   DO構造判定
+　　├┐ElseIf StartsWithKeyword(LineText, "Do") Then	内部呼出:StartsWithKeyword
+　　││#   Do
+　　│〇 GetNodeType = NODE_DO
+　　├┐ElseIf StartsWithKeyword(LineText, "Loop") Then	内部呼出:StartsWithKeyword
+　　││#   Loop
+　　│〇 GetNodeType = NODE_LOOP
+　　││#   WHILE構造判定
+　　├┐ElseIf StartsWithKeyword(LineText, "While") Then	内部呼出:StartsWithKeyword
+　　││#   While
+　　│〇 GetNodeType = NODE_WHILE
+　　├┐ElseIf StrComp(LineText,  "Wend",  vbTextCompare) = 0 Then
+　　││#   Wend
+　　│〇 GetNodeType = NODE_WEND
+　　││#   WITH構造判定
+　　├┐ElseIf StartsWithKeyword(LineText, "With") Then	内部呼出:StartsWithKeyword
+　　││#   With
+　　│〇 GetNodeType = NODE_WITH
+　　├┐ElseIf StrComp(LineText,  "End With",  vbTextCompare) = 0 Then
+　　││#   End With
+　　│〇 GetNodeType = NODE_ENDWITH
+　　││#   SELECT構造判定
+　　├┐ElseIf StartsWithKeyword(LineText, "Select Case") Then	内部呼出:StartsWithKeyword
+　　││#   Select Case
+　　│〇 GetNodeType = NODE_SELECT
+　　├┐ElseIf StartsWithKeyword(LineText, "Case") Then	内部呼出:StartsWithKeyword
+　　││#   Case
+　　│〇 GetNodeType = NODE_CASE
+　　├┐ElseIf StrComp(LineText,  "End Select",  vbTextCompare) = 0 Then
+　　││#   End Select
+　　│〇 GetNodeType = NODE_ENDSELECT
+　　││#   ジャンプ構造判定
+　　├┐ElseIf StartsWithKeyword(LineText, "Resume") Then	内部呼出:StartsWithKeyword
+　　││#   Resume
+　　│〇 GetNodeType = NODE_RESUME
+　　├┐ElseIf StartsWithKeyword(LineText, "GoTo") Then	内部呼出:StartsWithKeyword
+　　││#   GoTo
+　　│〇 GetNodeType = NODE_GOTO
+　　├┐ElseIf right$(LineText, 1) = ":" Then
+　　││#   ラベル定義
+　　│〇 GetNodeType = NODE_LABEL
+　　├┐ElseIf StartsWithKeyword(LineText, "Exit") Then	内部呼出:StartsWithKeyword
+　　││#   Exit文
+　　│〇 GetNodeType = NODE_EXIT
+　　││#   通常処理判定
+　　├┐ELSE
+　　││#   通常処理
+　　│〇 GetNodeType = NODE_NORMAL
+　　│┴End If
+　　┴End Function
+
+========================================
+Calls (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+StartsWithKeyword	キーワード前方一致判定	modProcAnalyzer
+IsInlineIf	インラインIf判定	modProcAnalyzer
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+AnalyzeProcedure	Proc解析	modProcAnalyzer

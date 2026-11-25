@@ -1,10 +1,23 @@
-Procedure: UF_RedminDbRegist.CommandButton2_Click  [ 登録取消＜UF_RedminDbRegist＞ ]
-HCP	Business
 ┬
 〇│Private Sub CommandButton2_Click()	登録取消＜UF_RedminDbRegist＞
 ┴└┐
-　　│#  登録取消
+　　│#   登録取消
 　　〇 vYesNo = vbNo
-　　│#  フォーム終了
+　　│#   フォーム終了
 　　〇 Unload Me
 　　┴End Sub
+
+========================================
+Calls (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+BuildHTMLContent	HTML本文生成	UF_InfoWebDisplay
+RenderHTML	HTML表示	UF_InfoWebDisplay
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

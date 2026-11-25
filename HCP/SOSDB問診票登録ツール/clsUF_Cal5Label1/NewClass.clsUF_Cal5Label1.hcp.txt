@@ -1,10 +1,22 @@
-Procedure: clsUF_Cal5Label1.NewClass  [ カレンダー日付ラベル初期化＜clsUF_Cal5Label1＞ ]
-HCP	Business
 ┬
 〇│Public Sub NewClass(ByVal objLabel As MSForms.Label, ByVal lngIx As Long)	カレンダー日付ラベル初期化＜clsUF_Cal5Label1＞
 ┴└┐
-　　│#  日付ラベル関連付け
+　　│#   日付ラベル関連付け
 　　〇 Set Label = objLabel
-　　│#  位置情報設定
+　　│#   位置情報設定
 　　〇 g_lngIndex = lngIx
 　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+UserForm_Initialize

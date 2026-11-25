@@ -1,12 +1,24 @@
-Procedure: modUtility.ClearRangeValue  [ セル内容初期化＜modUtility＞ ]
-HCP	Business
 ┬
 〇│Private Sub ClearRangeValue(ByVal Rng As Range)	セル内容初期化＜modUtility＞
 ┴└┐
 　　＠┐With Rng
-　　││#  セル値クリア
+　　││#   セル値クリア
 　　│〇 .Value = ""
-　　││#  自動縮小設定
+　　││#   自動縮小設定
 　　│〇 .ShrinkToFit = True
 　　│┴End With
 　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+Clear_WorkFile	ワークファイル削除	modUtility

@@ -1,86 +1,90 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
 <meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
 <title>BuildDescription2010</title>
 <style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
 body{font-family:Meiryo;font-size:9pt;}
 table{border-collapse:collapse;}
-th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
 td{vertical-align:top;}
 th{background:#e8f0fe;}
-colgroup col:nth-of-type(1) {}
-colgroup col:nth-of-type(2) {}
-.resize {position: relative;}
-.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
 </style>
 </head>
-<body>
+<body translate="no">
 <h1>BuildDescription2010</h1>
 <p>Module : modMonshinCore</p>
-<p><a href="./_INDEX.html">← Module Index</a></p>
 <table>
-<colgroup><col/><col/></colgroup>
-<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
 <tbody>
-<tr><td>Procedure: modMonshinCore.BuildDescription2010  [ 説明文生成2010形式＜modMonshinCore＞ ]</td><td></td></tr>
-<tr><td>HCP</td><td>Business</td></tr>
 <tr><td>┬</td><td></td></tr>
 <tr><td>〇│Private Function BuildDescription2010(  ByRef info As MonshinInfoType) As String</td><td>説明文生成2010形式＜modMonshinCore＞</td></tr>
 <tr><td>┴└┐</td><td></td></tr>
 <tr><td>　　□ Dim sb As String</td><td></td></tr>
 <tr><td>　　□ Dim r() As String</td><td></td></tr>
 <tr><td>　　〇 r = info.RequestContents</td><td></td></tr>
-<tr><td>　　│#  問合せ内容出力</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   問合せ内容出力</span></td><td></td></tr>
 <tr><td>　　◆┐If r(0) &lt;&gt; "" Then</td><td></td></tr>
 <tr><td>　　│〇 sb = sb &amp;  "＝＝＝＜問合せ種別＞＝＝＝" &amp; vbCrLf &amp;  r(0) &amp; vbCrLf</td><td></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
-<tr><td>　　│#  故障発生状況出力</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   故障発生状況出力</span></td><td></td></tr>
 <tr><td>　　◆┐If r(1) &lt;&gt; "" Then</td><td></td></tr>
 <tr><td>　　│〇 sb = sb &amp;  "＝＝＝＜故障発生状況＞＝＝＝" &amp; vbCrLf &amp;  r(1) &amp; vbCrLf</td><td></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
-<tr><td>　　│#  発生状況出力</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   発生状況出力</span></td><td></td></tr>
 <tr><td>　　◆┐If r(2) &lt;&gt; "" Then</td><td></td></tr>
 <tr><td>　　│〇 sb = sb &amp;  "＝＝＝【発生状況】＝＝＝" &amp; vbCrLf &amp;  r(2) &amp; vbCrLf</td><td></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
-<tr><td>　　│#  対応状況出力</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   対応状況出力</span></td><td></td></tr>
 <tr><td>　　◆┐If info.ResponseStatus &lt;&gt; "" Then</td><td></td></tr>
 <tr><td>　　│〇 sb = sb &amp;  "===【対応状況】===" &amp; vbCrLf &amp;  info.ResponseStatus &amp; vbCrLf</td><td></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
-<tr><td>　　│#  収集データ出力</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   収集データ出力</span></td><td></td></tr>
 <tr><td>　　◆┐If info.CollectedData &lt;&gt; "" Then</td><td></td></tr>
 <tr><td>　　│〇 sb = sb &amp;  "===【収集データ】===" &amp; vbCrLf &amp;  info.CollectedData &amp; vbCrLf</td><td></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
-<tr><td>　　│#  説明文返却</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   説明文返却</span></td><td></td></tr>
 <tr><td>　　〇 BuildDescription2010 = sb</td><td></td></tr>
 <tr><td>　　┴End Function</td><td></td></tr>
 </tbody>
 </table>
+<hr>
+<h2>Calls (0)</h2>
+<p>呼出先なし</p>
+<hr>
+<h2>Called By (1)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modMonshinCore/BuildDescription.modMonshinCore.hcp.html">BuildDescription</a></td><td>説明文生成</td><td>modMonshinCore</td></tr>
+</table>
 <script>
-document.querySelectorAll('.resize').forEach(function (eleTh) {
+document.querySelectorAll('.resize').forEach(function(eleTh) {
 let startX;
 let startWidth;
 const eleResizer = document.createElement('div');
 eleResizer.classList.add('resizer');
-eleResizer.addEventListener('mousedown', function (e) {
-const styleTh = window.getComputedStyle(eleTh);
-const paddingLeft = parseFloat(styleTh.paddingLeft);
-const paddingRight = parseFloat(styleTh.paddingRight);
-const borderLeft = parseFloat(styleTh.borderLeftWidth);
-const borderRight = parseFloat(styleTh.borderRightWidth);
+eleResizer.addEventListener('mousedown', function(e) {
 startX = e.pageX;
-startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+startWidth = eleTh.offsetWidth;
 document.addEventListener('mousemove', onMouseMove);
 document.addEventListener('mouseup', onMouseUp);
 });
 eleTh.appendChild(eleResizer);
-function onMouseMove(e) {
-const newWidth = startWidth + (e.pageX - startX);
-eleTh.style.width = newWidth + 'px';
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
 }
-function onMouseUp() {
-document.removeEventListener('mousemove', onMouseMove);
-document.removeEventListener('mouseup', onMouseUp);
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
 }
 });
 </script>

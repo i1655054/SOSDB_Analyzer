@@ -1,0 +1,49 @@
+┬
+〇│Private Sub BuildNode(  ByVal ParentID As Long,  ByVal Prefix As String)	RenderNode生成＜clsHCPRenderBuilder＞
+┴└┐
+　　□ Dim Node As clsHCPNode
+　　│#   指定階層ノード走査
+　　＠┐For Each Node In mNodes
+　　│◆┐If Node.ParentID = ParentID Then
+　　│││#   ノード種別毎にRenderText生成
+　　││◆┐Select Case Node.NodeType
+　　│││├┐Case NODE_START
+　　││││〇 Node.RenderText =  "〇│" &  Node.Text
+　　│││├┐Case NODE_DECLARE
+　　││││◎ Node.RenderText =  Prefix &  "□ " &  GetDisplayText(  Node,  Prefix)	表示文字列取得＜clsHCPRenderBuilder＞
+　　│││├┐Case NODE_END
+　　││││〇 Node.RenderText =  Prefix &  "┴" &  Node.Text
+　　│││├┐Case NODE_MERGE
+　　│││├┐Case NODE_COMMENT
+　　││││◎ BuildRenderCommentNode  Node,  Prefix	コメント RenderText生成＜clsHCPRenderBuilder＞
+　　│││├┐Case Else
+　　││││◎ BuildRenderControlNode  Node,  Prefix	制御ノード RenderText生成＜clsHCPRenderBuilder＞
+　　│││┴End Select
+　　││┴End If
+　　│┴Next Node
+　　┴End Sub
+
+========================================
+Calls (3)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetDisplayText	表示文字列取得	clsHCPRenderBuilder
+BuildRenderCommentNode	コメント RenderText生成	clsHCPRenderBuilder
+BuildRenderControlNode	制御ノード RenderText生成	clsHCPRenderBuilder
+
+========================================
+Called By (8)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+BuildRenderText	RenderText生成	clsHCPRenderBuilder
+BuildRenderIfBlock	IF RenderText生成	clsHCPRenderBuilder
+BuildRenderForBlock	FOR RenderText生成	clsHCPRenderBuilder
+BuildRenderDoBlock	DO RenderText生成	clsHCPRenderBuilder
+BuildRenderWhileBlock	WHILE RenderText生成	clsHCPRenderBuilder
+BuildRenderWithBlock	WITH RenderText生成	clsHCPRenderBuilder
+BuildRenderSelectBlock	SELECT RenderText生成	clsHCPRenderBuilder
+BuildRenderCompileBlock	条件コンパイル RenderText生成	clsHCPRenderBuilder

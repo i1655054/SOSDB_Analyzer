@@ -1,0 +1,26 @@
+┬
+〇│Private Sub cmdNavigator_Click()	ナビゲータ表示＜frmPathChart＞
+┴└┐
+　　│#   検索候補初期化
+　　〇 frmPathChartNavigator.cmbSearch.Clear
+　　│#   検索候補読込
+　　◎ LoadSearchNodeList  frmPathChartNavigator.cmbSearch	検索候補読込＜modPathChart＞
+　　│#   PathChartナビゲータ表示
+　　〇 frmPathChartNavigator.Show  vbModeless
+　　│#   PathChart画面非表示
+　　〇 Me.Hide
+　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+LoadSearchNodeList	検索候補読込	modPathChart
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

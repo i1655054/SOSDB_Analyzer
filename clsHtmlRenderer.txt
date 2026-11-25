@@ -1,0 +1,813 @@
+Option Explicit
+
+'===================================================================
+' @JPName
+' HTMLレンダラ
+'
+' @Category
+' HCP
+'
+' @Summary
+' HCPNodesをHTML形式で出力する
+'
+' @Remarks
+' RenderTextを利用して
+' hcp.html を生成する
+'
+' Procedureリンク
+' Comment色分け
+' Calls
+' Called By
+'
+' を出力する
+'===================================================================
+
+Private mFileNo As Integer
+
+'===================================================================
+' @JPName
+' HTML出力
+'
+' @Category
+' HCP
+'
+' @Input
+' FilePath(String)
+' ModuleName(String)
+' ProcName(String)
+' HCPNodes(Collection)
+'
+' @Output
+' hcp.html
+'
+' @Summary
+' HCPNodesをHTML出力する
+'
+' @Remarks
+' RenderTextを利用して
+' HCPチャートをHTML形式で出力する
+'
+' Calls
+' Called By
+'
+' を付加出力する
+'===================================================================
+Public Sub Export( _
+                ByVal FilePath As String, _
+                ByVal ModuleName As String, _
+                ByVal ProcName As String, _
+                ByVal HCPNodes As Collection)
+
+    '# 出力ファイル番号取得
+    mFileNo = FreeFile
+
+    '# HTMLファイルオープン
+    Open FilePath _
+        For Output As #mFileNo
+
+    '--------------------------------
+    '# HTMLヘッダ出力
+    '--------------------------------
+    WriteHtmlHeader _
+        mFileNo, _
+        ProcName, _
+        1.2, _
+        True
+
+    '--------------------------------
+    '# タイトル出力
+    '--------------------------------
+    Print #mFileNo, _
+        "<h1>" & _
+        ProcName & _
+        "</h1>"
+
+    '# モジュール名出力
+    Print #mFileNo, _
+        "<p>Module : " & _
+        ModuleName & _
+        "</p>"
+
+    '--------------------------------
+    '# HCPテーブル開始
+    '--------------------------------
+    Print #mFileNo, _
+        "<table>"
+
+    '# ヘッダ開始
+    Print #mFileNo, _
+        "<thead>"
+
+    '# HCPヘッダ出力
+    Print #mFileNo, _
+        "<tr>" & _
+        "<th class=""resize"">HCP</th>" & _
+        "<th class=""resize"">Business</th>" & _
+        "</tr>"
+
+    '# ヘッダ終了
+    Print #mFileNo, _
+        "</thead>"
+
+    '# HCP本文開始
+    Print #mFileNo, _
+        "<tbody>"
+
+    '--------------------------------
+    '# HCP本文出力
+    '--------------------------------
+    OutputHCPNodes _
+        HCPNodes
+
+    '# HCP本文終了
+    Print #mFileNo, _
+        "</tbody>"
+
+    '# HCPテーブル終了
+    Print #mFileNo, _
+        "</table>"
+
+    '--------------------------------
+    '# Calls出力
+    '--------------------------------
+    WriteCallsHtml _
+        mFileNo, _
+        ProcName
+
+    '--------------------------------
+    '# Called By出力
+    '--------------------------------
+    WriteCalledByHtml _
+        mFileNo, _
+        ProcName
+
+    '--------------------------------
+    '# HTMLフッタ出力
+    '--------------------------------
+    WriteHtmlFooter _
+        mFileNo, _
+        True
+
+    '# HTMLファイルクローズ
+    Close #mFileNo
+
+End Sub
+
+'===================================================================
+' @JPName
+' HCPノードHTML出力
+'
+' @Category
+' HCP
+'
+' @Input
+' HCPNodes(Collection)
+'
+' @Output
+' HTMLテーブル
+'
+' @Summary
+' HCPNode一覧を
+' HTMLテーブルへ出力する
+'
+' @Remarks
+' RenderTextを利用して
+' HCP本文を出力する
+'
+' CALLノードは
+' Procedureリンク化する
+'
+' Business列が複数行の場合は
+' 複数<tr>へ展開する
+'
+' STARTノードは出力済みのため
+' 対象外とする
+'===================================================================
+Private Sub OutputHCPNodes( _
+                ByVal HCPNodes As Collection)
+
+    ' HCPノード
+    Dim Node As clsHCPNode
+
+    ' HCP表示文字列
+    Dim HCPText As String
+
+    ' Business分割
+    Dim Lines() As String
+
+    ' 行Index
+    Dim i As Long
+
+    '# STARTノード取得
+    For Each Node In HCPNodes
+
+        If Node.NodeType = NODE_START Then
+
+            Print #mFileNo, _
+                "<tr><td>┬</td><td></td></tr>"
+
+            Print #mFileNo, _
+                "<tr><td>" & _
+                GetNodeHtmlText(Node) & _
+                "</td><td>" & _
+                HtmlEncode(Node.BusinessText) & _
+                "</td></tr>"
+
+            Print #mFileNo, _
+                "<tr><td>┴└┐</td><td></td></tr>"
+
+            Exit For
+
+        End If
+
+    Next Node
+
+    '--------------------------------
+    '# HCP本文出力
+    '--------------------------------
+    For Each Node In HCPNodes
+
+        '# STARTノードは出力済
+        If Node.NodeType = NODE_START Then
+
+            GoTo ContinueLoop
+
+        End If
+
+        '# HCP表示文字列取得
+        HCPText = _
+            GetNodeHtmlText(Node)
+
+        '# RenderText未生成
+        If Trim$(HCPText) = "" Then
+
+            GoTo ContinueLoop
+
+        End If
+
+        '# Businessなし
+        If Trim$(Node.BusinessText) = "" Then
+
+            Print #mFileNo, _
+                "<tr>" & _
+                "<td>" & _
+                HCPText & _
+                "</td>" & _
+                "<td></td>" & _
+                "</tr>"
+
+        Else
+
+            '# Business分割
+            Lines = Split( _
+                        Node.BusinessText, _
+                        vbCrLf)
+
+            '-------------------------
+            '# 1行目出力
+            '-------------------------
+            Print #mFileNo, _
+                "<tr>" & _
+                "<td>" & _
+                HCPText & _
+                "</td>" & _
+                "<td>" & _
+                GetBusinessHtml( _
+                    Node, _
+                    Lines(0)) & _
+                "</td>" & _
+                "</tr>"
+
+            '-------------------------
+            '# 2行目以降出力
+            '-------------------------
+            For i = 1 To UBound(Lines)
+
+                Print #mFileNo, _
+                    "<tr>" & _
+                    "<td>" & _
+                    HtmlEncode( _
+                        GetBusinessPrefix( _
+                            Node.RenderText)) & _
+                    "</td>" & _
+                    "<td>" & _
+                    HtmlEncode( _
+                        Lines(i)) & _
+                    "</td>" & _
+                    "</tr>"
+
+            Next i
+
+        End If
+
+ContinueLoop:
+
+    Next Node
+
+End Sub
+
+'===================================================================
+' @JPName
+' HTMLエンコード
+'
+' @Category
+' HTML
+'
+' @Input
+' Text(String)
+'
+' @Output
+' HtmlText(String)
+'
+' @Summary
+' HTML表示用に文字列を
+' エンコードする
+'
+' @Remarks
+' &, <, > をHTMLエンティティへ変換し
+' 改行は<br>へ変換する
+'===================================================================
+Private Function HtmlEncode( _
+                ByVal Text As String) _
+                As String
+                
+    HtmlEncode = Text
+
+    HtmlEncode = _
+        Replace(HtmlEncode, "&", "&amp;")
+
+    HtmlEncode = _
+        Replace(HtmlEncode, "<", "&lt;")
+
+    HtmlEncode = _
+        Replace(HtmlEncode, ">", "&gt;")
+
+    HtmlEncode = _
+        Replace(HtmlEncode, vbCrLf, "<br>")
+
+End Function
+
+'===================================================================
+' @JPName
+' ノードHTML文字列取得
+'
+' @Category
+' HCP
+'
+' @Input
+' Node : HCPノード
+'
+' @Output
+' HtmlText
+'
+' @Summary
+' ノード種別に応じた
+' HTML文字列を返却する
+'
+' @Remarks
+' HCP記号付与および
+' Procedureリンク化を行う
+'===================================================================
+Public Function GetNodeHtmlText( _
+                ByVal Node As clsHCPNode) _
+                As String
+
+    '# 描画対象ではないノードを除外
+    If Trim$(Node.RenderText) = "" Then
+
+        GetNodeHtmlText = ""
+
+        Exit Function
+
+    End If
+
+    Select Case Node.NodeType
+
+        Case NODE_CALL
+
+            GetNodeHtmlText = _
+                GetCallNodeHtml(Node)
+
+        Case NODE_COMMENT
+
+            GetNodeHtmlText = _
+                "<span class=""hcp-comment"">" & _
+                HtmlEncode(Node.RenderText) & _
+                "</span>"
+        
+        Case Else
+
+            GetNodeHtmlText = _
+                GetNormalNodeHtml(Node)
+
+    End Select
+
+End Function
+
+'===================================================================
+' @JPName
+' CALLノードHTML取得
+'
+' @Category
+' HCP
+'
+' @Input
+' Node : HCPノード
+'
+' @Output
+' HtmlText
+'
+' @Summary
+' CALLノード用HTML文字列を返却する
+'
+' @Remarks
+' CallNameが設定されている場合は
+' Procedureリンクへ変換する
+'
+' CallName未設定時は
+' RenderTextをそのまま出力する
+'===================================================================
+Private Function GetCallNodeHtml( _
+                ByVal Node As clsHCPNode) _
+                As String
+
+    '# HTMLリンク
+    Dim LinkText As String
+
+    '# CallName未設定
+    If Trim$(Node.CallName) = "" Then
+
+        GetCallNodeHtml = _
+            HtmlEncode( _
+                Node.RenderText)
+
+        Exit Function
+
+    End If
+
+    '# Procedureリンク生成
+    LinkText = _
+        BuildProcedureLink( _
+            Node.CallName)
+
+    '# CALLノードHTML生成
+    GetCallNodeHtml = _
+        Replace( _
+            HtmlEncode( _
+                Node.RenderText), _
+            Node.CallName, _
+            LinkText)
+
+End Function
+
+
+'===================================================================
+' @JPName
+' 通常ノードHTML取得
+'
+' @Category
+' HCP
+'
+' @Input
+' Node : HCPノード
+'
+' @Output
+' HtmlText
+'
+' @Summary
+' 通常ノードのHTML文字列を返却する
+'
+' @Remarks
+' HCP記号を付与して返却する
+'===================================================================
+Private Function GetNormalNodeHtml( _
+                ByVal Node As clsHCPNode) _
+                As String
+
+        GetNormalNodeHtml = _
+            HtmlEncode( _
+                Node.RenderText)
+
+End Function
+
+'===================================================================
+' @JPName
+' Business HTML取得
+'
+' @Category
+' HTML
+'
+' @Input
+' Node(clsHCPNode)
+' BusinessText(String)
+'
+' @Output
+' HtmlText(String)
+'
+' @Summary
+' Business列用HTMLを生成する
+'
+' @Remarks
+' CALLノードは
+' Business列もProcedureリンク化する
+'===================================================================
+Private Function GetBusinessHtml( _
+                ByVal Node As clsHCPNode, _
+                ByVal BusinessText As String) _
+                As String
+
+    Dim HtmlPath As String
+
+    If Node.NodeType <> NODE_CALL Then
+
+        GetBusinessHtml = _
+            HtmlEncode(BusinessText)
+
+        Exit Function
+
+    End If
+
+    If Trim$(Node.CallName) = "" Then
+
+        GetBusinessHtml = _
+            HtmlEncode(BusinessText)
+
+        Exit Function
+
+    End If
+
+    HtmlPath = _
+        GetProcedureHtmlPath( _
+            Node.CallName)
+
+    If HtmlPath = "" Then
+
+        GetBusinessHtml = _
+            HtmlEncode(BusinessText)
+
+        Exit Function
+
+    End If
+
+    GetBusinessHtml = _
+        "<a href=""" & _
+        HtmlPath & _
+        """>" & _
+        HtmlEncode(BusinessText) & _
+        "</a>"
+
+End Function
+
+'===================================================================
+' @JPName
+' Calls一覧HTML出力
+'
+' @Category
+' HCP
+'
+' @Input
+' FileNo(Integer)
+' ProcName(String)
+'
+' @Output
+' なし
+'
+' @Summary
+' 指定Procedureの
+' 呼出先一覧をHTML出力する
+'
+' @Remarks
+' 呼出先Procedureは
+' HCPページへのリンクとして出力する
+'
+' 呼出先が存在しない場合は
+' 「呼出先なし」を出力する
+'===================================================================
+Private Sub WriteCallsHtml( _
+                ByVal FileNo As Integer, _
+                ByVal ProcName As String)
+
+    '# 呼出先一覧
+    Dim Calls As Collection
+
+    '# 呼出先Procedure
+    Dim Proc As Variant
+
+    '# HTMLパス
+    Dim HtmlPath As String
+    
+    ' 呼出先Procedure情報
+    Dim Info As clsProcInfo
+
+    '# 呼出先一覧取得
+    Set Calls = _
+        GetCallList(ProcName)
+
+    Print #FileNo, "<hr>"
+
+    Print #FileNo, _
+        "<h2>Calls (" & _
+        Calls.Count & _
+        ")</h2>"
+
+    '# 呼出先なし
+    If Calls.Count = 0 Then
+
+        Print #FileNo, _
+            "<p>呼出先なし</p>"
+
+        Exit Sub
+
+    End If
+
+    '# 呼出先一覧テーブル出力
+    Print #FileNo, "<table>"
+
+    '# テーブルヘッダ出力
+    Print #FileNo, _
+        "<tr>" & _
+        "<th>Procedure</th>" & _
+        "<th>JPName</th>" & _
+        "<th>Module</th>" & _
+        "</tr>"
+    
+    '# 呼出先一覧出力
+    For Each Proc In Calls
+
+        '# Procedure情報取得
+        Set Info = _
+            ResolveProcedure( _
+                "", _
+                CStr(Proc))
+
+        '# HCP HTMLパス取得
+        HtmlPath = _
+            GetProcedureHtmlPath(CStr(Proc))
+
+        If Info Is Nothing Then
+
+            Print #FileNo, _
+                "<tr>" & _
+                "<td><a href=""" & _
+                HtmlPath & _
+                """>" & _
+                CStr(Proc) & _
+                "</a></td>" & _
+                "<td></td>" & _
+                "<td></td>" & _
+                "</tr>"
+
+        Else
+        
+            Print #FileNo, _
+                "<tr>" & _
+                "<td><a href=""" & _
+                HtmlPath & _
+                """>" & _
+                CStr(Proc) & _
+                "</a></td>" & _
+                "<td>" & _
+                HtmlEncode(Info.JPName) & _
+                "</td>" & _
+                "<td>" & _
+                HtmlEncode(Info.ModuleName) & _
+                "</td>" & _
+                "</tr>"
+
+        End If
+
+    Next Proc
+
+    Print #FileNo, "</table>"
+
+End Sub
+
+
+'===================================================================
+' @JPName
+' Called By一覧HTML出力
+'
+' @Category
+' HCP
+'
+' @Input
+' FileNo(Integer)
+' ProcName(String)
+'
+' @Output
+' なし
+'
+' @Summary
+' 指定Procedureの
+' 呼出元一覧をHTML出力する
+'
+' @Remarks
+' FunctionDependencyを参照し
+' 呼出元Procedure一覧を出力する
+'
+' 呼出元Procedureは
+' HCPページへのリンクとして出力する
+'
+' 呼出元が存在しない場合は
+' 「呼出元なし」を出力する
+'===================================================================
+Private Sub WriteCalledByHtml( _
+                ByVal FileNo As Integer, _
+                ByVal ProcName As String)
+
+    ' 呼出元一覧
+    Dim Callers As Collection
+
+    ' 呼出元Procedure
+    Dim Caller As Variant
+
+    ' リンクURL
+    Dim HtmlPath As String
+    
+    ' 呼出元Procedure情報
+    Dim Info As clsProcInfo
+
+    '# 呼出元一覧取得
+    Set Callers = _
+        GetCalledByList( _
+            ProcName)
+
+    Print #FileNo, "<hr>"
+
+    Print #FileNo, _
+        "<h2>Called By (" & _
+        Callers.Count & _
+        ")</h2>"
+
+    '# 呼出元なし
+    If Callers.Count = 0 Then
+
+        Print #FileNo, _
+            "<p>呼出元なし</p>"
+
+        Exit Sub
+
+    End If
+
+    '# 呼出元一覧テーブル出力
+    Print #FileNo, "<table>"
+    
+    '# テーブルヘッダ出力
+    Print #FileNo, _
+        "<tr>" & _
+        "<th>Procedure</th>" & _
+        "<th>JPName</th>" & _
+        "<th>Module</th>" & _
+        "</tr>"
+
+    '# 呼出元一覧出力
+    For Each Caller In Callers
+
+        '# Procedure情報取得
+        Set Info = _
+            ResolveProcedure( _
+                "", _
+                CStr(Caller))
+
+        '# HCP HTMLパス取得
+        HtmlPath = _
+            GetProcedureHtmlPath(CStr(Caller))
+
+        If Info Is Nothing Then
+
+            Print #FileNo, _
+                "<tr>" & _
+                "<td><a href=""" & _
+                HtmlPath & _
+                """>" & _
+                CStr(Caller) & _
+                "</a></td>" & _
+                "<td></td>" & _
+                "<td></td>" & _
+                "</tr>"
+      
+        Else
+
+            Print #FileNo, _
+                "<tr>" & _
+                "<td><a href=""" & _
+                HtmlPath & _
+                """>" & _
+                CStr(Caller) & _
+                "</a></td>" & _
+                "<td>" & _
+                HtmlEncode(Info.JPName) & _
+                "</td>" & _
+                "<td>" & _
+                HtmlEncode(Info.ModuleName) & _
+                "</td>" & _
+                "</tr>"
+
+        End If
+
+    Next Caller
+
+    Print #FileNo, "</table>"
+
+End Sub
+

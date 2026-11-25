@@ -503,6 +503,24 @@ Private Sub cmdGenerate_Click()
     
 End Sub
 
+'===================================================================
+' @JPName
+' HCP_TARGETS更新
+'
+' @Category
+' HCP
+'
+' @Summary
+' HCP_TARGETSを最新状態へ同期し
+' シートを表示する
+'
+' @Remarks
+' HCP_TARGETS未存在時は
+' CreateHCPTargetsを実行する
+'
+' HCP_TARGETS存在時は
+' UpdateHCPTargetsを実行する
+'===================================================================
 Private Sub cmdHCPTargets_Click()
 
     Dim ws As Worksheet
@@ -534,16 +552,42 @@ Private Sub cmdHCPTargets_Click()
 
         CreateHCPTargets
 
-        Set ws = _
-            gContext.ManagementBook.Worksheets( _
-                SHEET_HCP_TARGETS)
+    Else
+
+        Trace "HCP", _
+            "Update HCP_TARGETS"
+
+        UpdateHCPTargets
 
     End If
+
+    Set ws = _
+        gContext.ManagementBook.Worksheets( _
+            SHEET_HCP_TARGETS)
 
     ws.Activate
 
 End Sub
 
+'===================================================================
+' @JPName
+' HCP一括生成実行
+'
+' @Category
+' HCP
+'
+' @Summary
+' HCP一括生成確認後
+' GenerateHCPBatchを実行する
+'
+' @Remarks
+' BuildHCPBatchMessageで
+' 対象一覧を表示し
+'
+' ユーザーが
+' 「はい」を選択した場合のみ
+' HCP一括生成を実行する
+'===================================================================
 Private Sub cmdGenerateBatch_Click()
 
     Dim Message As String

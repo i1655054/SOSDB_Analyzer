@@ -1,0 +1,50 @@
+┬
+〇│Public Sub CheckHCPTargetIntegrity()	HCP_TARGETS整合性チェック＜modHCPTargetManager＞
+┴└┐
+　　□ Dim wsProc As Worksheet
+　　□ Dim wsTarget As Worksheet
+　　□ Dim Dict As Object
+　　□ Dim r As Long
+　　□ Dim LastRow As Long
+　　□ Dim Key As String
+　　□ Dim NGCount As Long
+　　□ Dim Result As String
+　　〇 Set Dict =  CreateObject("Scripting.Dictionary")
+　　〇 Set wsProc =  Worksheets(SHEET_PROC_LIST)
+　　〇 Set wsTarget =  Worksheets(SHEET_HCP_TARGETS)
+　　〇 LastRow =  wsProc.Cells(  wsProc.Rows.Count,  COL_PROCLIST_MODULE).End(xlUp).row
+　　＠┐For r = 2 To LastRow
+　　│〇 Key =  Trim$(wsProc.Cells(  r,  COL_PROCLIST_MODULE).Value) &  "|" &  Trim$(wsProc.Cells(  r,  COL_PROCLIST_NAME).Value)
+　　│〇 Dict(Key) = True
+　　│┴Next r
+　　〇 Result =  "CheckHCPTargetIntegrity Result" & vbCrLf &  String(40, "-") & vbCrLf
+　　〇 Result = Result &  "ProcList Count = " &  Dict.Count & vbCrLf
+　　〇 LastRow =  wsTarget.Cells(  wsTarget.Rows.Count,  2).End(xlUp).row
+　　〇 Result = Result &  "HCP_TARGETS Count = " &  LastRow - 1 & vbCrLf
+　　＠┐For r = LastRow To 2 Step -1
+　　│〇 Key =  Trim$(wsTarget.Cells(r, 2).Value) &  "|" &  Trim$(wsTarget.Cells(r, 3).Value)
+　　│◆┐If Not Dict.Exists(Key) Then
+　　││〇 NGCount =  NGCount + 1
+　　││〇 Result = Result &  "NG : " &  Key & vbCrLf
+　　││┴End If
+　　│┴Next r
+　　〇 Result = Result & vbCrLf &  "NG Count = " &  NGCount
+　　〇 Debug.Print Result
+　　◆┐If NGCount = 0 Then
+　　│〇 MsgBox  "HCP_TARGETS整合性OK" & vbCrLf &  "ProcList=" & Dict.Count,  vbInformation
+　　├┐ELSE
+　　│〇 MsgBox  "HCP_TARGETS不整合あり" & vbCrLf &  "NG=" & NGCount,  vbExclamation
+　　│┴End If
+　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

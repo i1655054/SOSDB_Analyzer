@@ -1,0 +1,38 @@
+┬
+〇│Public Function GetProcedureInfo(  ByVal ModuleName As String,  ByVal ProcName As String)  As clsProcedureInfo	Procedure情報取得＜modHCPInfo＞
+┴└┐
+　　│#   ProcList
+　　□ Dim ws As Worksheet
+　　│#   最終行
+　　□ Dim LastRow As Long
+　　│#   行番号
+　　□ Dim r As Long
+　　│#   Procedure情報
+　　□ Dim Info As clsProcedureInfo
+　　〇 Set ws =  gContext.ManagementBook.Worksheets(
+　　│   SHEET_PROC_LIST)
+　　〇 LastRow =  ws.Cells(  ws.Rows.Count,  COL_MODULE).End(xlUp).row
+　　＠┐For r = 2 To LastRow
+　　│◆┐If StrComp(  Trim$(ws.Cells(r, COL_MODULE).Value),  ModuleName,  vbTextCompare) = 0 Then
+　　││◆┐If StrComp(  Trim$(ws.Cells(r, COL_PROC).Value),  ProcName,  vbTextCompare) = 0 Then
+　　│││〇 Set Info =  New clsProcedureInfo
+　　│││〇 Info.ProcedureName =  ProcName
+　　│││〇 Info.JPName =  Trim$(ws.Cells(  r,  COL_JPNAME).Value)
+　　│││〇 Set GetProcedureInfo =  Info
+　　│││→ Exit Function
+　　│││┴End If
+　　││┴End If
+　　│┴Next r
+　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

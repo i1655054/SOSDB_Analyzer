@@ -1,0 +1,24 @@
+┬
+〇│Public Function GetDefaultStartProcedure() As String	開始関数取得＜modPathChartConfig＞
+┴└┐
+　　│#   PathChartConfig取得
+　　□ Dim ws As Worksheet
+　　│#   PathChart設定シート取得
+　　〇 Set ws = ThisWorkbook.Worksheets(SHEET_PATH_CHART_CONFIG)
+　　│#   開始Procedure取得
+　　〇 GetDefaultStartProcedure =  Trim$(ws.Range(CFG_START_PROC).Value)
+　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+UserForm_Initialize

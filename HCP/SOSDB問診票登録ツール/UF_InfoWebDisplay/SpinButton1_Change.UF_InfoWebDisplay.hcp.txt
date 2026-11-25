@@ -1,19 +1,31 @@
-Procedure: UF_InfoWebDisplay.SpinButton1_Change  [ 文字サイズ変更＜UF_InfoWebDisplay＞ ]
-HCP	Business
 ┬
 〇│Private Sub SpinButton1_Change()	文字サイズ変更＜UF_InfoWebDisplay＞
 ┴└┐
-　　│#  文字サイズ更新
+　　│#   文字サイズ更新
 　　〇 FontSize = SpinButton1.Value
-　　│#  表示更新
+　　│#   表示更新
 　　〇 Label2.Caption = CStr(FontSize)
-　　│#  CSS再適用
+　　│#   CSS再適用
 　　◎ ApplyCss FontSize          ' ← ドキュメントは開き直さない	CSS適用＜UF_InfoWebDisplay＞
 　　☆ On Error Resume Next
 　　□ Dim doc As Object, el As Object
 　　〇 Set doc = WebBrowser1.document
 　　◆┐If Not doc Is Nothing Then
-　　││#  HTML側同期
+　　││#   HTML側同期
 　　│〇 doc.parentWindow.execScript "setSize(" & CStr(FontSize) & ")", "JavaScript"
 　　│┴End If
 　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ApplyCss	CSS適用	UF_InfoWebDisplay
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

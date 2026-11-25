@@ -1,0 +1,69 @@
+┬
+〇│Public Sub BuildProcInfoDictionary()	Procedure辞書作成＜modProcedureRepository＞
+┴└┐
+　　□ Dim ws As Worksheet
+　　□ Dim LastRow As Long
+　　□ Dim r As Long
+　　□ Dim Info As clsProcInfo
+　　□ Dim Key As String
+　　☆ On Error Resume Next
+　　│#   ProcListシート取得
+　　〇 Set ws =  gContext.ManagementBook.Worksheets(
+　　│   SHEET_PROC_LIST)
+　　☆ On Error GoTo 0
+　　│#   ProcList存在確認
+　　◆┐If ws Is Nothing Then
+　　│〇 MsgBox  "ProcListが存在しません。" & vbCrLf &  "先に解析実行を行ってください。",  vbExclamation
+　　│→ Exit Sub
+　　│┴End If
+　　│#   Procedure管理辞書初期化
+　　〇 Set gContext.ProcInfoDic =  CreateObject("Scripting.Dictionary")
+　　│#   Procedure索引辞書初期化
+　　〇 Set gContext.ProcIndexDic =  CreateObject("Scripting.Dictionary")
+　　│#   ProcList読込
+　　│#   ProcList最終行取得
+　　〇 LastRow =  ws.Cells(  ws.Rows.Count,  1).End(xlUp).row
+　　│#   Procedure情報読込
+　　＠┐For r = 2 To LastRow
+　　││#   Procedure情報生成
+　　│〇 Set Info = New clsProcInfo
+　　│〇 Info.ModuleName =  Trim(ws.Cells(r, COL_MODULE).Value)
+　　│〇 Info.ProcName =  Trim(ws.Cells(r, COL_PROC).Value)
+　　│〇 Info.ProcType =  Trim(ws.Cells(r, COL_TYPE).Value)
+　　│〇 Info.JPName =  Trim(ws.Cells(r, COL_JPNAME).Value)
+　　│〇 Info.Category =  Trim(ws.Cells(r, COL_CATEGORY).Value)
+　　│〇 Info.InputText =  Trim(ws.Cells(r, COL_INPUT).Value)
+　　│〇 Info.OutputText =  Trim(ws.Cells(r, COL_OUTPUT).Value)
+　　│〇 Info.Summary =  Trim(ws.Cells(r, COL_SUMMARY).Value)
+　　│〇 Info.Remarks =  Trim(ws.Cells(r, COL_REMARKS).Value)
+　　│〇 Info.UsageCount =  CLng(Val(ws.Cells(r, COL_USAGECOUNT).Value))
+　　│〇 Info.Status =  Trim(ws.Cells(r, COL_STATUS).Value)
+　　││#   Procedure検索キー生成
+　　│〇 Key =  Info.ModuleName & "|" &  Info.ProcName
+　　││#   Procedure情報登録
+　　│◆┐If Not gContext.ProcInfoDic.Exists(Key) Then
+　　││〇 gContext.ProcInfoDic.Add Key, Info
+　　│├┐ELSE
+　　│││#   Procedure情報更新
+　　││〇 Set gContext.ProcInfoDic(Key) = Info
+　　││┴End If
+　　││#   Procedure索引作成
+　　│◎ BuildProcIndex Info	Procedure索引作成＜modProcedureRepository＞
+　　│┴Next r
+　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+BuildProcIndex	Procedure索引作成	modProcedureRepository
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+InitializeProcedureRepository	ProcedureRepository初期化	modProcedureRepository

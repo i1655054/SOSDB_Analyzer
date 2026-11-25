@@ -1,0 +1,25 @@
+┬
+〇│Private Sub cmdCopyCurrentInfo_Click()	現在情報コピー＜frmPathChartNavigator＞
+┴└┐
+　　□ Dim S As String
+　　│#   コピー文字列生成
+　　〇 S =  "Procedure : " & txtCurrentNode.Text & vbCrLf &  "JPName    : " & lblJPName.Caption & vbCrLf &  "Category  : " & lblCategory.Caption & vbCrLf &  "Module    : " & lblModule.Caption & vbCrLf &  "Summary   : " & txtSummary.Text
+　　│#   現在ノード情報コピー
+　　◎ Call CopyTextToClipboard(S)	クリップボードコピー＜modAnalyzerCommon＞
+　　│#   コピー完了表示
+　　〇 Application.StatusBar = "現在情報をコピーしました"
+　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+CopyTextToClipboard	クリップボードコピー	modAnalyzerCommon
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

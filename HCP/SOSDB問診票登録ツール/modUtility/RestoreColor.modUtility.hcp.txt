@@ -1,9 +1,27 @@
-Procedure: modUtility.RestoreColor  [ セル色復元＜modUtility＞ ]
-HCP	Business
 ┬
 〇│Public Sub RestoreColor(rngName As String)	セル色復元＜modUtility＞
 ┴└┐
-　　│#  セル色復元
+　　│#   セル色復元
 　　◎ Range(rngName).Interior.color = GetDefaultColor(rngName)	標準背景色取得＜modUtility＞
 　　│	内部呼出:Range
 　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetDefaultColor	標準背景色取得	modUtility
+
+========================================
+Called By (5)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+chk_TorbleNum	トラブル番号確認	modUtility
+ValidateAndHighlight	入力確認強調表示	modUtility
+RestoreAllColors	全セル色復元	modUtility
+SetMultiLineAlert	複数行注意表示設定	modUtility
+ReleaseMultiLineAlert	複数行注意表示解除個別	modUtility

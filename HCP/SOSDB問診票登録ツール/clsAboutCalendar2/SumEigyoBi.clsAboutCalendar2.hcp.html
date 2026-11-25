@@ -1,36 +1,37 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
 <meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
 <title>SumEigyoBi</title>
 <style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
 body{font-family:Meiryo;font-size:9pt;}
 table{border-collapse:collapse;}
-th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
 td{vertical-align:top;}
 th{background:#e8f0fe;}
-colgroup col:nth-of-type(1) {}
-colgroup col:nth-of-type(2) {}
-.resize {position: relative;}
-.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
 </style>
 </head>
-<body>
+<body translate="no">
 <h1>SumEigyoBi</h1>
 <p>Module : clsAboutCalendar2</p>
-<p><a href="./_INDEX.html">← Module Index</a></p>
 <table>
-<colgroup><col/><col/></colgroup>
-<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
 <tbody>
-<tr><td>Procedure: clsAboutCalendar2.SumEigyoBi  [ 営業日加算日付計算＜clsAboutCalendar2＞ ]</td><td></td></tr>
-<tr><td>HCP</td><td>Business</td></tr>
 <tr><td>┬</td><td></td></tr>
 <tr><td>〇│Friend Sub SumEigyoBi(ByVal dteDateF As Date,  ByVal lngCntKeika As Long,  ByRef dteDateT As Date)</td><td>営業日加算日付計算＜clsAboutCalendar2＞</td></tr>
 <tr><td>┴└┐</td><td></td></tr>
-<tr><td>　　│#  起算日設定</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   起算日設定</span></td><td></td></tr>
 <tr><td>　　〇 dteDateT = dteDateF                                         ' 一旦、起算日とする</td><td></td></tr>
-<tr><td>　　│#  経過日数確認</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   経過日数確認</span></td><td></td></tr>
 <tr><td>　　◆→ If lngCntKeika = 0 Then Exit Sub</td><td></td></tr>
 <tr><td>　　□ Dim lngSign As Long                                             ' ループ時の加算日数</td><td></td></tr>
 <tr><td>　　□ Dim lngCntKeikaABS As Long                                      ' 経過日数の絶対値</td><td></td></tr>
@@ -45,39 +46,39 @@ colgroup col:nth-of-type(2) {}
 <tr><td>　　□ Dim lngIxSMax As Long                                           ' カレンダーテーブルINDEX上限</td><td></td></tr>
 <tr><td>　　□ Dim tblCalendar() As g_typAboutCalendar2                        ' カレンダーテーブル</td><td></td></tr>
 <tr><td>　　〇 dteTmp = dteDateF</td><td></td></tr>
-<tr><td>　　│#  加算方向判定</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   加算方向判定</span></td><td></td></tr>
 <tr><td>　　◆┐If lngCntKeika &gt; 0 Then</td><td></td></tr>
-<tr><td>　　││#  前方検索設定</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   前方検索設定</span></td><td></td></tr>
 <tr><td>　　│〇 lngSign = 1</td><td></td></tr>
 <tr><td>　　│〇 dteTmp = dteTmp + 1</td><td></td></tr>
 <tr><td>　　├┐ELSE</td><td></td></tr>
-<tr><td>　　││#  後方検索設定</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   後方検索設定</span></td><td></td></tr>
 <tr><td>　　│〇 lngSign = -1</td><td></td></tr>
 <tr><td>　　│〇 dteTmp = dteTmp - 1</td><td></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
 <tr><td>　　〇 lngCntKeikaABS = lngCntKeika * lngSign</td><td></td></tr>
 <tr><td>　　〇 currY = Year(dteTmp)</td><td></td></tr>
 <tr><td>　　〇 currM = Month(dteTmp)</td><td></td></tr>
-<tr><td>　　│#  営業日算出開始</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   営業日算出開始</span></td><td></td></tr>
 <tr><td>　　＠┐Do While lngCntEigyo &lt; lngCntKeikaABS</td><td></td></tr>
 <tr><td>　　│〇 prevY = currY</td><td></td></tr>
 <tr><td>　　│〇 prevM = currM</td><td></td></tr>
 <tr><td>　　│〇 lngIxSMax = -1</td><td></td></tr>
 <tr><td>　　│〇 ReDim tblCalendar(0)</td><td></td></tr>
-<tr><td>　　││#  月次カレンダー生成</td><td></td></tr>
-<tr><td>　　│◎ Call GP_GetCalendarSub(prevY, prevM, lngIxSMax, tblCalendar)</td><td>単月カレンダー生成内部処理＜clsAboutCalendar2＞</td></tr>
+<tr><td><span class="hcp-comment">　　││#   月次カレンダー生成</span></td><td></td></tr>
+<tr><td>　　│◎ Call <a href="../clsAboutCalendar2/GP_GetCalendarSub.clsAboutCalendar2.hcp.html">GP_GetCalendarSub</a>(prevY, prevM, lngIxSMax, tblCalendar)</td><td><a href="../clsAboutCalendar2/GP_GetCalendarSub.clsAboutCalendar2.hcp.html">単月カレンダー生成内部処理＜clsAboutCalendar2＞</a></td></tr>
 <tr><td>　　│◆┐If lngCntKeika &gt; 0 Then</td><td></td></tr>
 <tr><td>　　││〇 lngIxS = 0</td><td></td></tr>
-<tr><td>　　│││#  前方営業日検索</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│││#   前方営業日検索</span></td><td></td></tr>
 <tr><td>　　││＠┐Do While ((lngCntEigyo &lt; lngCntKeikaABS) And (currY = prevY) And (currM = prevM))</td><td></td></tr>
 <tr><td>　　│││〇 swSyuku = False</td><td></td></tr>
 <tr><td>　　│││＠┐Do While lngIxS &lt;= lngIxSMax</td><td></td></tr>
 <tr><td>　　││││◆┐If tblCalendar(lngIxS).Hiduke = dteTmp Then</td><td></td></tr>
-<tr><td>　　││││││#  祝日判定</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││││││#   祝日判定</span></td><td></td></tr>
 <tr><td>　　│││││〇 swSyuku = tblCalendar(lngIxS).Syuku &lt;&gt; 0</td><td></td></tr>
 <tr><td>　　│││││→ Exit Do</td><td></td></tr>
 <tr><td>　　│││││┴End If</td><td></td></tr>
-<tr><td>　　│││││#  営業日判定</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│││││#   営業日判定</span></td><td></td></tr>
 <tr><td>　　││││〇 lngIxS = lngIxS + 1</td><td></td></tr>
 <tr><td>　　││││┴Loop</td><td></td></tr>
 <tr><td>　　│││◆┐If ((Weekday(dteTmp) &lt;&gt; vbSunday) And  (Weekday(dteTmp) &lt;&gt; vbSaturday) And  (Not swSyuku)) Then</td><td></td></tr>
@@ -91,54 +92,60 @@ colgroup col:nth-of-type(2) {}
 <tr><td>　　│├┐ELSE</td><td></td></tr>
 <tr><td>　　││〇 lngIxS = lngIxSMax</td><td></td></tr>
 <tr><td>　　││＠┐Do While ((lngCntEigyo &lt; lngCntKeikaABS) And (currY = prevY) And (currM = prevM))</td><td></td></tr>
+<tr><td>　　││〇 swSyuku = False</td><td></td></tr>
+<tr><td>　　││＠┐Do While lngIxS &gt;= 0</td><td></td></tr>
+<tr><td>　　││◆┐If tblCalendar(lngIxS).Hiduke = dteTmp Then</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││││#   祝日判定</span></td><td></td></tr>
+<tr><td>　　│││〇 swSyuku = tblCalendar(lngIxS).Syuku &lt;&gt; 0</td><td></td></tr>
+<tr><td>　　│││→ Exit Do</td><td></td></tr>
+<tr><td>　　│││┴End If</td><td></td></tr>
+<tr><td>　　│││〇 lngIxS = lngIxS - 1</td><td></td></tr>
+<tr><td>　　│││┴Loop</td><td></td></tr>
 <tr><td>　　│││◆┐If ((Weekday(dteTmp) &lt;&gt; vbSunday) And  (Weekday(dteTmp) &lt;&gt; vbSaturday) And  (Not swSyuku)) Then</td><td></td></tr>
 <tr><td>　　││││〇 lngCntEigyo = lngCntEigyo + 1               ' 営業日数を加算</td><td></td></tr>
 <tr><td>　　││││〇 dteDateT = dteTmp                           ' 現在日をセット</td><td></td></tr>
 <tr><td>　　││││┴End If</td><td></td></tr>
-<tr><td>　　││││#  営業日判定</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││││#   営業日判定</span></td><td></td></tr>
 <tr><td>　　│││〇 dteTmp = dteTmp - 1</td><td></td></tr>
 <tr><td>　　│││〇 currY = Year(dteTmp)</td><td></td></tr>
 <tr><td>　　│││〇 currM = Month(dteTmp)</td><td></td></tr>
 <tr><td>　　│││┴Loop</td><td></td></tr>
-<tr><td>　　││〇 swSyuku = False</td><td></td></tr>
-<tr><td>　　││＠┐Do While lngIxS &gt;= 0</td><td></td></tr>
-<tr><td>　　│││〇 lngIxS = lngIxS - 1</td><td></td></tr>
-<tr><td>　　│││┴Loop</td><td></td></tr>
-<tr><td>　　││◆┐If tblCalendar(lngIxS).Hiduke = dteTmp Then</td><td></td></tr>
-<tr><td>　　││││#  祝日判定</td><td></td></tr>
-<tr><td>　　│││〇 swSyuku = tblCalendar(lngIxS).Syuku &lt;&gt; 0</td><td></td></tr>
-<tr><td>　　│││→ Exit Do</td><td></td></tr>
-<tr><td>　　│││┴End If</td><td></td></tr>
 <tr><td>　　││┴End If</td><td></td></tr>
 <tr><td>　　│┴Loop</td><td></td></tr>
 <tr><td>　　┴End Sub</td><td></td></tr>
 </tbody>
 </table>
+<hr>
+<h2>Calls (1)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../clsAboutCalendar2/GP_GetCalendarSub.clsAboutCalendar2.hcp.html">GP_GetCalendarSub</a></td><td>単月カレンダー生成内部処理</td><td>clsAboutCalendar2</td></tr>
+</table>
+<hr>
+<h2>Called By (1)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modAboutCalendar2/FP_SumEigyoBi.modAboutCalendar2.hcp.html">FP_SumEigyoBi</a></td><td>営業日加算日付計算</td><td>modAboutCalendar2</td></tr>
+</table>
 <script>
-document.querySelectorAll('.resize').forEach(function (eleTh) {
+document.querySelectorAll('.resize').forEach(function(eleTh) {
 let startX;
 let startWidth;
 const eleResizer = document.createElement('div');
 eleResizer.classList.add('resizer');
-eleResizer.addEventListener('mousedown', function (e) {
-const styleTh = window.getComputedStyle(eleTh);
-const paddingLeft = parseFloat(styleTh.paddingLeft);
-const paddingRight = parseFloat(styleTh.paddingRight);
-const borderLeft = parseFloat(styleTh.borderLeftWidth);
-const borderRight = parseFloat(styleTh.borderRightWidth);
+eleResizer.addEventListener('mousedown', function(e) {
 startX = e.pageX;
-startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+startWidth = eleTh.offsetWidth;
 document.addEventListener('mousemove', onMouseMove);
 document.addEventListener('mouseup', onMouseUp);
 });
 eleTh.appendChild(eleResizer);
-function onMouseMove(e) {
-const newWidth = startWidth + (e.pageX - startX);
-eleTh.style.width = newWidth + 'px';
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
 }
-function onMouseUp() {
-document.removeEventListener('mousemove', onMouseMove);
-document.removeEventListener('mouseup', onMouseUp);
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
 }
 });
 </script>

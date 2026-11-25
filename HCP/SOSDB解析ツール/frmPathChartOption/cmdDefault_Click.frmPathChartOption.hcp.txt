@@ -1,0 +1,30 @@
+┬
+〇│Private Sub cmdDefault_Click()	既定値設定＜frmPathChartOption＞
+┴└┐
+　　│#   PathChart表示設定初期化
+　　〇 chkSkipCommon.Value = False
+　　〇 chkShowCount.Value = False
+　　│#   出力設定初期化
+　　〇 chkPowerPoint.Value = False
+　　〇 chkPngOutput.Value = False
+　　│#   モジュール表示設定初期化
+　　〇 chkShowModule.Value = False
+　　〇 chkColorModule.Value = False
+　　│#   テーマ設定初期化
+　　〇 cmbColorTheme.Value = DEFAULT_COLOR_THEME
+　　│#   制限値初期化
+　　〇 txtMaxNode.Text = DEFAULT_MAX_NODE
+　　〇 txtMaxEdge.Text = DEFAULT_MAX_EDGE
+　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

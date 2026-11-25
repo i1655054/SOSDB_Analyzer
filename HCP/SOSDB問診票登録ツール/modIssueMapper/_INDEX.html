@@ -1,72 +1,45 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
 <meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
 <title>modIssueMapper</title>
 <style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
 body{font-family:Meiryo;font-size:9pt;}
 table{border-collapse:collapse;}
-th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.5;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.5;}
 td{vertical-align:top;}
 th{background:#e8f0fe;}
-colgroup col:nth-of-type(1) {}
-colgroup col:nth-of-type(2) {}
-.resize {position: relative;}
-.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
 </style>
 </head>
-<body>
+<body translate="no">
 <p><a href="../_INDEX.html">← Tool Index</a></p>
 <h1>modIssueMapper</h1>
 <p>Procedure Count : 18</p>
 <table>
 <tr><th>Procedure</th><th>JPName</th><th>Status</th><th>Updated</th></tr>
-<tr><td><a href="CreateIssueFromInfo.modIssueMapper.hcp.html">CreateIssueFromInfo</a></td><td>問診情報からIssue生成</td><td>[OK]</td><td>2026/11/13 17:28:25</td></tr>
-<tr><td><a href="ApplyMainSheetToIssue.modIssueMapper.hcp.html">ApplyMainSheetToIssue</a></td><td>メイン画面反映</td><td>[OK]</td><td>2026/11/13 17:28:37</td></tr>
-<tr><td><a href="CloneIssue.modIssueMapper.hcp.html">CloneIssue</a></td><td>Issue複製</td><td>[OK]</td><td>2026/11/13 17:28:43</td></tr>
-<tr><td><a href="GetUpdateCheckResult.modIssueMapper.hcp.html">GetUpdateCheckResult</a></td><td>更新差分判定</td><td>[OK]</td><td>2026/11/13 17:28:56</td></tr>
-<tr><td><a href="IsChanged.modIssueMapper.hcp.html">IsChanged</a></td><td>変更判定</td><td>[OK]</td><td>2026/11/13 17:29:03</td></tr>
-<tr><td><a href="IsChangedDescription.modIssueMapper.hcp.html">IsChangedDescription</a></td><td>説明文変更判定</td><td>[OK]</td><td>2026/11/13 17:29:07</td></tr>
-<tr><td><a href="Normalize.modIssueMapper.hcp.html">Normalize</a></td><td>文字列正規化</td><td>[OK]</td><td>2026/11/13 17:29:12</td></tr>
-<tr><td><a href="NormalizeDescription.modIssueMapper.hcp.html">NormalizeDescription</a></td><td>説明文正規化</td><td>[OK]</td><td>2026/11/13 17:29:16</td></tr>
-<tr><td><a href="GetTargetPath.modIssueMapper.hcp.html">GetTargetPath</a></td><td>対象バージョン保存先取得</td><td>[OK]</td><td>2026/11/13 17:29:21</td></tr>
-<tr><td><a href="GetServerURL.modIssueMapper.hcp.html">GetServerURL</a></td><td>RedmineサーバURL取得</td><td>[OK]</td><td>2026/11/13 17:29:25</td></tr>
-<tr><td><a href="GetStatusId.modIssueMapper.hcp.html">GetStatusId</a></td><td>ステータスID取得</td><td>[OK]</td><td>2026/11/13 17:29:30</td></tr>
-<tr><td><a href="GetUserId.modIssueMapper.hcp.html">GetUserId</a></td><td>ユーザーID取得</td><td>[OK]</td><td>2026/11/13 17:29:34</td></tr>
-<tr><td><a href="GetPriorityId.modIssueMapper.hcp.html">GetPriorityId</a></td><td>優先度ID取得</td><td>[OK]</td><td>2026/11/13 17:29:39</td></tr>
-<tr><td><a href="GetVersionId.modIssueMapper.hcp.html">GetVersionId</a></td><td>対象バージョンID取得</td><td>[OK]</td><td>2026/11/13 17:29:43</td></tr>
-<tr><td><a href="GetApiKey.modIssueMapper.hcp.html">GetApiKey</a></td><td>APIキー取得</td><td>[OK]</td><td>2026/11/13 17:29:50</td></tr>
-<tr><td><a href="GetPassword.modIssueMapper.hcp.html">GetPassword</a></td><td>問診票パスワード取得</td><td>[OK]</td><td>2026/11/13 17:29:58</td></tr>
-<tr><td><a href="Get_RedmineDataToIssueInfo.modIssueMapper.hcp.html">Get_RedmineDataToIssueInfo</a></td><td>Redmine情報取得</td><td>[OK]</td><td>2026/11/13 17:30:07</td></tr>
-<tr><td><a href="DebugPrintIssue.modIssueMapper.hcp.html">DebugPrintIssue</a></td><td>Issue情報デバッグ出力</td><td>[OK]</td><td>2026/11/13 17:30:18</td></tr>
+<tr><td><a href="CreateIssueFromInfo.modIssueMapper.hcp.html">CreateIssueFromInfo</a></td><td>問診情報からIssue生成</td><td>[OK]</td><td>2026/11/25 11:44:39</td></tr>
+<tr><td><a href="ApplyMainSheetToIssue.modIssueMapper.hcp.html">ApplyMainSheetToIssue</a></td><td>メイン画面反映</td><td>[OK]</td><td>2026/11/25 11:44:44</td></tr>
+<tr><td><a href="CloneIssue.modIssueMapper.hcp.html">CloneIssue</a></td><td>Issue複製</td><td>[OK]</td><td>2026/11/25 11:44:48</td></tr>
+<tr><td><a href="GetUpdateCheckResult.modIssueMapper.hcp.html">GetUpdateCheckResult</a></td><td>更新差分判定</td><td>[OK]</td><td>2026/11/25 11:44:53</td></tr>
+<tr><td><a href="IsChanged.modIssueMapper.hcp.html">IsChanged</a></td><td>変更判定</td><td>[OK]</td><td>2026/11/25 11:44:58</td></tr>
+<tr><td><a href="IsChangedDescription.modIssueMapper.hcp.html">IsChangedDescription</a></td><td>説明文変更判定</td><td>[OK]</td><td>2026/11/25 11:45:00</td></tr>
+<tr><td><a href="Normalize.modIssueMapper.hcp.html">Normalize</a></td><td>文字列正規化</td><td>[OK]</td><td>2026/11/25 11:45:04</td></tr>
+<tr><td><a href="NormalizeDescription.modIssueMapper.hcp.html">NormalizeDescription</a></td><td>説明文正規化</td><td>[OK]</td><td>2026/11/25 11:45:07</td></tr>
+<tr><td><a href="GetTargetPath.modIssueMapper.hcp.html">GetTargetPath</a></td><td>対象バージョン保存先取得</td><td>[OK]</td><td>2026/11/25 11:45:10</td></tr>
+<tr><td><a href="GetServerURL.modIssueMapper.hcp.html">GetServerURL</a></td><td>RedmineサーバURL取得</td><td>[OK]</td><td>2026/11/25 11:45:14</td></tr>
+<tr><td><a href="GetStatusId.modIssueMapper.hcp.html">GetStatusId</a></td><td>ステータスID取得</td><td>[OK]</td><td>2026/11/25 11:45:17</td></tr>
+<tr><td><a href="GetUserId.modIssueMapper.hcp.html">GetUserId</a></td><td>ユーザーID取得</td><td>[OK]</td><td>2026/11/25 11:45:22</td></tr>
+<tr><td><a href="GetPriorityId.modIssueMapper.hcp.html">GetPriorityId</a></td><td>優先度ID取得</td><td>[OK]</td><td>2026/11/25 11:45:26</td></tr>
+<tr><td><a href="GetVersionId.modIssueMapper.hcp.html">GetVersionId</a></td><td>対象バージョンID取得</td><td>[OK]</td><td>2026/11/25 11:45:31</td></tr>
+<tr><td><a href="GetApiKey.modIssueMapper.hcp.html">GetApiKey</a></td><td>APIキー取得</td><td>[OK]</td><td>2026/11/25 11:45:35</td></tr>
+<tr><td><a href="GetPassword.modIssueMapper.hcp.html">GetPassword</a></td><td>問診票パスワード取得</td><td>[OK]</td><td>2026/11/25 11:45:40</td></tr>
+<tr><td><a href="Get_RedmineDataToIssueInfo.modIssueMapper.hcp.html">Get_RedmineDataToIssueInfo</a></td><td>Redmine情報取得</td><td>[OK]</td><td>2026/11/25 11:45:45</td></tr>
+<tr><td><a href="DebugPrintIssue.modIssueMapper.hcp.html">DebugPrintIssue</a></td><td>Issue情報デバッグ出力</td><td>[OK]</td><td>2026/11/25 11:45:50</td></tr>
 </table>
-<script>
-document.querySelectorAll('.resize').forEach(function (eleTh) {
-let startX;
-let startWidth;
-const eleResizer = document.createElement('div');
-eleResizer.classList.add('resizer');
-eleResizer.addEventListener('mousedown', function (e) {
-const styleTh = window.getComputedStyle(eleTh);
-const paddingLeft = parseFloat(styleTh.paddingLeft);
-const paddingRight = parseFloat(styleTh.paddingRight);
-const borderLeft = parseFloat(styleTh.borderLeftWidth);
-const borderRight = parseFloat(styleTh.borderRightWidth);
-startX = e.pageX;
-startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
-document.addEventListener('mousemove', onMouseMove);
-document.addEventListener('mouseup', onMouseUp);
-});
-eleTh.appendChild(eleResizer);
-function onMouseMove(e) {
-const newWidth = startWidth + (e.pageX - startX);
-eleTh.style.width = newWidth + 'px';
-}
-function onMouseUp() {
-document.removeEventListener('mousemove', onMouseMove);
-document.removeEventListener('mouseup', onMouseUp);
-}
-});
-</script>
 </body>
 </html>

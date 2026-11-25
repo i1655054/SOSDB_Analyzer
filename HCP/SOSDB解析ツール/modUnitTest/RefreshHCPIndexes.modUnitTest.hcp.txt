@@ -1,0 +1,22 @@
+┬
+〇│Public Sub RefreshHCPIndexes()	＜modUnitTest＞
+┴└┐
+　　◎ Trace "INDEX",  "Manual Refresh"	トレース出力＜modDebug＞
+　　◎ RebuildAllIndexes	INDEX一括再生成＜modHCPIndex＞
+　　〇 MsgBox  "INDEX更新完了",  vbInformation
+　　┴End Sub
+
+========================================
+Calls (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+Trace	トレース出力	modDebug
+RebuildAllIndexes	INDEX一括再生成	modHCPIndex
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

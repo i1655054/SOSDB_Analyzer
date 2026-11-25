@@ -1,73 +1,81 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
 <meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
 <title>EnsureMonFolder</title>
 <style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
 body{font-family:Meiryo;font-size:9pt;}
 table{border-collapse:collapse;}
-th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
 td{vertical-align:top;}
 th{background:#e8f0fe;}
-colgroup col:nth-of-type(1) {}
-colgroup col:nth-of-type(2) {}
-.resize {position: relative;}
-.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
 </style>
 </head>
-<body>
+<body translate="no">
 <h1>EnsureMonFolder</h1>
 <p>Module : modUtility</p>
-<p><a href="./_INDEX.html">← Module Index</a></p>
 <table>
-<colgroup><col/><col/></colgroup>
-<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
 <tbody>
-<tr><td>Procedure: modUtility.EnsureMonFolder  [ 問診票保存フォルダ確認＜modUtility＞ ]</td><td></td></tr>
-<tr><td>HCP</td><td>Business</td></tr>
 <tr><td>┬</td><td></td></tr>
 <tr><td>〇│Public Function EnsureMonFolder(ByRef issue As IssueInfo) As Boolean</td><td>問診票保存フォルダ確認＜modUtility＞</td></tr>
 <tr><td>┴└┐</td><td></td></tr>
-<tr><td>　　│#  問診票保存先確認</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   問診票保存先確認</span></td><td></td></tr>
 <tr><td>　　◆┐If Trim(issue.MonFolder) = "" Then</td><td></td></tr>
-<tr><td>　　││#  保存先フォルダ選択</td><td></td></tr>
-<tr><td>　　│◎ issue.MonFolder = GetSaveFolder("問処票")</td><td>保存先フォルダ選択＜modFileUtility＞</td></tr>
-<tr><td>　　││#  選択結果確認</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   保存先フォルダ選択</span></td><td></td></tr>
+<tr><td>　　│◎ issue.MonFolder = <a href="../modFileUtility/GetSaveFolder.modFileUtility.hcp.html">GetSaveFolder</a>("問処票")</td><td><a href="../modFileUtility/GetSaveFolder.modFileUtility.hcp.html">保存先フォルダ選択＜modFileUtility＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　││#   選択結果確認</span></td><td></td></tr>
 <tr><td>　　│◆┐If issue.MonFolder = "" Then</td><td></td></tr>
 <tr><td>　　││〇 EnsureMonFolder = False</td><td></td></tr>
 <tr><td>　　││→ Exit Function</td><td></td></tr>
 <tr><td>　　││┴End If</td><td></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
-<tr><td>　　│#  保存先確認完了</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   保存先確認完了</span></td><td></td></tr>
 <tr><td>　　〇 EnsureMonFolder = True</td><td></td></tr>
 <tr><td>　　┴End Function</td><td></td></tr>
 </tbody>
 </table>
+<hr>
+<h2>Calls (1)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modFileUtility/GetSaveFolder.modFileUtility.hcp.html">GetSaveFolder</a></td><td>保存先フォルダ選択</td><td>modFileUtility</td></tr>
+</table>
+<hr>
+<h2>Called By (2)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modMonshinCore/Get_MonshinInfo_NoForm.modMonshinCore.hcp.html">Get_MonshinInfo_NoForm</a></td><td>問診票なし登録</td><td>modMonshinCore</td></tr>
+<tr><td><a href="../modIssueService/UpdateExistingIssue.modIssueService.hcp.html">UpdateExistingIssue</a></td><td>Issue更新登録</td><td>modIssueService</td></tr>
+</table>
 <script>
-document.querySelectorAll('.resize').forEach(function (eleTh) {
+document.querySelectorAll('.resize').forEach(function(eleTh) {
 let startX;
 let startWidth;
 const eleResizer = document.createElement('div');
 eleResizer.classList.add('resizer');
-eleResizer.addEventListener('mousedown', function (e) {
-const styleTh = window.getComputedStyle(eleTh);
-const paddingLeft = parseFloat(styleTh.paddingLeft);
-const paddingRight = parseFloat(styleTh.paddingRight);
-const borderLeft = parseFloat(styleTh.borderLeftWidth);
-const borderRight = parseFloat(styleTh.borderRightWidth);
+eleResizer.addEventListener('mousedown', function(e) {
 startX = e.pageX;
-startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+startWidth = eleTh.offsetWidth;
 document.addEventListener('mousemove', onMouseMove);
 document.addEventListener('mouseup', onMouseUp);
 });
 eleTh.appendChild(eleResizer);
-function onMouseMove(e) {
-const newWidth = startWidth + (e.pageX - startX);
-eleTh.style.width = newWidth + 'px';
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
 }
-function onMouseUp() {
-document.removeEventListener('mousemove', onMouseMove);
-document.removeEventListener('mouseup', onMouseUp);
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
 }
 });
 </script>

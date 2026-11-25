@@ -1,0 +1,94 @@
+┬
+〇│Public Sub FunctionTrace()	関数トレース作成＜modFunctionTrac＞
+┴└┐
+　　□ Dim wsOut As Worksheet
+　　□ Dim VBComp As Object
+　　□ Dim FuncList As Object
+　　□ Dim CodeText As String
+　　□ Dim RowOut As Long
+　　□ Dim TotalModuleCount As Long
+　　□ Dim CurrentModuleCount As Long
+　　◆→ If gContext Is Nothing Then Exit Sub
+　　☆ On Error Resume Next
+　　│#   FunctionTraceシート準備
+　　〇 Set wsOut = gContext.ManagementBook.Worksheets(
+　　│ SHEET_FUNCTION_TRACE)
+　　☆ On Error GoTo 0
+　　◆┐If wsOut Is Nothing Then
+　　│〇 Set wsOut =  gContext.ManagementBook.Worksheets.Add(
+　　││   After:=gContext.ManagementBook.Worksheets(
+　　││   gContext.ManagementBook.Worksheets.Count))
+　　│〇 wsOut.Name = SHEET_FUNCTION_TRACE
+　　├┐ELSE
+　　│〇 wsOut.Cells.Clear
+　　│┴End If
+　　〇 wsOut.Range("A1") = "呼出元"
+　　〇 wsOut.Range("B1") = "呼出元JPName"
+　　〇 wsOut.Range("C1") = "呼出先"
+　　〇 wsOut.Range("D1") = "呼出先JPName"
+　　〇 wsOut.Range("E1") = "呼出元モジュール"
+　　〇 wsOut.Range("F1") = "呼出先モジュール"
+　　〇 wsOut.Range("G1") = "呼出先Category"
+　　〇 wsOut.Range("H1") = "呼出先Summary"
+　　〇 wsOut.Range("I1") = "行番号"
+　　〇 wsOut.Range("J1") = "元コード"
+　　│#   Procedure一覧管理初期化
+　　〇 Set FuncList = CreateObject("Scripting.Dictionary")
+　　│#   関数一覧取得
+　　│#   解析対象モジュール数取得
+　　〇 TotalModuleCount =  gContext.TargetBook.VBProject.VBComponents.Count
+　　〇 CurrentModuleCount = 0
+　　│#   Procedure一覧収集
+　　＠┐For Each VBComp In gContext.TargetBook.VBProject.VBComponents
+　　││#   FunctionTrace対象判定
+　　│◆┐If IsTraceTargetModule(VBComp) Then	内部呼出:IsTraceTargetModule
+　　││◆┐If VBComp.CodeModule.CountOfLines > 0 Then
+　　││││#   モジュールソース取得
+　　│││〇 CodeText = VBComp.CodeModule.Lines(  1,  VBComp.CodeModule.CountOfLines)
+　　││││#   Procedure情報収集
+　　│││◎ Call GetFunctions(CodeText, VBComp.Name, FuncList)	関数一覧取得＜modFunctionTrac＞
+　　│││┴End If
+　　││┴End If
+　　│┴Next
+　　│#   呼出関係取得
+　　〇 RowOut = 2
+　　│#   呼出関係解析開始
+　　＠┐For Each VBComp In gContext.TargetBook.VBProject.VBComponents
+　　│〇 CurrentModuleCount =  CurrentModuleCount + 1
+　　││#   解析進捗表示更新
+　　│〇 Application.StatusBar =  "FunctionTrace解析中 [" &  CurrentModuleCount & "/" &  TotalModuleCount &  "] " &  VBComp.Name &  " Trace=" & RowOut
+　　│〇 DoEvents
+　　││#   FunctionTrace対象判定
+　　│◆┐If IsTraceTargetModule(VBComp) Then	内部呼出:IsTraceTargetModule
+　　││◆┐If VBComp.CodeModule.CountOfLines > 0 Then
+　　││││#   モジュールソース取得
+　　│││〇 CodeText = VBComp.CodeModule.Lines(  1,  VBComp.CodeModule.CountOfLines)
+　　││││#   モジュール呼出関係解析
+　　│││◎ RowOut = TraceModule(  CodeText,  VBComp.Name,  FuncList,  wsOut,  RowOut)	関数呼出解析＜modFunctionTrac＞
+　　│││┴End If
+　　││┴End If
+　　│┴Next VBComp
+　　│#   確認支援設定
+　　◎ Call SetupTraceValidation(wsOut)	トレース確認設定＜modFunctionTrac＞
+　　│#   FunctionTraceシート体裁設定
+　　〇 wsOut.Columns.AutoFit
+　　┴End Sub
+
+========================================
+Calls (4)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+IsTraceTargetModule	FunctionTrace対象判定	modFunctionTrac
+GetFunctions	関数一覧取得	modFunctionTrac
+TraceModule	関数呼出解析	modFunctionTrac
+SetupTraceValidation	トレース確認設定	modFunctionTrac
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+AnalyzeAll	全解析実行	modAnalyzerCommon

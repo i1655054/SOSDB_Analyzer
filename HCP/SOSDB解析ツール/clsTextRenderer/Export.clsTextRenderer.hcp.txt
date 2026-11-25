@@ -1,0 +1,71 @@
+┬
+〇│Public Sub Export(  ByVal FilePath As String,  ByVal ProcName As String,  ByVal HCPNodes As Collection)	テキスト出力＜clsTextRenderer＞
+┴└┐
+　　□ Dim Node As clsHCPNode
+　　□ Dim Lines() As String
+　　□ Dim i As Long
+　　〇 mFileNo = FreeFile
+　　〇 Open FilePath  For Output As #mFileNo
+　　│#   STARTノード出力
+　　＠┐For Each Node In HCPNodes
+　　│◆┐If Node.NodeType = NODE_START Then
+　　││〇 Print #mFileNo, "┬"
+　　││◆┐If Trim$(Node.BusinessText) <> "" Then
+　　│││〇 Print #mFileNo,  Node.RenderText &  vbTab &  Node.BusinessText
+　　││├┐ELSE
+　　│││〇 Print #mFileNo,  Node.RenderText
+　　│││┴End If
+　　││〇 Print #mFileNo, "┴└┐"
+　　││→ Exit For
+　　││┴End If
+　　│┴Next Node
+　　│#   HCP本文出力
+　　＠┐For Each Node In HCPNodes
+　　│◆┐If Node.NodeType = NODE_START Then
+　　││→ GoTo ContinueLoop
+　　││┴End If
+　　│◆┐If Trim$(Node.RenderText) = "" Then
+　　││→ GoTo ContinueLoop
+　　││┴End If
+　　│◆┐If Trim$(Node.BusinessText) = "" Then
+　　││〇 Print #mFileNo,  Node.RenderText
+　　│├┐ELSE
+　　││〇 Lines = Split(  Node.BusinessText,  vbCrLf)
+　　││〇 Print #mFileNo,  Node.RenderText &  vbTab &  Lines(0)
+　　││＠┐For i = 1 To UBound(Lines)
+　　││◎ Print #mFileNo,  GetBusinessPrefix(  Node.RenderText) &  vbTab &  Lines(i)	Business継続プレフィックス取得＜modHCPCommon＞
+　　│││	内部呼出:Lines
+　　│││┴Next i
+　　││┴End If
+▼ ContinueLoop:
+　　│┴Next Node
+　　│#   HCP本文出力
+　　│#   Calls一覧出力
+　　◎ WriteCallsText  mFileNo,  ProcName	Calls一覧出力＜clsTextRenderer＞
+　　│#   Called By一覧出力
+　　◎ WriteCalledByText  mFileNo,  ProcName	Called By一覧出力＜clsTextRenderer＞
+　　〇 Close #mFileNo
+　　┴End Sub
+
+========================================
+Calls (10)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetBusinessPrefix	Business継続プレフィックス取得	modHCPCommon
+WriteCallsText	Calls一覧出力	clsTextRenderer
+WriteCalledByText	Called By一覧出力	clsTextRenderer
+WriteHtmlHeader	HTMLヘッダ出力	modHCPIndex
+OutputHCPNodes	HCPノードHTML出力	clsHtmlRenderer
+WriteCallsHtml	Calls一覧HTML出力	clsHtmlRenderer
+WriteCalledByHtml	Called By一覧HTML出力	clsHtmlRenderer
+WriteHtmlFooter	HTMLフッタ出力	modHCPIndex
+ResolveProcedure	Procedure解決	modProcedureRepository
+OutputNode	ノード出力	clsExcelRenderer
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

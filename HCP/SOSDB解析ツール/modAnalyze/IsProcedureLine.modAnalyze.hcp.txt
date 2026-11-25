@@ -1,0 +1,37 @@
+┬
+〇│Public Function IsProcedureLine(  ByVal line As String)  As Boolean	プロシージャ定義判定＜modAnalyze＞
+┴└┐
+　　│#   コメント行除外
+　　◆┐If Left(Trim(line), 1) = "'" Then
+　　│〇 IsProcedureLine = False
+　　│→ Exit Function
+　　│┴End If
+　　〇 line = Trim(line)
+　　│#   Procedure宣言判定
+　　◆┐If line Like "Sub *"  Or line Like "Public Sub *"  Or line Like "Private Sub *"  Or line Like "Function *"  Or line Like "Public Function *"  Or line Like "Private Function *"  Or line Like "Property Get *"  Or line Like "Property Let *"  Or line Like "Property Set *"  Or line Like "Friend Sub *"  Or line Like "Friend Function *" Then
+　　│〇 IsProcedureLine = True
+　　├┐ELSE
+　　│〇 IsProcedureLine = False
+　　│┴End If
+　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (8)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ProcedureList	関数一覧作成	modAnalyze
+GetFunctions	関数一覧取得	modFunctionTrac
+GetProcedureName	現在関数取得	modFunctionTrac
+GetTagValueFromCode	タグ値取得	modAnalyzerCommon
+IsFunctionCall	関数呼出判定	modAnalyzerCommon
+ExtractCallNames	呼出関数一覧取得	modProcAnalyzer
+AnalyzeProcedure	Proc解析	modProcAnalyzer
+ExtractProcedureHeader	Procedure宣言取得	modProcAnalyzer

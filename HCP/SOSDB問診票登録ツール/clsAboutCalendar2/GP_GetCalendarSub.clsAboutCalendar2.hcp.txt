@@ -1,25 +1,44 @@
-Procedure: clsAboutCalendar2.GP_GetCalendarSub  [ 単月カレンダー生成内部処理＜clsAboutCalendar2＞ ]
-HCP	Business
 ┬
 〇│Private Sub GPGetCalendarSub(ByVal lngY As Long,  ByVal lngM As Long,  ByRef lngCalIxMax As Long,  ByRef tblCalendar() As g_typAboutCalendar2)	単月カレンダー生成内部処理＜clsAboutCalendar2＞
 ┴└┐
 　　□ Dim lngCalStrIx As Long                                         ' 当月開始位置INDEX
-　　│#  当月開始位置取得
+　　│#   当月開始位置取得
 　　〇 lngCalStrIx = lngCalIxMax + 1
-　　│#  日付テーブル生成
+　　│#   日付テーブル生成
 　　◎ Call GP_MakeCalendarTable(lngY, lngM, lngCalIxMax, tblCalendar)	日付テーブル生成＜clsAboutCalendar2＞
-　　│#  祝日有無確認
+　　│#   祝日有無確認
 　　◆→ If g_tblParamMMPos(lngM).EndIx < 0 Then Exit Sub
 　　□ Dim lngFuriDIxMax As Long                                       ' 振替休日判定日INDEXテーブル上限
 　　□ Dim tblFuriDIx() As g_typFuriDIx                                ' 振替休日判定日INDEXテーブル
 　　〇 lngFuriDIxMax = -1
-　　│#  祝日判定テーブル初期化
+　　│#   祝日判定テーブル初期化
 　　〇 ReDim tblFuriDIx(0)
-　　│#  祝日反映
+　　│#   祝日反映
 　　◎ Call GP_UpdateHolidayToCalendar(lngY,  lngM,  lngCalStrIx,  lngFuriDIxMax,  tblFuriDIx,  tblCalendar)	祝日反映処理＜clsAboutCalendar2＞
-　　│#  振替休日判定
+　　│#   振替休日判定
 　　◆┐If lngFuriDIxMax >= 0 Then
-　　││#  振替休日反映
+　　││#   振替休日反映
 　　│◎ Call GP_UpdateFuriKokuminKyu(tblFuriDIx, tblCalendar)	振替休日国民の休日設定＜clsAboutCalendar2＞
 　　│┴End If
 　　┴End Sub
+
+========================================
+Calls (3)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GP_MakeCalendarTable	日付テーブル生成	clsAboutCalendar2
+GP_UpdateHolidayToCalendar	祝日反映処理	clsAboutCalendar2
+GP_UpdateFuriKokuminKyu	振替休日国民の休日設定	clsAboutCalendar2
+
+========================================
+Called By (4)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetCalendarTable1	単月カレンダーテーブル生成	clsAboutCalendar2
+GetCalendarTable3	三か月カレンダーテーブル生成	clsAboutCalendar2
+SumEigyoNissu	営業日数集計	clsAboutCalendar2
+SumEigyoBi	営業日加算日付計算	clsAboutCalendar2

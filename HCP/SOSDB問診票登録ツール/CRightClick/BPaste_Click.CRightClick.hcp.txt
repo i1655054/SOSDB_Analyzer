@@ -1,8 +1,18 @@
-Procedure: CRightClick.BPaste_Click  [ 貼り付け実行＜CRightClick＞ ]
-HCP	Business
 ┬
 〇│Private Sub BPaste_Click(ByVal ctrl As Office.CommandBarButton, CancelDefault As Boolean)	貼り付け実行＜CRightClick＞
 ┴└┐
-　　│#  貼り付け実行
+　　│#   貼り付け実行
 　　◆ If TypeName(Tb) = "TextBox" Then Tb.Paste Else Cb.Paste
 　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

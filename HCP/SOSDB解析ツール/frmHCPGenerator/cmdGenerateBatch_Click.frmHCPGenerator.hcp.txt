@@ -1,0 +1,25 @@
+┬
+〇│Private Sub cmdGenerateBatch_Click()	HCP一括生成実行＜frmHCPGenerator＞
+┴└┐
+　　□ Dim Message As String
+　　◎ Message =  BuildHCPBatchMessage()	HCP一括生成確認メッセージ作成＜modHCPTargetManager＞
+　　◆┐If MsgBox(  Message,  vbYesNo + vbQuestion,  "HCP一括生成") <> vbYes Then
+　　│→ Exit Sub
+　　│┴End If
+　　◎ GenerateHCPBatch	HCP一括生成＜modHCPTargetManager＞
+　　┴End Sub
+
+========================================
+Calls (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+BuildHCPBatchMessage	HCP一括生成確認メッセージ作成	modHCPTargetManager
+GenerateHCPBatch	HCP一括生成	modHCPTargetManager
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

@@ -1,101 +1,108 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
 <meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
 <title>InitMonshinMap</title>
 <style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
 body{font-family:Meiryo;font-size:9pt;}
 table{border-collapse:collapse;}
-th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
 td{vertical-align:top;}
 th{background:#e8f0fe;}
-colgroup col:nth-of-type(1) {}
-colgroup col:nth-of-type(2) {}
-.resize {position: relative;}
-.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
 </style>
 </head>
-<body>
+<body translate="no">
 <h1>InitMonshinMap</h1>
 <p>Module : modMonshinMap</p>
-<p><a href="./_INDEX.html">← Module Index</a></p>
 <table>
-<colgroup><col/><col/></colgroup>
-<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
 <tbody>
-<tr><td>Procedure: modMonshinMap.InitMonshinMap  [ 問診票マッピング初期化＜modMonshinMap＞ ]</td><td></td></tr>
-<tr><td>HCP</td><td>Business</td></tr>
 <tr><td>┬</td><td></td></tr>
 <tr><td>〇│Public Sub InitMonshinMap()</td><td>問診票マッピング初期化＜modMonshinMap＞</td></tr>
 <tr><td>┴└┐</td><td></td></tr>
-<tr><td>　　│#  マッピング辞書生成</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   マッピング辞書生成</span></td><td></td></tr>
 <tr><td>　　〇 Set MonshinMap = CreateObject("Scripting.Dictionary")</td><td></td></tr>
-<tr><td>　　│#  管理番号マッピング登録</td><td></td></tr>
-<tr><td>　　◎ AddMapItem "MonShinNum",  "B4", "B4", "B4", "B4", "B4"</td><td>マッピング項目登録＜modMonshinMap＞</td></tr>
-<tr><td>　　◎ AddMapItem "FaultRepNum",  "", "C4", "C4", "C4", ""</td><td>マッピング項目登録＜modMonshinMap＞</td></tr>
-<tr><td>　　◎ AddMapItem "UnKanNum",  "C4", "", "", "", "C4"</td><td>マッピング項目登録＜modMonshinMap＞</td></tr>
-<tr><td>　　│#  題名事象マッピング登録</td><td></td></tr>
-<tr><td>　　◎ AddMapItem "TitleLine",  "D4", "D4", "D4", "D4", "D4"</td><td>マッピング項目登録＜modMonshinMap＞</td></tr>
-<tr><td>　　◎ AddMapItem "Phenomenon",  "D4", "D4", "D4", "D4", "D4"</td><td>マッピング項目登録＜modMonshinMap＞</td></tr>
-<tr><td>　　│#  依頼元情報マッピング登録</td><td></td></tr>
-<tr><td>　　◎ AddMapItem "Request_Client",  "I4", "I4", "I4", "I4", "I4"</td><td>マッピング項目登録＜modMonshinMap＞</td></tr>
-<tr><td>　　│#  発生日時環境情報マッピング登録</td><td></td></tr>
-<tr><td>　　◎ AddMapItem "OccurrenceDate",  "C7", "B7", "B7", "B7", "C7"</td><td>マッピング項目登録＜modMonshinMap＞</td></tr>
-<tr><td>　　◎ AddMapItem "OccurrenceTime",  "D7", "C7", "C7", "C7", "D7"</td><td>マッピング項目登録＜modMonshinMap＞</td></tr>
-<tr><td>　　◎ AddMapItem "ProblemBuilding",  "E7", "D7", "D7", "D7", "E7"</td><td>マッピング項目登録＜modMonshinMap＞</td></tr>
-<tr><td>　　◎ AddMapItem "Equipment",  "G7", "F7", "F7", "F7", "G7"</td><td>マッピング項目登録＜modMonshinMap＞</td></tr>
-<tr><td>　　◎ AddMapItem "HostName",  "H7", "G7", "G7", "G7", "H7"</td><td>マッピング項目登録＜modMonshinMap＞</td></tr>
-<tr><td>　　◎ AddMapItem "FileVer",  "K7", "H7", "H7", "H7", "K7"</td><td>マッピング項目登録＜modMonshinMap＞</td></tr>
-<tr><td>　　│#  アラーム状況マッピング登録</td><td></td></tr>
-<tr><td>　　◎ AddMapItem "AlarmInfo",  "F10", "E10", "E10", "E10", "F10"</td><td>マッピング項目登録＜modMonshinMap＞</td></tr>
-<tr><td>　　◎ AddMapItem "OccurrenceStatus",  "B12", "B12", "B12", "B12", "B12"</td><td>マッピング項目登録＜modMonshinMap＞</td></tr>
-<tr><td>　　◎ AddMapItem "ResponseStatus",  "F12", "F12", "F12", "F12", "F12"</td><td>マッピング項目登録＜modMonshinMap＞</td></tr>
-<tr><td>　　│#  問合せ内容マッピング登録</td><td></td></tr>
-<tr><td>　　◎ AddMapItem "Req0", "G4", "G4", "G4", "G4", "G4"</td><td>マッピング項目登録＜modMonshinMap＞</td></tr>
-<tr><td>　　◎ AddMapItem "Req1", "", "B10", "B10", "B10", ""</td><td>マッピング項目登録＜modMonshinMap＞</td></tr>
-<tr><td>　　◎ AddMapItem "Req2", "", "D10", "D10", "D10", ""</td><td>マッピング項目登録＜modMonshinMap＞</td></tr>
-<tr><td>　　◎ AddMapItem "Req3", "", "E10", "E10", "E10", ""</td><td>マッピング項目登録＜modMonshinMap＞</td></tr>
-<tr><td>　　◎ AddMapItem "Req4", "B12", "B12", "B12", "B12", "B12"</td><td>マッピング項目登録＜modMonshinMap＞</td></tr>
-<tr><td>　　◎ AddMapItem "Req5", "", "F12", "F12", "F12", ""</td><td>マッピング項目登録＜modMonshinMap＞</td></tr>
-<tr><td>　　◎ AddMapItem "Req6", "", "B14", "B14", "B14", ""</td><td>マッピング項目登録＜modMonshinMap＞</td></tr>
-<tr><td>　　◎ AddMapItem "Req7", "B15", "B17", "B17", "B17", "B15"</td><td>マッピング項目登録＜modMonshinMap＞</td></tr>
-<tr><td>　　│#  収集データマッピング登録</td><td></td></tr>
-<tr><td>　　◎ AddMapItem "CollectedData",  "B15", "B17", "B17", "B17", "B15"</td><td>マッピング項目登録＜modMonshinMap＞</td></tr>
-<tr><td>　　│#  原因対処マッピング登録</td><td></td></tr>
-<tr><td>　　◎ AddMapItem "CauseDetail",  "", "C21", "C21", "C21", ""</td><td>マッピング項目登録＜modMonshinMap＞</td></tr>
-<tr><td>　　◎ AddMapItem "Countermeasure",  "", "C23", "C23", "C23", ""</td><td>マッピング項目登録＜modMonshinMap＞</td></tr>
-<tr><td>　　│#  回答情報マッピング登録</td><td></td></tr>
-<tr><td>　　◎ AddMapItem "AnswerDate",  "B17", "B19", "B19", "B19", "B17"</td><td>マッピング項目登録＜modMonshinMap＞</td></tr>
-<tr><td>　　◎ AddMapItem "AnswerPerson",  "D17", "D19", "D19", "D19", "D17"</td><td>マッピング項目登録＜modMonshinMap＞</td></tr>
-<tr><td>　　◎ AddMapItem "AnswerInfo",  "B19",  "B21+C21+B22+C22+B23+C23+B24+C24+B25+C25+B26+C26+B27+C27",  "B21+C21+B22+C22+B23+C23+B24+C24+B25+C25+B26+C26+B27+C27",  "B21+C21+B22+C22+B23+C23+B24+C24+B25+C25+B26+C26+B27+C27",  "B19"</td><td>マッピング項目登録＜modMonshinMap＞</td></tr>
+<tr><td><span class="hcp-comment">　　│#   管理番号マッピング登録</span></td><td></td></tr>
+<tr><td>　　◎ <a href="../modMonshinMap/AddMapItem.modMonshinMap.hcp.html">AddMapItem</a> "MonShinNum",  "B4", "B4", "B4", "B4", "B4"</td><td><a href="../modMonshinMap/AddMapItem.modMonshinMap.hcp.html">マッピング項目登録＜modMonshinMap＞</a></td></tr>
+<tr><td>　　◎ <a href="../modMonshinMap/AddMapItem.modMonshinMap.hcp.html">AddMapItem</a> "FaultRepNum",  "", "C4", "C4", "C4", ""</td><td><a href="../modMonshinMap/AddMapItem.modMonshinMap.hcp.html">マッピング項目登録＜modMonshinMap＞</a></td></tr>
+<tr><td>　　◎ <a href="../modMonshinMap/AddMapItem.modMonshinMap.hcp.html">AddMapItem</a> "UnKanNum",  "C4", "", "", "", "C4"</td><td><a href="../modMonshinMap/AddMapItem.modMonshinMap.hcp.html">マッピング項目登録＜modMonshinMap＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│#   題名事象マッピング登録</span></td><td></td></tr>
+<tr><td>　　◎ <a href="../modMonshinMap/AddMapItem.modMonshinMap.hcp.html">AddMapItem</a> "TitleLine",  "D4", "D4", "D4", "D4", "D4"</td><td><a href="../modMonshinMap/AddMapItem.modMonshinMap.hcp.html">マッピング項目登録＜modMonshinMap＞</a></td></tr>
+<tr><td>　　◎ <a href="../modMonshinMap/AddMapItem.modMonshinMap.hcp.html">AddMapItem</a> "Phenomenon",  "D4", "D4", "D4", "D4", "D4"</td><td><a href="../modMonshinMap/AddMapItem.modMonshinMap.hcp.html">マッピング項目登録＜modMonshinMap＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│#   依頼元情報マッピング登録</span></td><td></td></tr>
+<tr><td>　　◎ <a href="../modMonshinMap/AddMapItem.modMonshinMap.hcp.html">AddMapItem</a> "Request_Client",  "I4", "I4", "I4", "I4", "I4"</td><td><a href="../modMonshinMap/AddMapItem.modMonshinMap.hcp.html">マッピング項目登録＜modMonshinMap＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│#   発生日時環境情報マッピング登録</span></td><td></td></tr>
+<tr><td>　　◎ <a href="../modMonshinMap/AddMapItem.modMonshinMap.hcp.html">AddMapItem</a> "OccurrenceDate",  "C7", "B7", "B7", "B7", "C7"</td><td><a href="../modMonshinMap/AddMapItem.modMonshinMap.hcp.html">マッピング項目登録＜modMonshinMap＞</a></td></tr>
+<tr><td>　　◎ <a href="../modMonshinMap/AddMapItem.modMonshinMap.hcp.html">AddMapItem</a> "OccurrenceTime",  "D7", "C7", "C7", "C7", "D7"</td><td><a href="../modMonshinMap/AddMapItem.modMonshinMap.hcp.html">マッピング項目登録＜modMonshinMap＞</a></td></tr>
+<tr><td>　　◎ <a href="../modMonshinMap/AddMapItem.modMonshinMap.hcp.html">AddMapItem</a> "ProblemBuilding",  "E7", "D7", "D7", "D7", "E7"</td><td><a href="../modMonshinMap/AddMapItem.modMonshinMap.hcp.html">マッピング項目登録＜modMonshinMap＞</a></td></tr>
+<tr><td>　　◎ <a href="../modMonshinMap/AddMapItem.modMonshinMap.hcp.html">AddMapItem</a> "Equipment",  "G7", "F7", "F7", "F7", "G7"</td><td><a href="../modMonshinMap/AddMapItem.modMonshinMap.hcp.html">マッピング項目登録＜modMonshinMap＞</a></td></tr>
+<tr><td>　　◎ <a href="../modMonshinMap/AddMapItem.modMonshinMap.hcp.html">AddMapItem</a> "HostName",  "H7", "G7", "G7", "G7", "H7"</td><td><a href="../modMonshinMap/AddMapItem.modMonshinMap.hcp.html">マッピング項目登録＜modMonshinMap＞</a></td></tr>
+<tr><td>　　◎ <a href="../modMonshinMap/AddMapItem.modMonshinMap.hcp.html">AddMapItem</a> "FileVer",  "K7", "H7", "H7", "H7", "K7"</td><td><a href="../modMonshinMap/AddMapItem.modMonshinMap.hcp.html">マッピング項目登録＜modMonshinMap＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│#   アラーム状況マッピング登録</span></td><td></td></tr>
+<tr><td>　　◎ <a href="../modMonshinMap/AddMapItem.modMonshinMap.hcp.html">AddMapItem</a> "AlarmInfo",  "F10", "E10", "E10", "E10", "F10"</td><td><a href="../modMonshinMap/AddMapItem.modMonshinMap.hcp.html">マッピング項目登録＜modMonshinMap＞</a></td></tr>
+<tr><td>　　◎ <a href="../modMonshinMap/AddMapItem.modMonshinMap.hcp.html">AddMapItem</a> "OccurrenceStatus",  "B12", "B12", "B12", "B12", "B12"</td><td><a href="../modMonshinMap/AddMapItem.modMonshinMap.hcp.html">マッピング項目登録＜modMonshinMap＞</a></td></tr>
+<tr><td>　　◎ <a href="../modMonshinMap/AddMapItem.modMonshinMap.hcp.html">AddMapItem</a> "ResponseStatus",  "F12", "F12", "F12", "F12", "F12"</td><td><a href="../modMonshinMap/AddMapItem.modMonshinMap.hcp.html">マッピング項目登録＜modMonshinMap＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│#   問合せ内容マッピング登録</span></td><td></td></tr>
+<tr><td>　　◎ <a href="../modMonshinMap/AddMapItem.modMonshinMap.hcp.html">AddMapItem</a> "Req0", "G4", "G4", "G4", "G4", "G4"</td><td><a href="../modMonshinMap/AddMapItem.modMonshinMap.hcp.html">マッピング項目登録＜modMonshinMap＞</a></td></tr>
+<tr><td>　　◎ <a href="../modMonshinMap/AddMapItem.modMonshinMap.hcp.html">AddMapItem</a> "Req1", "", "B10", "B10", "B10", ""</td><td><a href="../modMonshinMap/AddMapItem.modMonshinMap.hcp.html">マッピング項目登録＜modMonshinMap＞</a></td></tr>
+<tr><td>　　◎ <a href="../modMonshinMap/AddMapItem.modMonshinMap.hcp.html">AddMapItem</a> "Req2", "", "D10", "D10", "D10", ""</td><td><a href="../modMonshinMap/AddMapItem.modMonshinMap.hcp.html">マッピング項目登録＜modMonshinMap＞</a></td></tr>
+<tr><td>　　◎ <a href="../modMonshinMap/AddMapItem.modMonshinMap.hcp.html">AddMapItem</a> "Req3", "", "E10", "E10", "E10", ""</td><td><a href="../modMonshinMap/AddMapItem.modMonshinMap.hcp.html">マッピング項目登録＜modMonshinMap＞</a></td></tr>
+<tr><td>　　◎ <a href="../modMonshinMap/AddMapItem.modMonshinMap.hcp.html">AddMapItem</a> "Req4", "B12", "B12", "B12", "B12", "B12"</td><td><a href="../modMonshinMap/AddMapItem.modMonshinMap.hcp.html">マッピング項目登録＜modMonshinMap＞</a></td></tr>
+<tr><td>　　◎ <a href="../modMonshinMap/AddMapItem.modMonshinMap.hcp.html">AddMapItem</a> "Req5", "", "F12", "F12", "F12", ""</td><td><a href="../modMonshinMap/AddMapItem.modMonshinMap.hcp.html">マッピング項目登録＜modMonshinMap＞</a></td></tr>
+<tr><td>　　◎ <a href="../modMonshinMap/AddMapItem.modMonshinMap.hcp.html">AddMapItem</a> "Req6", "", "B14", "B14", "B14", ""</td><td><a href="../modMonshinMap/AddMapItem.modMonshinMap.hcp.html">マッピング項目登録＜modMonshinMap＞</a></td></tr>
+<tr><td>　　◎ <a href="../modMonshinMap/AddMapItem.modMonshinMap.hcp.html">AddMapItem</a> "Req7", "B15", "B17", "B17", "B17", "B15"</td><td><a href="../modMonshinMap/AddMapItem.modMonshinMap.hcp.html">マッピング項目登録＜modMonshinMap＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│#   収集データマッピング登録</span></td><td></td></tr>
+<tr><td>　　◎ <a href="../modMonshinMap/AddMapItem.modMonshinMap.hcp.html">AddMapItem</a> "CollectedData",  "B15", "B17", "B17", "B17", "B15"</td><td><a href="../modMonshinMap/AddMapItem.modMonshinMap.hcp.html">マッピング項目登録＜modMonshinMap＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│#   原因対処マッピング登録</span></td><td></td></tr>
+<tr><td>　　◎ <a href="../modMonshinMap/AddMapItem.modMonshinMap.hcp.html">AddMapItem</a> "CauseDetail",  "", "C21", "C21", "C21", ""</td><td><a href="../modMonshinMap/AddMapItem.modMonshinMap.hcp.html">マッピング項目登録＜modMonshinMap＞</a></td></tr>
+<tr><td>　　◎ <a href="../modMonshinMap/AddMapItem.modMonshinMap.hcp.html">AddMapItem</a> "Countermeasure",  "", "C23", "C23", "C23", ""</td><td><a href="../modMonshinMap/AddMapItem.modMonshinMap.hcp.html">マッピング項目登録＜modMonshinMap＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│#   回答情報マッピング登録</span></td><td></td></tr>
+<tr><td>　　◎ <a href="../modMonshinMap/AddMapItem.modMonshinMap.hcp.html">AddMapItem</a> "AnswerDate",  "B17", "B19", "B19", "B19", "B17"</td><td><a href="../modMonshinMap/AddMapItem.modMonshinMap.hcp.html">マッピング項目登録＜modMonshinMap＞</a></td></tr>
+<tr><td>　　◎ <a href="../modMonshinMap/AddMapItem.modMonshinMap.hcp.html">AddMapItem</a> "AnswerPerson",  "D17", "D19", "D19", "D19", "D17"</td><td><a href="../modMonshinMap/AddMapItem.modMonshinMap.hcp.html">マッピング項目登録＜modMonshinMap＞</a></td></tr>
+<tr><td>　　◎ <a href="../modMonshinMap/AddMapItem.modMonshinMap.hcp.html">AddMapItem</a> "AnswerInfo",  "B19",  "B21+C21+B22+C22+B23+C23+B24+C24+B25+C25+B26+C26+B27+C27",  "B21+C21+B22+C22+B23+C23+B24+C24+B25+C25+B26+C26+B27+C27",  "B21+C21+B22+C22+B23+C23+B24+C24+B25+C25+B26+C26+B27+C27",  "B19"</td><td><a href="../modMonshinMap/AddMapItem.modMonshinMap.hcp.html">マッピング項目登録＜modMonshinMap＞</a></td></tr>
 <tr><td>　　┴End Sub</td><td></td></tr>
 </tbody>
 </table>
+<hr>
+<h2>Calls (1)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modMonshinMap/AddMapItem.modMonshinMap.hcp.html">AddMapItem</a></td><td>マッピング項目登録</td><td>modMonshinMap</td></tr>
+</table>
+<hr>
+<h2>Called By (1)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modMonshinMap/InitMonshinCommon.modMonshinMap.hcp.html">InitMonshinCommon</a></td><td>問診票共通初期化</td><td>modMonshinMap</td></tr>
+</table>
 <script>
-document.querySelectorAll('.resize').forEach(function (eleTh) {
+document.querySelectorAll('.resize').forEach(function(eleTh) {
 let startX;
 let startWidth;
 const eleResizer = document.createElement('div');
 eleResizer.classList.add('resizer');
-eleResizer.addEventListener('mousedown', function (e) {
-const styleTh = window.getComputedStyle(eleTh);
-const paddingLeft = parseFloat(styleTh.paddingLeft);
-const paddingRight = parseFloat(styleTh.paddingRight);
-const borderLeft = parseFloat(styleTh.borderLeftWidth);
-const borderRight = parseFloat(styleTh.borderRightWidth);
+eleResizer.addEventListener('mousedown', function(e) {
 startX = e.pageX;
-startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+startWidth = eleTh.offsetWidth;
 document.addEventListener('mousemove', onMouseMove);
 document.addEventListener('mouseup', onMouseUp);
 });
 eleTh.appendChild(eleResizer);
-function onMouseMove(e) {
-const newWidth = startWidth + (e.pageX - startX);
-eleTh.style.width = newWidth + 'px';
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
 }
-function onMouseUp() {
-document.removeEventListener('mousemove', onMouseMove);
-document.removeEventListener('mouseup', onMouseUp);
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
 }
 });
 </script>

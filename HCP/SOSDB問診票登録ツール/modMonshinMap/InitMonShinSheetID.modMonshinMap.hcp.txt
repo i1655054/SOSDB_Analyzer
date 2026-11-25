@@ -1,5 +1,3 @@
-Procedure: modMonshinMap.InitMonShinSheetID  [ 問診票シート定義初期化＜modMonshinMap＞ ]
-HCP	Business
 ┬
 〇│Public Sub InitMonShinSheetID()	問診票シート定義初期化＜modMonshinMap＞
 ┴└┐
@@ -9,3 +7,17 @@ HCP	Business
 　　◇ MonShinSheet_id(Monshin_Current) = "フォーマット"
 　　◇ MonShinSheet_id(Monshin_Other) = "トラブル問診票"   ' 2010互換
 　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+InitMonshinCommon	問診票共通初期化	modMonshinMap

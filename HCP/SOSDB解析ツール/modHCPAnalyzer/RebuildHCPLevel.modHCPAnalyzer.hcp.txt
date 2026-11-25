@@ -1,0 +1,31 @@
+┬
+〇│Private Sub RebuildHCPLevel(  ByVal HCPNodes As Collection)	HCPレベル再計算＜modHCPAnalyzer＞
+┴└┐
+　　□ Dim NodeMap As Object
+　　□ Dim Node As clsHCPNode
+　　〇 Set NodeMap =  CreateObject("Scripting.Dictionary")
+　　│#   Node検索表生成
+　　＠┐For Each Node In HCPNodes
+　　│〇 NodeMap.Add  CStr(Node.NodeID),  Node
+　　│┴Next Node
+　　│#   HCPレベル再計算
+　　＠┐For Each Node In HCPNodes
+　　│◎ Node.Level =  CalcLevel(Node, NodeMap)	HCPレベル算出＜modHCPAnalyzer＞
+　　│┴Next Node
+　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+CalcLevel	HCPレベル算出	modHCPAnalyzer
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ConvertProcToHCP	HCP変換	modHCPAnalyzer

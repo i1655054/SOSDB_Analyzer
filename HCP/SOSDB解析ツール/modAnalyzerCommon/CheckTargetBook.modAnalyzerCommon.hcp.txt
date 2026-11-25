@@ -1,0 +1,30 @@
+┬
+〇│Public Function CheckTargetBook(  ByVal TargetBook As Workbook,  Optional ByVal BookName As String = "")  As Boolean	対象ブック確認＜modAnalyzerCommon＞
+┴└┐
+　　│#   対象ブック存在確認
+　　◆┐If TargetBook Is Nothing Then
+　　│◆┐If Trim$(BookName) = "" Then
+　　│││#   対象ブック未オープン通知
+　　││〇 MsgBox  "対象ブックが開かれていません。" & vbCrLf &  "対象ブック名が指定されていません。",  vbExclamation
+　　│├┐ELSE
+　　││〇 MsgBox  "対象ブックが開かれていません。" & vbCrLf &  "対象: " & BookName,  vbExclamation
+　　││┴End If
+　　│→ Exit Function
+　　│┴End If
+　　│#   対象ブック有効
+　　〇 CheckTargetBook = True
+　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+AnalyzeAll	全解析実行	modAnalyzerCommon

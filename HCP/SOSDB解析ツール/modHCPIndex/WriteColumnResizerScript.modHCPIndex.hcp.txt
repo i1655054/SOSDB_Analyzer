@@ -1,0 +1,50 @@
+┬
+〇│Public Sub WriteColumnResizerScript(  ByVal FileNo As Integer)	列幅変更Script出力＜modHCPIndex＞
+┴└┐
+　　│#   Script開始
+　　〇 Print #FileNo,  "<script>"
+　　│#   resize対象取得
+　　〇 Print #FileNo,  "document.querySelectorAll('.resize').forEach(function(eleTh) {"
+　　│#   開始位置
+　　〇 Print #FileNo,  "let startX;"
+　　│#   開始幅
+　　〇 Print #FileNo,  "let startWidth;"
+　　│#   リサイズハンドル生成
+　　〇 Print #FileNo,  "const eleResizer = document.createElement('div');"
+　　〇 Print #FileNo,  "eleResizer.classList.add('resizer');"
+　　│#   ドラッグ開始
+　　〇 Print #FileNo,  "eleResizer.addEventListener('mousedown', function(e) {"
+　　〇 Print #FileNo,  "startX = e.pageX;"
+　　〇 Print #FileNo,  "startWidth = eleTh.offsetWidth;"
+　　〇 Print #FileNo,  "document.addEventListener('mousemove', onMouseMove);"
+　　〇 Print #FileNo,  "document.addEventListener('mouseup', onMouseUp);"
+　　〇 Print #FileNo,  "});"
+　　│#   ハンドル追加
+　　〇 Print #FileNo,  "eleTh.appendChild(eleResizer);"
+　　│#   ドラッグ中
+　　〇 Print #FileNo,  "function onMouseMove(e){"
+　　〇 Print #FileNo,  "eleTh.style.width=" &  "(startWidth+(e.pageX-startX))+'px';"
+　　〇 Print #FileNo,  "}"
+　　│#   ドラッグ終了
+　　〇 Print #FileNo,  "function onMouseUp(){"
+　　〇 Print #FileNo,  "document.removeEventListener('mousemove',onMouseMove);"
+　　〇 Print #FileNo,  "document.removeEventListener('mouseup',onMouseUp);"
+　　〇 Print #FileNo,  "}"
+　　〇 Print #FileNo,  "});"
+　　│#   Script終了
+　　〇 Print #FileNo,  "</script>"
+　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+WriteHtmlFooter	HTMLフッタ出力	modHCPIndex

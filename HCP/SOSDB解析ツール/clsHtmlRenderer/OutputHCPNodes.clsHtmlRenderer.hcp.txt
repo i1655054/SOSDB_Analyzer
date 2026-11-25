@@ -1,0 +1,66 @@
+┬
+〇│Private Sub OutputHCPNodes(  ByVal HCPNodes As Collection)	HCPノードHTML出力＜clsHtmlRenderer＞
+┴└┐
+　　□ Dim Node As clsHCPNode
+　　□ Dim HCPText As String
+　　□ Dim Lines() As String
+　　□ Dim i As Long
+　　│#   STARTノード取得
+　　＠┐For Each Node In HCPNodes
+　　│◆┐If Node.NodeType = NODE_START Then
+　　││〇 Print #mFileNo,  "<tr><td>┬</td><td></td></tr>"
+　　││◎ Print #mFileNo,  "<tr><td>" &  GetNodeHtmlText(Node) &  "</td><td>" &  HtmlEncode(Node.BusinessText) &  "</td></tr>"	HTMLエンコード＜clsHtmlRenderer＞
+　　│││	内部呼出:GetNodeHtmlText
+　　││〇 Print #mFileNo,  "<tr><td>┴└┐</td><td></td></tr>"
+　　││→ Exit For
+　　││┴End If
+　　│┴Next Node
+　　│#   HCP本文出力
+　　＠┐For Each Node In HCPNodes
+　　││#   STARTノードは出力済
+　　│◆┐If Node.NodeType = NODE_START Then
+　　││→ GoTo ContinueLoop
+　　││┴End If
+　　││#   HCP表示文字列取得
+　　│◎ HCPText =  GetNodeHtmlText(Node)	ノードHTML文字列取得＜clsHtmlRenderer＞
+　　││#   RenderText未生成
+　　│◆┐If Trim$(HCPText) = "" Then
+　　││→ GoTo ContinueLoop
+　　││┴End If
+　　││#   Businessなし
+　　│◆┐If Trim$(Node.BusinessText) = "" Then
+　　││〇 Print #mFileNo,  "<tr>" &  "<td>" &  HCPText &  "</td>" &  "<td></td>" &  "</tr>"
+　　│├┐ELSE
+　　│││#   Business分割
+　　││〇 Lines = Split(  Node.BusinessText,  vbCrLf)
+　　│││#   1行目出力
+　　││◎ Print #mFileNo,  "<tr>" &  "<td>" &  HCPText &  "</td>" &  "<td>" &  GetBusinessHtml(  Node,  Lines(0)) &  "</td>" &  "</tr>"	Business HTML取得＜clsHtmlRenderer＞
+　　│││	内部呼出:Lines
+　　│││#   2行目以降出力
+　　││＠┐For i = 1 To UBound(Lines)
+　　││◎ Print #mFileNo,  "<tr>" &  "<td>" &  HtmlEncode(  GetBusinessPrefix(  Node.RenderText)) &  "</td>" &  "<td>" &  HtmlEncode(  Lines(i)) &  "</td>" &  "</tr>"	HTMLエンコード＜clsHtmlRenderer＞
+　　│││	内部呼出:GetBusinessPrefix, Lines
+　　│││┴Next i
+　　││┴End If
+▼ ContinueLoop:
+　　│┴Next Node
+　　┴End Sub
+
+========================================
+Calls (4)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetNodeHtmlText	ノードHTML文字列取得	clsHtmlRenderer
+HtmlEncode	HTMLエンコード	clsHtmlRenderer
+GetBusinessHtml	Business HTML取得	clsHtmlRenderer
+GetBusinessPrefix	Business継続プレフィックス取得	modHCPCommon
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+Export

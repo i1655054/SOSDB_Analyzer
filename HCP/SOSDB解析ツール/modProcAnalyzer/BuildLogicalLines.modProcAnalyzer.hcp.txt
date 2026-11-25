@@ -1,0 +1,45 @@
+┬
+〇│Private Function BuildLogicalLines(  ByVal CodeText As String)  As Collection	論理行生成＜modProcAnalyzer＞
+┴└┐
+　　□ Dim Result As Collection
+　　□ Dim Lines() As String
+　　□ Dim i As Long
+　　□ Dim CurrentLine As String
+　　□ Dim LineText As String
+　　│#   論理行一覧初期化
+　　〇 Set Result = New Collection
+　　│#   ソース行分解
+　　〇 Lines = Split(CodeText, vbCrLf)
+　　│#   論理行生成
+　　＠┐For i = LBound(Lines) To UBound(Lines)
+　　│〇 LineText = Trim$(Lines(i))
+　　││#   行継続結合
+　　│◆┐If right$(LineText, 1) = "_" Then
+　　││〇 CurrentLine =  CurrentLine & " " &  Left$(LineText,  Len(LineText) - 1)
+　　│├┐ELSE
+　　││〇 CurrentLine =  CurrentLine & " " &  LineText
+　　│││#   論理行登録
+　　││〇 Result.Add Trim$(CurrentLine)
+　　││〇 CurrentLine = ""
+　　││┴End If
+　　│┴Next i
+　　◆┐If Len(CurrentLine) > 0 Then
+　　│〇 Result.Add Trim$(CurrentLine)
+　　│┴End If
+　　│#   論理行一覧返却
+　　〇 Set BuildLogicalLines = Result
+　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+AnalyzeProcedure	Proc解析	modProcAnalyzer

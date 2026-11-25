@@ -1,0 +1,63 @@
+┬
+〇│Public Sub MoveToParentNode()	親ノード移動＜modPathChart＞
+┴└┐
+　　│#   親ノード存在確認
+　　◆┐If gParentMap Is Nothing Then
+　　│〇 MsgBox "PathChartを再生成してください。"
+　　│→ Exit Sub
+　　│┴End If
+　　□ Dim ws As Worksheet
+　　□ Dim shp As Shape
+　　〇 Set ws = gContext.ManagementBook.Worksheets(
+　　│ SHEET_PATH_CHART)
+　　│#   親ノード有無確認
+　　◆┐If gCurrentParentShapeName = "" Then
+　　│〇 MsgBox  "親ノードはありません。",  vbInformation
+　　│→ Exit Sub
+　　│┴End If
+　　│#   親ノード取得
+　　〇 Set shp =  ws.Shapes(gCurrentParentShapeName)
+　　│#   現在ノード更新
+　　〇 gCurrentShapeName = shp.Name
+　　〇 gCurrentNodeText = shp.TextFrame.Characters.Text
+　　◆┐If gParentMap.Exists(shp.Name) Then
+　　│〇 gCurrentParentShapeName = gParentMap(shp.Name)
+　　├┐ELSE
+　　│〇 gCurrentParentShapeName = ""
+　　│┴End If
+　　〇 gCurrentParentWithChildren = gCurrentShapeName
+　　│#   ノード強調表示
+　　◎ Call HighlightNode(shp)	ノード強調表示＜modPathChart＞
+　　◎ UpdateCurrentNodeInfo  GetProcedureNameFromNodeText(  gCurrentNodeText)	関数名取得＜modPathChart＞
+　　〇 gCurrentShapeName = shp.Name
+　　〇 gCurrentParentWithChildren = shp.Name
+　　〇 gCurrentChildIndex = 0
+　　◆┐If Not gParentMap Is Nothing Then
+　　│◆┐If gParentMap.Exists(shp.Name) Then
+　　││〇 gCurrentParentShapeName = gParentMap(shp.Name)
+　　│├┐ELSE
+　　││〇 gCurrentParentShapeName = ""
+　　││┴End If
+　　│┴End If
+　　│#   Navigator状態更新
+　　◎ UpdateNavigatorStatus  "親ノード : " &  GetProcedureNameFromNodeText(  shp.TextFrame.Characters.Text)	関数名取得＜modPathChart＞
+　　┴End Sub
+
+========================================
+Calls (4)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+HighlightNode	ノード強調表示	modPathChart
+UpdateCurrentNodeInfo	ノード情報更新	modPathChart
+GetProcedureNameFromNodeText	関数名取得	modPathChart
+UpdateNavigatorStatus	Navigator状態更新	modPathChart
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+cmdParent_Click	親ノード移動	frmPathChartNavigator

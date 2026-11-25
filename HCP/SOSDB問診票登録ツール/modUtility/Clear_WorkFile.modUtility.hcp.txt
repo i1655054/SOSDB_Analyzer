@@ -1,5 +1,3 @@
-Procedure: modUtility.Clear_WorkFile  [ ワークファイル削除＜modUtility＞ ]
-HCP	Business
 ┬
 〇│Public Sub Clear_WorkFile()	ワークファイル削除＜modUtility＞
 ┴└┐
@@ -7,24 +5,42 @@ HCP	Business
 　　〇 Set sht = ThisWorkbook.Worksheets(SheetName_Main)
 　　□ Dim MyFolder As String
 　　□ Dim WorkFolder As String: WorkFolder = "WorkRedmine"
-　　│#  ドキュメントフォルダ取得
-　　〇 MyFolder = GetDocumentFolderPath
+　　│#   ドキュメントフォルダ取得
+　　◎ MyFolder = GetDocumentFolderPath	ドキュメントフォルダ取得＜modFileUtility＞
 　　□ Dim filePath As String
-　　│#  検索結果ファイル削除
+　　│#   検索結果ファイル削除
 　　〇 filePath = MyFolder & "\" & WorkFolder & "\Redmine_IDs.csv"
 　　◎ DeleteFileSafe filePath	安全ファイル削除＜modUtility＞
 　　□ Dim targets As Variant
 　　〇 targets = Array(MONFOLDER_RANG)
 　　□ Dim i As Long
 　　□ Dim Rng As Range
-　　│#  ワークファイル削除
+　　│#   ワークファイル削除
 　　＠┐For i = LBound(targets) To UBound(targets)
 　　│〇 Set Rng = sht.Range(targets(i))
-　　││#  ファイルパス取得
+　　││#   ファイルパス取得
 　　│〇 filePath = Trim(Rng.Value)
-　　││#  ファイル削除
+　　││#   ファイル削除
 　　│◎ DeleteFileSafe filePath	安全ファイル削除＜modUtility＞
-　　││#  セル初期化
+　　││#   セル初期化
 　　│◎ ClearRangeValue Rng	セル内容初期化＜modUtility＞
 　　│┴Next
 　　┴End Sub
+
+========================================
+Calls (3)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetDocumentFolderPath	ドキュメントフォルダ取得	modFileUtility
+DeleteFileSafe	安全ファイル削除	modUtility
+ClearRangeValue	セル内容初期化	modUtility
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+Work情報削除	ワーク情報削除	modUtility

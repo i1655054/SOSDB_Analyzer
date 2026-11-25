@@ -1,16 +1,14 @@
-Procedure: UF_Calendar5.LBL_MONTH_Click  [ 月選択表示＜UF_Calendar5＞ ]
-HCP	Business
 ┬
 〇│Private Sub LBL_MONTH_Click()	月選択表示＜UF_Calendar5＞
 ┴└┐
 　　□ Dim intMonth As Integer
 　　□ Dim IX As Long, CUR As Long
-　　│#  年選択非表示
+　　│#   年選択非表示
 　　◎ Call GP_EraseYear	年選択非表示＜UF_Calendar5＞
 　　〇 g_swBatch = True
-　　│#  月選択一覧生成
+　　│#   月選択一覧生成
 　　＠┐With CBO_MONTH
-　　│◎ .Clear	Issue情報初期化＜IssueInfo＞
+　　│〇 .Clear
 　　│＠┐For intMonth = 1 To 12
 　　││〇 .AddItem Format(intMonth, "00")
 　　││◆ If intMonth = g_intCurMonth Then CUR = IX
@@ -18,8 +16,23 @@ HCP	Business
 　　││┴Next intMonth
 　　│〇 .ListIndex = CUR
 　　│〇 .Visible = True
-　　││#  月選択表示
+　　││#   月選択表示
 　　│〇 g_VisibleMonth = True
 　　│┴End With
 　　〇 g_swBatch = False
 　　┴End Sub
+
+========================================
+Calls (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GP_EraseYear	年選択非表示	UF_Calendar5
+Clear	Issue情報初期化	IssueInfo
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

@@ -1,0 +1,23 @@
+┬
+〇│Private Sub UserFormQueryClose(  Cancel As Integer,  CloseMode As Integer)	ナビゲータ終了制御＜frmPathChartNavigator＞
+┴└┐
+　　│#   ×ボタン終了判定
+　　◆┐If CloseMode = vbFormControlMenu Then
+　　││#   PathChart画面再表示
+　　│〇 frmPathChart.Show vbModeless
+　　│┴End If
+　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+RestoreMainWindowState	Main画面状態復元	modToolManager
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

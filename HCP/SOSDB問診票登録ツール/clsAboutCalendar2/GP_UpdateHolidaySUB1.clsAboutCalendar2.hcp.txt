@@ -1,5 +1,3 @@
-Procedure: clsAboutCalendar2.GP_UpdateHolidaySUB1  [ 固定日祝日設定＜clsAboutCalendar2＞ ]
-HCP	Business
 ┬
 〇│Private Sub GPUpdateHolidaySUB1(ByVal lngDay As Long,  ByVal strName As String,  ByVal lngSyuku As Long,  ByVal lngFurikaeKbn As Long,  ByVal lngCalStrIx As Long,  ByVal lngIxSyuku As Long,  ByRef lngFuriDIxMax As Long,  ByRef tblFuriDIx() As gtypFuriDIx,  ByRef tblCalendar() As g_typAboutCalendar2)	固定日祝日設定＜clsAboutCalendar2＞
 ┴└┐
@@ -13,27 +11,27 @@ HCP	Business
 　　□ Dim lngIxSyukuN As Long                                     ' 次の祝日パラメータテーブルINDEX
 　　□ Dim lngYearN As Long                                        ' 次の年
 　　□ Dim lngMonthN As Long                                       ' 次の月
-　　│#  対象日位置算出
+　　│#   対象日位置算出
 　　〇 lngIx = lngCalStrIx + lngDay - 1
 　　〇 lngIxMax = UBound(tblCalendar)
-　　│#  会社休日優先判定
+　　│#   会社休日優先判定
 　　◆┐If ((lngSyuku = 3) And (tblCalendar(lngIx).Syuku <> 0)) Then
 　　│→ Exit Sub
 　　│┴End If
-　　│#  前後日位置算出
+　　│#   前後日位置算出
 　　〇 lngIxA1 = lngIx + 1
 　　〇 lngIxA2 = lngIx + 2
 　　〇 lngIxB1 = lngIx - 1
 　　〇 lngIxB2 = lngIx - 2
-　　│#  祝日設定
+　　│#   祝日設定
 　　＠┐With tblCalendar(lngIx)
 　　│〇 .Syuku = lngSyuku
 　　│〇 .SyukuNm = strName
 　　│〇 .FurikaeKbn = lngFurikaeKbn
 　　│┴End With
-　　│#  振替対象確認
+　　│#   振替対象確認
 　　◆→ If lngFurikaeKbn = 1 Then Exit Sub
-　　│#  振替休日候補登録
+　　│#   振替休日候補登録
 　　◆┐If tblCalendar(lngIx).Yobi = 0 Then
 　　│〇 lngFuriDIxMax = lngFuriDIxMax + 1
 　　│〇 ReDim Preserve tblFuriDIx(lngFuriDIxMax)
@@ -59,7 +57,7 @@ HCP	Business
 　　││→ Exit Sub
 　　││┴End If
 　　│┴End If
-　　│#  国民の休日候補登録
+　　│#   国民の休日候補登録
 　　◆┐If lngIx = lngIxMax - 1 Then
 　　│〇 lngIxSyukuN = lngIxSyuku + 1
 　　│◆┐If ((g_tblParamater(lngIxSyukuN).Hiduke = 1) And  (g_tblParamater(lngIxSyukuN).FurikaeKbn = 0)) Then
@@ -81,3 +79,20 @@ HCP	Business
 　　││┴End If
 　　│┴End If
 　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (4)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GP_UpdateHolidayToCalendar	祝日反映処理	clsAboutCalendar2
+GP_UpdateHolidaySUB2	HappyMonday祝日設定	clsAboutCalendar2
+GP_GetSyunbun	春分の日算出	clsAboutCalendar2
+GP_GetSyuubun	秋分の日算出	clsAboutCalendar2

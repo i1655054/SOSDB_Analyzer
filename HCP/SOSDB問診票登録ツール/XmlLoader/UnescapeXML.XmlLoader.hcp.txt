@@ -1,19 +1,29 @@
-Procedure: XmlLoader.UnescapeXML  [ XMLデコード＜XmlLoader＞ ]
-HCP	Business
 ┬
 〇│Public Function UnescapeXML(ByVal str As String) As String	XMLデコード＜XmlLoader＞
 ┴└┐
-　　│#  空文字確認
+　　│#   空文字確認
 　　◆┐If str = "" Then
 　　│〇 UnescapeXML = ""
 　　│→ Exit Function
 　　│┴End If
-　　│#  XML特殊文字復元
+　　│#   XML特殊文字復元
 　　〇 str = Replace(str, "&apos;", "'")
 　　〇 str = Replace(str, "&quot;", """")
 　　〇 str = Replace(str, "&gt;", ">")
 　　〇 str = Replace(str, "&lt;", "<")
 　　〇 str = Replace(str, "&amp;", "&")
-　　│#  復元結果返却
+　　│#   復元結果返却
 　　〇 UnescapeXML = str
 　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

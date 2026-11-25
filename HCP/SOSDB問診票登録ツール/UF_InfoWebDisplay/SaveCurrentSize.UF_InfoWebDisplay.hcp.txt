@@ -1,15 +1,37 @@
-Procedure: UF_InfoWebDisplay.SaveCurrentSize  [ フォームサイズ保存＜UF_InfoWebDisplay＞ ]
-HCP	Business
 ┬
 〇│Public Sub SaveCurrentSize()	フォームサイズ保存＜UF_InfoWebDisplay＞
 ┴└┐
-　　│#  サイズ管理初期化
+　　│#   サイズ管理初期化
 　　◎ Call InitFormSize	フォームサイズ管理初期化＜UF_InfoWebDisplay＞
-　　│#  表示種別確認
+　　│#   表示種別確認
 　　◆→ If CallingInfoDisplay = "" Then Exit Sub
 　　□ Dim sz(1) As Double
 　　〇 sz(0) = Me.Width
 　　〇 sz(1) = Me.Height
-　　│#  現在サイズ保存
+　　│#   現在サイズ保存
 　　〇 m_FormSizeDic(CallingInfoDisplay) = sz
 　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+InitFormSize	フォームサイズ管理初期化	UF_InfoWebDisplay
+
+========================================
+Called By (9)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ShowPhenomenon	事象名表示	modInfoDisplay
+ShowRequesterNum	依頼元管理番号表示	modInfoDisplay
+ShowRequesterPro	依頼者表示	modInfoDisplay
+ShowCause	原因詳細表示	modInfoDisplay
+ShowCope	対処内容表示	modInfoDisplay
+ShowRemarks	備考表示	modInfoDisplay
+ShowDescription	説明表示	modInfoDisplay
+ShowKeyWordX	キーワード表示編集	modInfoDisplay
+UserForm_Resize	フォームサイズ変更	UF_InfoWebDisplay

@@ -1,0 +1,20 @@
+┬
+〇│Private Sub Workbook_Open()	Workbook起動＜ThisWorkbook＞
+┴└┐
+　　│#   Analyzer初期化
+　　◎ InitializeAnalyzer	Analyzer初期化＜modStartup＞
+　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+InitializeAnalyzer	Analyzer初期化	modStartup
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

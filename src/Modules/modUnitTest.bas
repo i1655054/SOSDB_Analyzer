@@ -17,7 +17,7 @@ End Sub
 '==================================================
 ' テスト支援
 '==================================================
-
+'起動確認
 Public Sub TestStartup()
 
     InitializeAnalyzer
@@ -57,36 +57,23 @@ Public Sub TestNavigator()
 
 End Sub
 
-'==================================================
-' CountUsage回帰テスト
-'==================================================
-' @JPName
-' CountUsageテスト
-'
-' @Category
-' Test
-'
-' @Summary
-' CountUsageおよびIsFunctionCallの
-' 回帰テストを実行する
-'
-' @Remarks
-' 期待値
-' Test      = 2
-' TestSub   = 0
-' FuncA     = 1
-'
-Public Sub Test_CountUsage()
+' 回帰確認
+Public Sub Test_All()
 
-    Debug.Print CountUsage("Test")
-    Debug.Print CountUsage("TestSub")
-    Debug.Print CountUsage("FuncA")
+    Test_IsFunctionCall
+
+    Test_Assert_CountUsage
+
+    Debug.Print _
+        "=========="
+
+    Debug.Print _
+        "UnitTest OK"
 
 End Sub
 
-
 '==================================================
-' 呼出判定回帰テスト
+' 回帰テスト
 '==================================================
 ' @JPName
 ' 関数呼出判定テスト
@@ -102,7 +89,7 @@ End Sub
 ' Debug.Assertですべてのテストが
 ' 成功した場合のみOKを出力する
 '
-'
+
 Public Sub Test_IsFunctionCall()
 
     Debug.Assert _
@@ -135,196 +122,121 @@ Public Sub Test_IsFunctionCall()
             "Calc = 1", _
             "Calc") = False
 
+    Debug.Assert _
+        IsFunctionCall( _
+            "If Not FP_InitAboutCalendar() Then", _
+            "FP_InitAboutCalendar")
+
+    Debug.Assert _
+        IsFunctionCall( _
+            "RegEx.Test(LineText)", _
+            "Test") = False
+
+    Debug.Assert _
+        IsFunctionCall( _
+            "Dictionary.Exists(Key)", _
+            "Exists") = False
+        
     Debug.Print "OK"
 
 End Sub
 
+Public Sub Test_Assert_CountUsage()
 
-Public Sub Test()
-
-    '# ④ EXIT系
-    If FuncA Then
-
-        Exit Sub
-
-    End If
-
-End Sub
-
-Public Sub TestSub()
-
-'# Public Sub Test_Goto()
-
-Retry:
-
-    If FuncA Then
-
-        GoTo Retry
-
-    End If
-
-End Sub
-
-Public Sub Sample()
-
-    MsgBox "Test"
-
-    Dim TestFlg As Boolean
-
-    TestFlg = True
-
-End Sub
-
-Public Sub Test2()
-
-     Dim i As Integer
-     Dim x As Integer
-
-    '# ③ FOR → SELECT → IF
-    For i = 1 To 3
-
-        Select Case x
-
-            Case 1
-
-                If FuncA Then
-
-                    Call FuncA
-
-                End If
-
-        End Select
-
-    Next i
-
-End Sub
-
-Public Sub Test3()
-
-     Dim x As Integer
+    Debug.Print "Test_Assert_CountUsage()"
     
-    '# ② CASEの中にIF
+    Debug.Assert _
+        CountUsage("Test") = 0
 
-    Select Case x
+    Debug.Assert _
+        CountUsage("TestSub") = 0
 
-        Case 1
+    Debug.Assert _
+        CountUsage("FuncA") = 5
 
-            If FuncA Then
-
-                Call FuncA
-
-            End If
-
-        Case 2
-
-            Call FuncA
-
-    End Select
+    Debug.Print "OK"
 
 End Sub
 
-Public Function FuncA() As Long
+'==================================================
+' CountUsage回帰テスト
+'==================================================
+' @JPName
+' CountUsageテスト
+'
+' @Category
+' Test
+'
+' @Summary
+' CountUsageおよびIsFunctionCallの
+' 回帰テストを実行する
+'
+' @Remarks
+' 期待値
+' Test      = 0
+' TestSub   = 0
+' FuncA     = 5
+'
 
-End Function
+Public Sub Test_CountUsage()
 
-Public Sub Test4()
-
-    '# ① FOR × IF × ELSE（最優先）
-    '# Public Sub Test_ForIf()
+    Debug.Print "Test_CountUsage()"
     
-    Dim i As Integer
-    Dim A As String
+    Debug.Print "Test=" & _
+        CountUsage("Test")
     
-    For i = 1 To 3
-
-        If A Then
-
-            Call FuncA
-
-        Else
-
-            Call FuncA
-
-        End If
-
-    Next i
+    Debug.Print "TestSub=" & _
+        CountUsage("TestSub")
+    
+    Debug.Print "FuncA=" & _
+        CountUsage("FuncA")
 
 End Sub
 
-Public Sub Test_For()
 
-     Dim i As Integer
-    
-    '# FOR開始コメント
+'==================================================
+' HCPレンダリング確認
+'==================================================
 
-    For i = 1 To 3
 
-        '# FOR内コメント
+Public Sub Test_IfElseIf()
 
-        Debug.Print i
+    Dim Value As Long
 
-    Next i
+    If Value = 1 Then
 
-End Sub
+        Call ProcA
 
-Public Sub Test_If()
+    ElseIf Value = 2 Then
 
-    Dim A As String
-    '# IF前コメント
-
-    If A Then
-
-        '# TRUEコメント
-
-        Call FuncA
+        Call ProcB
 
     Else
 
-        '# FALSEコメント
+        Call ProcC
 
-        Call FuncA
     End If
 
 End Sub
 
-Public Sub Test_Do()
+Private Function ProcA() As Boolean
 
-    Dim A As String
-    Do While A
+    ProcA = True
 
-        '# DOコメント
+End Function
 
-        Call FuncA
+Private Function ProcB() As Boolean
 
-    Loop
+    ProcB = True
 
-End Sub
+End Function
 
-Public Sub Test_With()
+Private Function ProcC() As Boolean
 
-    Dim Obj
-    With Obj
+    ProcC = True
 
-        '# WITHコメント
+End Function
 
-        .Name = "ABC"
-
-    End With
-
-End Sub
-
-Public Sub Test_While()
-
-    Dim A As String
-    While A
-
-        '# WHILEコメント
-
-        Call FuncA
-
-    Wend
-
-End Sub
 
 Public Sub Test_Select()
 
@@ -347,6 +259,7 @@ Public Sub Test_Select()
 
 End Sub
 
+
 Public Sub Test_Compile()
 
 #If VBA7 Then
@@ -354,118 +267,61 @@ Public Sub Test_Compile()
     '# COMPILEコメント
 
     Call FuncA
+    
+#Else
+
+    Call FuncA
 
 #End If
 
 End Sub
 
-Public Sub Test_IfElseIf()
+Private Function FuncA() As Boolean
 
-    Dim Value As Long
+    FuncA = True
 
-    If Value = 1 Then
+End Function
 
-        Call ProcA
+' 特殊ケース確認
 
-    ElseIf Value = 2 Then
+Public Sub Test_ObjectMethod()
 
-        Call ProcB
+    Dim RegEx As Object
 
-    Else
+    Set RegEx = _
+        CreateObject("VBScript.RegExp")
 
-        Call ProcC
+    If RegEx.Test("ABC") Then
+
+        Debug.Print "OK"
 
     End If
 
 End Sub
 
-Public Sub Test_ForIf()
+' If条件内関数呼出確認
+Public Sub Test_InternalCall()
 
-    Dim i As Long
+    If Not TestBoolFunction() Then
 
-    For i = 1 To 10
+        Exit Sub
 
-        If i Mod 2 = 0 Then
-
-            Call ProcA
-
-        Else
-
-            Call ProcB
-
-        End If
-
-    Next i
+    End If
 
 End Sub
 
-Public Sub Test_SelectIf()
+Private Function TestBoolFunction() As Boolean
 
-    Dim Value As Long
+    TestBoolFunction = True
 
-    Select Case Value
+End Function
 
-        Case 1
+'Module.Procedure
+Public Sub Test_ModuleCall()
 
-            If Value > 0 Then
-
-                Call ProcA
-
-            End If
-
-        Case 2
-
-            Call ProcB
-
-        Case Else
-
-            Call ProcC
-
-    End Select
+    modDebug.Trace _
+        "TEST", _
+        "HELLO"
 
 End Sub
-
-Public Sub Test_Do2()
-
-    Dim Value As Long
-
-    Do While Value < 10
-
-        Call ProcA
-
-        Value = Value + 1
-
-    Loop
-
-End Sub
-
-Public Sub Test_With2()
-
-    With ActiveSheet
-
-        .Name = "TEST"
-
-        Call ProcA
-
-    End With
-
-End Sub
-
-
-Public Sub Test_Compile2()
-
-#If VBA7 Then
-
-    Call ProcA
-
-#Else
-
-    Call ProcB
-
-#End If
-
-End Sub
-
-
-
 

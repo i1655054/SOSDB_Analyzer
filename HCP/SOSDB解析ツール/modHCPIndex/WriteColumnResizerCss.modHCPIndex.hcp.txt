@@ -1,0 +1,22 @@
+┬
+〇│Public Sub WriteColumnResizerCss(  ByVal FileNo As Integer)	列幅変更CSS出力＜modHCPIndex＞
+┴└┐
+　　│#   resizeクラス
+　　〇 Print #FileNo,  ".resize{position:relative;}"
+　　│#   リサイズハンドル
+　　〇 Print #FileNo,  ".resizer{" &  "position:absolute;" &  "right:-10px;" &  "top:0;" &  "width:20px;" &  "height:100%;" &  "cursor:col-resize;" &  "user-select:none;" &  "z-index:100;}"
+　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+WriteHtmlHeader	HTMLヘッダ出力	modHCPIndex

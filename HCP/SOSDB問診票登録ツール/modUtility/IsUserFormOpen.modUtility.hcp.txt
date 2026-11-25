@@ -1,18 +1,30 @@
-Procedure: modUtility.IsUserFormOpen  [ フォーム起動状態確認＜modUtility＞ ]
-HCP	Business
 ┬
 〇│Public Function IsUserFormOpen(FormName As String) As Boolean	フォーム起動状態確認＜modUtility＞
 ┴└┐
 　　□ Dim uf As Object
-　　│#  戻り値初期化
+　　│#   戻り値初期化
 　　〇 IsUserFormOpen = False
-　　│#  起動フォーム走査
+　　│#   起動フォーム走査
 　　＠┐For Each uf In VBA.UserForms
-　　││#  フォーム名一致確認
+　　││#   フォーム名一致確認
 　　│◆┐If uf.name = FormName Then
-　　│││#  起動中判定
+　　│││#   起動中判定
 　　││〇 IsUserFormOpen = True
 　　││→ Exit Function
 　　││┴End If
 　　│┴Next uf
 　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+CommandButton1_Click

@@ -1,8 +1,24 @@
-Procedure: UF_RedminDbRegist.UserForm_Initialize  [ 登録確認フォーム初期化＜UF_RedminDbRegist＞ ]
-HCP	Business
 ┬
 〇│Private Sub UserForm_Initialize()	登録確認フォーム初期化＜UF_RedminDbRegist＞
 ┴└┐
-　　│#  初期値設定
+　　│#   初期値設定
 　　〇 vYesNo = vbNo
 　　┴End Sub
+
+========================================
+Calls (5)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+NewClass
+FP_GetCalendarTable3	三か月カレンダーテーブル取得	modAboutCalendar2
+RequesterNumDivision	依頼元管理番号解析	UF_RequesterNumRegist
+Initialize	右クリック機能初期化	CRightClick
+BuildHTMLContent	HTML本文生成	UF_InfoWebDisplay
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

@@ -1,6 +1,9 @@
 Attribute VB_Name = "modProcedureRepository"
 Option Explicit
 
+'modProcedureRepositoryデバッグ出力有効化
+#Const DEBUG_MODE = False
+
 '===================================================================
 ' @JPName
 ' ProcedureRepository
@@ -352,26 +355,29 @@ Public Function ResolveProcedure( _
 
     End If
 
-    '# Procedure候補競合出力
-    If Col.Count > 1 Then
-
-        Debug.Print _
-            "ResolveProcedure Ambiguous : " _
-            & ProcName _
-            & " CallerModule=" _
-            & CallerModule
-
-        For Each V In Col
+    #If DEBUG_MODE Then
+   
+        '# Procedure候補競合出力
+        If Col.Count > 1 Then
 
             Debug.Print _
-                "  Candidate : " & CStr(V)
+                "ResolveProcedure Ambiguous : " _
+                & ProcName _
+                & " CallerModule=" _
+                & CallerModule
 
-        Next V
+            For Each V In Col
+
+                Debug.Print _
+                    "  Candidate : " & CStr(V)
+
+            Next V
     
-    End If
+        End If
+
+    #End If
 
 End Function
-
 
 ' @JPName
 ' ProcedureRepository初期化解除

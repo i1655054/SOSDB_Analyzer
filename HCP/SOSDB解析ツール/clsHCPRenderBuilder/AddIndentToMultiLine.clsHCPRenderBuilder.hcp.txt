@@ -1,0 +1,20 @@
+┬
+〇│Private Function AddIndentToMultiLine(  ByVal Text As String,  ByVal Prefix As String)  As String	複数行インデント付与＜clsHCPRenderBuilder＞
+┴└┐
+　　│#   複数行インデント付与
+　　〇 AddIndentToMultiLine =  Replace(  Text,  vbCrLf,  vbCrLf & Prefix & "│ ")
+　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetDisplayText	表示文字列取得	clsHCPRenderBuilder

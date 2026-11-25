@@ -1,18 +1,32 @@
-Procedure: Sheet1.DB検索_Click  [ Redmine検索＜Sheet1＞ ]
-HCP	Business
 ┬
 〇│Private Sub DB検索_Click()	Redmine検索＜Sheet1＞
 ┴└┐
-　　◆┐If Not PrepareIssueFor("SEARCH_SIMPLE") Then
+　　◆┐If Not PrepareIssueFor("SEARCH_SIMPLE") Then	内部呼出:PrepareIssueFor
 　　│〇 MsgBox "担当者を入力してください。"
 　　│◎ Call RestoreAllColors	全セル色復元＜modUtility＞
 　　│→ Exit Sub
 　　│┴End If
 　　◆┐If DB検索.Caption = "検索" Then
-　　│◎ Call XmlSearch.InputSearchWord	検索キーワード入力＜XmlSearch＞
+　　│〇 Call XmlSearch.InputSearchWord
 　　├┐ELSE
 　　│〇 DB検索.Caption = "検索"
 　　│〇 DB検索.BackColor = &H8000000F
 　　│〇 UF_SearchResults.Show
 　　│┴End If
 　　┴End Sub
+
+========================================
+Calls (3)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+PrepareIssueFor	事前処理実行	modUtility
+RestoreAllColors	全セル色復元	modUtility
+InputSearchWord	検索キーワード入力	XmlSearch
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

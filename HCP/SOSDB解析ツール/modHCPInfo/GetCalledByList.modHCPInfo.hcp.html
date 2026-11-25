@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
+<title>GetCalledByList</title>
+<style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
+</style>
+</head>
+<body translate="no">
+<h1>GetCalledByList</h1>
+<p>Module : modHCPInfo</p>
+<table>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
+<tbody>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Public Function GetCalledByList(  ByVal ProcName As String)  As Collection</td><td>呼出元一覧取得＜modHCPInfo＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   結果</span></td><td></td></tr>
+<tr><td>　　□ Dim Result As Collection</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   重複除外用</span></td><td></td></tr>
+<tr><td>　　□ Dim Dic As Object</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   FunctionDependency</span></td><td></td></tr>
+<tr><td>　　□ Dim ws As Worksheet</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   最終行</span></td><td></td></tr>
+<tr><td>　　□ Dim LastRow As Long</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   行番号</span></td><td></td></tr>
+<tr><td>　　□ Dim r As Long</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   呼出元</span></td><td></td></tr>
+<tr><td>　　□ Dim Caller As String</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   Dictionary走査用</span></td><td></td></tr>
+<tr><td>　　□ Dim V As Variant</td><td></td></tr>
+<tr><td>　　〇 Set Result = New Collection</td><td></td></tr>
+<tr><td>　　〇 Set Dic =  CreateObject("Scripting.Dictionary")</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   FunctionDependency取得</span></td><td></td></tr>
+<tr><td>　　〇 Set ws =  gContext.ManagementBook.Worksheets(<br>　　│   SHEET_FUNCTION_DEPENDENCY)</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   最終行取得</span></td><td></td></tr>
+<tr><td>　　〇 LastRow =  ws.Cells(  ws.Rows.Count,  1).End(xlUp).row</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   呼出元探索</span></td><td></td></tr>
+<tr><td>　　＠┐For r = 2 To LastRow</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   呼出先一致確認</span></td><td></td></tr>
+<tr><td>　　│◆┐If StrComp(  Trim$(ws.Cells(r, 3).Value),  ProcName,  vbTextCompare) = 0 Then</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│││#   呼出元取得</span></td><td></td></tr>
+<tr><td>　　││〇 Caller =  Trim$(ws.Cells(r, 1).Value)</td><td></td></tr>
+<tr><td>　　││◆┐If Caller &lt;&gt; "" Then</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││││#   重複除外登録</span></td><td></td></tr>
+<tr><td>　　│││◆┐If Not Dic.Exists(Caller) Then</td><td></td></tr>
+<tr><td>　　││││〇 Dic.Add  Caller,  True</td><td></td></tr>
+<tr><td>　　││││┴End If</td><td></td></tr>
+<tr><td>　　│││┴End If</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td>　　│┴Next r</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   Collectionへ変換</span></td><td></td></tr>
+<tr><td>　　＠┐For Each V In Dic.Keys</td><td></td></tr>
+<tr><td>　　│〇 Result.Add CStr(V)</td><td></td></tr>
+<tr><td>　　│┴Next V</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   呼出元一覧返却</span></td><td></td></tr>
+<tr><td>　　〇 Set GetCalledByList = Result</td><td></td></tr>
+<tr><td>　　┴End Function</td><td></td></tr>
+</tbody>
+</table>
+<hr>
+<h2>Calls (0)</h2>
+<p>呼出先なし</p>
+<hr>
+<h2>Called By (2)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../clsTextRenderer/WriteCalledByText.clsTextRenderer.hcp.html">WriteCalledByText</a></td><td>Called By一覧出力</td><td>clsTextRenderer</td></tr>
+<tr><td><a href="../clsHtmlRenderer/WriteCalledByHtml.clsHtmlRenderer.hcp.html">WriteCalledByHtml</a></td><td>Called By一覧HTML出力</td><td>clsHtmlRenderer</td></tr>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function(eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function(e) {
+startX = e.pageX;
+startWidth = eleTh.offsetWidth;
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
+}
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
+}
+});
+</script>
+</body>
+</html>

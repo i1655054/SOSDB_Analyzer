@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
+<title>AnalyzeProcedure</title>
+<style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
+</style>
+</head>
+<body translate="no">
+<h1>AnalyzeProcedure</h1>
+<p>Module : modProcAnalyzer</p>
+<table>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
+<tbody>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Public Function AnalyzeProcedure(  ByVal CodeText As String,  ByVal ModuleName As String,  ByVal ProcName As String,  ByVal FuncList As Object)  As Collection</td><td>Proc解析＜modProcAnalyzer＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　□ Dim Nodes As Collection</td><td></td></tr>
+<tr><td>　　□ Dim Node As clsProcNode</td><td></td></tr>
+<tr><td>　　□ Dim PrevNode As clsProcNode</td><td></td></tr>
+<tr><td>　　□ Dim LogicalLines As Collection</td><td></td></tr>
+<tr><td>　　□ Dim LineText As Variant</td><td></td></tr>
+<tr><td>　　□ Dim i As Long</td><td></td></tr>
+<tr><td>　　□ Dim NodeID As Long</td><td></td></tr>
+<tr><td>　　□ Dim LastNodeID As Long</td><td></td></tr>
+<tr><td>　　□ Dim NodeType As String</td><td></td></tr>
+<tr><td>　　□ Dim Level As Long</td><td></td></tr>
+<tr><td>　　□ Dim OutputLevel As Long</td><td></td></tr>
+<tr><td>　　□ Dim ParentStack As Collection</td><td></td></tr>
+<tr><td>　　□ Dim CurrentBranch As String</td><td></td></tr>
+<tr><td>　　□ Dim CallNames As Collection</td><td></td></tr>
+<tr><td>　　□ Dim CallName As Variant</td><td></td></tr>
+<tr><td>　　□ Dim CurrentCaseID As Long</td><td></td></tr>
+<tr><td>　　□ Dim BranchStack As Collection</td><td></td></tr>
+<tr><td>　　□ Dim ProcHeader As String</td><td></td></tr>
+<tr><td>　　□ Dim InternalCalls As String</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   ProcNode管理初期化</span></td><td></td></tr>
+<tr><td>　　〇 Set Nodes = New Collection</td><td></td></tr>
+<tr><td>　　〇 Set ParentStack = New Collection</td><td></td></tr>
+<tr><td>　　〇 Set BranchStack = New Collection</td><td></td></tr>
+<tr><td>　　〇 NodeID = 1</td><td></td></tr>
+<tr><td>　　〇 Level = 0</td><td></td></tr>
+<tr><td>　　〇 CurrentCaseID = 0</td><td></td></tr>
+<tr><td>　　〇 CurrentBranch = BRANCH_NONE</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   Procedure宣言取得</span></td><td></td></tr>
+<tr><td>　　◎ ProcHeader =  <a href="../modProcAnalyzer/ExtractProcedureHeader.modProcAnalyzer.hcp.html">ExtractProcedureHeader</a>(CodeText)</td><td><a href="../modProcAnalyzer/ExtractProcedureHeader.modProcAnalyzer.hcp.html">Procedure宣言取得＜modProcAnalyzer＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│#   STARTノード生成</span></td><td></td></tr>
+<tr><td>　　〇 Set Node = New clsProcNode</td><td></td></tr>
+<tr><td>　　〇 Node.NodeID = NodeID</td><td></td></tr>
+<tr><td>　　〇 Node.ParentID = 0</td><td></td></tr>
+<tr><td>　　〇 Node.Level = 0</td><td></td></tr>
+<tr><td>　　〇 Node.BranchType = BRANCH_NONE</td><td></td></tr>
+<tr><td>　　〇 Node.ProcName = ProcName</td><td></td></tr>
+<tr><td>　　〇 Node.ModuleName = ModuleName</td><td></td></tr>
+<tr><td>　　〇 Node.NodeType = NODE_START</td><td></td></tr>
+<tr><td>　　〇 Node.NodeText = ProcHeader</td><td></td></tr>
+<tr><td>　　〇 Node.SourceLine = ""</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   STARTノード追加</span></td><td></td></tr>
+<tr><td>　　◎ <a href="../modProcAnalyzer/AddProcNode.modProcAnalyzer.hcp.html">AddProcNode</a>  Nodes,  Node,  PrevNode,  LastNodeID</td><td><a href="../modProcAnalyzer/AddProcNode.modProcAnalyzer.hcp.html">ProcNode追加＜modProcAnalyzer＞</a></td></tr>
+<tr><td>　　〇 NodeID = NodeID + 1</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   論理行生成</span></td><td></td></tr>
+<tr><td>　　◎ Set LogicalLines =  <a href="../modProcAnalyzer/BuildLogicalLines.modProcAnalyzer.hcp.html">BuildLogicalLines</a>(CodeText)</td><td><a href="../modProcAnalyzer/BuildLogicalLines.modProcAnalyzer.hcp.html">論理行生成＜modProcAnalyzer＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│#   論理行解析開始</span></td><td></td></tr>
+<tr><td>　　＠┐For Each LineText In LogicalLines</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   HCPコメント取得</span></td><td></td></tr>
+<tr><td>　　│◆┐If Left$(Trim$(CStr(LineText)), 2) = "'#" Then</td><td></td></tr>
+<tr><td>　　││〇 Set Node = New clsProcNode</td><td></td></tr>
+<tr><td>　　││〇 Node.NodeID = NodeID</td><td></td></tr>
+<tr><td>　　││◎ Node.ParentID =  <a href="../modProcAnalyzer/GetCurrentParentID.modProcAnalyzer.hcp.html">GetCurrentParentID</a>(ParentStack)</td><td><a href="../modProcAnalyzer/GetCurrentParentID.modProcAnalyzer.hcp.html">親ノード取得＜modProcAnalyzer＞</a></td></tr>
+<tr><td>　　││〇 Node.Level = Level</td><td></td></tr>
+<tr><td>　　││〇 Node.BranchType = CurrentBranch</td><td></td></tr>
+<tr><td>　　││〇 Node.ProcName = ProcName</td><td></td></tr>
+<tr><td>　　││〇 Node.ModuleName = ModuleName</td><td></td></tr>
+<tr><td>　　││〇 Node.NodeType = NODE_COMMENT</td><td></td></tr>
+<tr><td>　　││〇 Node.NodeText =  Mid$(Trim$(CStr(LineText)), 3)</td><td></td></tr>
+<tr><td>　　││◎ <a href="../modProcAnalyzer/AddProcNode.modProcAnalyzer.hcp.html">AddProcNode</a>  Nodes,  Node,  PrevNode,  LastNodeID</td><td><a href="../modProcAnalyzer/AddProcNode.modProcAnalyzer.hcp.html">ProcNode追加＜modProcAnalyzer＞</a></td></tr>
+<tr><td>　　││〇 NodeID = NodeID + 1</td><td></td></tr>
+<tr><td>　　││→ GoTo NextLine</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   Procedure宣言除外</span></td><td></td></tr>
+<tr><td>　　│◆┐If <a href="../modAnalyze/IsProcedureLine.modAnalyze.hcp.html">IsProcedureLine</a>(Trim$(CStr(LineText))) Then</td><td>内部呼出:<a href="../modAnalyze/IsProcedureLine.modAnalyze.hcp.html">IsProcedureLine</a></td></tr>
+<tr><td>　　││→ GoTo NextLine</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   コメント行除外</span></td><td></td></tr>
+<tr><td>　　│◆┐If Left$(Trim$(CStr(LineText)), 1) = "'" Then</td><td></td></tr>
+<tr><td>　　││→ GoTo NextLine</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td>　　│〇 i = i + 1</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   ノード種別判定</span></td><td></td></tr>
+<tr><td>　　│◎ NodeType =  <a href="../modProcAnalyzer/GetNodeType.modProcAnalyzer.hcp.html">GetNodeType</a>(CStr(LineText))</td><td><a href="../modProcAnalyzer/GetNodeType.modProcAnalyzer.hcp.html">ノード種別判定＜modProcAnalyzer＞</a></td></tr>
+<tr><td>　　││</td><td>内部呼出:CStr</td></tr>
+<tr><td><span class="hcp-comment">　　││#   呼出関数解析</span></td><td></td></tr>
+<tr><td>　　│◎ Set CallNames =  <a href="../modProcAnalyzer/ExtractCallNames.modProcAnalyzer.hcp.html">ExtractCallNames</a>(  CStr(LineText),  FuncList)</td><td><a href="../modProcAnalyzer/ExtractCallNames.modProcAnalyzer.hcp.html">呼出関数一覧取得＜modProcAnalyzer＞</a></td></tr>
+<tr><td>　　││</td><td>内部呼出:CStr</td></tr>
+<tr><td>　　│◆┐If InStr(1,  CStr(LineText),  "FP_InitAboutCalendar",  vbTextCompare) &gt; 0 Then</td><td></td></tr>
+<tr><td>　　││〇 Debug.Print  "Line=" &amp; CStr(LineText)</td><td></td></tr>
+<tr><td>　　││〇 Debug.Print  "CallNames.Count=" &amp;  CallNames.Count</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td>　　│〇 InternalCalls = ""</td><td></td></tr>
+<tr><td>　　│◆┐If CallNames.Count &gt; 0 Then</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│││#   内部呼出一覧取得</span></td><td></td></tr>
+<tr><td>　　││◎ InternalCalls =  <a href="../modProcAnalyzer/GetInternalCallList.modProcAnalyzer.hcp.html">GetInternalCallList</a>(  CStr(LineText),  CStr(CallNames(1)))</td><td><a href="../modProcAnalyzer/GetInternalCallList.modProcAnalyzer.hcp.html">内部呼出一覧取得＜modProcAnalyzer＞</a></td></tr>
+<tr><td>　　│││</td><td>内部呼出:CStr, CStr, CallNames</td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td>　　│〇 OutputLevel = Level</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   END SELECT処理</span></td><td></td></tr>
+<tr><td>　　│◆┐If NodeType = NODE_ENDSELECT Then</td><td></td></tr>
+<tr><td>　　││〇 CurrentCaseID = 0</td><td></td></tr>
+<tr><td>　　││◆┐If ParentStack.Count &gt; 0 Then</td><td></td></tr>
+<tr><td>　　│││〇 ParentStack.Remove ParentStack.Count</td><td></td></tr>
+<tr><td>　　│││┴End If</td><td></td></tr>
+<tr><td>　　││◆┐If ParentStack.Count &gt; 0 Then</td><td></td></tr>
+<tr><td>　　│││〇 ParentStack.Remove ParentStack.Count</td><td></td></tr>
+<tr><td>　　│││┴End If</td><td></td></tr>
+<tr><td>　　││◆┐If Level &gt; 0 Then</td><td></td></tr>
+<tr><td>　　│││〇 Level = Level - 1</td><td></td></tr>
+<tr><td>　　│││┴End If</td><td></td></tr>
+<tr><td>　　││〇 OutputLevel = Level</td><td></td></tr>
+<tr><td>　　││〇 CurrentBranch = BRANCH_NONE</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   制御構造終了処理</span></td><td></td></tr>
+<tr><td>　　│◆┐If NodeType = NODE_ENDIF  Or NodeType = NODE_NEXT  Or NodeType = NODE_LOOP  Or NodeType = NODE_ENDWITH  Or NodeType = NODE_WEND  Or NodeType = NODE_COMPILE_ENDIF Then</td><td></td></tr>
+<tr><td>　　││◆┐If Level &gt; 0 Then</td><td></td></tr>
+<tr><td>　　│││〇 Level = Level - 1</td><td></td></tr>
+<tr><td>　　│││┴End If</td><td></td></tr>
+<tr><td>　　││〇 OutputLevel = Level</td><td></td></tr>
+<tr><td>　　││◆┐If ParentStack.Count &gt; 0 Then</td><td></td></tr>
+<tr><td>　　│││〇 ParentStack.Remove ParentStack.Count</td><td></td></tr>
+<tr><td>　　│││┴End If</td><td></td></tr>
+<tr><td>　　││◆┐If BranchStack.Count &gt; 0 Then</td><td></td></tr>
+<tr><td>　　│││〇 CurrentBranch =  BranchStack(BranchStack.Count)</td><td></td></tr>
+<tr><td>　　│││〇 BranchStack.Remove  BranchStack.Count</td><td></td></tr>
+<tr><td>　　││├┐ELSE</td><td></td></tr>
+<tr><td>　　│││〇 CurrentBranch = BRANCH_NONE</td><td></td></tr>
+<tr><td>　　│││┴End If</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   ELSE分岐切替</span></td><td></td></tr>
+<tr><td>　　│◆┐If NodeType = NODE_ELSE Then</td><td></td></tr>
+<tr><td>　　││〇 CurrentBranch = BRANCH_FALSE</td><td></td></tr>
+<tr><td>　　││〇 OutputLevel = Level - 1</td><td></td></tr>
+<tr><td>　　││◆┐If OutputLevel &lt; 0 Then</td><td></td></tr>
+<tr><td>　　│││〇 OutputLevel = 0</td><td></td></tr>
+<tr><td>　　│││┴End If</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   ELSEIF分岐切替</span></td><td></td></tr>
+<tr><td>　　│◆┐If NodeType = NODE_ELSEIF Then</td><td></td></tr>
+<tr><td>　　││◆┐If ParentStack.Count &gt; 0 Then</td><td></td></tr>
+<tr><td>　　│││〇 ParentStack.Remove  ParentStack.Count</td><td></td></tr>
+<tr><td>　　│││┴End If</td><td></td></tr>
+<tr><td>　　││◆┐If Level &gt; 0 Then</td><td></td></tr>
+<tr><td>　　│││〇 Level = Level - 1</td><td></td></tr>
+<tr><td>　　│││┴End If</td><td></td></tr>
+<tr><td>　　││〇 OutputLevel = Level</td><td></td></tr>
+<tr><td>　　││〇 CurrentBranch = BRANCH_FALSE</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   CASE切替処理</span></td><td></td></tr>
+<tr><td>　　│◆┐If NodeType = NODE_CASE Then</td><td></td></tr>
+<tr><td>　　││◆┐If CurrentCaseID &lt;&gt; 0 Then</td><td></td></tr>
+<tr><td>　　│││◆┐If ParentStack.Count &gt; 0 Then</td><td></td></tr>
+<tr><td>　　││││〇 ParentStack.Remove ParentStack.Count</td><td></td></tr>
+<tr><td>　　││││┴End If</td><td></td></tr>
+<tr><td>　　│││┴End If</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   制御構造ノード生成</span></td><td></td></tr>
+<tr><td>　　│◆┐If NodeType &lt;&gt; NODE_NORMAL Then</td><td></td></tr>
+<tr><td>　　││〇 Set Node = New clsProcNode</td><td></td></tr>
+<tr><td>　　││〇 Node.NodeID = NodeID</td><td></td></tr>
+<tr><td>　　││◎ Node.ParentID =  <a href="../modProcAnalyzer/GetCurrentParentID.modProcAnalyzer.hcp.html">GetCurrentParentID</a>(ParentStack)</td><td><a href="../modProcAnalyzer/GetCurrentParentID.modProcAnalyzer.hcp.html">親ノード取得＜modProcAnalyzer＞</a></td></tr>
+<tr><td>　　││〇 Node.Level = OutputLevel</td><td></td></tr>
+<tr><td>　　││〇 Node.BranchType = CurrentBranch</td><td></td></tr>
+<tr><td>　　││〇 Node.ProcName = ProcName</td><td></td></tr>
+<tr><td>　　││〇 Node.ModuleName = ModuleName</td><td></td></tr>
+<tr><td>　　││〇 Node.NodeType = NodeType</td><td></td></tr>
+<tr><td>　　││◆┐If CallNames.Count &gt; 0 Then</td><td></td></tr>
+<tr><td>　　│││◎ Node.InternalCalls =  <a href="../modProcAnalyzer/JoinCollection.modProcAnalyzer.hcp.html">JoinCollection</a>(CallNames)</td><td><a href="../modProcAnalyzer/JoinCollection.modProcAnalyzer.hcp.html">Collection連結＜modProcAnalyzer＞</a></td></tr>
+<tr><td>　　│││┴End If</td><td></td></tr>
+<tr><td>　　││〇 Node.SourceLine =  Trim$(CStr(LineText))</td><td></td></tr>
+<tr><td>　　││〇 Node.NodeText =  Trim$(CStr(LineText))</td><td></td></tr>
+<tr><td>　　││〇 Node.LineNo = i</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│││#   制御構造ノード追加</span></td><td></td></tr>
+<tr><td>　　││◎ <a href="../modProcAnalyzer/AddProcNode.modProcAnalyzer.hcp.html">AddProcNode</a>  Nodes,  Node,  PrevNode,  LastNodeID</td><td><a href="../modProcAnalyzer/AddProcNode.modProcAnalyzer.hcp.html">ProcNode追加＜modProcAnalyzer＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│││#   制御構造状態更新</span></td><td></td></tr>
+<tr><td>　　││◆┐Select Case NodeType</td><td></td></tr>
+<tr><td>　　│││├┐Case NODE_IF</td><td></td></tr>
+<tr><td>　　││││〇 ParentStack.Add NodeID</td><td></td></tr>
+<tr><td>　　││││〇 BranchStack.Add CurrentBranch</td><td></td></tr>
+<tr><td>　　││││〇 Level = Level + 1</td><td></td></tr>
+<tr><td>　　││││〇 CurrentBranch = BRANCH_TRUE</td><td></td></tr>
+<tr><td>　　│││├┐Case NODE_ELSEIF</td><td></td></tr>
+<tr><td>　　││││〇 ParentStack.Add NodeID</td><td></td></tr>
+<tr><td>　　││││〇 BranchStack.Add CurrentBranch</td><td></td></tr>
+<tr><td>　　││││〇 Level = Level + 1</td><td></td></tr>
+<tr><td>　　││││〇 CurrentBranch = BRANCH_TRUE</td><td></td></tr>
+<tr><td>　　│││├┐Case NODE_FOR</td><td></td></tr>
+<tr><td>　　││││〇 ParentStack.Add NodeID</td><td></td></tr>
+<tr><td>　　││││〇 Level = Level + 1</td><td></td></tr>
+<tr><td>　　│││├┐Case NODE_DO</td><td></td></tr>
+<tr><td>　　││││〇 ParentStack.Add NodeID</td><td></td></tr>
+<tr><td>　　││││〇 Level = Level + 1</td><td></td></tr>
+<tr><td>　　│││├┐Case NODE_WITH</td><td></td></tr>
+<tr><td>　　││││〇 ParentStack.Add NodeID</td><td></td></tr>
+<tr><td>　　││││〇 Level = Level + 1</td><td></td></tr>
+<tr><td>　　│││├┐Case NODE_WHILE</td><td></td></tr>
+<tr><td>　　││││〇 ParentStack.Add NodeID</td><td></td></tr>
+<tr><td>　　││││〇 Level = Level + 1</td><td></td></tr>
+<tr><td>　　│││├┐Case NODE_SELECT</td><td></td></tr>
+<tr><td>　　││││〇 ParentStack.Add NodeID</td><td></td></tr>
+<tr><td>　　││││〇 Level = Level + 1</td><td></td></tr>
+<tr><td>　　││││〇 CurrentCaseID = 0</td><td></td></tr>
+<tr><td>　　│││├┐Case NODE_CASE</td><td></td></tr>
+<tr><td>　　││││〇 ParentStack.Add NodeID</td><td></td></tr>
+<tr><td>　　││││〇 CurrentCaseID = NodeID</td><td></td></tr>
+<tr><td>　　││││〇 Level = OutputLevel + 1</td><td></td></tr>
+<tr><td>　　│││├┐Case NODE_LABEL</td><td></td></tr>
+<tr><td>　　││││〇 Node.NodeText =  Trim$(CStr(LineText))</td><td></td></tr>
+<tr><td>　　│││├┐Case NODE_COMPILE_IF</td><td></td></tr>
+<tr><td>　　││││〇 ParentStack.Add NodeID</td><td></td></tr>
+<tr><td>　　││││〇 Level = Level + 1</td><td></td></tr>
+<tr><td>　　│││├┐Case Else</td><td></td></tr>
+<tr><td>　　│││┴End Select</td><td></td></tr>
+<tr><td>　　││〇 NodeID = NodeID + 1</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│││#   CALLノード生成</span></td><td></td></tr>
+<tr><td>　　│├┐ElseIf CallNames.Count &gt; 0 Then</td><td></td></tr>
+<tr><td>　　││〇 Set Node = New clsProcNode</td><td></td></tr>
+<tr><td>　　││〇 Node.NodeID = NodeID</td><td></td></tr>
+<tr><td>　　││◎ Node.ParentID =  <a href="../modProcAnalyzer/GetCurrentParentID.modProcAnalyzer.hcp.html">GetCurrentParentID</a>(ParentStack)</td><td><a href="../modProcAnalyzer/GetCurrentParentID.modProcAnalyzer.hcp.html">親ノード取得＜modProcAnalyzer＞</a></td></tr>
+<tr><td>　　││〇 Node.Level = Level</td><td></td></tr>
+<tr><td>　　││〇 Node.BranchType = CurrentBranch</td><td></td></tr>
+<tr><td>　　││〇 Node.ProcName = ProcName</td><td></td></tr>
+<tr><td>　　││〇 Node.ModuleName = ModuleName</td><td></td></tr>
+<tr><td>　　││〇 Node.NodeType = NODE_CALL</td><td></td></tr>
+<tr><td>　　││〇 Node.NodeText =  Trim$(CStr(LineText))</td><td></td></tr>
+<tr><td>　　││〇 Node.SourceLine =  Trim$(CStr(LineText))</td><td></td></tr>
+<tr><td>　　││〇 Node.LineNo = i</td><td></td></tr>
+<tr><td>　　││〇 Node.CallName =  CStr(CallNames(1))</td><td></td></tr>
+<tr><td>　　││〇 Node.InternalCalls =  InternalCalls</td><td></td></tr>
+<tr><td>　　││◎ <a href="../modProcAnalyzer/AddProcNode.modProcAnalyzer.hcp.html">AddProcNode</a>  Nodes,  Node,  PrevNode,  LastNodeID</td><td><a href="../modProcAnalyzer/AddProcNode.modProcAnalyzer.hcp.html">ProcNode追加＜modProcAnalyzer＞</a></td></tr>
+<tr><td>　　││〇 NodeID = NodeID + 1</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│││#   REFERENCEノード生成</span></td><td></td></tr>
+<tr><td>　　│├┐ElseIf <a href="../modProcAnalyzer/IsReferenceLine.modProcAnalyzer.hcp.html">IsReferenceLine</a>(  Trim$(CStr(LineText))) Then</td><td>内部呼出:<a href="../modProcAnalyzer/IsReferenceLine.modProcAnalyzer.hcp.html">IsReferenceLine</a></td></tr>
+<tr><td>　　││〇 Set Node = New clsProcNode</td><td></td></tr>
+<tr><td>　　││〇 Node.NodeID = NodeID</td><td></td></tr>
+<tr><td>　　││◎ Node.ParentID =  <a href="../modProcAnalyzer/GetCurrentParentID.modProcAnalyzer.hcp.html">GetCurrentParentID</a>(ParentStack)</td><td><a href="../modProcAnalyzer/GetCurrentParentID.modProcAnalyzer.hcp.html">親ノード取得＜modProcAnalyzer＞</a></td></tr>
+<tr><td>　　││〇 Node.Level = Level</td><td></td></tr>
+<tr><td>　　││〇 Node.BranchType = CurrentBranch</td><td></td></tr>
+<tr><td>　　││〇 Node.ProcName = ProcName</td><td></td></tr>
+<tr><td>　　││〇 Node.ModuleName = ModuleName</td><td></td></tr>
+<tr><td>　　││〇 Node.NodeType = NODE_REFERENCE</td><td></td></tr>
+<tr><td>　　││〇 Node.NodeText =  Trim$(CStr(LineText))</td><td></td></tr>
+<tr><td>　　││〇 Node.SourceLine =  Trim$(CStr(LineText))</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│││#   REFERENCEノード追加</span></td><td></td></tr>
+<tr><td>　　││◎ <a href="../modProcAnalyzer/AddProcNode.modProcAnalyzer.hcp.html">AddProcNode</a>  Nodes,  Node,  PrevNode,  LastNodeID</td><td><a href="../modProcAnalyzer/AddProcNode.modProcAnalyzer.hcp.html">ProcNode追加＜modProcAnalyzer＞</a></td></tr>
+<tr><td>　　││〇 NodeID = NodeID + 1</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│││#   NORMALノード生成</span></td><td></td></tr>
+<tr><td>　　│├┐ElseIf <a href="../modProcAnalyzer/IsOutputNormal.modProcAnalyzer.hcp.html">IsOutputNormal</a>(  Trim$(CStr(LineText))) Then</td><td>内部呼出:<a href="../modProcAnalyzer/IsOutputNormal.modProcAnalyzer.hcp.html">IsOutputNormal</a></td></tr>
+<tr><td>　　││〇 Set Node = New clsProcNode</td><td></td></tr>
+<tr><td>　　││〇 Node.NodeID = NodeID</td><td></td></tr>
+<tr><td>　　││◎ Node.ParentID =  <a href="../modProcAnalyzer/GetCurrentParentID.modProcAnalyzer.hcp.html">GetCurrentParentID</a>(ParentStack)</td><td><a href="../modProcAnalyzer/GetCurrentParentID.modProcAnalyzer.hcp.html">親ノード取得＜modProcAnalyzer＞</a></td></tr>
+<tr><td>　　││〇 Node.Level = Level</td><td></td></tr>
+<tr><td>　　││〇 Node.BranchType = CurrentBranch</td><td></td></tr>
+<tr><td>　　││〇 Node.ProcName = ProcName</td><td></td></tr>
+<tr><td>　　││〇 Node.ModuleName = ModuleName</td><td></td></tr>
+<tr><td>　　││〇 Node.NodeType = NODE_NORMAL</td><td></td></tr>
+<tr><td>　　││〇 Node.NodeText =  Trim$(CStr(LineText))</td><td></td></tr>
+<tr><td>　　││〇 Node.SourceLine =  Trim$(CStr(LineText))</td><td></td></tr>
+<tr><td>　　││〇 Node.LineNo = i</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│││#   NORMALノード追加</span></td><td></td></tr>
+<tr><td>　　││◎ <a href="../modProcAnalyzer/AddProcNode.modProcAnalyzer.hcp.html">AddProcNode</a>  Nodes,  Node,  PrevNode,  LastNodeID</td><td><a href="../modProcAnalyzer/AddProcNode.modProcAnalyzer.hcp.html">ProcNode追加＜modProcAnalyzer＞</a></td></tr>
+<tr><td>　　││〇 NodeID = NodeID + 1</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td>▼ NextLine:</td><td></td></tr>
+<tr><td>　　│┴Next</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   ENDノード生成</span></td><td></td></tr>
+<tr><td>　　〇 Set Node = New clsProcNode</td><td></td></tr>
+<tr><td>　　〇 Node.NodeID = NodeID</td><td></td></tr>
+<tr><td>　　〇 Node.ParentID = 0</td><td></td></tr>
+<tr><td>　　〇 Node.Level = 0</td><td></td></tr>
+<tr><td>　　〇 Node.BranchType = BRANCH_NONE</td><td></td></tr>
+<tr><td>　　〇 Node.ProcName = ProcName</td><td></td></tr>
+<tr><td>　　〇 Node.ModuleName = ModuleName</td><td></td></tr>
+<tr><td>　　〇 Node.NodeType = NODE_END</td><td></td></tr>
+<tr><td>　　◎ Node.NodeText =  <a href="../modProcAnalyzer/GetProcedureEndText.modProcAnalyzer.hcp.html">GetProcedureEndText</a>(  ProcHeader)</td><td><a href="../modProcAnalyzer/GetProcedureEndText.modProcAnalyzer.hcp.html">終了構文取得＜modProcAnalyzer＞</a></td></tr>
+<tr><td>　　〇 Node.SourceLine = ""</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   ENDノード追加</span></td><td></td></tr>
+<tr><td>　　◎ <a href="../modProcAnalyzer/AddProcNode.modProcAnalyzer.hcp.html">AddProcNode</a>  Nodes,  Node,  PrevNode,  LastNodeID</td><td><a href="../modProcAnalyzer/AddProcNode.modProcAnalyzer.hcp.html">ProcNode追加＜modProcAnalyzer＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│#   ProcNode一覧返却</span></td><td></td></tr>
+<tr><td>　　〇 Set AnalyzeProcedure = Nodes</td><td></td></tr>
+<tr><td>　　┴End Function</td><td></td></tr>
+</tbody>
+</table>
+<hr>
+<h2>Calls (12)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modProcAnalyzer/ExtractProcedureHeader.modProcAnalyzer.hcp.html">ExtractProcedureHeader</a></td><td>Procedure宣言取得</td><td>modProcAnalyzer</td></tr>
+<tr><td><a href="../modProcAnalyzer/AddProcNode.modProcAnalyzer.hcp.html">AddProcNode</a></td><td>ProcNode追加</td><td>modProcAnalyzer</td></tr>
+<tr><td><a href="../modProcAnalyzer/BuildLogicalLines.modProcAnalyzer.hcp.html">BuildLogicalLines</a></td><td>論理行生成</td><td>modProcAnalyzer</td></tr>
+<tr><td><a href="../modProcAnalyzer/GetCurrentParentID.modProcAnalyzer.hcp.html">GetCurrentParentID</a></td><td>親ノード取得</td><td>modProcAnalyzer</td></tr>
+<tr><td><a href="../modAnalyze/IsProcedureLine.modAnalyze.hcp.html">IsProcedureLine</a></td><td>プロシージャ定義判定</td><td>modAnalyze</td></tr>
+<tr><td><a href="../modProcAnalyzer/GetNodeType.modProcAnalyzer.hcp.html">GetNodeType</a></td><td>ノード種別判定</td><td>modProcAnalyzer</td></tr>
+<tr><td><a href="../modProcAnalyzer/ExtractCallNames.modProcAnalyzer.hcp.html">ExtractCallNames</a></td><td>呼出関数一覧取得</td><td>modProcAnalyzer</td></tr>
+<tr><td><a href="../modProcAnalyzer/GetInternalCallList.modProcAnalyzer.hcp.html">GetInternalCallList</a></td><td>内部呼出一覧取得</td><td>modProcAnalyzer</td></tr>
+<tr><td><a href="../modProcAnalyzer/JoinCollection.modProcAnalyzer.hcp.html">JoinCollection</a></td><td>Collection連結</td><td>modProcAnalyzer</td></tr>
+<tr><td><a href="../modProcAnalyzer/IsReferenceLine.modProcAnalyzer.hcp.html">IsReferenceLine</a></td><td>参照行判定</td><td>modProcAnalyzer</td></tr>
+<tr><td><a href="../modProcAnalyzer/IsOutputNormal.modProcAnalyzer.hcp.html">IsOutputNormal</a></td><td>通常文出力判定</td><td>modProcAnalyzer</td></tr>
+<tr><td><a href="../modProcAnalyzer/GetProcedureEndText.modProcAnalyzer.hcp.html">GetProcedureEndText</a></td><td>終了構文取得</td><td>modProcAnalyzer</td></tr>
+</table>
+<hr>
+<h2>Called By (1)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modHCPAnalyzer/CreateHCP.modHCPAnalyzer.hcp.html">CreateHCP</a></td><td>HCP作成</td><td>modHCPAnalyzer</td></tr>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function(eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function(e) {
+startX = e.pageX;
+startWidth = eleTh.offsetWidth;
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
+}
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
+}
+});
+</script>
+</body>
+</html>

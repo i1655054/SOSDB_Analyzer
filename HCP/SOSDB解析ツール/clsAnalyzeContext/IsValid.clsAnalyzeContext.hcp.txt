@@ -1,0 +1,17 @@
+┬
+〇│Public Function IsValid() As Boolean	コンテキスト妥当性確認＜clsAnalyzeContext＞
+┴└┐
+　　〇 IsValid =  Not TargetBook Is Nothing  And  Not ManagementBook Is Nothing  And  Not Tool Is Nothing
+　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

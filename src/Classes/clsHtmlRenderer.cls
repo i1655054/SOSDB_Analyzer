@@ -9,6 +9,9 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Explicit
 
+' clsHtmlRendererデバッグ出力有効化
+' #Const DEBUG_MODE = True
+#Const DEBUG_MODE = False
 '===================================================================
 ' @JPName
 ' HTMLレンダラ
@@ -55,6 +58,10 @@ Private mFileNo As Integer
 ' @Remarks
 ' RenderTextを利用して
 ' HCPチャートをHTML形式で出力する
+'
+' Procedureリンク化
+' Comment色分け
+' Businessリンク化
 '
 ' Calls
 ' Called By
@@ -363,6 +370,76 @@ End Function
 
 '===================================================================
 ' @JPName
+' Procedureリンク生成
+'
+' @Category
+' HCP
+'
+' @Input
+' ProcName : Procedure名
+'
+' @Output
+' HtmlText
+'
+' @Summary
+' Procedure名に対応する
+' HTMLリンクを生成する
+'
+' @Remarks
+' Procedure名から
+' HCP HTML相対パスを取得し
+'
+' <a href="...">
+' </a>
+'
+' を生成して返却する
+'
+' Procedure未登録時は
+' Procedure名をそのまま返却する
+'===================================================================
+Public Function BuildProcedureLink( _
+                ByVal ProcName As String) _
+                As String
+
+    '# HTMLパス
+    Dim HtmlPath As String
+
+    '# Procedure名確認
+    If Trim$(ProcName) = "" Then
+
+        BuildProcedureLink = ""
+
+        Exit Function
+
+    End If
+
+    '# Procedure HTMLパス取得
+    HtmlPath = _
+        GetProcedureHtmlPath( _
+            ProcName)
+
+    '# Procedure未登録
+    If HtmlPath = "" Then
+
+        BuildProcedureLink = _
+            ProcName
+
+        Exit Function
+
+    End If
+
+    '# Procedureリンク生成
+    BuildProcedureLink = _
+        "<a href=""" & _
+        HtmlPath & _
+        """>" & _
+        ProcName & _
+        "</a>"
+
+End Function
+
+'===================================================================
+' @JPName
 ' ノードHTML文字列取得
 '
 ' @Category
@@ -474,51 +551,6 @@ Private Function GetCallNodeHtml( _
 
 End Function
 
-
-'===================================================================
-' @JPName
-' 通常ノードHTML取得
-'
-' @Category
-' HCP
-'
-' @Input
-' Node : HCPノード
-'
-' @Output
-' HtmlText
-'
-' @Summary
-' 通常ノードのHTML文字列を返却する
-'
-' @Remarks
-' HCP記号を付与して返却する
-'===================================================================
-Private Function oldGetNormalNodeHtml( _
-                ByVal Node As clsHCPNode) _
-                As String
-#If DEBUG_MODE Then
-
-    Debug.Print _
-        "NodeType=" & Node.NodeType
-
-    Debug.Print _
-        "RenderText=" & Node.RenderText
-
-    Debug.Print _
-        "CallName=" & Node.CallName
-
-    Debug.Print _
-        "InternalCalls=" & Node.InternalCalls
-
-#End If
-        oldGetNormalNodeHtml = _
-            HtmlEncode( _
-                Node.RenderText)
-
-End Function
-
-
 '===================================================================
 ' @JPName
 ' 通常ノードHTML取得
@@ -541,18 +573,6 @@ End Function
 Private Function GetNormalNodeHtml( _
                 ByVal Node As clsHCPNode) _
                 As String
-Debug.Print _
-    "NodeType=" & _
-    Node.NodeType
-
-Debug.Print _
-    "RenderText=" & _
-    Node.RenderText
-
-Debug.Print _
-    "InternalCalls=" & _
-    Node.InternalCalls
-
 
     ' HTML文字列
     Dim HtmlText As String
@@ -594,22 +614,32 @@ Debug.Print _
             LinkText = _
                 BuildProcedureLink( _
                     CStr(FuncName))
-Debug.Print _
-    "Replace Target=" & _
-    CStr(FuncName)
-Debug.Print _
-    "Before=" & _
-    HtmlText
-    
+
+            #If DEBUG_MODE Then
+                
+                Debug.Print _
+                    "Replace Target=" & _
+                    CStr(FuncName)
+                Debug.Print _
+                    "Before=" & _
+                    HtmlText
+            
+            #End If
+            
             HtmlText = _
                 Replace( _
                     HtmlText, _
                     CStr(FuncName), _
                     LinkText)
-Debug.Print _
-    "After=" & _
-    HtmlText
-    
+
+            #If DEBUG_MODE Then
+                
+                Debug.Print _
+                    "After=" & _
+                    HtmlText
+            
+            #End If
+        
         End If
 
     Next FuncName
@@ -837,7 +867,6 @@ Private Sub WriteCallsHtml( _
 
 End Sub
 
-
 '===================================================================
 ' @JPName
 ' Called By一覧HTML出力
@@ -965,6 +994,8 @@ Private Sub WriteCalledByHtml( _
     Print #FileNo, "</table>"
 
 End Sub
+
+
 
 
 

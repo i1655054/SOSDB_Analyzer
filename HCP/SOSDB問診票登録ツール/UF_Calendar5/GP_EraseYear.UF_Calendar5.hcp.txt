@@ -1,11 +1,24 @@
-Procedure: UF_Calendar5.GP_EraseYear  [ 年選択非表示＜UF_Calendar5＞ ]
-HCP	Business
 ┬
 〇│Private Sub GP_EraseYear()	年選択非表示＜UF_Calendar5＞
 ┴└┐
-　　│#  年コンボ非表示
+　　│#   年コンボ非表示
 　　◆┐If g_VisibleYear Then
 　　│〇 CBO_YEAR.Visible = False
 　　│〇 g_VisibleYear = False
 　　│┴End If
 　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+LBL_MONTH_Click	月選択表示	UF_Calendar5
+GP_EraseYearMonth	年月選択非表示	UF_Calendar5

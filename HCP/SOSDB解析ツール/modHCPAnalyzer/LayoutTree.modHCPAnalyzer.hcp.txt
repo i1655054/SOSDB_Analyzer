@@ -1,0 +1,30 @@
+┬
+〇│Private Sub LayoutTree(  ByVal Node As clsHCPNode,  ByVal HCPNodes As Collection,  ByVal Level As Long,  ByRef CurrentY As Double)	ノード配置＜modHCPAnalyzer＞
+┴└┐
+　　□ Dim Children As Collection
+　　□ Dim Child As clsHCPNode
+　　│#   ノード表示位置設定
+　　〇 Node.PosX =  20 + Level * 220
+　　〇 Node.PosY =  CurrentY
+　　〇 CurrentY =  CurrentY + 60
+　　│#   子ノード取得
+　　◎ Set Children =  GetChildNodes(  Node.NodeID,  HCPNodes)	子ノード取得＜modHCPAnalyzer＞
+　　│#   子ノード配置
+　　＠┐For Each Child In Children
+　　│◎ LayoutTree  Child,  HCPNodes,  Level + 1,  CurrentY	ノード配置＜modHCPAnalyzer＞
+　　│┴Next Child
+　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetChildNodes	子ノード取得	modHCPAnalyzer
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

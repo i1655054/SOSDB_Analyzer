@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
+<title>LoadPathChartConfig</title>
+<style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
+</style>
+</head>
+<body translate="no">
+<h1>LoadPathChartConfig</h1>
+<p>Module : modPathChartConfig</p>
+<table>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
+<tbody>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Public Sub LoadPathChartConfig()</td><td>PathChart設定読込＜modPathChartConfig＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　□ Dim ws As Worksheet</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   PathChart設定シート取得</span></td><td></td></tr>
+<tr><td>　　〇 Set ws =  ThisWorkbook.Worksheets(SHEET_PATH_CHART_CONFIG)</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   共通設定読込</span></td><td></td></tr>
+<tr><td>　　〇 gSkipCommon = ws.Range(CFG_SKIP_COMMON).Value</td><td></td></tr>
+<tr><td>　　〇 gShowCount = ws.Range(CFG_SHOW_COUNT).Value</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   PowerPoint設定読込</span></td><td></td></tr>
+<tr><td>　　〇 gPowerPoint = ws.Range(CFG_POWERPOINT).Value</td><td></td></tr>
+<tr><td>　　〇 gPptOrientation = Trim$(ws.Range(CFG_PPT_ORIENTATION).Value)</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   PowerPoint向き既定値設定</span></td><td></td></tr>
+<tr><td>　　◆┐If gPptOrientation = "" Then</td><td></td></tr>
+<tr><td>　　│〇 gPptOrientation = PPT_ORIENT_AUTO</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   出力設定読込</span></td><td></td></tr>
+<tr><td>　　〇 gPngOutput = ws.Range(CFG_PNG_OUTPUT).Value</td><td></td></tr>
+<tr><td>　　〇 gShowModule = ws.Range(CFG_SHOW_MODULE).Value</td><td></td></tr>
+<tr><td>　　〇 gColorModule = ws.Range(CFG_COLOR_MODULE).Value</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   解析対象設定読込</span></td><td></td></tr>
+<tr><td>　　〇 gProperty = ws.Range(CFG_PROPERTY).Value</td><td></td></tr>
+<tr><td>　　〇 gPrivate = ws.Range(CFG_PRIVATE).Value</td><td></td></tr>
+<tr><td>　　〇 gPublic = ws.Range(CFG_PUBLIC).Value</td><td></td></tr>
+<tr><td>　　〇 gStdModule = ws.Range(CFG_STD_MODULE).Value</td><td></td></tr>
+<tr><td>　　〇 gUserForm = ws.Range(CFG_USER_FORM).Value</td><td></td></tr>
+<tr><td>　　〇 gClassModule = ws.Range(CFG_CLASS_MODULE).Value</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   除外条件設定読込</span></td><td></td></tr>
+<tr><td>　　〇 gIgnoreAPI = ws.Range(CFG_IGNORE_API).Value</td><td></td></tr>
+<tr><td>　　〇 gIgnoreExcel = ws.Range(CFG_IGNORE_EXCEL).Value</td><td></td></tr>
+<tr><td>　　〇 gIgnoreSelf = ws.Range(CFG_IGNORE_SELF).Value</td><td></td></tr>
+<tr><td>　　〇 gSameModuleOnly = ws.Range(CFG_SAME_MODULE_ONLY).Value</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   色設定読込</span></td><td></td></tr>
+<tr><td>　　〇 gColorTheme = ws.Range(CFG_COLOR_THEME).Value</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   制限値読込</span></td><td></td></tr>
+<tr><td>　　〇 gMaxNode = Val(ws.Range(CFG_MAX_NODE).Value)</td><td></td></tr>
+<tr><td>　　〇 gMaxEdge = Val(ws.Range(CFG_MAX_EDGE).Value)</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   外部呼出設定読込</span></td><td></td></tr>
+<tr><td>　　〇 gExternal = ws.Range(CFG_EXTERNAL).Value</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   外部呼出設定既定値補正</span></td><td></td></tr>
+<tr><td>　　◆┐If Trim$(ws.Range(CFG_EXTERNAL).Value &amp; "") = "" Then</td><td></td></tr>
+<tr><td>　　│〇 gExternal = True</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　〇 gRecursive = ws.Range(CFG_RECURSIVE).Value</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   再帰呼出設定既定値補正</span></td><td></td></tr>
+<tr><td>　　◆┐If Trim$(ws.Range(CFG_RECURSIVE).Value &amp; "") = "" Then</td><td></td></tr>
+<tr><td>　　│〇 gRecursive = True</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   表示設定読込</span></td><td></td></tr>
+<tr><td>　　〇 gShowJPName = ws.Range(CFG_SHOW_JPNAME).Value</td><td></td></tr>
+<tr><td>　　〇 gShowCategory = ws.Range(CFG_SHOW_CATEGORY).Value</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   制限値既定値補正</span></td><td></td></tr>
+<tr><td>　　◆ If gMaxNode = 0 Then gMaxNode = DEFAULT_MAX_NODE</td><td></td></tr>
+<tr><td>　　◆ If gMaxEdge = 0 Then gMaxEdge = DEFAULT_MAX_EDGE</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   色設定既定値補正</span></td><td></td></tr>
+<tr><td>　　◆┐If gColorTheme = "" Then</td><td></td></tr>
+<tr><td>　　│〇 gColorTheme = DEFAULT_COLOR_THEME</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　┴End Sub</td><td></td></tr>
+</tbody>
+</table>
+<hr>
+<h2>Calls (0)</h2>
+<p>呼出先なし</p>
+<hr>
+<h2>Called By (2)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../frmPathChart/UserForm_Initialize.frmPathChart.hcp.html">UserForm_Initialize</a></td><td></td><td></td></tr>
+<tr><td><a href="../modStartup/InitializeAnalyzer.modStartup.hcp.html">InitializeAnalyzer</a></td><td>Analyzer初期化</td><td>modStartup</td></tr>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function(eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function(e) {
+startX = e.pageX;
+startWidth = eleTh.offsetWidth;
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
+}
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
+}
+});
+</script>
+</body>
+</html>

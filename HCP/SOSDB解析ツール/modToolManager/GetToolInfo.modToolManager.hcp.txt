@@ -1,0 +1,54 @@
+┬
+〇│Public Function GetToolInfo(  ByVal ToolID As Long)  As clsToolInfo	ツール情報取得＜modToolManager＞
+┴└┐
+　　□ Dim ws As Worksheet
+　　□ Dim LastRow As Long
+　　□ Dim r As Long
+　　□ Dim Tool As clsToolInfo
+　　│#   ToolManagerシート取得
+　　〇 Set ws = ThisWorkbook.Worksheets(SHEET_TOOL_MANAGER)
+　　│#   ToolManager最終行取得
+　　〇 LastRow =  ws.Cells(ws.Rows.Count, "A")  .End(xlUp).row
+　　│#   ToolManager検索
+　　＠┐For r = 2 To LastRow
+　　│◆┐If ws.Cells(r, "A").Value = ToolID Then
+　　│││#   Tool情報生成
+　　││〇 Set Tool = New clsToolInfo
+　　││〇 Tool.ToolID = ToolID
+　　││◎ Tool.ToolName =  TrimEx(ws.Cells(r, "B").Value)	文字列整形＜modToolManager＞
+　　│││	内部呼出:Cells
+　　││◎ Tool.WorkbookName =  TrimEx(ws.Cells(r, "C").Value)	文字列整形＜modToolManager＞
+　　│││	内部呼出:Cells
+　　││◎ Tool.GitRepository =  TrimEx(ws.Cells(r, "D").Value)	文字列整形＜modToolManager＞
+　　│││	内部呼出:Cells
+　　││〇 Tool.ExportEnabled =  CBool(ws.Cells(r, "E").Value)
+　　││◎ Tool.Description =  TrimEx(ws.Cells(r, "F").Value)	文字列整形＜modToolManager＞
+　　│││	内部呼出:Cells
+　　││◎ Tool.ManagementFile =  TrimEx(ws.Cells(r, "G").Value)	文字列整形＜modToolManager＞
+　　│││	内部呼出:Cells
+　　│││#   ツール情報返却
+　　││〇 Set GetToolInfo = Tool
+　　││→ Exit Function
+　　││┴End If
+　　│┴Next r
+　　┴End Function
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+TrimEx	文字列整形	modToolManager
+
+========================================
+Called By (5)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetGitRootPathByToolID	Git管理フォルダ取得	modExportVBA
+GetCurrentToolInfo	現在ツール情報取得	modToolManager
+GetManagementWorkbookByToolID	管理ブック取得	modToolManager
+GetManagementFilePathByToolID	管理ファイルパス取得	modToolManager
+GetWorkbookByToolID	対象ブック取得	modToolManager

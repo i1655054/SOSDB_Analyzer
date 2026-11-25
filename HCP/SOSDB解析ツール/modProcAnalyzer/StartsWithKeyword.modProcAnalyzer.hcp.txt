@@ -1,0 +1,40 @@
+┬
+〇│Private Function StartsWithKeyword(  ByVal LineText As String,  ByVal Keyword As String)  As Boolean	キーワード前方一致判定＜modProcAnalyzer＞
+┴└┐
+　　□ Dim NextChar As String
+　　│#   キーワード長確認
+　　◆┐If Len(LineText) < Len(Keyword) Then
+　　│→ Exit Function
+　　│┴End If
+　　│#   キーワード前方一致確認
+　　◆┐If StrComp(  Left$(LineText, Len(Keyword)),  Keyword,  vbTextCompare) <> 0 Then
+　　│→ Exit Function
+　　│┴End If
+　　│#   完全一致判定
+　　◆┐If Len(LineText) = Len(Keyword) Then
+　　│〇 StartsWithKeyword = True
+　　│→ Exit Function
+　　│┴End If
+　　│#   キーワード後続文字取得
+　　〇 NextChar = Mid$(  LineText,  Len(Keyword) + 1,  1)
+　　│#   キーワード境界判定
+　　◆┐Select Case NextChar
+　　│├┐Case " ", vbTab, "(", ":"
+　　││〇 StartsWithKeyword = True
+　　│┴End Select
+　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetNodeType	ノード種別判定	modProcAnalyzer
+GetProcedureEndText	終了構文取得	modProcAnalyzer

@@ -1,0 +1,301 @@
+┬
+〇│Public Function AnalyzeProcedure(  ByVal CodeText As String,  ByVal ModuleName As String,  ByVal ProcName As String,  ByVal FuncList As Object)  As Collection	Proc解析＜modProcAnalyzer＞
+┴└┐
+　　□ Dim Nodes As Collection
+　　□ Dim Node As clsProcNode
+　　□ Dim PrevNode As clsProcNode
+　　□ Dim LogicalLines As Collection
+　　□ Dim LineText As Variant
+　　□ Dim i As Long
+　　□ Dim NodeID As Long
+　　□ Dim LastNodeID As Long
+　　□ Dim NodeType As String
+　　□ Dim Level As Long
+　　□ Dim OutputLevel As Long
+　　□ Dim ParentStack As Collection
+　　□ Dim CurrentBranch As String
+　　□ Dim CallNames As Collection
+　　□ Dim CallName As Variant
+　　□ Dim CurrentCaseID As Long
+　　□ Dim BranchStack As Collection
+　　□ Dim ProcHeader As String
+　　□ Dim InternalCalls As String
+　　│#   ProcNode管理初期化
+　　〇 Set Nodes = New Collection
+　　〇 Set ParentStack = New Collection
+　　〇 Set BranchStack = New Collection
+　　〇 NodeID = 1
+　　〇 Level = 0
+　　〇 CurrentCaseID = 0
+　　〇 CurrentBranch = BRANCH_NONE
+　　│#   Procedure宣言取得
+　　◎ ProcHeader =  ExtractProcedureHeader(CodeText)	Procedure宣言取得＜modProcAnalyzer＞
+　　│#   STARTノード生成
+　　〇 Set Node = New clsProcNode
+　　〇 Node.NodeID = NodeID
+　　〇 Node.ParentID = 0
+　　〇 Node.Level = 0
+　　〇 Node.BranchType = BRANCH_NONE
+　　〇 Node.ProcName = ProcName
+　　〇 Node.ModuleName = ModuleName
+　　〇 Node.NodeType = NODE_START
+　　〇 Node.NodeText = ProcHeader
+　　〇 Node.SourceLine = ""
+　　│#   STARTノード追加
+　　◎ AddProcNode  Nodes,  Node,  PrevNode,  LastNodeID	ProcNode追加＜modProcAnalyzer＞
+　　〇 NodeID = NodeID + 1
+　　│#   論理行生成
+　　◎ Set LogicalLines =  BuildLogicalLines(CodeText)	論理行生成＜modProcAnalyzer＞
+　　│#   論理行解析開始
+　　＠┐For Each LineText In LogicalLines
+　　││#   HCPコメント取得
+　　│◆┐If Left$(Trim$(CStr(LineText)), 2) = "'#" Then
+　　││〇 Set Node = New clsProcNode
+　　││〇 Node.NodeID = NodeID
+　　││◎ Node.ParentID =  GetCurrentParentID(ParentStack)	親ノード取得＜modProcAnalyzer＞
+　　││〇 Node.Level = Level
+　　││〇 Node.BranchType = CurrentBranch
+　　││〇 Node.ProcName = ProcName
+　　││〇 Node.ModuleName = ModuleName
+　　││〇 Node.NodeType = NODE_COMMENT
+　　││〇 Node.NodeText =  Mid$(Trim$(CStr(LineText)), 3)
+　　││◎ AddProcNode  Nodes,  Node,  PrevNode,  LastNodeID	ProcNode追加＜modProcAnalyzer＞
+　　││〇 NodeID = NodeID + 1
+　　││→ GoTo NextLine
+　　││┴End If
+　　││#   Procedure宣言除外
+　　│◆┐If IsProcedureLine(Trim$(CStr(LineText))) Then	内部呼出:IsProcedureLine
+　　││→ GoTo NextLine
+　　││┴End If
+　　││#   コメント行除外
+　　│◆┐If Left$(Trim$(CStr(LineText)), 1) = "'" Then
+　　││→ GoTo NextLine
+　　││┴End If
+　　│〇 i = i + 1
+　　││#   ノード種別判定
+　　│◎ NodeType =  GetNodeType(CStr(LineText))	ノード種別判定＜modProcAnalyzer＞
+　　││	内部呼出:CStr
+　　││#   呼出関数解析
+　　│◎ Set CallNames =  ExtractCallNames(  CStr(LineText),  FuncList)	呼出関数一覧取得＜modProcAnalyzer＞
+　　││	内部呼出:CStr
+　　│◆┐If InStr(1,  CStr(LineText),  "FP_InitAboutCalendar",  vbTextCompare) > 0 Then
+　　││〇 Debug.Print  "Line=" & CStr(LineText)
+　　││〇 Debug.Print  "CallNames.Count=" &  CallNames.Count
+　　││┴End If
+　　│〇 InternalCalls = ""
+　　│◆┐If CallNames.Count > 0 Then
+　　│││#   内部呼出一覧取得
+　　││◎ InternalCalls =  GetInternalCallList(  CStr(LineText),  CStr(CallNames(1)))	内部呼出一覧取得＜modProcAnalyzer＞
+　　│││	内部呼出:CStr, CStr, CallNames
+　　││┴End If
+　　│〇 OutputLevel = Level
+　　││#   END SELECT処理
+　　│◆┐If NodeType = NODE_ENDSELECT Then
+　　││〇 CurrentCaseID = 0
+　　││◆┐If ParentStack.Count > 0 Then
+　　│││〇 ParentStack.Remove ParentStack.Count
+　　│││┴End If
+　　││◆┐If ParentStack.Count > 0 Then
+　　│││〇 ParentStack.Remove ParentStack.Count
+　　│││┴End If
+　　││◆┐If Level > 0 Then
+　　│││〇 Level = Level - 1
+　　│││┴End If
+　　││〇 OutputLevel = Level
+　　││〇 CurrentBranch = BRANCH_NONE
+　　││┴End If
+　　││#   制御構造終了処理
+　　│◆┐If NodeType = NODE_ENDIF  Or NodeType = NODE_NEXT  Or NodeType = NODE_LOOP  Or NodeType = NODE_ENDWITH  Or NodeType = NODE_WEND  Or NodeType = NODE_COMPILE_ENDIF Then
+　　││◆┐If Level > 0 Then
+　　│││〇 Level = Level - 1
+　　│││┴End If
+　　││〇 OutputLevel = Level
+　　││◆┐If ParentStack.Count > 0 Then
+　　│││〇 ParentStack.Remove ParentStack.Count
+　　│││┴End If
+　　││◆┐If BranchStack.Count > 0 Then
+　　│││〇 CurrentBranch =  BranchStack(BranchStack.Count)
+　　│││〇 BranchStack.Remove  BranchStack.Count
+　　││├┐ELSE
+　　│││〇 CurrentBranch = BRANCH_NONE
+　　│││┴End If
+　　││┴End If
+　　││#   ELSE分岐切替
+　　│◆┐If NodeType = NODE_ELSE Then
+　　││〇 CurrentBranch = BRANCH_FALSE
+　　││〇 OutputLevel = Level - 1
+　　││◆┐If OutputLevel < 0 Then
+　　│││〇 OutputLevel = 0
+　　│││┴End If
+　　││┴End If
+　　││#   ELSEIF分岐切替
+　　│◆┐If NodeType = NODE_ELSEIF Then
+　　││◆┐If ParentStack.Count > 0 Then
+　　│││〇 ParentStack.Remove  ParentStack.Count
+　　│││┴End If
+　　││◆┐If Level > 0 Then
+　　│││〇 Level = Level - 1
+　　│││┴End If
+　　││〇 OutputLevel = Level
+　　││〇 CurrentBranch = BRANCH_FALSE
+　　││┴End If
+　　││#   CASE切替処理
+　　│◆┐If NodeType = NODE_CASE Then
+　　││◆┐If CurrentCaseID <> 0 Then
+　　│││◆┐If ParentStack.Count > 0 Then
+　　││││〇 ParentStack.Remove ParentStack.Count
+　　││││┴End If
+　　│││┴End If
+　　││┴End If
+　　││#   制御構造ノード生成
+　　│◆┐If NodeType <> NODE_NORMAL Then
+　　││〇 Set Node = New clsProcNode
+　　││〇 Node.NodeID = NodeID
+　　││◎ Node.ParentID =  GetCurrentParentID(ParentStack)	親ノード取得＜modProcAnalyzer＞
+　　││〇 Node.Level = OutputLevel
+　　││〇 Node.BranchType = CurrentBranch
+　　││〇 Node.ProcName = ProcName
+　　││〇 Node.ModuleName = ModuleName
+　　││〇 Node.NodeType = NodeType
+　　││◆┐If CallNames.Count > 0 Then
+　　│││◎ Node.InternalCalls =  JoinCollection(CallNames)	Collection連結＜modProcAnalyzer＞
+　　│││┴End If
+　　││〇 Node.SourceLine =  Trim$(CStr(LineText))
+　　││〇 Node.NodeText =  Trim$(CStr(LineText))
+　　││〇 Node.LineNo = i
+　　│││#   制御構造ノード追加
+　　││◎ AddProcNode  Nodes,  Node,  PrevNode,  LastNodeID	ProcNode追加＜modProcAnalyzer＞
+　　│││#   制御構造状態更新
+　　││◆┐Select Case NodeType
+　　│││├┐Case NODE_IF
+　　││││〇 ParentStack.Add NodeID
+　　││││〇 BranchStack.Add CurrentBranch
+　　││││〇 Level = Level + 1
+　　││││〇 CurrentBranch = BRANCH_TRUE
+　　│││├┐Case NODE_ELSEIF
+　　││││〇 ParentStack.Add NodeID
+　　││││〇 BranchStack.Add CurrentBranch
+　　││││〇 Level = Level + 1
+　　││││〇 CurrentBranch = BRANCH_TRUE
+　　│││├┐Case NODE_FOR
+　　││││〇 ParentStack.Add NodeID
+　　││││〇 Level = Level + 1
+　　│││├┐Case NODE_DO
+　　││││〇 ParentStack.Add NodeID
+　　││││〇 Level = Level + 1
+　　│││├┐Case NODE_WITH
+　　││││〇 ParentStack.Add NodeID
+　　││││〇 Level = Level + 1
+　　│││├┐Case NODE_WHILE
+　　││││〇 ParentStack.Add NodeID
+　　││││〇 Level = Level + 1
+　　│││├┐Case NODE_SELECT
+　　││││〇 ParentStack.Add NodeID
+　　││││〇 Level = Level + 1
+　　││││〇 CurrentCaseID = 0
+　　│││├┐Case NODE_CASE
+　　││││〇 ParentStack.Add NodeID
+　　││││〇 CurrentCaseID = NodeID
+　　││││〇 Level = OutputLevel + 1
+　　│││├┐Case NODE_LABEL
+　　││││〇 Node.NodeText =  Trim$(CStr(LineText))
+　　│││├┐Case NODE_COMPILE_IF
+　　││││〇 ParentStack.Add NodeID
+　　││││〇 Level = Level + 1
+　　│││├┐Case Else
+　　│││┴End Select
+　　││〇 NodeID = NodeID + 1
+　　│││#   CALLノード生成
+　　│├┐ElseIf CallNames.Count > 0 Then
+　　││〇 Set Node = New clsProcNode
+　　││〇 Node.NodeID = NodeID
+　　││◎ Node.ParentID =  GetCurrentParentID(ParentStack)	親ノード取得＜modProcAnalyzer＞
+　　││〇 Node.Level = Level
+　　││〇 Node.BranchType = CurrentBranch
+　　││〇 Node.ProcName = ProcName
+　　││〇 Node.ModuleName = ModuleName
+　　││〇 Node.NodeType = NODE_CALL
+　　││〇 Node.NodeText =  Trim$(CStr(LineText))
+　　││〇 Node.SourceLine =  Trim$(CStr(LineText))
+　　││〇 Node.LineNo = i
+　　││〇 Node.CallName =  CStr(CallNames(1))
+　　││〇 Node.InternalCalls =  InternalCalls
+　　││◎ AddProcNode  Nodes,  Node,  PrevNode,  LastNodeID	ProcNode追加＜modProcAnalyzer＞
+　　││〇 NodeID = NodeID + 1
+　　│││#   REFERENCEノード生成
+　　│├┐ElseIf IsReferenceLine(  Trim$(CStr(LineText))) Then	内部呼出:IsReferenceLine
+　　││〇 Set Node = New clsProcNode
+　　││〇 Node.NodeID = NodeID
+　　││◎ Node.ParentID =  GetCurrentParentID(ParentStack)	親ノード取得＜modProcAnalyzer＞
+　　││〇 Node.Level = Level
+　　││〇 Node.BranchType = CurrentBranch
+　　││〇 Node.ProcName = ProcName
+　　││〇 Node.ModuleName = ModuleName
+　　││〇 Node.NodeType = NODE_REFERENCE
+　　││〇 Node.NodeText =  Trim$(CStr(LineText))
+　　││〇 Node.SourceLine =  Trim$(CStr(LineText))
+　　│││#   REFERENCEノード追加
+　　││◎ AddProcNode  Nodes,  Node,  PrevNode,  LastNodeID	ProcNode追加＜modProcAnalyzer＞
+　　││〇 NodeID = NodeID + 1
+　　│││#   NORMALノード生成
+　　│├┐ElseIf IsOutputNormal(  Trim$(CStr(LineText))) Then	内部呼出:IsOutputNormal
+　　││〇 Set Node = New clsProcNode
+　　││〇 Node.NodeID = NodeID
+　　││◎ Node.ParentID =  GetCurrentParentID(ParentStack)	親ノード取得＜modProcAnalyzer＞
+　　││〇 Node.Level = Level
+　　││〇 Node.BranchType = CurrentBranch
+　　││〇 Node.ProcName = ProcName
+　　││〇 Node.ModuleName = ModuleName
+　　││〇 Node.NodeType = NODE_NORMAL
+　　││〇 Node.NodeText =  Trim$(CStr(LineText))
+　　││〇 Node.SourceLine =  Trim$(CStr(LineText))
+　　││〇 Node.LineNo = i
+　　│││#   NORMALノード追加
+　　││◎ AddProcNode  Nodes,  Node,  PrevNode,  LastNodeID	ProcNode追加＜modProcAnalyzer＞
+　　││〇 NodeID = NodeID + 1
+　　││┴End If
+▼ NextLine:
+　　│┴Next
+　　│#   ENDノード生成
+　　〇 Set Node = New clsProcNode
+　　〇 Node.NodeID = NodeID
+　　〇 Node.ParentID = 0
+　　〇 Node.Level = 0
+　　〇 Node.BranchType = BRANCH_NONE
+　　〇 Node.ProcName = ProcName
+　　〇 Node.ModuleName = ModuleName
+　　〇 Node.NodeType = NODE_END
+　　◎ Node.NodeText =  GetProcedureEndText(  ProcHeader)	終了構文取得＜modProcAnalyzer＞
+　　〇 Node.SourceLine = ""
+　　│#   ENDノード追加
+　　◎ AddProcNode  Nodes,  Node,  PrevNode,  LastNodeID	ProcNode追加＜modProcAnalyzer＞
+　　│#   ProcNode一覧返却
+　　〇 Set AnalyzeProcedure = Nodes
+　　┴End Function
+
+========================================
+Calls (12)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ExtractProcedureHeader	Procedure宣言取得	modProcAnalyzer
+AddProcNode	ProcNode追加	modProcAnalyzer
+BuildLogicalLines	論理行生成	modProcAnalyzer
+GetCurrentParentID	親ノード取得	modProcAnalyzer
+IsProcedureLine	プロシージャ定義判定	modAnalyze
+GetNodeType	ノード種別判定	modProcAnalyzer
+ExtractCallNames	呼出関数一覧取得	modProcAnalyzer
+GetInternalCallList	内部呼出一覧取得	modProcAnalyzer
+JoinCollection	Collection連結	modProcAnalyzer
+IsReferenceLine	参照行判定	modProcAnalyzer
+IsOutputNormal	通常文出力判定	modProcAnalyzer
+GetProcedureEndText	終了構文取得	modProcAnalyzer
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+CreateHCP	HCP作成	modHCPAnalyzer

@@ -1,12 +1,27 @@
-Procedure: UF_Calendar5.LBL_NEXT_Click  [ 翌月表示＜UF_Calendar5＞ ]
-HCP	Business
 ┬
 〇│Private Sub LBL_NEXT_Click()	翌月表示＜UF_Calendar5＞
 ┴└┐
-　　│#  年月選択非表示
+　　│#   年月選択非表示
 　　◎ Call GP_EraseYearMonth	年月選択非表示＜UF_Calendar5＞
-　　│#  翌月設定
+　　│#   翌月設定
 　　〇 g_FormDate1 = DateSerial(g_intCurYear, g_intCurMonth + 1, 1)
-　　│#  カレンダー再生成
+　　│#   カレンダー再生成
 　　◎ Call GP_MakeCalendar	カレンダー生成＜UF_Calendar5＞
 　　┴End Sub
+
+========================================
+Calls (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GP_EraseYearMonth	年月選択非表示	UF_Calendar5
+GP_MakeCalendar	カレンダー生成	UF_Calendar5
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+UserForm_KeyDown	キーボード日付操作	UF_Calendar5

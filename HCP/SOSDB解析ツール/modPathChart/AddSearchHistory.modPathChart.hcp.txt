@@ -1,0 +1,32 @@
+┬
+〇│Public Sub AddSearchHistory(  ByVal SearchText As String)	検索履歴追加＜modPathChart＞
+┴└┐
+　　□ Dim V As Variant
+　　│#   検索文字列確認
+　　◆→ If Trim$(SearchText) = "" Then Exit Sub
+　　◎ InitSearchHistory	検索履歴初期化＜modPathChart＞
+　　│#   検索履歴重複確認
+　　＠┐For Each V In gSearchHistory
+　　│◆┐If StrComp(V, SearchText,  vbTextCompare) = 0 Then
+　　││→ Exit Sub
+　　││┴End If
+　　│┴Next
+　　│#   検索履歴追加
+　　〇 gSearchHistory.Add SearchText
+　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+InitSearchHistory	検索履歴初期化	modPathChart
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+cmdFind_Click	ノード検索	frmPathChartNavigator

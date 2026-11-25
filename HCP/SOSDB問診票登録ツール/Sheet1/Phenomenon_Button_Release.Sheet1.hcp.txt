@@ -1,5 +1,3 @@
-Procedure: Sheet1.Phenomenon_Button_Release  [ 事象名ボタン解除＜Sheet1＞ ]
-HCP	Business
 ┬
 〇│Public Sub Phenomenon_Button_Release()	事象名ボタン解除＜Sheet1＞
 ┴└┐
@@ -11,3 +9,18 @@ HCP	Business
 　　〇 Application.ScreenUpdating = True
 　　〇 ActiveWindow.SmallScroll Down:=0
 　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+Button_Set_Check	詳細表示ボタン制御	modUtility
+Clear_InputCellDat	入力セル初期化	modUtility

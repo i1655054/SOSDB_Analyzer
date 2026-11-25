@@ -1,41 +1,62 @@
-Procedure: modMonshinCore.Get_MonshinInfo  [ 問診情報取得＜modMonshinCore＞ ]
-HCP	Business
 ┬
 〇│Public Function GetMonshinInfo(  ByVal xlBook As Object,  ByVal sheetType As enMonshinSheetType  ) As MonshinInfoType	問診情報取得＜modMonshinCore＞
 ┴└┐
-　　│#  変数初期化
+　　│#   変数初期化
 　　□ Dim info As MonshinInfoType
 　　□ Dim Key As Variant
 　　□ Dim addr As String
 　　□ Dim Value As String
 　　□ Dim wsName As String
-　　│#  MAP初期化確認
+　　│#   MAP初期化確認
 　　◆┐If modMonshinMap.MonshinMap Is Nothing Then
-　　│◎ modMonshinMap.InitMonshinCommon	問診票共通初期化＜modMonshinMap＞
+　　│〇 modMonshinMap.InitMonshinCommon
 　　│┴End If
-　　│#  問診情報初期化
+　　│#   問診情報初期化
 　　◎ info = InitMonshinInfo(sheetType)	問診情報初期化＜modMonshinCore＞
-　　│#  対象シート名取得
+　　│#   対象シート名取得
 　　◇ wsName = modMonshinMap.MonShinSheet_id(sheetType)
-　　│#  MAP定義に従い問診情報取得
+　　│#   MAP定義に従い問診情報取得
 　　＠┐For Each Key In modMonshinMap.MonshinMap.Keys
 　　│◇ addr = modMonshinMap.MonshinMap(Key)(sheetType)
-　　││#  セル値取得
+　　││#   セル値取得
 　　│◆┐If addr <> "" Then
 　　││◎ Value = GetValueByAddress(xlBook, wsName, addr)	セル値取得＜modMonshinCore＞
 　　│├┐ELSE
 　　││〇 Value = ""
 　　││┴End If
-　　││#  問診情報設定
+　　││#   問診情報設定
 　　│◎ SetMonshinValue info, CStr(Key), Value	問診情報設定＜modMonshinCore＞
 　　││	内部呼出:CStr
 　　│┴Next Key
-　　│#  依頼元管理番号生成
+　　│#   依頼元管理番号生成
 　　◎ info.RequesterNum = BuildRequesterNum(info)	依頼元管理番号生成＜modMonshinCore＞
-　　│#  説明文生成
+　　│#   説明文生成
 　　◎ info.Description = BuildDescription(info)	説明文生成＜modMonshinCore＞
-　　│#  備考生成
+　　│#   備考生成
 　　◎ info.Remarks = BuildRemarks(info)	備考生成＜modMonshinCore＞
-　　│#  問診情報返却
+　　│#   問診情報返却
 　　〇 Get_MonshinInfo = info
 　　┴End Function
+
+========================================
+Calls (7)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+InitMonshinCommon	問診票共通初期化	modMonshinMap
+InitMonshinInfo	問診情報初期化	modMonshinCore
+GetValueByAddress	セル値取得	modMonshinCore
+SetMonshinValue	問診情報設定	modMonshinCore
+BuildRequesterNum	依頼元管理番号生成	modMonshinCore
+BuildDescription	説明文生成	modMonshinCore
+BuildRemarks	備考生成	modMonshinCore
+
+========================================
+Called By (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+MonshinInfoHandler	問診票取込処理	modMonshinCore
+UpdateMonshinHandler	問診票更新処理	modMonshinCore

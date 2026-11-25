@@ -1,0 +1,57 @@
+┬
+〇│Public Sub ExportHCPNodes(  ByVal HCPNodes As Collection)	HCPノード出力＜modHCPAnalyzer＞
+┴└┐
+　　□ Dim ws As Worksheet
+　　□ Dim Node As clsHCPNode
+　　□ Dim RowOut As Long
+　　☆ On Error Resume Next
+　　│#   HCPNodesシート取得
+　　〇 Set ws =  gContext.ManagementBook.Worksheets(
+　　│   SHEET_HCP_NODES)
+　　☆ On Error GoTo 0
+　　│#   HCPNodesシート作成
+　　◆┐If ws Is Nothing Then
+　　│〇 Set ws =  gContext.ManagementBook.Worksheets.Add(
+　　││   After:=gContext.ManagementBook.Worksheets(
+　　││   gContext.ManagementBook.Worksheets.Count))
+　　│〇 ws.Name = SHEET_HCP_NODES
+　　│┴End If
+　　│#   HCPNodesシート初期化
+　　〇 ws.Cells.Clear
+　　│#   HCPNodesヘッダ出力
+　　〇 ws.Range("A1:L1").Value =  Array(
+　　│   "NodeID",  "ParentID",  "PrevNodeID",  "NextNodeID",  "Level",  "NodeType",  "BranchType",  "Text",  "SourceText",  "BusinessText",  "CallName",  "InternalCalls")
+　　〇 RowOut = 2
+　　│#   HCPノード一覧出力
+　　＠┐For Each Node In HCPNodes
+　　│〇 ws.Cells(RowOut, 1) = Node.NodeID
+　　│〇 ws.Cells(RowOut, 2) = Node.ParentID
+　　│〇 ws.Cells(RowOut, 3) = Node.PrevNodeID
+　　│〇 ws.Cells(RowOut, 4) = Node.NextNodeID
+　　│〇 ws.Cells(RowOut, 5) = Node.Level
+　　│〇 ws.Cells(RowOut, 6) = Node.NodeType
+　　│〇 ws.Cells(RowOut, 7) = Node.BranchType
+　　│〇 ws.Cells(RowOut, 8) = Node.Text
+　　│〇 ws.Cells(RowOut, 9) = Node.SourceText
+　　│〇 ws.Cells(RowOut, 10) = Node.BusinessText
+　　│〇 ws.Cells(RowOut, 11) = Node.CallName
+　　│〇 ws.Cells(RowOut, 12) = Node.InternalCalls
+　　│〇 RowOut = RowOut + 1
+　　│┴Next Node
+　　│#   HCPNodesシート体裁設定
+　　〇 ws.Columns.AutoFit
+　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+CreateHCP	HCP作成	modHCPAnalyzer

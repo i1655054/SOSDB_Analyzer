@@ -1,9 +1,19 @@
-Procedure: UF_InfoWebDisplay.ResetFormSize  [ フォームサイズ初期化＜UF_InfoWebDisplay＞ ]
-HCP	Business
 ┬
 〇│Public Sub ResetFormSize()	フォームサイズ初期化＜UF_InfoWebDisplay＞
 ┴└┐
-　　│#  デフォルトサイズ復元
+　　│#   デフォルトサイズ復元
 　　〇 Me.Width = m_DefaultWidth
 　　〇 Me.Height = m_DefaultHeight
 　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

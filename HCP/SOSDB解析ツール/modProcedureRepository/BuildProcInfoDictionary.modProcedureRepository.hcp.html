@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
+<title>BuildProcInfoDictionary</title>
+<style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
+</style>
+</head>
+<body translate="no">
+<h1>BuildProcInfoDictionary</h1>
+<p>Module : modProcedureRepository</p>
+<table>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
+<tbody>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Public Sub BuildProcInfoDictionary()</td><td>Procedure辞書作成＜modProcedureRepository＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　□ Dim ws As Worksheet</td><td></td></tr>
+<tr><td>　　□ Dim LastRow As Long</td><td></td></tr>
+<tr><td>　　□ Dim r As Long</td><td></td></tr>
+<tr><td>　　□ Dim Info As clsProcInfo</td><td></td></tr>
+<tr><td>　　□ Dim Key As String</td><td></td></tr>
+<tr><td>　　☆ On Error Resume Next</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   ProcListシート取得</span></td><td></td></tr>
+<tr><td>　　〇 Set ws =  gContext.ManagementBook.Worksheets(<br>　　│   SHEET_PROC_LIST)</td><td></td></tr>
+<tr><td>　　☆ On Error GoTo 0</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   ProcList存在確認</span></td><td></td></tr>
+<tr><td>　　◆┐If ws Is Nothing Then</td><td></td></tr>
+<tr><td>　　│〇 MsgBox  "ProcListが存在しません。" &amp; vbCrLf &amp;  "先に解析実行を行ってください。",  vbExclamation</td><td></td></tr>
+<tr><td>　　│→ Exit Sub</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   Procedure管理辞書初期化</span></td><td></td></tr>
+<tr><td>　　〇 Set gContext.ProcInfoDic =  CreateObject("Scripting.Dictionary")</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   Procedure索引辞書初期化</span></td><td></td></tr>
+<tr><td>　　〇 Set gContext.ProcIndexDic =  CreateObject("Scripting.Dictionary")</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   ProcList読込</span></td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   ProcList最終行取得</span></td><td></td></tr>
+<tr><td>　　〇 LastRow =  ws.Cells(  ws.Rows.Count,  1).End(xlUp).row</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   Procedure情報読込</span></td><td></td></tr>
+<tr><td>　　＠┐For r = 2 To LastRow</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   Procedure情報生成</span></td><td></td></tr>
+<tr><td>　　│〇 Set Info = New clsProcInfo</td><td></td></tr>
+<tr><td>　　│〇 Info.ModuleName =  Trim(ws.Cells(r, COL_MODULE).Value)</td><td></td></tr>
+<tr><td>　　│〇 Info.ProcName =  Trim(ws.Cells(r, COL_PROC).Value)</td><td></td></tr>
+<tr><td>　　│〇 Info.ProcType =  Trim(ws.Cells(r, COL_TYPE).Value)</td><td></td></tr>
+<tr><td>　　│〇 Info.JPName =  Trim(ws.Cells(r, COL_JPNAME).Value)</td><td></td></tr>
+<tr><td>　　│〇 Info.Category =  Trim(ws.Cells(r, COL_CATEGORY).Value)</td><td></td></tr>
+<tr><td>　　│〇 Info.InputText =  Trim(ws.Cells(r, COL_INPUT).Value)</td><td></td></tr>
+<tr><td>　　│〇 Info.OutputText =  Trim(ws.Cells(r, COL_OUTPUT).Value)</td><td></td></tr>
+<tr><td>　　│〇 Info.Summary =  Trim(ws.Cells(r, COL_SUMMARY).Value)</td><td></td></tr>
+<tr><td>　　│〇 Info.Remarks =  Trim(ws.Cells(r, COL_REMARKS).Value)</td><td></td></tr>
+<tr><td>　　│〇 Info.UsageCount =  CLng(Val(ws.Cells(r, COL_USAGECOUNT).Value))</td><td></td></tr>
+<tr><td>　　│〇 Info.Status =  Trim(ws.Cells(r, COL_STATUS).Value)</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   Procedure検索キー生成</span></td><td></td></tr>
+<tr><td>　　│〇 Key =  Info.ModuleName &amp; "|" &amp;  Info.ProcName</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   Procedure情報登録</span></td><td></td></tr>
+<tr><td>　　│◆┐If Not gContext.ProcInfoDic.Exists(Key) Then</td><td></td></tr>
+<tr><td>　　││〇 gContext.ProcInfoDic.Add Key, Info</td><td></td></tr>
+<tr><td>　　│├┐ELSE</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│││#   Procedure情報更新</span></td><td></td></tr>
+<tr><td>　　││〇 Set gContext.ProcInfoDic(Key) = Info</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   Procedure索引作成</span></td><td></td></tr>
+<tr><td>　　│◎ <a href="../modProcedureRepository/BuildProcIndex.modProcedureRepository.hcp.html">BuildProcIndex</a> Info</td><td><a href="../modProcedureRepository/BuildProcIndex.modProcedureRepository.hcp.html">Procedure索引作成＜modProcedureRepository＞</a></td></tr>
+<tr><td>　　│┴Next r</td><td></td></tr>
+<tr><td>　　┴End Sub</td><td></td></tr>
+</tbody>
+</table>
+<hr>
+<h2>Calls (1)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modProcedureRepository/BuildProcIndex.modProcedureRepository.hcp.html">BuildProcIndex</a></td><td>Procedure索引作成</td><td>modProcedureRepository</td></tr>
+</table>
+<hr>
+<h2>Called By (1)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modProcedureRepository/InitializeProcedureRepository.modProcedureRepository.hcp.html">InitializeProcedureRepository</a></td><td>ProcedureRepository初期化</td><td>modProcedureRepository</td></tr>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function(eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function(e) {
+startX = e.pageX;
+startWidth = eleTh.offsetWidth;
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
+}
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
+}
+});
+</script>
+</body>
+</html>

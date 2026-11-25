@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
+<title>MoveToSiblingNode</title>
+<style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
+</style>
+</head>
+<body translate="no">
+<h1>MoveToSiblingNode</h1>
+<p>Module : modPathChart</p>
+<table>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
+<tbody>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Public Sub MoveToSiblingNode()</td><td>兄弟ノード移動＜modPathChart＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　◆┐If gParentMap Is Nothing Then</td><td></td></tr>
+<tr><td>　　│〇 MsgBox "PathChartを再生成してください。"</td><td></td></tr>
+<tr><td>　　│→ Exit Sub</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　□ Dim ws As Worksheet</td><td></td></tr>
+<tr><td>　　□ Dim shp As Shape</td><td></td></tr>
+<tr><td>　　□ Dim ParentName As String</td><td></td></tr>
+<tr><td>　　□ Dim Ary As Variant</td><td></td></tr>
+<tr><td>　　□ Dim i As Long</td><td></td></tr>
+<tr><td>　　□ Dim CurrentPos As Long</td><td></td></tr>
+<tr><td>　　〇 Set ws = gContext.ManagementBook.Worksheets(<br>　　│ SHEET_PATH_CHART)</td><td></td></tr>
+<tr><td>　　◆┐If gCurrentShapeName = "" Then</td><td></td></tr>
+<tr><td>　　│〇 MsgBox "現在ノードがありません。"</td><td></td></tr>
+<tr><td>　　│→ Exit Sub</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　◆┐If gParentMap Is Nothing Then</td><td></td></tr>
+<tr><td>　　│〇 MsgBox "パスチャートを再生成してください。"</td><td></td></tr>
+<tr><td>　　│→ Exit Sub</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　◆┐If Not gParentMap.Exists(gCurrentShapeName) Then</td><td></td></tr>
+<tr><td>　　│〇 MsgBox "兄弟ノードはありません。"</td><td></td></tr>
+<tr><td>　　│→ Exit Sub</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   親ノード取得</span></td><td></td></tr>
+<tr><td>　　〇 ParentName = gParentMap(gCurrentShapeName)</td><td></td></tr>
+<tr><td>　　◆┐If Not gChildMap.Exists(ParentName) Then</td><td></td></tr>
+<tr><td>　　│〇 MsgBox "兄弟ノードはありません。"</td><td></td></tr>
+<tr><td>　　│→ Exit Sub</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   兄弟ノード一覧取得</span></td><td></td></tr>
+<tr><td>　　〇 Ary = Split(gChildMap(ParentName), "|")</td><td></td></tr>
+<tr><td>　　〇 CurrentPos = -1</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   現在位置検索</span></td><td></td></tr>
+<tr><td>　　＠┐For i = LBound(Ary) To UBound(Ary)</td><td></td></tr>
+<tr><td>　　│◆┐If Ary(i) = gCurrentShapeName Then</td><td></td></tr>
+<tr><td>　　││〇 CurrentPos = i</td><td></td></tr>
+<tr><td>　　││→ Exit For</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td>　　│┴Next i</td><td></td></tr>
+<tr><td>　　◆┐If CurrentPos = -1 Then</td><td></td></tr>
+<tr><td>　　│〇 MsgBox "兄弟ノードが見つかりません。"</td><td></td></tr>
+<tr><td>　　│→ Exit Sub</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   次兄弟ノード選択</span></td><td></td></tr>
+<tr><td>　　〇 CurrentPos = CurrentPos + 1</td><td></td></tr>
+<tr><td>　　◆┐If CurrentPos &gt; UBound(Ary) Then</td><td></td></tr>
+<tr><td>　　│〇 CurrentPos = 0</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   兄弟ノード取得</span></td><td></td></tr>
+<tr><td>　　〇 Set shp = ws.Shapes(Ary(CurrentPos))</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   現在ノード更新</span></td><td></td></tr>
+<tr><td>　　〇 gCurrentShapeName = shp.Name</td><td></td></tr>
+<tr><td>　　〇 gCurrentNodeText = shp.TextFrame.Characters.Text</td><td></td></tr>
+<tr><td>　　◎ UpdateCurrentNodeInfo  <a href="../modPathChart/GetProcedureNameFromNodeText.modPathChart.hcp.html">GetProcedureNameFromNodeText</a>(  gCurrentNodeText)</td><td><a href="../modPathChart/GetProcedureNameFromNodeText.modPathChart.hcp.html">関数名取得＜modPathChart＞</a></td></tr>
+<tr><td>　　◆┐If gParentMap.Exists(shp.Name) Then</td><td></td></tr>
+<tr><td>　　│〇 gCurrentParentShapeName =  gParentMap(shp.Name)</td><td></td></tr>
+<tr><td>　　│〇 gCurrentParentWithChildren =  gParentMap(shp.Name)</td><td></td></tr>
+<tr><td>　　├┐ELSE</td><td></td></tr>
+<tr><td>　　│〇 gCurrentParentShapeName = ""</td><td></td></tr>
+<tr><td>　　│〇 gCurrentParentWithChildren = ""</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   ノード強調表示</span></td><td></td></tr>
+<tr><td>　　◎ Call <a href="../modPathChart/HighlightNode.modPathChart.hcp.html">HighlightNode</a>(shp)</td><td><a href="../modPathChart/HighlightNode.modPathChart.hcp.html">ノード強調表示＜modPathChart＞</a></td></tr>
+<tr><td>　　〇 gCurrentParentWithChildren =  gCurrentParentShapeName</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   Navigator状態更新</span></td><td></td></tr>
+<tr><td>　　◎ UpdateNavigatorStatus  "兄弟ノード : " &amp;  <a href="../modPathChart/GetProcedureNameFromNodeText.modPathChart.hcp.html">GetProcedureNameFromNodeText</a>(  shp.TextFrame.Characters.Text)</td><td><a href="../modPathChart/GetProcedureNameFromNodeText.modPathChart.hcp.html">関数名取得＜modPathChart＞</a></td></tr>
+<tr><td>　　┴End Sub</td><td></td></tr>
+</tbody>
+</table>
+<hr>
+<h2>Calls (4)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modPathChart/UpdateCurrentNodeInfo.modPathChart.hcp.html">UpdateCurrentNodeInfo</a></td><td>ノード情報更新</td><td>modPathChart</td></tr>
+<tr><td><a href="../modPathChart/GetProcedureNameFromNodeText.modPathChart.hcp.html">GetProcedureNameFromNodeText</a></td><td>関数名取得</td><td>modPathChart</td></tr>
+<tr><td><a href="../modPathChart/HighlightNode.modPathChart.hcp.html">HighlightNode</a></td><td>ノード強調表示</td><td>modPathChart</td></tr>
+<tr><td><a href="../modPathChart/UpdateNavigatorStatus.modPathChart.hcp.html">UpdateNavigatorStatus</a></td><td>Navigator状態更新</td><td>modPathChart</td></tr>
+</table>
+<hr>
+<h2>Called By (1)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../frmPathChartNavigator/cmdSibling_Click.frmPathChartNavigator.hcp.html">cmdSibling_Click</a></td><td>兄弟ノード移動</td><td>frmPathChartNavigator</td></tr>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function(eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function(e) {
+startX = e.pageX;
+startWidth = eleTh.offsetWidth;
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
+}
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
+}
+});
+</script>
+</body>
+</html>

@@ -1,14 +1,12 @@
-Procedure: modMonshinCore.BuildRequesterNum  [ 依頼元管理番号生成＜modMonshinCore＞ ]
-HCP	Business
 ┬
 〇│Private Function BuildRequesterNum(ByRef info As MonshinInfoType) As String	依頼元管理番号生成＜modMonshinCore＞
 ┴└┐
 　　□ Dim baseNum As String
 　　□ Dim result As String
-　　│#  ベース番号決定
+　　│#   ベース番号決定
 　　〇 baseNum = info.RequesterNum   ' ← MAPでB4から取っている前提
 　　◆┐If baseNum = "" Then
-　　││#  フォールバック番号判定
+　　││#   フォールバック番号判定
 　　│◆┐Select Case info.sheetType
 　　││├┐Case Monshin_2010, Monshin_Other
 　　│││〇 baseNum = info.unKanNum
@@ -16,9 +14,9 @@ HCP	Business
 　　│││〇 baseNum = info.faultRepNum
 　　││┴End Select
 　　│┴End If
-　　│#  管理番号文字列生成
+　　│#   管理番号文字列生成
 　　〇 result = "問診票管理番号=" & baseNum
-　　│#  フォーマット別追加情報生成
+　　│#   フォーマット別追加情報生成
 　　◆┐Select Case info.sheetType
 　　│├┐Case Monshin_2010, Monshin_Other
 　　││◆┐If info.unKanNum <> "" Then
@@ -29,6 +27,20 @@ HCP	Business
 　　│││〇 result = result & " / 故障票番号=" & info.faultRepNum
 　　│││┴End If
 　　│┴End Select
-　　│#  依頼元管理番号返却
+　　│#   依頼元管理番号返却
 　　〇 BuildRequesterNum = result
 　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+Get_MonshinInfo	問診情報取得	modMonshinCore

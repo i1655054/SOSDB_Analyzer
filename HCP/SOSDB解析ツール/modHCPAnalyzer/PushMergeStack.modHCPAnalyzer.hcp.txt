@@ -1,0 +1,23 @@
+┬
+〇│Private Sub PushMergeStack(  ByVal MergeStack As Collection,  ByVal NodeType As String,  ByVal NodeID As Long)	マージスタック登録＜modHCPAnalyzer＞
+┴└┐
+　　│#   制御構造開始位置登録
+　　〇 MergeStack.Add  NodeType & ":" & NodeID
+　　◎ TraceStack  "PUSH",  NodeType & ":" & NodeID,  MergeStack.Count	スタックトレース出力＜modDebug＞
+　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+TraceStack	スタックトレース出力	modDebug
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ConvertProcToHCP	HCP変換	modHCPAnalyzer

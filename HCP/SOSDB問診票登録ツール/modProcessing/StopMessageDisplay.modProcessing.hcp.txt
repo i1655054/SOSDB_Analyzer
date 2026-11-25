@@ -1,11 +1,25 @@
-Procedure: modProcessing.StopMessageDisplay  [ 処理中画面終了＜modProcessing＞ ]
-HCP	Business
 ┬
 〇│Sub StopMessageDisplay()	処理中画面終了＜modProcessing＞
 ┴└┐
 　　☆ On Error Resume Next
-　　│#  タイマー停止
+　　│#   タイマー停止
 　　〇 Application.OnTime nextTime, "ScheduleNextMessage", schedule:=False
-　　│#  処理中画面終了
+　　│#   処理中画面終了
 　　〇 Unload frmProcessing
 　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (3)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+MonshinInfoHandler	問診票取込処理	modMonshinCore
+UpdateMonshinHandler	問診票更新処理	modMonshinCore
+ScheduleNextMessage	進捗メッセージ更新	modProcessing

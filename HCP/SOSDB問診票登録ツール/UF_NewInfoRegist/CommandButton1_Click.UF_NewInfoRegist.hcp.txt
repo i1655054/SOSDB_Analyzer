@@ -1,5 +1,3 @@
-Procedure: UF_NewInfoRegist.CommandButton1_Click  [ 新規Issue登録情報確定＜UF_NewInfoRegist＞ ]
-HCP	Business
 ┬
 〇│Private Sub CommandButton1_Click()	新規Issue登録情報確定＜UF_NewInfoRegist＞
 ┴└┐
@@ -8,65 +6,90 @@ HCP	Business
 　　│#  ## mainシートの選択 ###
 　　□ Dim sht As Worksheet
 　　〇 Set sht = ThisWorkbook.Worksheets(SheetName_Main)
-　　│#  入力チェック
-　　◆ If Not 管理番号_子番号_chk Then message = message & "管理番号_子番号" & vbCrLf
-　　◆ If Not 優先度_chk Then message = message & "優先度" & vbCrLf
-　　◆ If Not 装置プロダクト_chk Then message = message & "装置プロダクト" & vbCrLf
-　　◆ If Not プロダクト担当者_chk Then message = message & "プロダクト担当者" & vbCrLf
-　　◆ If Not 発生日_chk Then message = message & "発生日" & vbCrLf
-　　◆ If Not 事象名_chk Then message = message & "事象名" & vbCrLf
-　　◆ If Not 依頼元管理番号_chk Then message = message & "依頼元管理番号" & vbCrLf
-　　◆ If Not 依頼者_chk Then message = message & "依頼者" & vbCrLf
-　　◆ If Not 説明_chk Then message = message & "説明" & vbCrLf
-　　│#  入力エラー確認
+　　│#   入力チェック
+　　◆ If Not 管理番号_子番号_chk Then message = message & "管理番号_子番号" & vbCrLf	内部呼出:管理番号_子番号_chk
+　　◆ If Not 優先度_chk Then message = message & "優先度" & vbCrLf	内部呼出:優先度_chk
+　　◆ If Not 装置プロダクト_chk Then message = message & "装置プロダクト" & vbCrLf	内部呼出:装置プロダクト_chk
+　　◆ If Not プロダクト担当者_chk Then message = message & "プロダクト担当者" & vbCrLf	内部呼出:プロダクト担当者_chk
+　　◆ If Not 発生日_chk Then message = message & "発生日" & vbCrLf	内部呼出:発生日_chk
+　　◆ If Not 事象名_chk Then message = message & "事象名" & vbCrLf	内部呼出:事象名_chk
+　　◆ If Not 依頼元管理番号_chk Then message = message & "依頼元管理番号" & vbCrLf	内部呼出:依頼元管理番号_chk
+　　◆ If Not 依頼者_chk Then message = message & "依頼者" & vbCrLf	内部呼出:依頼者_chk
+　　◆ If Not 説明_chk Then message = message & "説明" & vbCrLf	内部呼出:説明_chk
+　　│#   入力エラー確認
 　　◆┐If message <> "" Then
-　　││#  エラーメッセージ表示
+　　││#   エラーメッセージ表示
 　　│〇 response = MsgBox(message, vbOKCancel + vbQuestion, "未入力NG")
-　　││#  再入力判定
+　　││#   再入力判定
 　　│◆┐If response = vbOK Then
-　　│││#  エラー表示解除
+　　│││#   エラー表示解除
 　　││◎ Clear_chk	入力エラー表示解除＜UF_NewInfoRegist＞
 　　││→ Exit Sub
 　　│├┐ELSE
-　　│││#  入力取消
+　　│││#   入力取消
 　　││〇 IsCanceled = True
 　　││〇 Unload Me
 　　││→ Exit Sub
 　　││┴End If
 　　│┴End If
-　　│#  Issue情報設定
+　　│#   Issue情報設定
 　　＠┐With TargetIssue
-　　││#  基本情報設定
+　　││#   基本情報設定
 　　│〇 .Subject = Me.txt事象名.Value
 　　│〇 .Phenomenon = Me.txt事象名.Value
 　　│〇 .Description = Me.txt説明.Value
-　　││#  問合せ情報設定
+　　││#   問合せ情報設定
 　　│〇 .RequesterNum = Me.txt依頼元管理番号.Value
 　　│〇 .Requester_Pro = Me.txt依頼者.Value
-　　││#  備考設定
+　　││#   備考設定
 　　│〇 .Remarks = Me.txt備考.Value
 　　│〇 .Priority = Me.cmb優先度.Value
 　　│〇 .Status = Me.cmbステータス.Value
 　　│〇 .AssignedTo = sht.Range(TANTOU_NAME_RANG).Value
 　　│〇 .targetVersion = Me.cmb年度.Value
-　　││#  設備情報設定
+　　││#   設備情報設定
 　　│〇 .ProblemBuilding = Me.txtビル.Value
 　　│〇 .HostName = Me.txtホスト名.Value
-　　││#  プロダクト情報設定
+　　││#   プロダクト情報設定
 　　│〇 .EqProduct = Me.cmb装置プロダクト.Value
 　　│〇 .ProductTantou = Me.txtプロダクト担当者.Value
-　　││#  発生日時設定
+　　││#   発生日時設定
 　　│〇 .OccurrenceDateTime = Me.txt問題発生日時.Value
 　　│〇 .Esukare_Date = Me.txt発生日.Value
 　　│〇 .Close_Date = Me.txt完了日.Value
 　　│〇 .Equipment = Me.txt問題発生装置.Value
-　　││#  管理番号生成
+　　││#   管理番号生成
 　　│◆┐If Trim(Me.txt管理番号_子番号.Value) <> "" Then
 　　││◎ .TroubleNum =  BuildTroubleNum(sht.Range(TARGET_VER_RANG).Value, Me.txt管理番号_子番号.Value)	トラブル番号生成＜modUtility＞
 　　│││	内部呼出:Range
 　　││┴End If
 　　│┴End With
-　　│#  登録完了
+　　│#   登録完了
 　　〇 IsCanceled = False
 　　〇 Unload Me
 　　┴End Sub
+
+========================================
+Calls (12)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+管理番号_子番号_chk	管理番号入力確認	UF_NewInfoRegist
+優先度_chk	優先度入力確認	UF_NewInfoRegist
+装置プロダクト_chk	装置プロダクト確認	UF_NewInfoRegist
+プロダクト担当者_chk	プロダクト担当者確認	UF_NewInfoRegist
+発生日_chk	発生日入力確認	UF_NewInfoRegist
+事象名_chk	事象名入力確認	UF_NewInfoRegist
+依頼元管理番号_chk	依頼元管理番号確認	UF_NewInfoRegist
+依頼者_chk	依頼者入力確認	UF_NewInfoRegist
+説明_chk	説明入力確認	UF_NewInfoRegist
+Clear_chk	入力エラー表示解除	UF_NewInfoRegist
+BuildTroubleNum	トラブル番号生成	modUtility
+IsUserFormOpen	フォーム起動状態確認	modUtility
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

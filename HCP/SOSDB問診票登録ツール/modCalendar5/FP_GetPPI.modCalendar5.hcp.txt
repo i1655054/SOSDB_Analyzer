@@ -1,7 +1,20 @@
-Procedure: modCalendar5.FP_GetPPI  [ PPI取得＜modCalendar5＞ ]
-HCP	Business
 ┬
 〇│Private Function FP_GetPPI() As Long	PPI取得＜modCalendar5＞
 ┴└┐
 　　〇 FP_GetPPI = Application.InchesToPoints(1)
 　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ShowCalendarFromTextBox2	テキストボックス日付選択	modCalendar5
+FP_GetFormPosition	フォーム表示位置算出	modCalendar5

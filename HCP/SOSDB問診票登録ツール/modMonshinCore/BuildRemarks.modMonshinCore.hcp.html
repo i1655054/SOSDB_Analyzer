@@ -1,72 +1,76 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
 <meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
 <title>BuildRemarks</title>
 <style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
 body{font-family:Meiryo;font-size:9pt;}
 table{border-collapse:collapse;}
-th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
 td{vertical-align:top;}
 th{background:#e8f0fe;}
-colgroup col:nth-of-type(1) {}
-colgroup col:nth-of-type(2) {}
-.resize {position: relative;}
-.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
 </style>
 </head>
-<body>
+<body translate="no">
 <h1>BuildRemarks</h1>
 <p>Module : modMonshinCore</p>
-<p><a href="./_INDEX.html">← Module Index</a></p>
 <table>
-<colgroup><col/><col/></colgroup>
-<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
 <tbody>
-<tr><td>Procedure: modMonshinCore.BuildRemarks  [ 備考生成＜modMonshinCore＞ ]</td><td></td></tr>
-<tr><td>HCP</td><td>Business</td></tr>
 <tr><td>┬</td><td></td></tr>
 <tr><td>〇│Private Function BuildRemarks(ByRef info As MonshinInfoType) As String</td><td>備考生成＜modMonshinCore＞</td></tr>
 <tr><td>┴└┐</td><td></td></tr>
-<tr><td>　　│#  回答日入力確認</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   回答日入力確認</span></td><td></td></tr>
 <tr><td>　　◆┐If Trim(info.AnswerDate) = "" Or info.AnswerDate = "0:00:00" Then</td><td></td></tr>
-<tr><td>　　││#  備考なし返却</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   備考なし返却</span></td><td></td></tr>
 <tr><td>　　│〇 BuildRemarks = ""</td><td></td></tr>
 <tr><td>　　│→ Exit Function</td><td></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
-<tr><td>　　│#  備考文字列生成</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   備考文字列生成</span></td><td></td></tr>
 <tr><td>　　□ Dim result As String</td><td></td></tr>
 <tr><td>　　〇 result = "回答日：" &amp; info.AnswerDate &amp; vbCrLf &amp;  "研開C担当者名、連絡先：" &amp; info.AnswerPerson &amp; vbCrLf &amp;  "【解析結果/対処方法】" &amp; vbCrLf &amp;  info.AnswerInfo &amp; vbCrLf</td><td></td></tr>
-<tr><td>　　│#  備考返却</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   備考返却</span></td><td></td></tr>
 <tr><td>　　〇 BuildRemarks = result</td><td></td></tr>
 <tr><td>　　┴End Function</td><td></td></tr>
 </tbody>
 </table>
+<hr>
+<h2>Calls (0)</h2>
+<p>呼出先なし</p>
+<hr>
+<h2>Called By (1)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modMonshinCore/Get_MonshinInfo.modMonshinCore.hcp.html">Get_MonshinInfo</a></td><td>問診情報取得</td><td>modMonshinCore</td></tr>
+</table>
 <script>
-document.querySelectorAll('.resize').forEach(function (eleTh) {
+document.querySelectorAll('.resize').forEach(function(eleTh) {
 let startX;
 let startWidth;
 const eleResizer = document.createElement('div');
 eleResizer.classList.add('resizer');
-eleResizer.addEventListener('mousedown', function (e) {
-const styleTh = window.getComputedStyle(eleTh);
-const paddingLeft = parseFloat(styleTh.paddingLeft);
-const paddingRight = parseFloat(styleTh.paddingRight);
-const borderLeft = parseFloat(styleTh.borderLeftWidth);
-const borderRight = parseFloat(styleTh.borderRightWidth);
+eleResizer.addEventListener('mousedown', function(e) {
 startX = e.pageX;
-startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+startWidth = eleTh.offsetWidth;
 document.addEventListener('mousemove', onMouseMove);
 document.addEventListener('mouseup', onMouseUp);
 });
 eleTh.appendChild(eleResizer);
-function onMouseMove(e) {
-const newWidth = startWidth + (e.pageX - startX);
-eleTh.style.width = newWidth + 'px';
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
 }
-function onMouseUp() {
-document.removeEventListener('mousemove', onMouseMove);
-document.removeEventListener('mouseup', onMouseUp);
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
 }
 });
 </script>

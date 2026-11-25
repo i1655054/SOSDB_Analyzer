@@ -1,0 +1,56 @@
+┬
+〇│Private Sub cmdOK_Click()	オプション保存＜frmPathChartOption＞
+┴└┐
+　　│#   解析対象設定保存
+　　〇 gProperty = chkProperty.Value
+　　〇 gPrivate = chkPrivate.Value
+　　〇 gPublic = chkPublic.Value
+　　│#   モジュール種別設定保存
+　　〇 gStdModule = chkStdModule.Value
+　　〇 gUserForm = chkUserForm.Value
+　　〇 gClassModule = chkClassModule.Value
+　　│#   除外条件設定保存
+　　〇 gIgnoreAPI = chkIgnoreAPI.Value
+　　〇 gIgnoreExcel = chkIgnoreExcel.Value
+　　〇 gIgnoreSelf = chkIgnoreSelf.Value
+　　〇 gSameModuleOnly = chkSameModuleOnly.Value
+　　│#   PathChart表示設定保存
+　　〇 gSkipCommon = chkSkipCommon.Value
+　　〇 gShowCount = chkShowCount.Value
+　　│#   出力設定保存
+　　〇 gPowerPoint = chkPowerPoint.Value
+　　│#   PowerPoint向き設定保存
+　　◎ SetOptionValue	出力オプション設定＜frmPathChartOption＞
+　　〇 gPngOutput = chkPngOutput.Value
+　　│#   モジュール表示設定保存
+　　〇 gShowModule = chkShowModule.Value
+　　〇 gColorModule = chkColorModule.Value
+　　│#   テーマ設定保存
+　　〇 gColorTheme = cmbColorTheme.Value
+　　│#   制限値設定保存
+　　〇 gMaxNode = Val(txtMaxNode.Text)
+　　〇 gMaxEdge = Val(txtMaxEdge.Text)
+　　│#   PathChart設定保存
+　　◎ SavePathChartConfig	PathChart設定保存＜modPathChartConfig＞
+　　│#   オプション画面終了
+　　〇 Me.Hide
+　　┴End Sub
+
+========================================
+Calls (6)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+SetOptionValue	出力オプション設定	frmPathChartOption
+SavePathChartConfig	PathChart設定保存	modPathChartConfig
+CreateAnalyzeContext	解析コンテキスト生成	modAnalyzerCommon
+ValidateTargetBook	対象ブック存在確認	modToolManager
+ClearProcedureRepository	ProcedureRepository初期化解除	modProcedureRepository
+ActivateAnalyzerBook	解析ツールBookアクティブ化	modToolManager
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

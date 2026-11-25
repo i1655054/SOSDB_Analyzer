@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
+<title>GetNodeType</title>
+<style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
+</style>
+</head>
+<body translate="no">
+<h1>GetNodeType</h1>
+<p>Module : modProcAnalyzer</p>
+<table>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
+<tbody>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Private Function GetNodeType(  ByVal LineText As String)  As String</td><td>ノード種別判定＜modProcAnalyzer＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   判定対象整形</span></td><td></td></tr>
+<tr><td>　　〇 LineText = Trim$(LineText)</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   ノード種別判定</span></td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   条件コンパイル判定</span></td><td></td></tr>
+<tr><td>　　◆┐If <a href="../modProcAnalyzer/StartsWithKeyword.modProcAnalyzer.hcp.html">StartsWithKeyword</a>(LineText, "#ElseIf") Then</td><td>内部呼出:<a href="../modProcAnalyzer/StartsWithKeyword.modProcAnalyzer.hcp.html">StartsWithKeyword</a></td></tr>
+<tr><td><span class="hcp-comment">　　││#   #ElseIf</span></td><td></td></tr>
+<tr><td>　　│〇 GetNodeType = NODE_COMPILE_ELSEIF</td><td></td></tr>
+<tr><td>　　├┐ElseIf StrComp(  LineText,  "#Else",  vbTextCompare) = 0 Then</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   #Else</span></td><td></td></tr>
+<tr><td>　　│〇 GetNodeType = NODE_COMPILE_ELSE</td><td></td></tr>
+<tr><td>　　├┐ElseIf StrComp(  LineText,  "#End If",  vbTextCompare) = 0 Then</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   #End If</span></td><td></td></tr>
+<tr><td>　　│〇 GetNodeType = NODE_COMPILE_ENDIF</td><td></td></tr>
+<tr><td>　　├┐ElseIf <a href="../modProcAnalyzer/StartsWithKeyword.modProcAnalyzer.hcp.html">StartsWithKeyword</a>(LineText, "#If") Then</td><td>内部呼出:<a href="../modProcAnalyzer/StartsWithKeyword.modProcAnalyzer.hcp.html">StartsWithKeyword</a></td></tr>
+<tr><td><span class="hcp-comment">　　││#   #If</span></td><td></td></tr>
+<tr><td>　　│〇 GetNodeType = NODE_COMPILE_IF</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   宣言・制御判定</span></td><td></td></tr>
+<tr><td>　　├┐ElseIf <a href="../modProcAnalyzer/StartsWithKeyword.modProcAnalyzer.hcp.html">StartsWithKeyword</a>(LineText, "Dim") Then</td><td>内部呼出:<a href="../modProcAnalyzer/StartsWithKeyword.modProcAnalyzer.hcp.html">StartsWithKeyword</a></td></tr>
+<tr><td><span class="hcp-comment">　　││#   変数宣言</span></td><td></td></tr>
+<tr><td>　　│〇 GetNodeType = NODE_DECLARE</td><td></td></tr>
+<tr><td>　　├┐ElseIf <a href="../modProcAnalyzer/StartsWithKeyword.modProcAnalyzer.hcp.html">StartsWithKeyword</a>(LineText, "Const") Then</td><td>内部呼出:<a href="../modProcAnalyzer/StartsWithKeyword.modProcAnalyzer.hcp.html">StartsWithKeyword</a></td></tr>
+<tr><td><span class="hcp-comment">　　││#   定数宣言</span></td><td></td></tr>
+<tr><td>　　│〇 GetNodeType = NODE_DECLARE</td><td></td></tr>
+<tr><td>　　├┐ElseIf <a href="../modProcAnalyzer/StartsWithKeyword.modProcAnalyzer.hcp.html">StartsWithKeyword</a>(LineText, "On Error") Then</td><td>内部呼出:<a href="../modProcAnalyzer/StartsWithKeyword.modProcAnalyzer.hcp.html">StartsWithKeyword</a></td></tr>
+<tr><td><span class="hcp-comment">　　││#   エラー制御</span></td><td></td></tr>
+<tr><td>　　│〇 GetNodeType = NODE_CONTROL</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   IF構造判定</span></td><td></td></tr>
+<tr><td>　　├┐ElseIf <a href="../modProcAnalyzer/StartsWithKeyword.modProcAnalyzer.hcp.html">StartsWithKeyword</a>(LineText, "If") Then</td><td>内部呼出:<a href="../modProcAnalyzer/StartsWithKeyword.modProcAnalyzer.hcp.html">StartsWithKeyword</a></td></tr>
+<tr><td><span class="hcp-comment">　　││#   1行If判定</span></td><td></td></tr>
+<tr><td>　　│◆┐If <a href="../modProcAnalyzer/IsInlineIf.modProcAnalyzer.hcp.html">IsInlineIf</a>(LineText) Then</td><td>内部呼出:<a href="../modProcAnalyzer/IsInlineIf.modProcAnalyzer.hcp.html">IsInlineIf</a></td></tr>
+<tr><td><span class="hcp-comment">　　│││#   インラインIf</span></td><td></td></tr>
+<tr><td>　　││〇 GetNodeType = NODE_INLINE_IF</td><td></td></tr>
+<tr><td>　　│├┐ELSE</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│││#   ブロックIf</span></td><td></td></tr>
+<tr><td>　　││〇 GetNodeType = NODE_IF</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td>　　├┐ElseIf StrComp(LineText,  "End If",  vbTextCompare) = 0 Then</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   End If</span></td><td></td></tr>
+<tr><td>　　│〇 GetNodeType = NODE_ENDIF</td><td></td></tr>
+<tr><td>　　├┐ElseIf <a href="../modProcAnalyzer/StartsWithKeyword.modProcAnalyzer.hcp.html">StartsWithKeyword</a>(LineText, "ElseIf") Then</td><td>内部呼出:<a href="../modProcAnalyzer/StartsWithKeyword.modProcAnalyzer.hcp.html">StartsWithKeyword</a></td></tr>
+<tr><td><span class="hcp-comment">　　││#   ElseIf</span></td><td></td></tr>
+<tr><td>　　│〇 GetNodeType = NODE_ELSEIF</td><td></td></tr>
+<tr><td>　　├┐ElseIf StrComp(LineText,  "Else",  vbTextCompare) = 0 Then</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   Else</span></td><td></td></tr>
+<tr><td>　　│〇 GetNodeType = NODE_ELSE</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   FOR構造判定</span></td><td></td></tr>
+<tr><td>　　├┐ElseIf <a href="../modProcAnalyzer/StartsWithKeyword.modProcAnalyzer.hcp.html">StartsWithKeyword</a>(LineText, "For") Then</td><td>内部呼出:<a href="../modProcAnalyzer/StartsWithKeyword.modProcAnalyzer.hcp.html">StartsWithKeyword</a></td></tr>
+<tr><td><span class="hcp-comment">　　││#   For</span></td><td></td></tr>
+<tr><td>　　│〇 GetNodeType = NODE_FOR</td><td></td></tr>
+<tr><td>　　├┐ElseIf <a href="../modProcAnalyzer/StartsWithKeyword.modProcAnalyzer.hcp.html">StartsWithKeyword</a>(LineText, "Next") Then</td><td>内部呼出:<a href="../modProcAnalyzer/StartsWithKeyword.modProcAnalyzer.hcp.html">StartsWithKeyword</a></td></tr>
+<tr><td><span class="hcp-comment">　　││#   Next</span></td><td></td></tr>
+<tr><td>　　│〇 GetNodeType = NODE_NEXT</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   DO構造判定</span></td><td></td></tr>
+<tr><td>　　├┐ElseIf <a href="../modProcAnalyzer/StartsWithKeyword.modProcAnalyzer.hcp.html">StartsWithKeyword</a>(LineText, "Do") Then</td><td>内部呼出:<a href="../modProcAnalyzer/StartsWithKeyword.modProcAnalyzer.hcp.html">StartsWithKeyword</a></td></tr>
+<tr><td><span class="hcp-comment">　　││#   Do</span></td><td></td></tr>
+<tr><td>　　│〇 GetNodeType = NODE_DO</td><td></td></tr>
+<tr><td>　　├┐ElseIf <a href="../modProcAnalyzer/StartsWithKeyword.modProcAnalyzer.hcp.html">StartsWithKeyword</a>(LineText, "Loop") Then</td><td>内部呼出:<a href="../modProcAnalyzer/StartsWithKeyword.modProcAnalyzer.hcp.html">StartsWithKeyword</a></td></tr>
+<tr><td><span class="hcp-comment">　　││#   Loop</span></td><td></td></tr>
+<tr><td>　　│〇 GetNodeType = NODE_LOOP</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   WHILE構造判定</span></td><td></td></tr>
+<tr><td>　　├┐ElseIf <a href="../modProcAnalyzer/StartsWithKeyword.modProcAnalyzer.hcp.html">StartsWithKeyword</a>(LineText, "While") Then</td><td>内部呼出:<a href="../modProcAnalyzer/StartsWithKeyword.modProcAnalyzer.hcp.html">StartsWithKeyword</a></td></tr>
+<tr><td><span class="hcp-comment">　　││#   While</span></td><td></td></tr>
+<tr><td>　　│〇 GetNodeType = NODE_WHILE</td><td></td></tr>
+<tr><td>　　├┐ElseIf StrComp(LineText,  "Wend",  vbTextCompare) = 0 Then</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   Wend</span></td><td></td></tr>
+<tr><td>　　│〇 GetNodeType = NODE_WEND</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   WITH構造判定</span></td><td></td></tr>
+<tr><td>　　├┐ElseIf <a href="../modProcAnalyzer/StartsWithKeyword.modProcAnalyzer.hcp.html">StartsWithKeyword</a>(LineText, "With") Then</td><td>内部呼出:<a href="../modProcAnalyzer/StartsWithKeyword.modProcAnalyzer.hcp.html">StartsWithKeyword</a></td></tr>
+<tr><td><span class="hcp-comment">　　││#   With</span></td><td></td></tr>
+<tr><td>　　│〇 GetNodeType = NODE_WITH</td><td></td></tr>
+<tr><td>　　├┐ElseIf StrComp(LineText,  "End With",  vbTextCompare) = 0 Then</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   End With</span></td><td></td></tr>
+<tr><td>　　│〇 GetNodeType = NODE_ENDWITH</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   SELECT構造判定</span></td><td></td></tr>
+<tr><td>　　├┐ElseIf <a href="../modProcAnalyzer/StartsWithKeyword.modProcAnalyzer.hcp.html">StartsWithKeyword</a>(LineText, "Select Case") Then</td><td>内部呼出:<a href="../modProcAnalyzer/StartsWithKeyword.modProcAnalyzer.hcp.html">StartsWithKeyword</a></td></tr>
+<tr><td><span class="hcp-comment">　　││#   Select Case</span></td><td></td></tr>
+<tr><td>　　│〇 GetNodeType = NODE_SELECT</td><td></td></tr>
+<tr><td>　　├┐ElseIf <a href="../modProcAnalyzer/StartsWithKeyword.modProcAnalyzer.hcp.html">StartsWithKeyword</a>(LineText, "Case") Then</td><td>内部呼出:<a href="../modProcAnalyzer/StartsWithKeyword.modProcAnalyzer.hcp.html">StartsWithKeyword</a></td></tr>
+<tr><td><span class="hcp-comment">　　││#   Case</span></td><td></td></tr>
+<tr><td>　　│〇 GetNodeType = NODE_CASE</td><td></td></tr>
+<tr><td>　　├┐ElseIf StrComp(LineText,  "End Select",  vbTextCompare) = 0 Then</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   End Select</span></td><td></td></tr>
+<tr><td>　　│〇 GetNodeType = NODE_ENDSELECT</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   ジャンプ構造判定</span></td><td></td></tr>
+<tr><td>　　├┐ElseIf <a href="../modProcAnalyzer/StartsWithKeyword.modProcAnalyzer.hcp.html">StartsWithKeyword</a>(LineText, "Resume") Then</td><td>内部呼出:<a href="../modProcAnalyzer/StartsWithKeyword.modProcAnalyzer.hcp.html">StartsWithKeyword</a></td></tr>
+<tr><td><span class="hcp-comment">　　││#   Resume</span></td><td></td></tr>
+<tr><td>　　│〇 GetNodeType = NODE_RESUME</td><td></td></tr>
+<tr><td>　　├┐ElseIf <a href="../modProcAnalyzer/StartsWithKeyword.modProcAnalyzer.hcp.html">StartsWithKeyword</a>(LineText, "GoTo") Then</td><td>内部呼出:<a href="../modProcAnalyzer/StartsWithKeyword.modProcAnalyzer.hcp.html">StartsWithKeyword</a></td></tr>
+<tr><td><span class="hcp-comment">　　││#   GoTo</span></td><td></td></tr>
+<tr><td>　　│〇 GetNodeType = NODE_GOTO</td><td></td></tr>
+<tr><td>　　├┐ElseIf right$(LineText, 1) = ":" Then</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   ラベル定義</span></td><td></td></tr>
+<tr><td>　　│〇 GetNodeType = NODE_LABEL</td><td></td></tr>
+<tr><td>　　├┐ElseIf <a href="../modProcAnalyzer/StartsWithKeyword.modProcAnalyzer.hcp.html">StartsWithKeyword</a>(LineText, "Exit") Then</td><td>内部呼出:<a href="../modProcAnalyzer/StartsWithKeyword.modProcAnalyzer.hcp.html">StartsWithKeyword</a></td></tr>
+<tr><td><span class="hcp-comment">　　││#   Exit文</span></td><td></td></tr>
+<tr><td>　　│〇 GetNodeType = NODE_EXIT</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   通常処理判定</span></td><td></td></tr>
+<tr><td>　　├┐ELSE</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   通常処理</span></td><td></td></tr>
+<tr><td>　　│〇 GetNodeType = NODE_NORMAL</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　┴End Function</td><td></td></tr>
+</tbody>
+</table>
+<hr>
+<h2>Calls (2)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modProcAnalyzer/StartsWithKeyword.modProcAnalyzer.hcp.html">StartsWithKeyword</a></td><td>キーワード前方一致判定</td><td>modProcAnalyzer</td></tr>
+<tr><td><a href="../modProcAnalyzer/IsInlineIf.modProcAnalyzer.hcp.html">IsInlineIf</a></td><td>インラインIf判定</td><td>modProcAnalyzer</td></tr>
+</table>
+<hr>
+<h2>Called By (1)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modProcAnalyzer/AnalyzeProcedure.modProcAnalyzer.hcp.html">AnalyzeProcedure</a></td><td>Proc解析</td><td>modProcAnalyzer</td></tr>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function(eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function(e) {
+startX = e.pageX;
+startWidth = eleTh.offsetWidth;
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
+}
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
+}
+});
+</script>
+</body>
+</html>

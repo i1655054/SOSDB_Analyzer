@@ -1,0 +1,103 @@
+┬
+〇│Public Sub CreatePowerPointPathChart(  ByVal StartProc As String,  ByVal MaxDepth As Long)	PowerPoint出力＜modPowerPointChart＞
+┴└┐
+　　□ Dim pptApp As Object
+　　□ Dim pptPres As Object
+　　□ Dim pptSlide As Object
+　　□ Dim pptShape As Object
+　　□ Dim pptTitle As Object
+　　□ Dim rng As Range
+　　□ Dim ChartWidth As Double
+　　□ Dim ChartHeight As Double
+　　□ Dim GridLineFlg As Boolean
+　　□ Dim PptFile As String
+　　│#   PathChart出力範囲取得
+　　◎ Set rng = GetChartRange()	チャート範囲取得＜modPathChart＞
+　　│#   チャートサイズ取得
+　　〇 ChartWidth = rng.Width
+　　〇 ChartHeight = rng.Height
+　　│#   グリッド線一時非表示
+　　〇 GridLineFlg = ActiveWindow.DisplayGridlines
+　　〇 ActiveWindow.DisplayGridlines = False
+　　│#   PathChart画像取得
+　　〇 rng.CopyPicture  Appearance:=xlScreen,  Format:=xlPicture
+　　│#   グリッド線表示復元
+　　〇 ActiveWindow.DisplayGridlines =  GridLineFlg
+　　│#   PowerPoint起動
+　　〇 Set pptApp =  CreateObject("PowerPoint.Application")
+　　〇 pptApp.Visible = True
+　　│#   プレゼンテーション生成
+　　〇 Set pptPres =  pptApp.Presentations.Add
+　　│#   スライド向き設定
+　　◆┐Select Case gPptOrientation
+　　│├┐Case PPT_ORIENT_PORTRAIT
+　　││〇 pptPres.PageSetup.SlideWidth = PPT_WIDTH_PORTRAIT
+　　││〇 pptPres.PageSetup.SlideHeight = PPT_HEIGHT_PORTRAIT
+　　│├┐Case PPT_ORIENT_LANDSCAPE
+　　││〇 pptPres.PageSetup.SlideWidth = PPT_WIDTH_LANDSCAPE
+　　││〇 pptPres.PageSetup.SlideHeight = PPT_HEIGHT_LANDSCAPE
+　　│├┐Case PPT_ORIENT_AUTO
+　　│││#   チャートサイズで向き自動判定
+　　││◆┐If ChartHeight > ChartWidth Then
+　　│││〇 pptPres.PageSetup.SlideWidth = PPT_WIDTH_PORTRAIT
+　　│││〇 pptPres.PageSetup.SlideHeight = PPT_HEIGHT_PORTRAIT
+　　││├┐ELSE
+　　│││〇 pptPres.PageSetup.SlideWidth = PPT_WIDTH_LANDSCAPE
+　　│││〇 pptPres.PageSetup.SlideHeight = PPT_HEIGHT_LANDSCAPE
+　　│││┴End If
+　　│┴End Select
+　　│#   PowerPointスライド追加
+　　〇 Set pptSlide =  pptPres.Slides.Add(  PPT_SLIDE_INDEX,  PPT_LAYOUT_BLANK)
+　　│#   スライドタイトル生成
+　　〇 Set pptTitle =  pptSlide.Shapes.AddTextbox(  PPT_TEXT_HORIZONTAL,  PPT_TITLE_LEFT,  PPT_TITLE_TOP,  pptPres.PageSetup.SlideWidth -  PPT_SIDE_MARGIN,  PPT_TITLE_HEIGHT)
+　　│#   タイトル設定
+　　│#   スライドタイトル設定
+　　〇 pptTitle.TextFrame.TextRange.Text =  StartProc &  " (Level=" &  MaxDepth & ")"
+　　│#   タイトル書式設定
+　　＠┐With pptTitle.TextFrame.TextRange
+　　│〇 .Font.Size = PPT_TITLE_FONT_SIZE
+　　│〇 .Font.Bold = True
+　　│〇 .ParagraphFormat.Alignment = 2
+　　│┴End With
+　　│#   PathChart貼付
+　　〇 pptSlide.Shapes.Paste
+　　│#   貼付図形取得
+　　〇 Set pptShape =  pptSlide.Shapes(  pptSlide.Shapes.Count)
+　　│#   縦横比固定
+　　〇 pptShape.LockAspectRatio = True
+　　│#   スライド幅内へ縮小
+　　◆┐If pptShape.Width >  (pptPres.PageSetup.SlideWidth -  PPT_SIDE_MARGIN) Then
+　　│〇 pptShape.Width =  (pptPres.PageSetup.SlideWidth -  PPT_SIDE_MARGIN)
+　　│┴End If
+　　│#   スライド高さ内へ縮小
+　　◆┐If pptShape.Height >  (pptPres.PageSetup.SlideHeight -  PPT_BOTTOM_MARGIN) Then
+　　│〇 pptShape.Height =  (pptPres.PageSetup.SlideHeight -  PPT_BOTTOM_MARGIN)
+　　│┴End If
+　　│#   スライド中央配置
+　　〇 pptShape.Left =  (pptPres.PageSetup.SlideWidth -  pptShape.Width) / 2
+　　│#   チャート配置位置設定
+　　〇 pptShape.Top = PPT_CHART_TOP
+　　│#   PowerPoint出力ファイル生成
+　　◎ PptFile =  GetOutputFolder() &  StartProc &  "_PathChart_" &  gExportTimeStamp &  ".pptx"	出力フォルダ取得＜modPowerPointChart＞
+　　│#   PowerPoint保存
+　　〇 pptPres.SaveAs PptFile
+　　│#   PowerPoint出力完了通知
+　　〇 MsgBox  "PowerPoint出力完了" & vbCrLf &  PptFile,  vbInformation
+　　┴End Sub
+
+========================================
+Calls (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetChartRange	チャート範囲取得	modPathChart
+GetOutputFolder	出力フォルダ取得	modPowerPointChart
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ExportPathChartToPowerPoint	PowerPoint出力	modPathChart

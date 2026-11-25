@@ -23,10 +23,11 @@ Option Explicit
 ' RenderTextを利用して
 ' hcp.txt を生成する
 '
-' Calls
-' Called By
+' HCP本文
+' Calls一覧
+' Called By一覧
 '
-' の一覧も出力する
+' をテキスト形式で出力する
 '===================================================================
 
 Private mFileNo As Integer
@@ -48,6 +49,16 @@ Private mFileNo As Integer
 '
 ' @Summary
 ' HCPNodesをテキスト出力する
+'
+' @Remarks
+' STARTノードを先頭へ出力し
+' HCP本文を順次出力する
+'
+' 出力後に
+' Calls一覧
+' Called By一覧
+'
+' を付加出力する
 '===================================================================
 Public Sub Export( _
                 ByVal FilePath As String, _
@@ -63,7 +74,9 @@ Public Sub Export( _
     Open FilePath _
         For Output As #mFileNo
 
+    '-----------------------------
     '# STARTノード出力
+    '-----------------------------
     For Each Node In HCPNodes
 
         If Node.NodeType = NODE_START Then
@@ -92,7 +105,9 @@ Public Sub Export( _
 
     Next Node
 
-    '# HCP出力
+    '-----------------------------
+    '# HCP本文出力
+    '-----------------------------
     For Each Node In HCPNodes
 
         If Node.NodeType = NODE_START Then
@@ -139,12 +154,19 @@ ContinueLoop:
 
     Next Node
 
-    '# Calls出力
+    '-----------------------------
+    '# HCP本文出力
+    '-----------------------------
+    '-----------------------------
+    '# Calls一覧出力
+    '-----------------------------
     WriteCallsText _
         mFileNo, _
         ProcName
 
-    '# Called By出力
+    '-----------------------------
+    '# Called By一覧出力
+    '-----------------------------
     WriteCalledByText _
         mFileNo, _
         ProcName

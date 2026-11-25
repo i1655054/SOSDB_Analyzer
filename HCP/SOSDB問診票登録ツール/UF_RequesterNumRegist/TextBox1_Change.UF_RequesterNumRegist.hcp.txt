@@ -1,8 +1,18 @@
-Procedure: UF_RequesterNumRegist.TextBox1_Change  [ 問診票管理番号同期＜UF_RequesterNumRegist＞ ]
-HCP	Business
 ┬
 〇│Private Sub TextBox1_Change()	問診票管理番号同期＜UF_RequesterNumRegist＞
 ┴└┐
-　　│#  入力内容同期
+　　│#   入力内容同期
 　　〇 TextBox2.text = TextBox1.text
 　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

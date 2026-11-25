@@ -1,0 +1,29 @@
+┬
+〇│Private Function HtmlEncode(  ByVal Text As String)  As String	HTMLエンコード＜clsHtmlRenderer＞
+┴└┐
+　　〇 HtmlEncode = Text
+　　〇 HtmlEncode =  Replace(HtmlEncode, "&", "&amp;")
+　　〇 HtmlEncode =  Replace(HtmlEncode, "<", "&lt;")
+　　〇 HtmlEncode =  Replace(HtmlEncode, ">", "&gt;")
+　　〇 HtmlEncode =  Replace(HtmlEncode, vbCrLf, "<br>")
+　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (7)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+OutputHCPNodes	HCPノードHTML出力	clsHtmlRenderer
+GetNodeHtmlText	ノードHTML文字列取得	clsHtmlRenderer
+GetCallNodeHtml	CALLノードHTML取得	clsHtmlRenderer
+GetNormalNodeHtml	通常ノードHTML取得	clsHtmlRenderer
+GetBusinessHtml	Business HTML取得	clsHtmlRenderer
+WriteCallsHtml	Calls一覧HTML出力	clsHtmlRenderer
+WriteCalledByHtml	Called By一覧HTML出力	clsHtmlRenderer

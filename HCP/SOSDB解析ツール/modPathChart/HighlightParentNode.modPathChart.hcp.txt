@@ -1,0 +1,28 @@
+┬
+〇│Private Sub HighlightParentNode(  ByVal ParentShapeName As String)	親ノード強調＜modPathChart＞
+┴└┐
+　　□ Dim ws As Worksheet
+　　◆→ If gParentMap Is Nothing Then Exit Sub
+　　◆→ If ParentShapeName = "" Then Exit Sub
+　　〇 Set ws = gContext.ManagementBook.Worksheets(
+　　│ SHEET_PATH_CHART)
+　　│#   親ノード強調表示
+　　＠┐With ws.Shapes(ParentShapeName)
+　　│〇 .line.ForeColor.RGB = PARENT_NODE_LINE_COLOR
+　　│〇 .line.Weight = CURRENT_NODE_LINE_WEIGHT
+　　│┴End With
+　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+HighlightNode	ノード強調表示	modPathChart

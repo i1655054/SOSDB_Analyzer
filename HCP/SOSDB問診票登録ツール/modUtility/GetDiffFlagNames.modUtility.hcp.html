@@ -1,96 +1,103 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
 <meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
 <title>GetDiffFlagNames</title>
 <style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
 body{font-family:Meiryo;font-size:9pt;}
 table{border-collapse:collapse;}
-th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
 td{vertical-align:top;}
 th{background:#e8f0fe;}
-colgroup col:nth-of-type(1) {}
-colgroup col:nth-of-type(2) {}
-.resize {position: relative;}
-.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
 </style>
 </head>
-<body>
+<body translate="no">
 <h1>GetDiffFlagNames</h1>
 <p>Module : modUtility</p>
-<p><a href="./_INDEX.html">← Module Index</a></p>
 <table>
-<colgroup><col/><col/></colgroup>
-<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
 <tbody>
-<tr><td>Procedure: modUtility.GetDiffFlagNames  [ 差分名称取得＜modUtility＞ ]</td><td></td></tr>
-<tr><td>HCP</td><td>Business</td></tr>
 <tr><td>┬</td><td></td></tr>
 <tr><td>〇│Public Function GetDiffFlagNames(ByVal diffFlags As Long) As String</td><td>差分名称取得＜modUtility＞</td></tr>
 <tr><td>┴└┐</td><td></td></tr>
 <tr><td>　　□ Dim result As String</td><td></td></tr>
-<tr><td>　　│#  基本項目差分判定</td><td></td></tr>
-<tr><td>　　◆ If (diffFlags And flg_Subject_Name) &lt;&gt; 0 Then  result = result &amp; j_Subject_Name &amp; FormatFlag(flg_Subject_Name) &amp; vbCrLf</td><td></td></tr>
-<tr><td>　　◆ If (diffFlags And flg_Description) &lt;&gt; 0 Then  result = result &amp; j_Description &amp; FormatFlag(flg_Description) &amp; vbCrLf</td><td></td></tr>
-<tr><td>　　◆ If (diffFlags And flg_Status_Name) &lt;&gt; 0 Then  result = result &amp; j_Status_Name &amp; FormatFlag(flg_Status_Name) &amp; vbCrLf</td><td></td></tr>
-<tr><td>　　◆ If (diffFlags And flg_Priority_Name) &lt;&gt; 0 Then  result = result &amp; j_Priority_Name &amp; FormatFlag(flg_Priority_Name) &amp; vbCrLf</td><td></td></tr>
-<tr><td>　　◆ If (diffFlags And flg_Author_Name) &lt;&gt; 0 Then  result = result &amp; j_Author_name &amp; FormatFlag(flg_Author_Name) &amp; vbCrLf</td><td></td></tr>
-<tr><td>　　◆ If (diffFlags And flg_Assigned_to_Name) &lt;&gt; 0 Then  result = result &amp; j_Assigned_to_Name &amp; FormatFlag(flg_Assigned_to_Name) &amp; vbCrLf</td><td></td></tr>
-<tr><td>　　◆ If (diffFlags And flg_Target_Version) &lt;&gt; 0 Then  result = result &amp; j_Target_Version &amp; FormatFlag(flg_Target_Version) &amp; vbCrLf</td><td></td></tr>
-<tr><td>　　│#  カスタム項目差分判定</td><td></td></tr>
-<tr><td>　　◆ If (diffFlags And flg_OccurrenceDateTime) &lt;&gt; 0 Then  result = result &amp; j_OccurrenceDateTime &amp; FormatFlag(flg_OccurrenceDateTime) &amp; vbCrLf</td><td></td></tr>
-<tr><td>　　◆ If (diffFlags And flg_ProblemBuilding) &lt;&gt; 0 Then  result = result &amp; j_ProblemBuilding &amp; FormatFlag(flg_ProblemBuilding) &amp; vbCrLf</td><td></td></tr>
-<tr><td>　　◆ If (diffFlags And flg_HostName) &lt;&gt; 0 Then  result = result &amp; j_HostName &amp; FormatFlag(flg_HostName) &amp; vbCrLf</td><td></td></tr>
-<tr><td>　　◆ If (diffFlags And flg_Phenomenon) &lt;&gt; 0 Then  result = result &amp; j_Phenomenon &amp; FormatFlag(flg_Phenomenon) &amp; vbCrLf</td><td></td></tr>
-<tr><td>　　◆ If (diffFlags And flg_Cause) &lt;&gt; 0 Then  result = result &amp; j_Cause &amp; FormatFlag(flg_Cause) &amp; vbCrLf</td><td></td></tr>
-<tr><td>　　◆ If (diffFlags And flg_Mondainum_Pro) &lt;&gt; 0 Then  result = result &amp; j_Mondainum_Pro &amp; FormatFlag(flg_Mondainum_Pro) &amp; vbCrLf</td><td></td></tr>
-<tr><td>　　◆ If (diffFlags And flg_Remarks) &lt;&gt; 0 Then  result = result &amp; j_Remarks &amp; FormatFlag(flg_Remarks) &amp; vbCrLf</td><td></td></tr>
-<tr><td>　　◆ If (diffFlags And flg_Esukare_Date) &lt;&gt; 0 Then  result = result &amp; j_Esukare_Date &amp; FormatFlag(flg_Esukare_Date) &amp; vbCrLf</td><td></td></tr>
-<tr><td>　　◆ If (diffFlags And flg_Close_Date) &lt;&gt; 0 Then  result = result &amp; j_Close_Date &amp; FormatFlag(flg_Close_Date) &amp; vbCrLf</td><td></td></tr>
-<tr><td>　　◆ If (diffFlags And flg_Requester_Pro) &lt;&gt; 0 Then  result = result &amp; j_Requester_Pro &amp; FormatFlag(flg_Requester_Pro) &amp; vbCrLf</td><td></td></tr>
-<tr><td>　　◆ If (diffFlags And flg_ServiceImpact) &lt;&gt; 0 Then  result = result &amp; j_ServiceImpact &amp; FormatFlag(flg_ServiceImpact) &amp; vbCrLf</td><td></td></tr>
-<tr><td>　　◆ If (diffFlags And flg_TroubleNum) &lt;&gt; 0 Then  result = result &amp; j_TroubleNum &amp; FormatFlag(flg_TroubleNum) &amp; vbCrLf</td><td></td></tr>
-<tr><td>　　◆ If (diffFlags And flg_Equipment) &lt;&gt; 0 Then  result = result &amp; j_Equipment &amp; FormatFlag(flg_Equipment) &amp; vbCrLf</td><td></td></tr>
-<tr><td>　　◆ If (diffFlags And flg_Cope) &lt;&gt; 0 Then  result = result &amp; j_Cope &amp; FormatFlag(flg_Cope) &amp; vbCrLf</td><td></td></tr>
-<tr><td>　　◆ If (diffFlags And flg_RequesterNum) &lt;&gt; 0 Then  result = result &amp; j_RequesterNum &amp; FormatFlag(flg_RequesterNum) &amp; vbCrLf</td><td></td></tr>
-<tr><td>　　◆ If (diffFlags And flg_ProductTantou) &lt;&gt; 0 Then  result = result &amp; j_ProductTantou &amp; FormatFlag(flg_ProductTantou) &amp; vbCrLf</td><td></td></tr>
-<tr><td>　　◆ If (diffFlags And flg_KihensinName_Date) &lt;&gt; 0 Then  result = result &amp; j_KihensinName_Date &amp; FormatFlag(flg_KihensinName_Date) &amp; vbCrLf</td><td></td></tr>
-<tr><td>　　◆ If (diffFlags And flg_Key_Word) &lt;&gt; 0 Then  result = result &amp; j_Key_Word &amp; FormatFlag(flg_Key_Word) &amp; vbCrLf</td><td></td></tr>
-<tr><td>　　◆ If (diffFlags And flg_EqProduct) &lt;&gt; 0 Then  result = result &amp; j_EqProduct &amp; FormatFlag(flg_EqProduct) &amp; vbCrLf</td><td></td></tr>
-<tr><td>　　│#  末尾改行削除</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   基本項目差分判定</span></td><td></td></tr>
+<tr><td>　　◆ If (diffFlags And flg_Subject_Name) &lt;&gt; 0 Then  result = result &amp; j_Subject_Name &amp; <a href="../modUtility/FormatFlag.modUtility.hcp.html">FormatFlag</a>(flg_Subject_Name) &amp; vbCrLf</td><td>内部呼出:<a href="../modUtility/FormatFlag.modUtility.hcp.html">FormatFlag</a></td></tr>
+<tr><td>　　◆ If (diffFlags And flg_Description) &lt;&gt; 0 Then  result = result &amp; j_Description &amp; <a href="../modUtility/FormatFlag.modUtility.hcp.html">FormatFlag</a>(flg_Description) &amp; vbCrLf</td><td>内部呼出:<a href="../modUtility/FormatFlag.modUtility.hcp.html">FormatFlag</a></td></tr>
+<tr><td>　　◆ If (diffFlags And flg_Status_Name) &lt;&gt; 0 Then  result = result &amp; j_Status_Name &amp; <a href="../modUtility/FormatFlag.modUtility.hcp.html">FormatFlag</a>(flg_Status_Name) &amp; vbCrLf</td><td>内部呼出:<a href="../modUtility/FormatFlag.modUtility.hcp.html">FormatFlag</a></td></tr>
+<tr><td>　　◆ If (diffFlags And flg_Priority_Name) &lt;&gt; 0 Then  result = result &amp; j_Priority_Name &amp; <a href="../modUtility/FormatFlag.modUtility.hcp.html">FormatFlag</a>(flg_Priority_Name) &amp; vbCrLf</td><td>内部呼出:<a href="../modUtility/FormatFlag.modUtility.hcp.html">FormatFlag</a></td></tr>
+<tr><td>　　◆ If (diffFlags And flg_Author_Name) &lt;&gt; 0 Then  result = result &amp; j_Author_name &amp; <a href="../modUtility/FormatFlag.modUtility.hcp.html">FormatFlag</a>(flg_Author_Name) &amp; vbCrLf</td><td>内部呼出:<a href="../modUtility/FormatFlag.modUtility.hcp.html">FormatFlag</a></td></tr>
+<tr><td>　　◆ If (diffFlags And flg_Assigned_to_Name) &lt;&gt; 0 Then  result = result &amp; j_Assigned_to_Name &amp; <a href="../modUtility/FormatFlag.modUtility.hcp.html">FormatFlag</a>(flg_Assigned_to_Name) &amp; vbCrLf</td><td>内部呼出:<a href="../modUtility/FormatFlag.modUtility.hcp.html">FormatFlag</a></td></tr>
+<tr><td>　　◆ If (diffFlags And flg_Target_Version) &lt;&gt; 0 Then  result = result &amp; j_Target_Version &amp; <a href="../modUtility/FormatFlag.modUtility.hcp.html">FormatFlag</a>(flg_Target_Version) &amp; vbCrLf</td><td>内部呼出:<a href="../modUtility/FormatFlag.modUtility.hcp.html">FormatFlag</a></td></tr>
+<tr><td><span class="hcp-comment">　　│#   カスタム項目差分判定</span></td><td></td></tr>
+<tr><td>　　◆ If (diffFlags And flg_OccurrenceDateTime) &lt;&gt; 0 Then  result = result &amp; j_OccurrenceDateTime &amp; <a href="../modUtility/FormatFlag.modUtility.hcp.html">FormatFlag</a>(flg_OccurrenceDateTime) &amp; vbCrLf</td><td>内部呼出:<a href="../modUtility/FormatFlag.modUtility.hcp.html">FormatFlag</a></td></tr>
+<tr><td>　　◆ If (diffFlags And flg_ProblemBuilding) &lt;&gt; 0 Then  result = result &amp; j_ProblemBuilding &amp; <a href="../modUtility/FormatFlag.modUtility.hcp.html">FormatFlag</a>(flg_ProblemBuilding) &amp; vbCrLf</td><td>内部呼出:<a href="../modUtility/FormatFlag.modUtility.hcp.html">FormatFlag</a></td></tr>
+<tr><td>　　◆ If (diffFlags And flg_HostName) &lt;&gt; 0 Then  result = result &amp; j_HostName &amp; <a href="../modUtility/FormatFlag.modUtility.hcp.html">FormatFlag</a>(flg_HostName) &amp; vbCrLf</td><td>内部呼出:<a href="../modUtility/FormatFlag.modUtility.hcp.html">FormatFlag</a></td></tr>
+<tr><td>　　◆ If (diffFlags And flg_Phenomenon) &lt;&gt; 0 Then  result = result &amp; j_Phenomenon &amp; <a href="../modUtility/FormatFlag.modUtility.hcp.html">FormatFlag</a>(flg_Phenomenon) &amp; vbCrLf</td><td>内部呼出:<a href="../modUtility/FormatFlag.modUtility.hcp.html">FormatFlag</a></td></tr>
+<tr><td>　　◆ If (diffFlags And flg_Cause) &lt;&gt; 0 Then  result = result &amp; j_Cause &amp; <a href="../modUtility/FormatFlag.modUtility.hcp.html">FormatFlag</a>(flg_Cause) &amp; vbCrLf</td><td>内部呼出:<a href="../modUtility/FormatFlag.modUtility.hcp.html">FormatFlag</a></td></tr>
+<tr><td>　　◆ If (diffFlags And flg_Mondainum_Pro) &lt;&gt; 0 Then  result = result &amp; j_Mondainum_Pro &amp; <a href="../modUtility/FormatFlag.modUtility.hcp.html">FormatFlag</a>(flg_Mondainum_Pro) &amp; vbCrLf</td><td>内部呼出:<a href="../modUtility/FormatFlag.modUtility.hcp.html">FormatFlag</a></td></tr>
+<tr><td>　　◆ If (diffFlags And flg_Remarks) &lt;&gt; 0 Then  result = result &amp; j_Remarks &amp; <a href="../modUtility/FormatFlag.modUtility.hcp.html">FormatFlag</a>(flg_Remarks) &amp; vbCrLf</td><td>内部呼出:<a href="../modUtility/FormatFlag.modUtility.hcp.html">FormatFlag</a></td></tr>
+<tr><td>　　◆ If (diffFlags And flg_Esukare_Date) &lt;&gt; 0 Then  result = result &amp; j_Esukare_Date &amp; <a href="../modUtility/FormatFlag.modUtility.hcp.html">FormatFlag</a>(flg_Esukare_Date) &amp; vbCrLf</td><td>内部呼出:<a href="../modUtility/FormatFlag.modUtility.hcp.html">FormatFlag</a></td></tr>
+<tr><td>　　◆ If (diffFlags And flg_Close_Date) &lt;&gt; 0 Then  result = result &amp; j_Close_Date &amp; <a href="../modUtility/FormatFlag.modUtility.hcp.html">FormatFlag</a>(flg_Close_Date) &amp; vbCrLf</td><td>内部呼出:<a href="../modUtility/FormatFlag.modUtility.hcp.html">FormatFlag</a></td></tr>
+<tr><td>　　◆ If (diffFlags And flg_Requester_Pro) &lt;&gt; 0 Then  result = result &amp; j_Requester_Pro &amp; <a href="../modUtility/FormatFlag.modUtility.hcp.html">FormatFlag</a>(flg_Requester_Pro) &amp; vbCrLf</td><td>内部呼出:<a href="../modUtility/FormatFlag.modUtility.hcp.html">FormatFlag</a></td></tr>
+<tr><td>　　◆ If (diffFlags And flg_ServiceImpact) &lt;&gt; 0 Then  result = result &amp; j_ServiceImpact &amp; <a href="../modUtility/FormatFlag.modUtility.hcp.html">FormatFlag</a>(flg_ServiceImpact) &amp; vbCrLf</td><td>内部呼出:<a href="../modUtility/FormatFlag.modUtility.hcp.html">FormatFlag</a></td></tr>
+<tr><td>　　◆ If (diffFlags And flg_TroubleNum) &lt;&gt; 0 Then  result = result &amp; j_TroubleNum &amp; <a href="../modUtility/FormatFlag.modUtility.hcp.html">FormatFlag</a>(flg_TroubleNum) &amp; vbCrLf</td><td>内部呼出:<a href="../modUtility/FormatFlag.modUtility.hcp.html">FormatFlag</a></td></tr>
+<tr><td>　　◆ If (diffFlags And flg_Equipment) &lt;&gt; 0 Then  result = result &amp; j_Equipment &amp; <a href="../modUtility/FormatFlag.modUtility.hcp.html">FormatFlag</a>(flg_Equipment) &amp; vbCrLf</td><td>内部呼出:<a href="../modUtility/FormatFlag.modUtility.hcp.html">FormatFlag</a></td></tr>
+<tr><td>　　◆ If (diffFlags And flg_Cope) &lt;&gt; 0 Then  result = result &amp; j_Cope &amp; <a href="../modUtility/FormatFlag.modUtility.hcp.html">FormatFlag</a>(flg_Cope) &amp; vbCrLf</td><td>内部呼出:<a href="../modUtility/FormatFlag.modUtility.hcp.html">FormatFlag</a></td></tr>
+<tr><td>　　◆ If (diffFlags And flg_RequesterNum) &lt;&gt; 0 Then  result = result &amp; j_RequesterNum &amp; <a href="../modUtility/FormatFlag.modUtility.hcp.html">FormatFlag</a>(flg_RequesterNum) &amp; vbCrLf</td><td>内部呼出:<a href="../modUtility/FormatFlag.modUtility.hcp.html">FormatFlag</a></td></tr>
+<tr><td>　　◆ If (diffFlags And flg_ProductTantou) &lt;&gt; 0 Then  result = result &amp; j_ProductTantou &amp; <a href="../modUtility/FormatFlag.modUtility.hcp.html">FormatFlag</a>(flg_ProductTantou) &amp; vbCrLf</td><td>内部呼出:<a href="../modUtility/FormatFlag.modUtility.hcp.html">FormatFlag</a></td></tr>
+<tr><td>　　◆ If (diffFlags And flg_KihensinName_Date) &lt;&gt; 0 Then  result = result &amp; j_KihensinName_Date &amp; <a href="../modUtility/FormatFlag.modUtility.hcp.html">FormatFlag</a>(flg_KihensinName_Date) &amp; vbCrLf</td><td>内部呼出:<a href="../modUtility/FormatFlag.modUtility.hcp.html">FormatFlag</a></td></tr>
+<tr><td>　　◆ If (diffFlags And flg_Key_Word) &lt;&gt; 0 Then  result = result &amp; j_Key_Word &amp; <a href="../modUtility/FormatFlag.modUtility.hcp.html">FormatFlag</a>(flg_Key_Word) &amp; vbCrLf</td><td>内部呼出:<a href="../modUtility/FormatFlag.modUtility.hcp.html">FormatFlag</a></td></tr>
+<tr><td>　　◆ If (diffFlags And flg_EqProduct) &lt;&gt; 0 Then  result = result &amp; j_EqProduct &amp; <a href="../modUtility/FormatFlag.modUtility.hcp.html">FormatFlag</a>(flg_EqProduct) &amp; vbCrLf</td><td>内部呼出:<a href="../modUtility/FormatFlag.modUtility.hcp.html">FormatFlag</a></td></tr>
+<tr><td><span class="hcp-comment">　　│#   末尾改行削除</span></td><td></td></tr>
 <tr><td>　　◆┐If Len(result) &gt; 0 Then</td><td></td></tr>
 <tr><td>　　│〇 result = Left(result, Len(result) - 2)</td><td></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
-<tr><td>　　│#  差分名称返却</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   差分名称返却</span></td><td></td></tr>
 <tr><td>　　〇 GetDiffFlagNames = result</td><td></td></tr>
 <tr><td>　　┴End Function</td><td></td></tr>
 </tbody>
 </table>
+<hr>
+<h2>Calls (1)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modUtility/FormatFlag.modUtility.hcp.html">FormatFlag</a></td><td>フラグ表示形式生成</td><td>modUtility</td></tr>
+</table>
+<hr>
+<h2>Called By (1)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modIssueService/UpdateExistingIssue.modIssueService.hcp.html">UpdateExistingIssue</a></td><td>Issue更新登録</td><td>modIssueService</td></tr>
+</table>
 <script>
-document.querySelectorAll('.resize').forEach(function (eleTh) {
+document.querySelectorAll('.resize').forEach(function(eleTh) {
 let startX;
 let startWidth;
 const eleResizer = document.createElement('div');
 eleResizer.classList.add('resizer');
-eleResizer.addEventListener('mousedown', function (e) {
-const styleTh = window.getComputedStyle(eleTh);
-const paddingLeft = parseFloat(styleTh.paddingLeft);
-const paddingRight = parseFloat(styleTh.paddingRight);
-const borderLeft = parseFloat(styleTh.borderLeftWidth);
-const borderRight = parseFloat(styleTh.borderRightWidth);
+eleResizer.addEventListener('mousedown', function(e) {
 startX = e.pageX;
-startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+startWidth = eleTh.offsetWidth;
 document.addEventListener('mousemove', onMouseMove);
 document.addEventListener('mouseup', onMouseUp);
 });
 eleTh.appendChild(eleResizer);
-function onMouseMove(e) {
-const newWidth = startWidth + (e.pageX - startX);
-eleTh.style.width = newWidth + 'px';
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
 }
-function onMouseUp() {
-document.removeEventListener('mousemove', onMouseMove);
-document.removeEventListener('mouseup', onMouseUp);
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
 }
 });
 </script>

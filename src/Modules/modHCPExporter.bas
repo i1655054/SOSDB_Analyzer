@@ -2,7 +2,8 @@ Attribute VB_Name = "modHCPExporter"
 Option Explicit
 
 ' HCPExporterデバッグ出力有効化
-#Const DEBUG_MODE = True
+' #Const DEBUG_MODE = True
+#Const DEBUG_MODE = False
 
 '===================================================================
 '@JPName     hcp.txt & hcp.HTML 出力

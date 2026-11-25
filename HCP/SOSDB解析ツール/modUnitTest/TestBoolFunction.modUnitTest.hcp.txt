@@ -1,0 +1,19 @@
+┬
+〇│Private Function TestBoolFunction() As Boolean	＜modUnitTest＞
+┴└┐
+　　〇 TestBoolFunction = True
+　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+Test_InternalCall		modUnitTest

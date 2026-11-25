@@ -1,0 +1,20 @@
+┬
+〇│Private Sub cmdClose_Click()	画面終了＜frmHCPGenerator＞
+┴└┐
+　　│#   HCP生成画面終了
+　　〇 Unload Me
+　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+RestoreMainWindowState	Main画面状態復元	modToolManager
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

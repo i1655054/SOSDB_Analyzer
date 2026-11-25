@@ -1,0 +1,38 @@
+┬
+〇│Public Sub ClearHighlight()	強調表示解除＜modPathChart＞
+┴└┐
+　　│#   強調表示解除
+　　◎ Call ResetChartHighlight	強調解除＜modPathChart＞
+　　│#   ナビゲーション状態初期化
+　　〇 gCurrentShapeName = ""
+　　〇 gCurrentParentShapeName = ""
+　　〇 gCurrentParentWithChildren = ""
+　　〇 gCurrentNodeText = ""
+　　〇 gNavigatorStatus = ""
+　　〇 Application.StatusBar = False
+　　◎ UpdateNavigatorStatus ""	Navigator状態更新＜modPathChart＞
+　　│#   Navigator表示クリア
+　　〇 frmPathChartNavigator.txtCurrentNode.Text = ""
+　　〇 frmPathChartNavigator.lblJPName.Caption = ""
+　　〇 frmPathChartNavigator.lblCategory.Caption = ""
+　　〇 frmPathChartNavigator.lblModule.Caption = ""
+　　〇 frmPathChartNavigator.txtSummary.Text = ""
+　　┴End Sub
+
+========================================
+Calls (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ResetChartHighlight	強調解除	modPathChart
+UpdateNavigatorStatus	Navigator状態更新	modPathChart
+
+========================================
+Called By (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+FindNodeCore	ノード検索実行	modPathChart
+cmdClear_Click

@@ -1,0 +1,118 @@
+┬
+〇│Private Sub FindNodeCore(ByVal IsNext As Boolean)	ノード検索実行＜modPathChart＞
+┴└┐
+　　□ Dim ws As Worksheet
+　　□ Dim shp As Shape
+　　□ Dim FindText As String
+　　□ Dim ExactMatch As Boolean
+　　□ Dim ShapeNo As Long
+　　〇 Set ws = gContext.ManagementBook.Worksheets(
+　　│ SHEET_PATH_CHART)
+　　│#   検索条件取得
+　　〇 FindText = Trim$(gSearchText)
+　　│#   検索条件確認
+　　◆┐If FindText = "" Then
+　　│〇 MsgBox "検索文字列を入力してください。"
+　　│→ Exit Sub
+　　│┴End If
+　　〇 ExactMatch = gExactMatch
+　　│#   検索状態初期化
+　　◆┐If Not IsNext Then
+　　│〇 gLastShapeIndex = 0
+　　│〇 gCurrentHitNo = 0
+　　├┐ElseIf gLastFindText <> FindText Then
+　　│〇 gLastShapeIndex = 0
+　　│〇 gCurrentHitNo = 0
+　　│┴End If
+　　〇 gLastFindText = FindText
+　　│#   前回ハイライト解除
+　　＠┐For Each shp In ws.Shapes
+　　│◆┐If Left$(shp.Name, 2) = "N_" Then
+　　││〇 shp.line.ForeColor.RGB = NODE_LINE_COLOR
+　　││〇 shp.line.Weight = NODE_LINE_WEIGHT
+　　││┴End If
+　　│┴Next shp
+　　〇 gHitCount = 0
+　　│#   検索ヒット件数集計
+　　＠┐For Each shp In ws.Shapes
+　　│◆┐If Left$(shp.Name, 2) = "N_" Then
+　　││◆┐If IsMatchNode(  shp.TextFrame.Characters.Text,  FindText,  ExactMatch) Then	内部呼出:IsMatchNode
+　　│││〇 gHitCount = gHitCount + 1
+　　│││┴End If
+　　││┴End If
+　　│┴Next shp
+　　│#   ヒット件数確認
+　　◆┐If gHitCount = 0 Then
+　　│〇 Application.StatusBar = False
+　　│〇 MsgBox "検索結果はありません。"
+　　│→ Exit Sub
+　　│┴End If
+　　〇 ShapeNo = 0
+　　│#   検索開始
+　　＠┐For Each shp In ws.Shapes
+　　│◆┐If Left$(shp.Name, 2) = "N_" Then
+　　││〇 ShapeNo = ShapeNo + 1
+　　││◆┐If ShapeNo <= gLastShapeIndex Then
+　　│││→ GoTo ContinueLoop
+　　│││┴End If
+　　│││#   一致ノード検出
+　　││◆┐If IsMatchNode(  shp.TextFrame.Characters.Text,  FindText,  ExactMatch) Then	内部呼出:IsMatchNode
+　　│││◆┐#If DEBUG_MODE Then
+　　││││〇 Debug.Print "Current=" & shp.Name
+　　││││┴#End If
+　　│││〇 gCurrentShapeName = shp.Name
+　　│││◆┐If Not gParentMap Is Nothing Then
+　　││││◆┐If gParentMap.Exists(shp.Name) Then
+　　│││││〇 gCurrentParentShapeName =  gParentMap(shp.Name)
+　　│││││◆┐#If DEBUG_MODE Then
+　　││││││〇 Debug.Print "Parent=" &  gCurrentParentShapeName
+　　││││││┴#End If
+　　││││├┐ELSE
+　　│││││〇 gCurrentParentShapeName = ""
+　　│││││┴End If
+　　││││┴End If
+　　│││〇 gCurrentParentWithChildren = shp.Name
+　　│││〇 gCurrentChildIndex = 0
+　　│││〇 gCurrentHitNo = gCurrentHitNo + 1
+　　││││#   ノード強調表示
+　　│││◎ Call HighlightNode(shp)	ノード強調表示＜modPathChart＞
+　　│││〇 gCurrentNodeText = shp.TextFrame.Characters.Text
+　　││││#   Navigator状態更新
+　　│││◎ UpdateCurrentNodeInfo  GetProcedureNameFromNodeText(  gCurrentNodeText)	関数名取得＜modPathChart＞
+　　││││#   検索状態リセット
+　　│││〇 gLastShapeIndex = ShapeNo
+　　│││◎ UpdateNavigatorStatus  "検索結果 " &  gCurrentHitNo & "/" &  gHitCount & " : " &  GetProcedureNameFromNodeText(  shp.TextFrame.Characters.Text)	関数名取得＜modPathChart＞
+　　│││→ Exit Sub
+　　│││┴End If
+　　││┴End If
+▼ ContinueLoop:
+　　│┴Next shp
+　　〇 gLastShapeIndex = 0
+　　〇 gCurrentHitNo = 0
+　　〇 gLastFindText = ""
+　　〇 Application.StatusBar = False
+　　◎ Call ClearHighlight	強調表示解除＜modPathChart＞
+　　〇 MsgBox  "これ以上見つかりません。" & vbCrLf &  "先頭から再検索します。",  vbInformation
+　　┴End Sub
+
+========================================
+Calls (6)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+IsMatchNode	ノード一致判定	modPathChart
+HighlightNode	ノード強調表示	modPathChart
+UpdateCurrentNodeInfo	ノード情報更新	modPathChart
+GetProcedureNameFromNodeText	関数名取得	modPathChart
+UpdateNavigatorStatus	Navigator状態更新	modPathChart
+ClearHighlight	強調表示解除	modPathChart
+
+========================================
+Called By (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+FindNode	ノード検索	modPathChart
+FindNextNode	次候補検索	modPathChart

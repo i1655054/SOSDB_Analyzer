@@ -1,0 +1,51 @@
+┬
+〇│Public Sub LoadSearchNodeList(  ByVal cbo As MSForms.ComboBox)	検索候補読込＜modPathChart＞
+┴└┐
+　　□ Dim ws As Worksheet
+　　□ Dim shp As Shape
+　　□ Dim Dic As Object
+　　□ Dim NodeText As String
+　　□ Dim V As Variant
+　　〇 Set ws = gContext.ManagementBook.Worksheets(
+　　│ SHEET_PATH_CHART)
+　　〇 Set Dic =  CreateObject("Scripting.Dictionary")
+　　〇 cbo.Clear
+　　│#   検索候補収集
+　　＠┐For Each shp In ws.Shapes
+　　│◆┐If Left$(shp.Name, 2) = "N_" Then
+　　││◆┐#If DEBUG_MODE Then
+　　│││〇 Debug.Print shp.Name
+　　│││〇 Debug.Print shp.TextFrame.Characters.Text
+　　│││┴#End If
+　　│││#   Procedure名取得
+　　││◎ NodeText =  GetProcedureNameFromNodeText(  shp.TextFrame.Characters.Text)	関数名取得＜modPathChart＞
+　　││〇 NodeText = Trim$(NodeText)
+　　││◆┐If NodeText <> "" Then
+　　││││#   検索候補登録
+　　│││◆┐If Not Dic.Exists(NodeText) Then
+　　││││〇 Dic.Add  NodeText,  True
+　　││││┴End If
+　　│││┴End If
+　　││┴End If
+　　│┴Next shp
+　　│#   検索候補表示
+　　＠┐For Each V In Dic.Keys
+　　│〇 cbo.AddItem V
+　　│┴Next V
+　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetProcedureNameFromNodeText	関数名取得	modPathChart
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+cmdNavigator_Click	ナビゲータ表示	frmPathChart

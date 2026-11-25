@@ -1,5 +1,3 @@
-Procedure: modFileUtility.AutomaticTextOutput  [ XMLファイル出力＜modFileUtility＞ ]
-HCP	Business
 ┬
 〇│Public Function AutomaticTextOutput(ByVal sendBody As Variant, ByVal id As Variant, ByRef outPath As String) As String	XMLファイル出力＜modFileUtility＞
 ┴└┐
@@ -13,20 +11,20 @@ HCP	Business
 　　□ Dim MyFolder As String
 　　□ Dim WorkFolder As String: WorkFolder = "WorkRedmine"
 　　〇 glbdbgflg = False
-　　│#  出力ファイル名生成用日時取得
+　　│#   出力ファイル名生成用日時取得
 　　〇 NowTime = Format(Year(Now), "0000") & Format(Month(Now), "00") & Format(Day(Now), "00") & Format(Hour(Now), "00") & Format(Minute(Now), "00") & Format(Second(Now), "00")
-　　│#  出力先フォルダ決定
+　　│#   出力先フォルダ決定
 　　◆┐If (outPath = "") Then
-　　│〇 MyFolder = GetDocumentFolderPath
+　　│◎ MyFolder = GetDocumentFolderPath	ドキュメントフォルダ取得＜modFileUtility＞
 　　│〇 outPath = MyFolder & "\" & WorkFolder
 　　│◆┐If Dir(outPath, vbDirectory) = "" Then
 　　││〇 MkDir outPath
 　　││┴End If
 　　│┴End If
-　　│#  XML出力ファイル名生成
+　　│#   XML出力ファイル名生成
 　　〇 strFileName = outPath & "\" & "SendBody" & id & "_" & NowTime & ".xml"
 　　□ Dim line As String
-　　│#  UTF-8ストリーム生成
+　　│#   UTF-8ストリーム生成
 　　□ Dim outStream As New ADODB.stream
 　　＠┐With outStream
 　　│〇 .Type = adTypeText
@@ -34,10 +32,28 @@ HCP	Business
 　　│〇 .LineSeparator = adCRLF
 　　│〇 .Open
 　　│┴End With
-　　│#  XML本文書込
+　　│#   XML本文書込
 　　〇 outStream.WriteText sendBody, adWriteLine
-　　│#  ファイル保存
+　　│#   ファイル保存
 　　〇 outStream.SaveToFile strFileName, adSaveCreateOverWrite
-　　│#  出力ファイル返却
+　　│#   出力ファイル返却
 　　〇 AutomaticTextOutput = strFileName
 　　┴End Function
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetDocumentFolderPath	ドキュメントフォルダ取得	modFileUtility
+
+========================================
+Called By (3)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ExecuteRedmineRequest	Redmine通信実行	XmlLoader
+RegisterNewIssue	新規Issue登録	modIssueService
+UpdateExistingIssue	Issue更新登録	modIssueService

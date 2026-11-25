@@ -1,102 +1,110 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
 <meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
 <title>FormatDescriptionForDisplay</title>
 <style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
 body{font-family:Meiryo;font-size:9pt;}
 table{border-collapse:collapse;}
-th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
 td{vertical-align:top;}
 th{background:#e8f0fe;}
-colgroup col:nth-of-type(1) {}
-colgroup col:nth-of-type(2) {}
-.resize {position: relative;}
-.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
 </style>
 </head>
-<body>
+<body translate="no">
 <h1>FormatDescriptionForDisplay</h1>
 <p>Module : modMonshinCore</p>
-<p><a href="./_INDEX.html">← Module Index</a></p>
 <table>
-<colgroup><col/><col/></colgroup>
-<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
 <tbody>
-<tr><td>Procedure: modMonshinCore.FormatDescriptionForDisplay  [ 説明文表示整形＜modMonshinCore＞ ]</td><td></td></tr>
-<tr><td>HCP</td><td>Business</td></tr>
 <tr><td>┬</td><td></td></tr>
 <tr><td>〇│Public Function FormatDescriptionForDisplay(  ByVal text As String) As String</td><td>説明文表示整形＜modMonshinCore＞</td></tr>
 <tr><td>┴└┐</td><td></td></tr>
-<tr><td>　　│#  末尾改行補完</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   末尾改行補完</span></td><td></td></tr>
 <tr><td>　　◆┐If Right(text, 1) &lt;&gt; vbLf Then</td><td></td></tr>
 <tr><td>　　│〇 text = text &amp; vbLf</td><td></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
-<tr><td>　　│#  問診票大見出し装飾</td><td></td></tr>
-<tr><td>　　◎ text = WrapHeader(  text,  "＝＝＝＜問合せ種別＞＝＝＝",  "hdr1")</td><td>見出し装飾設定＜modMonshinCore＞</td></tr>
-<tr><td>　　◎ text = WrapHeader(  text,  "＝＝＝＜問合せ内容＞＝＝＝",  "hdr1")</td><td>見出し装飾設定＜modMonshinCore＞</td></tr>
-<tr><td>　　◎ text = WrapHeader(  text,  "＝＝＝＜故障発生状況＞＝＝＝",  "hdr1")</td><td>見出し装飾設定＜modMonshinCore＞</td></tr>
-<tr><td>　　│#  問診票中見出し装飾</td><td></td></tr>
-<tr><td>　　◎ text = WrapHeader(  text,  "＝＝＝【現状の運用系】＝＝＝",  "hdr2")</td><td>見出し装飾設定＜modMonshinCore＞</td></tr>
-<tr><td>　　◎ text = WrapHeader(  text,  "＝＝＝【アラーム発生の有無】＝＝＝",  "hdr2")</td><td>見出し装飾設定＜modMonshinCore＞</td></tr>
-<tr><td>　　◎ text = WrapHeader(  text,  "＝＝＝【アラーム表示内容】＝＝＝",  "hdr2")</td><td>見出し装飾設定＜modMonshinCore＞</td></tr>
-<tr><td>　　◎ text = WrapHeader(  text,  "＝＝＝【発生状況】＝＝＝",  "hdr2")</td><td>見出し装飾設定＜modMonshinCore＞</td></tr>
-<tr><td>　　◎ text = WrapHeader(  text,  "===【対応状況】===",  "hdr2")</td><td>見出し装飾設定＜modMonshinCore＞</td></tr>
-<tr><td>　　◎ text = WrapHeader(  text,  "＝＝＝【対応状況詳細】＝＝＝",  "hdr2")</td><td>見出し装飾設定＜modMonshinCore＞</td></tr>
-<tr><td>　　◎ text = WrapHeader(  text,  "＝＝＝【実施していた作業】＝＝＝",  "hdr2")</td><td>見出し装飾設定＜modMonshinCore＞</td></tr>
-<tr><td>　　◎ text = WrapHeader(  text,  "===【収集データ】===",  "hdr2")</td><td>見出し装飾設定＜modMonshinCore＞</td></tr>
-<tr><td>　　◎ text = WrapHeader(  text,  "＝＝＝【収集データ】＝＝＝",  "hdr2")</td><td>見出し装飾設定＜modMonshinCore＞</td></tr>
-<tr><td>　　│#  回答情報大見出し装飾</td><td></td></tr>
-<tr><td>　　◎ text = WrapHeader(  text,  "【解析結果/対処方法】",  "hdr1")</td><td>見出し装飾設定＜modMonshinCore＞</td></tr>
-<tr><td>　　│#  回答情報中見出し装飾</td><td></td></tr>
-<tr><td>　　◎ text = WrapHeader(  text,  "■発生原因",  "hdr2")</td><td>見出し装飾設定＜modMonshinCore＞</td></tr>
-<tr><td>　　◎ text = WrapHeader(  text,  "■対処要否",  "hdr2")</td><td>見出し装飾設定＜modMonshinCore＞</td></tr>
-<tr><td>　　◎ text = WrapHeader(  text,  "■対処方法",  "hdr2")</td><td>見出し装飾設定＜modMonshinCore＞</td></tr>
-<tr><td>　　◎ text = WrapHeader(  text,  "■次回発生時の対応",  "hdr2")</td><td>見出し装飾設定＜modMonshinCore＞</td></tr>
-<tr><td>　　◎ text = WrapHeader(  text,  "■同件判断方法",  "hdr2")</td><td>見出し装飾設定＜modMonshinCore＞</td></tr>
-<tr><td>　　◎ text = WrapHeader(  text,  "■問処票発行要否",  "hdr2")</td><td>見出し装飾設定＜modMonshinCore＞</td></tr>
-<tr><td>　　◎ text = WrapHeader(  text,  "■その他",  "hdr2")</td><td>見出し装飾設定＜modMonshinCore＞</td></tr>
-<tr><td>　　│#  回答情報強調項目装飾</td><td></td></tr>
-<tr><td>　　◎ text = WrapHeader(  text,  "発生原因" &amp; vbLf,  "hdr2")</td><td>見出し装飾設定＜modMonshinCore＞</td></tr>
-<tr><td>　　◎ text = WrapHeader(  text,  "対処要否" &amp; vbLf,  "hdr2")</td><td>見出し装飾設定＜modMonshinCore＞</td></tr>
-<tr><td>　　◎ text = WrapHeader(  text,  "対処方法" &amp; vbLf,  "hdr2")</td><td>見出し装飾設定＜modMonshinCore＞</td></tr>
-<tr><td>　　◎ text = WrapHeader(  text,  "次回発生時の" &amp; vbLf &amp; "対応" &amp; vbLf,  "hdr2")</td><td>見出し装飾設定＜modMonshinCore＞</td></tr>
-<tr><td>　　◎ text = WrapHeader(  text,  "同件判断方法" &amp; vbLf,  "hdr2")</td><td>見出し装飾設定＜modMonshinCore＞</td></tr>
-<tr><td>　　◎ text = WrapHeader(  text,  "問処票発行要否" &amp; vbLf,  "hdr2")</td><td>見出し装飾設定＜modMonshinCore＞</td></tr>
-<tr><td>　　◎ text = WrapHeader(  text,  "その他",  "hdr2")</td><td>見出し装飾設定＜modMonshinCore＞</td></tr>
-<tr><td>　　│#  回答情報強調項目装飾</td><td></td></tr>
-<tr><td>　　◎ text = WrapHeader(  text,  "回答日：",  "hdr3")</td><td>見出し装飾設定＜modMonshinCore＞</td></tr>
-<tr><td>　　◎ text = WrapHeader(  text,  "研開C担当者名、連絡先：",  "hdr3")</td><td>見出し装飾設定＜modMonshinCore＞</td></tr>
-<tr><td>　　│#  装飾後文字列返却</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   問診票大見出し装飾</span></td><td></td></tr>
+<tr><td>　　◎ text = <a href="../modMonshinCore/WrapHeader.modMonshinCore.hcp.html">WrapHeader</a>(  text,  "＝＝＝＜問合せ種別＞＝＝＝",  "hdr1")</td><td><a href="../modMonshinCore/WrapHeader.modMonshinCore.hcp.html">見出し装飾設定＜modMonshinCore＞</a></td></tr>
+<tr><td>　　◎ text = <a href="../modMonshinCore/WrapHeader.modMonshinCore.hcp.html">WrapHeader</a>(  text,  "＝＝＝＜問合せ内容＞＝＝＝",  "hdr1")</td><td><a href="../modMonshinCore/WrapHeader.modMonshinCore.hcp.html">見出し装飾設定＜modMonshinCore＞</a></td></tr>
+<tr><td>　　◎ text = <a href="../modMonshinCore/WrapHeader.modMonshinCore.hcp.html">WrapHeader</a>(  text,  "＝＝＝＜故障発生状況＞＝＝＝",  "hdr1")</td><td><a href="../modMonshinCore/WrapHeader.modMonshinCore.hcp.html">見出し装飾設定＜modMonshinCore＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│#   問診票中見出し装飾</span></td><td></td></tr>
+<tr><td>　　◎ text = <a href="../modMonshinCore/WrapHeader.modMonshinCore.hcp.html">WrapHeader</a>(  text,  "＝＝＝【現状の運用系】＝＝＝",  "hdr2")</td><td><a href="../modMonshinCore/WrapHeader.modMonshinCore.hcp.html">見出し装飾設定＜modMonshinCore＞</a></td></tr>
+<tr><td>　　◎ text = <a href="../modMonshinCore/WrapHeader.modMonshinCore.hcp.html">WrapHeader</a>(  text,  "＝＝＝【アラーム発生の有無】＝＝＝",  "hdr2")</td><td><a href="../modMonshinCore/WrapHeader.modMonshinCore.hcp.html">見出し装飾設定＜modMonshinCore＞</a></td></tr>
+<tr><td>　　◎ text = <a href="../modMonshinCore/WrapHeader.modMonshinCore.hcp.html">WrapHeader</a>(  text,  "＝＝＝【アラーム表示内容】＝＝＝",  "hdr2")</td><td><a href="../modMonshinCore/WrapHeader.modMonshinCore.hcp.html">見出し装飾設定＜modMonshinCore＞</a></td></tr>
+<tr><td>　　◎ text = <a href="../modMonshinCore/WrapHeader.modMonshinCore.hcp.html">WrapHeader</a>(  text,  "＝＝＝【発生状況】＝＝＝",  "hdr2")</td><td><a href="../modMonshinCore/WrapHeader.modMonshinCore.hcp.html">見出し装飾設定＜modMonshinCore＞</a></td></tr>
+<tr><td>　　◎ text = <a href="../modMonshinCore/WrapHeader.modMonshinCore.hcp.html">WrapHeader</a>(  text,  "===【対応状況】===",  "hdr2")</td><td><a href="../modMonshinCore/WrapHeader.modMonshinCore.hcp.html">見出し装飾設定＜modMonshinCore＞</a></td></tr>
+<tr><td>　　◎ text = <a href="../modMonshinCore/WrapHeader.modMonshinCore.hcp.html">WrapHeader</a>(  text,  "＝＝＝【対応状況詳細】＝＝＝",  "hdr2")</td><td><a href="../modMonshinCore/WrapHeader.modMonshinCore.hcp.html">見出し装飾設定＜modMonshinCore＞</a></td></tr>
+<tr><td>　　◎ text = <a href="../modMonshinCore/WrapHeader.modMonshinCore.hcp.html">WrapHeader</a>(  text,  "＝＝＝【実施していた作業】＝＝＝",  "hdr2")</td><td><a href="../modMonshinCore/WrapHeader.modMonshinCore.hcp.html">見出し装飾設定＜modMonshinCore＞</a></td></tr>
+<tr><td>　　◎ text = <a href="../modMonshinCore/WrapHeader.modMonshinCore.hcp.html">WrapHeader</a>(  text,  "===【収集データ】===",  "hdr2")</td><td><a href="../modMonshinCore/WrapHeader.modMonshinCore.hcp.html">見出し装飾設定＜modMonshinCore＞</a></td></tr>
+<tr><td>　　◎ text = <a href="../modMonshinCore/WrapHeader.modMonshinCore.hcp.html">WrapHeader</a>(  text,  "＝＝＝【収集データ】＝＝＝",  "hdr2")</td><td><a href="../modMonshinCore/WrapHeader.modMonshinCore.hcp.html">見出し装飾設定＜modMonshinCore＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│#   回答情報大見出し装飾</span></td><td></td></tr>
+<tr><td>　　◎ text = <a href="../modMonshinCore/WrapHeader.modMonshinCore.hcp.html">WrapHeader</a>(  text,  "【解析結果/対処方法】",  "hdr1")</td><td><a href="../modMonshinCore/WrapHeader.modMonshinCore.hcp.html">見出し装飾設定＜modMonshinCore＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│#   回答情報中見出し装飾</span></td><td></td></tr>
+<tr><td>　　◎ text = <a href="../modMonshinCore/WrapHeader.modMonshinCore.hcp.html">WrapHeader</a>(  text,  "■発生原因",  "hdr2")</td><td><a href="../modMonshinCore/WrapHeader.modMonshinCore.hcp.html">見出し装飾設定＜modMonshinCore＞</a></td></tr>
+<tr><td>　　◎ text = <a href="../modMonshinCore/WrapHeader.modMonshinCore.hcp.html">WrapHeader</a>(  text,  "■対処要否",  "hdr2")</td><td><a href="../modMonshinCore/WrapHeader.modMonshinCore.hcp.html">見出し装飾設定＜modMonshinCore＞</a></td></tr>
+<tr><td>　　◎ text = <a href="../modMonshinCore/WrapHeader.modMonshinCore.hcp.html">WrapHeader</a>(  text,  "■対処方法",  "hdr2")</td><td><a href="../modMonshinCore/WrapHeader.modMonshinCore.hcp.html">見出し装飾設定＜modMonshinCore＞</a></td></tr>
+<tr><td>　　◎ text = <a href="../modMonshinCore/WrapHeader.modMonshinCore.hcp.html">WrapHeader</a>(  text,  "■次回発生時の対応",  "hdr2")</td><td><a href="../modMonshinCore/WrapHeader.modMonshinCore.hcp.html">見出し装飾設定＜modMonshinCore＞</a></td></tr>
+<tr><td>　　◎ text = <a href="../modMonshinCore/WrapHeader.modMonshinCore.hcp.html">WrapHeader</a>(  text,  "■同件判断方法",  "hdr2")</td><td><a href="../modMonshinCore/WrapHeader.modMonshinCore.hcp.html">見出し装飾設定＜modMonshinCore＞</a></td></tr>
+<tr><td>　　◎ text = <a href="../modMonshinCore/WrapHeader.modMonshinCore.hcp.html">WrapHeader</a>(  text,  "■問処票発行要否",  "hdr2")</td><td><a href="../modMonshinCore/WrapHeader.modMonshinCore.hcp.html">見出し装飾設定＜modMonshinCore＞</a></td></tr>
+<tr><td>　　◎ text = <a href="../modMonshinCore/WrapHeader.modMonshinCore.hcp.html">WrapHeader</a>(  text,  "■その他",  "hdr2")</td><td><a href="../modMonshinCore/WrapHeader.modMonshinCore.hcp.html">見出し装飾設定＜modMonshinCore＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│#   回答情報強調項目装飾</span></td><td></td></tr>
+<tr><td>　　◎ text = <a href="../modMonshinCore/WrapHeader.modMonshinCore.hcp.html">WrapHeader</a>(  text,  "発生原因" &amp; vbLf,  "hdr2")</td><td><a href="../modMonshinCore/WrapHeader.modMonshinCore.hcp.html">見出し装飾設定＜modMonshinCore＞</a></td></tr>
+<tr><td>　　◎ text = <a href="../modMonshinCore/WrapHeader.modMonshinCore.hcp.html">WrapHeader</a>(  text,  "対処要否" &amp; vbLf,  "hdr2")</td><td><a href="../modMonshinCore/WrapHeader.modMonshinCore.hcp.html">見出し装飾設定＜modMonshinCore＞</a></td></tr>
+<tr><td>　　◎ text = <a href="../modMonshinCore/WrapHeader.modMonshinCore.hcp.html">WrapHeader</a>(  text,  "対処方法" &amp; vbLf,  "hdr2")</td><td><a href="../modMonshinCore/WrapHeader.modMonshinCore.hcp.html">見出し装飾設定＜modMonshinCore＞</a></td></tr>
+<tr><td>　　◎ text = <a href="../modMonshinCore/WrapHeader.modMonshinCore.hcp.html">WrapHeader</a>(  text,  "次回発生時の" &amp; vbLf &amp; "対応" &amp; vbLf,  "hdr2")</td><td><a href="../modMonshinCore/WrapHeader.modMonshinCore.hcp.html">見出し装飾設定＜modMonshinCore＞</a></td></tr>
+<tr><td>　　◎ text = <a href="../modMonshinCore/WrapHeader.modMonshinCore.hcp.html">WrapHeader</a>(  text,  "同件判断方法" &amp; vbLf,  "hdr2")</td><td><a href="../modMonshinCore/WrapHeader.modMonshinCore.hcp.html">見出し装飾設定＜modMonshinCore＞</a></td></tr>
+<tr><td>　　◎ text = <a href="../modMonshinCore/WrapHeader.modMonshinCore.hcp.html">WrapHeader</a>(  text,  "問処票発行要否" &amp; vbLf,  "hdr2")</td><td><a href="../modMonshinCore/WrapHeader.modMonshinCore.hcp.html">見出し装飾設定＜modMonshinCore＞</a></td></tr>
+<tr><td>　　◎ text = <a href="../modMonshinCore/WrapHeader.modMonshinCore.hcp.html">WrapHeader</a>(  text,  "その他",  "hdr2")</td><td><a href="../modMonshinCore/WrapHeader.modMonshinCore.hcp.html">見出し装飾設定＜modMonshinCore＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│#   回答情報強調項目装飾</span></td><td></td></tr>
+<tr><td>　　◎ text = <a href="../modMonshinCore/WrapHeader.modMonshinCore.hcp.html">WrapHeader</a>(  text,  "回答日：",  "hdr3")</td><td><a href="../modMonshinCore/WrapHeader.modMonshinCore.hcp.html">見出し装飾設定＜modMonshinCore＞</a></td></tr>
+<tr><td>　　◎ text = <a href="../modMonshinCore/WrapHeader.modMonshinCore.hcp.html">WrapHeader</a>(  text,  "研開C担当者名、連絡先：",  "hdr3")</td><td><a href="../modMonshinCore/WrapHeader.modMonshinCore.hcp.html">見出し装飾設定＜modMonshinCore＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│#   装飾後文字列返却</span></td><td></td></tr>
 <tr><td>　　〇 FormatDescriptionForDisplay = text</td><td></td></tr>
 <tr><td>　　┴End Function</td><td></td></tr>
 </tbody>
 </table>
+<hr>
+<h2>Calls (1)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modMonshinCore/WrapHeader.modMonshinCore.hcp.html">WrapHeader</a></td><td>見出し装飾設定</td><td>modMonshinCore</td></tr>
+</table>
+<hr>
+<h2>Called By (2)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modInfoDisplay/ShowRemarks.modInfoDisplay.hcp.html">ShowRemarks</a></td><td>備考表示</td><td>modInfoDisplay</td></tr>
+<tr><td><a href="../modInfoDisplay/ShowDescription.modInfoDisplay.hcp.html">ShowDescription</a></td><td>説明表示</td><td>modInfoDisplay</td></tr>
+</table>
 <script>
-document.querySelectorAll('.resize').forEach(function (eleTh) {
+document.querySelectorAll('.resize').forEach(function(eleTh) {
 let startX;
 let startWidth;
 const eleResizer = document.createElement('div');
 eleResizer.classList.add('resizer');
-eleResizer.addEventListener('mousedown', function (e) {
-const styleTh = window.getComputedStyle(eleTh);
-const paddingLeft = parseFloat(styleTh.paddingLeft);
-const paddingRight = parseFloat(styleTh.paddingRight);
-const borderLeft = parseFloat(styleTh.borderLeftWidth);
-const borderRight = parseFloat(styleTh.borderRightWidth);
+eleResizer.addEventListener('mousedown', function(e) {
 startX = e.pageX;
-startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+startWidth = eleTh.offsetWidth;
 document.addEventListener('mousemove', onMouseMove);
 document.addEventListener('mouseup', onMouseUp);
 });
 eleTh.appendChild(eleResizer);
-function onMouseMove(e) {
-const newWidth = startWidth + (e.pageX - startX);
-eleTh.style.width = newWidth + 'px';
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
 }
-function onMouseUp() {
-document.removeEventListener('mousemove', onMouseMove);
-document.removeEventListener('mouseup', onMouseUp);
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
 }
 });
 </script>

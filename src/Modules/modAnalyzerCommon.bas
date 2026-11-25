@@ -665,12 +665,45 @@ End Function
 '
 ' は呼出対象外とする
 '
+'===================================================================
+' @JPName
+' 関数呼出判定
+'
+' @Category
+' ProcAnalyzer
+'
+' @Input
+' LineText(String)
+' FuncName(String)
+'
+' @Output
+' Boolean
+'
+' @Summary
+' 指定文字列内に
+' Procedure呼出が存在するか判定する
+'
+' @Remarks
+' Function呼出
+' Sub呼出
+' Module.Procedure呼出
+'
+' を対象とする
+'
+' オブジェクトメソッド
+' (RegEx.Test等)
+'
+' は除外する
+'===================================================================
 Public Function IsFunctionCall( _
         ByVal LineText As String, _
         ByVal FuncName As String) As Boolean
 
     ' 正規表現オブジェクト
     Dim RegEx As Object
+
+    ' 行継続判定用
+    Dim WorkText As String
 
     '# Procedure定義行除外
     If IsProcedureLine(LineText) Then
@@ -685,28 +718,28 @@ Public Function IsFunctionCall( _
     '# API説明行除外
     If Left$(LineText, 1) = "■" Then Exit Function
 
+    '# RegEx生成
     Set RegEx = CreateObject("VBScript.RegExp")
 
     RegEx.IgnoreCase = True
 
     '------------------------------------
-    ' 関数戻り値代入除外
+    '# 関数戻り値代入除外
     ' GetCurrentToolID = xxx
     '------------------------------------
-    '# 関数戻り値代入除外
     RegEx.Pattern = _
         "^\s*" & _
         FuncName & _
         "\s*="
 
     If RegEx.Test(LineText) Then
-
         Exit Function
-
     End If
-    
+
+    '------------------------------------
     '# Call構文判定
-    ' Call Function
+    ' Call Func()
+    '------------------------------------
     RegEx.Pattern = _
         "(^|\s)Call\s+" & _
         FuncName & _
@@ -715,42 +748,59 @@ Public Function IsFunctionCall( _
     If RegEx.Test(LineText) Then
 
         IsFunctionCall = True
+
         Exit Function
 
     End If
 
+    '------------------------------------
+    '# オブジェクトメソッド除外
+    ' RegEx.Test()
+    ' Dictionary.Exists()
+    '------------------------------------
+    If IsObjectMethodCall( _
+            LineText, _
+            FuncName) Then
+
+        Exit Function
+
+    End If
+
+    '------------------------------------
     '# Function呼出判定
-    ' Function(...)
+    ' Func(...)
+    '------------------------------------
     RegEx.Pattern = _
         "(^|[\s=\(,])" & _
         FuncName & _
         "\s*\("
+
     If RegEx.Test(LineText) Then
-    
+
         IsFunctionCall = True
+
         Exit Function
-    
+
     End If
-    
-    '------------------------------------
-    ' 行継続文字対応
-    ' CreatePathChart_V3 _
+
     '------------------------------------
     '# 行継続呼出判定
+    ' Func _
+    '------------------------------------
     If right$(Trim$(LineText), 1) = "_" Then
-    
-        Dim WorkText As String
-        
+
         WorkText = Trim$(LineText)
 
-        If Left$(Trim$(LineText), Len(FuncName)) = FuncName Then
+        If Left$(WorkText, Len(FuncName)) = FuncName Then
 
             If Len(WorkText) = Len(FuncName) + 1 Then
+
                 IsFunctionCall = True
+
                 Exit Function
 
             End If
-        
+
             Select Case Mid$( _
                             WorkText, _
                             Len(FuncName) + 1, _
@@ -759,57 +809,49 @@ Public Function IsFunctionCall( _
                 Case " ", "(", vbTab
 
                     IsFunctionCall = True
+
                     Exit Function
 
             End Select
-            
+
         End If
 
     End If
-    
+
+    '------------------------------------
     '# Sub呼出判定
-    ' Sub Arg1, Arg2
+    ' Func Arg1
+    '------------------------------------
     RegEx.Pattern = _
         "^\s*" & _
         FuncName & _
         "\s+.+$"
-    
-    If RegEx.Test(LineText) Then
-
-        IsFunctionCall = True
-        Exit Function
-
-    End If
-    
-    '# オブジェクトメソッド呼出判定
-    ' Object.Method Arg1
-    RegEx.Pattern = _
-        "\." & FuncName & _
-        "(\s+|\s*\(|$)"
 
     If RegEx.Test(LineText) Then
 
         IsFunctionCall = True
+
         Exit Function
 
     End If
 
+    '------------------------------------
     '# モジュール修飾呼出判定
-    ' Module.Procedure Arg1, Arg2
-    RegEx.Pattern = _
-        "(^|\s)(\w+\.)+" & _
-        FuncName & _
-        "\s+.+$"
-
-    If RegEx.Test(LineText) Then
+    ' modXXX.Func(...)
+    '------------------------------------
+    If IsProjectModuleCall( _
+            LineText, _
+            FuncName) Then
 
         IsFunctionCall = True
+
         Exit Function
 
     End If
 
-    '# 単独呼出判定
-    ' Call Module.Procedure(...)
+    '------------------------------------
+    '# Call Module.Procedure(...)
+    '------------------------------------
     RegEx.Pattern = _
         "(^|\s)Call\s+(\w+\.)+" & _
         FuncName & _
@@ -818,26 +860,18 @@ Public Function IsFunctionCall( _
     If RegEx.Test(LineText) Then
 
         IsFunctionCall = True
+
         Exit Function
 
     End If
 
-    ' Module.Procedure(...)
+    '------------------------------------
+    '# Function単独参照
+    '------------------------------------
     RegEx.Pattern = _
-        "(^|\s)(\w+\.)+" & _
+        "^\s*" & _
         FuncName & _
-        "\s*\("
-
-    If RegEx.Test(LineText) Then
-
-        IsFunctionCall = True
-        Exit Function
-
-    End If
-
-    ' Function 単独呼出
-    RegEx.Pattern = _
-        "^\s*" & FuncName & "\s*$"
+        "\s*$"
 
     If RegEx.Test(LineText) Then
 
@@ -846,8 +880,11 @@ Public Function IsFunctionCall( _
         Exit Function
 
     End If
-    
-    ' Function参照
+
+    '------------------------------------
+    '# Function参照判定
+    ' If Not Func Then
+    '------------------------------------
     RegEx.Pattern = _
         "(^|\s)(Not\s+)?" & _
         FuncName & _
@@ -860,10 +897,109 @@ Public Function IsFunctionCall( _
         Exit Function
 
     End If
-    
-    
-    IsFunctionCall = RegEx.Test(LineText)
 
 End Function
 
+'===================================================================
+' @JPName
+' オブジェクトメソッド判定
+'
+' @Category
+' ProcAnalyzer
+'
+' @Input
+' LineText(String)
+' FuncName(String)
+'
+' @Output
+' Boolean
+'
+' @Summary
+' FuncNameが
+' オブジェクトメソッド呼出か判定する
+'
+' @Remarks
+' RegEx.Test
+' Dictionary.Exists
+' Collection.Add
+'
+' などを除外する
+'===================================================================
+Public Function IsObjectMethodCall( _
+                ByVal LineText As String, _
+                ByVal FuncName As String) _
+                As Boolean
+
+    Dim Pos As Long
+    Dim ObjName As String
+    Dim i As Long
+
+    Pos = InStr( _
+            1, _
+            LineText, _
+            "." & FuncName & "(", _
+            vbTextCompare)
+
+    If Pos = 0 Then Exit Function
+
+    i = Pos - 1
+
+    Do While i > 0
+
+        If Mid$(LineText, i, 1) Like "[A-Za-z0-9_]" Then
+
+            ObjName = _
+                Mid$(LineText, i, 1) & ObjName
+
+            i = i - 1
+
+        Else
+
+            Exit Do
+
+        End If
+
+    Loop
+
+    Select Case UCase$(ObjName)
+
+        Case "REGEX", _
+             "DICTIONARY", _
+             "COLLECTION", _
+             "WORKSHEET", _
+             "WORKBOOK"
+
+            IsObjectMethodCall = True
+
+    End Select
+
+End Function
+
+Private Function IsProjectModuleCall( _
+                ByVal LineText As String, _
+                ByVal FuncName As String) _
+                As Boolean
+
+    Dim Info As clsProcInfo
+    Dim ModuleName As String
+
+    Set Info = _
+        ResolveProcedure("", FuncName)
+
+    If Info Is Nothing Then Exit Function
+
+    ModuleName = _
+        Info.ModuleName
+
+    If InStr( _
+            1, _
+            LineText, _
+            ModuleName & "." & FuncName & "(", _
+            vbTextCompare) > 0 Then
+
+        IsProjectModuleCall = True
+
+    End If
+
+End Function
 

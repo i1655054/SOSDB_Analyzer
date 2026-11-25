@@ -1,0 +1,21 @@
+┬
+〇│Public Sub AddCall(ByVal ProcName As String)	呼出先追加＜clsProcInfo＞
+┴└┐
+　　◆┐If Not ExistsInCollection(Calls, ProcName) Then	内部呼出:ExistsInCollection
+　　│〇 Calls.Add ProcName
+　　│┴End If
+　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ExistsInCollection	Collection存在確認	clsProcInfo
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

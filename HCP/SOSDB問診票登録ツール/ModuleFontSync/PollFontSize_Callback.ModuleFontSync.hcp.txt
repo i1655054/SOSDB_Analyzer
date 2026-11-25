@@ -1,9 +1,23 @@
-Procedure: ModuleFontSync.PollFontSize_Callback  [ フォント監視コールバック＜ModuleFontSync＞ ]
-HCP	Business
 ┬
 〇│Public Sub PollFontSize_Callback()	フォント監視コールバック＜ModuleFontSync＞
 ┴└┐
 　　☆ On Error Resume Next
-　　│#  フォント同期処理委譲
-　　◎ UF_InfoWebDisplay.PollFontSize_Worker	フォント同期＜UF_InfoWebDisplay＞
+　　│#   フォント同期処理委譲
+　　〇 UF_InfoWebDisplay.PollFontSize_Worker
 　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+PollFontSize_Worker	フォント同期	UF_InfoWebDisplay
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+StartPollTimer	フォント監視開始	ModuleFontSync

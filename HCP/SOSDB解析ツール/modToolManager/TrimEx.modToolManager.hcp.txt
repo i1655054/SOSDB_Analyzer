@@ -1,0 +1,20 @@
+┬
+〇│Private Function TrimEx(ByVal Value As Variant) As String	文字列整形＜modToolManager＞
+┴└┐
+　　│#   前後空白除去
+　　〇 TrimEx = Trim$(Replace(CStr(Value), "　", ""))
+　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetToolInfo	ツール情報取得	modToolManager

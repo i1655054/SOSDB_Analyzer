@@ -1,0 +1,23 @@
+┬
+〇│Private Sub txtSummaryMouseDown(  ByVal Button As Integer,  ByVal Shift As Integer,  ByVal x As Single,  ByVal y As Single)	値コピー＜frmPathChartNavigator＞
+┴└┐
+　　│#   右クリック判定
+　　◆┐If Button = 2 Then
+　　││#   概要コピー
+　　│◎ CopyControlValue  txtSummary.Text,  "概要"	値コピー＜frmPathChartNavigator＞
+　　│┴End If
+　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+CopyControlValue	値コピー	frmPathChartNavigator
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

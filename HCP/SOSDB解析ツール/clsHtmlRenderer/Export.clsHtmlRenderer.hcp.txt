@@ -1,0 +1,61 @@
+┬
+〇│Public Sub Export(  ByVal FilePath As String,  ByVal ModuleName As String,  ByVal ProcName As String,  ByVal HCPNodes As Collection)	HTML出力＜clsHtmlRenderer＞
+┴└┐
+　　│#   出力ファイル番号取得
+　　〇 mFileNo = FreeFile
+　　│#   HTMLファイルオープン
+　　〇 Open FilePath  For Output As #mFileNo
+　　│#   HTMLヘッダ出力
+　　◎ WriteHtmlHeader  mFileNo,  ProcName,  1.2,  True	HTMLヘッダ出力＜modHCPIndex＞
+　　│#   タイトル出力
+　　〇 Print #mFileNo,  "<h1>" &  ProcName &  "</h1>"
+　　│#   モジュール名出力
+　　〇 Print #mFileNo,  "<p>Module : " &  ModuleName &  "</p>"
+　　│#   HCPテーブル開始
+　　〇 Print #mFileNo,  "<table>"
+　　│#   ヘッダ開始
+　　〇 Print #mFileNo,  "<thead>"
+　　│#   HCPヘッダ出力
+　　〇 Print #mFileNo,  "<tr>" &  "<th class=""resize"">HCP</th>" &  "<th class=""resize"">Business</th>" &  "</tr>"
+　　│#   ヘッダ終了
+　　〇 Print #mFileNo,  "</thead>"
+　　│#   HCP本文開始
+　　〇 Print #mFileNo,  "<tbody>"
+　　│#   HCP本文出力
+　　◎ OutputHCPNodes  HCPNodes	HCPノードHTML出力＜clsHtmlRenderer＞
+　　│#   HCP本文終了
+　　〇 Print #mFileNo,  "</tbody>"
+　　│#   HCPテーブル終了
+　　〇 Print #mFileNo,  "</table>"
+　　│#   Calls出力
+　　◎ WriteCallsHtml  mFileNo,  ProcName	Calls一覧HTML出力＜clsHtmlRenderer＞
+　　│#   Called By出力
+　　◎ WriteCalledByHtml  mFileNo,  ProcName	Called By一覧HTML出力＜clsHtmlRenderer＞
+　　│#   HTMLフッタ出力
+　　◎ WriteHtmlFooter  mFileNo,  True	HTMLフッタ出力＜modHCPIndex＞
+　　│#   HTMLファイルクローズ
+　　〇 Close #mFileNo
+　　┴End Sub
+
+========================================
+Calls (10)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetBusinessPrefix	Business継続プレフィックス取得	modHCPCommon
+WriteCallsText	Calls一覧出力	clsTextRenderer
+WriteCalledByText	Called By一覧出力	clsTextRenderer
+WriteHtmlHeader	HTMLヘッダ出力	modHCPIndex
+OutputHCPNodes	HCPノードHTML出力	clsHtmlRenderer
+WriteCallsHtml	Calls一覧HTML出力	clsHtmlRenderer
+WriteCalledByHtml	Called By一覧HTML出力	clsHtmlRenderer
+WriteHtmlFooter	HTMLフッタ出力	modHCPIndex
+ResolveProcedure	Procedure解決	modProcedureRepository
+OutputNode	ノード出力	clsExcelRenderer
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

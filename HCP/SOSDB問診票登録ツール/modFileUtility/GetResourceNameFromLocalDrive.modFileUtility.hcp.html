@@ -1,84 +1,88 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
 <meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
 <title>GetResourceNameFromLocalDrive</title>
 <style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
 body{font-family:Meiryo;font-size:9pt;}
 table{border-collapse:collapse;}
-th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
 td{vertical-align:top;}
 th{background:#e8f0fe;}
-colgroup col:nth-of-type(1) {}
-colgroup col:nth-of-type(2) {}
-.resize {position: relative;}
-.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
 </style>
 </head>
-<body>
+<body translate="no">
 <h1>GetResourceNameFromLocalDrive</h1>
 <p>Module : modFileUtility</p>
-<p><a href="./_INDEX.html">← Module Index</a></p>
 <table>
-<colgroup><col/><col/></colgroup>
-<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
 <tbody>
-<tr><td>Procedure: modFileUtility.GetResourceNameFromLocalDrive  [ ネットワーク共有パス取得＜modFileUtility＞ ]</td><td></td></tr>
-<tr><td>HCP</td><td>Business</td></tr>
 <tr><td>┬</td><td></td></tr>
 <tr><td>〇│Public Function GetResourceNameFromLocalDrive(strDrv As String) As String</td><td>ネットワーク共有パス取得＜modFileUtility＞</td></tr>
 <tr><td>┴└┐</td><td></td></tr>
 <tr><td>　　□ Dim strBuf As String</td><td></td></tr>
 <tr><td>　　□ Dim strDriveName As String</td><td></td></tr>
 <tr><td>　　□ Dim lngLen As Long</td><td></td></tr>
-<tr><td>　　│#  ドライブ名抽出</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   ドライブ名抽出</span></td><td></td></tr>
 <tr><td>　　〇 strDriveName = Left$(strDrv, 1) &amp; g_cnsCol</td><td></td></tr>
 <tr><td>　　☆ On Error GoTo GetResourceNameFromLocalDrive_ERROR</td><td></td></tr>
 <tr><td>　　〇 strBuf = String$(MAX_PATH + 1, vbNullChar)</td><td></td></tr>
-<tr><td>　　│#  ネットワーク共有取得</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   ネットワーク共有取得</span></td><td></td></tr>
 <tr><td>　　〇 WNetGetConnection strDriveName, strBuf, MAX_PATH</td><td></td></tr>
 <tr><td>　　〇 lngLen = InStr(1, strBuf, vbNullChar)</td><td></td></tr>
-<tr><td>　　│#  取得結果判定</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   取得結果判定</span></td><td></td></tr>
 <tr><td>　　◆┐If lngLen &gt; 1 Then</td><td></td></tr>
-<tr><td>　　││#  UNCパス返却</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   UNCパス返却</span></td><td></td></tr>
 <tr><td>　　│〇 GetResourceNameFromLocalDrive = Left$(strBuf, lngLen - 1)</td><td></td></tr>
 <tr><td>　　├┐ELSE</td><td></td></tr>
-<tr><td>　　││#  ドライブ名返却</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   ドライブ名返却</span></td><td></td></tr>
 <tr><td>　　│〇 GetResourceNameFromLocalDrive = strDriveName</td><td></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
 <tr><td>　　☆ On Error GoTo 0</td><td></td></tr>
 <tr><td>　　→ Exit Function</td><td></td></tr>
 <tr><td>▼ GetResourceNameFromLocalDrive_ERROR:</td><td></td></tr>
-<tr><td>　　│#  取得失敗時は元ドライブ返却</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   取得失敗時は元ドライブ返却</span></td><td></td></tr>
 <tr><td>　　〇 GetResourceNameFromLocalDrive = strDriveName</td><td></td></tr>
 <tr><td>　　┴End Function</td><td></td></tr>
 </tbody>
 </table>
+<hr>
+<h2>Calls (0)</h2>
+<p>呼出先なし</p>
+<hr>
+<h2>Called By (1)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modFileUtility/OpenDialog.modFileUtility.hcp.html">OpenDialog</a></td><td>ファイル選択ダイアログ表示</td><td>modFileUtility</td></tr>
+</table>
 <script>
-document.querySelectorAll('.resize').forEach(function (eleTh) {
+document.querySelectorAll('.resize').forEach(function(eleTh) {
 let startX;
 let startWidth;
 const eleResizer = document.createElement('div');
 eleResizer.classList.add('resizer');
-eleResizer.addEventListener('mousedown', function (e) {
-const styleTh = window.getComputedStyle(eleTh);
-const paddingLeft = parseFloat(styleTh.paddingLeft);
-const paddingRight = parseFloat(styleTh.paddingRight);
-const borderLeft = parseFloat(styleTh.borderLeftWidth);
-const borderRight = parseFloat(styleTh.borderRightWidth);
+eleResizer.addEventListener('mousedown', function(e) {
 startX = e.pageX;
-startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+startWidth = eleTh.offsetWidth;
 document.addEventListener('mousemove', onMouseMove);
 document.addEventListener('mouseup', onMouseUp);
 });
 eleTh.appendChild(eleResizer);
-function onMouseMove(e) {
-const newWidth = startWidth + (e.pageX - startX);
-eleTh.style.width = newWidth + 'px';
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
 }
-function onMouseUp() {
-document.removeEventListener('mousemove', onMouseMove);
-document.removeEventListener('mouseup', onMouseUp);
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
 }
 });
 </script>

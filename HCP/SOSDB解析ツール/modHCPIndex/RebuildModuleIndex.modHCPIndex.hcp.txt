@@ -1,0 +1,33 @@
+┬
+〇│Public Sub RebuildModuleIndex(  ByVal ModuleName As String)	モジュールINDEX再生成＜modHCPIndex＞
+┴└┐
+　　│#   Procedure一覧
+　　□ Dim Procedures As Collection
+　　│#   INDEXファイル
+　　□ Dim IndexPath As String
+　　◎ Trace "INDEX",  "RebuildModuleIndex " &  ModuleName	トレース出力＜modDebug＞
+　　◎ Set Procedures =  GetModuleProcedureList(  ModuleName)	Procedure一覧取得＜modHCPInfo＞
+　　◎ IndexPath =  GetHCPOutputFolder(  ModuleName) &  "_INDEX.html"	HCP出力フォルダ取得＜modHCPPath＞
+　　◎ WriteHtmlIndexFile  IndexPath,  ModuleName,  Procedures	Module INDEX HTML出力＜modHCPIndex＞
+　　◎ Trace "INDEX",  "ModuleIndex Created " &  ModuleName &  " Procedures=" &  Procedures.Count	トレース出力＜modDebug＞
+　　┴End Sub
+
+========================================
+Calls (4)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+Trace	トレース出力	modDebug
+GetModuleProcedureList	Procedure一覧取得	modHCPInfo
+GetHCPOutputFolder	HCP出力フォルダ取得	modHCPPath
+WriteHtmlIndexFile	Module INDEX HTML出力	modHCPIndex
+
+========================================
+Called By (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+CreateHCP	HCP作成	modHCPAnalyzer
+RebuildAllIndexes	INDEX一括再生成	modHCPIndex

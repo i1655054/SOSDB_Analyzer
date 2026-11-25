@@ -1,0 +1,65 @@
+┬
+〇│Public Function GetModuleProcedureList(  ByVal ModuleName As String)  As Collection	Procedure一覧取得＜modHCPInfo＞
+┴└┐
+　　│#   返却一覧
+　　□ Dim Result As Collection
+　　│#   HCP_TARGETS
+　　□ Dim ws As Worksheet
+　　│#   最終行
+　　□ Dim LastRow As Long
+　　│#   行番号
+　　□ Dim r As Long
+　　│#   Procedure情報
+　　□ Dim Info As clsProcedureInfo
+　　〇 Set Result = New Collection
+　　〇 Set ws =  gContext.ManagementBook.Worksheets(
+　　│   SHEET_HCP_TARGETS)
+　　〇 LastRow =  ws.Cells(  ws.Rows.Count,  COL_HCP_MODULE).End(xlUp).row
+　　＠┐For r = 2 To LastRow
+　　│◆┐If StrComp(  Trim$(ws.Cells(r,  COL_HCP_MODULE).Value),  ModuleName,  vbTextCompare) = 0 Then
+　　││〇 Set Info =  New clsProcedureInfo
+　　││〇 Info.ProcedureName =  Trim$(ws.Cells(  r,  COL_HCP_PROC).Value)
+　　││◎ Info.JPName =  GetProcedureJPName(  ModuleName,  Info.ProcedureName)	ProcedureJPName取得＜modHCPInfo＞
+　　││〇 Info.FileName =  Info.ProcedureName &  "." &  ModuleName
+　　││〇 Info.Status =  Trim$(ws.Cells(  r,  COL_HCP_STATUS).Value)
+　　││◆┐Select Case UCase$(Info.Status)
+　　│││├┐Case "DONE"
+　　││││〇 Info.Status =  STATUS_OK
+　　│││├┐Case "ERROR"
+　　││││〇 Info.Status =  STATUS_ERROR
+　　│││├┐Case "PENDING"
+　　││││〇 Info.Status =  STATUS_PENDING
+　　│││├┐Case "SKIP"
+　　││││〇 Info.Status =  STATUS_SKIP
+　　│││├┐Case ""
+　　││││〇 Info.Status =  STATUS_UNKNOWN
+　　│││├┐Case Else
+　　││││〇 Info.Status =  "[" &  Info.Status &  "]"
+　　│││┴End Select
+　　││◆┐If IsDate(ws.Cells(  r,  COL_HCP_UPDATE_DATE).Value) Then
+　　│││〇 Info.LastUpdate =  Format$(  ws.Cells(  r,  COL_HCP_UPDATE_DATE).Value,  "yyyy/mm/dd HH:nn:ss")
+　　││├┐ELSE
+　　│││〇 Info.LastUpdate = "-"
+　　│││┴End If
+　　││〇 Result.Add Info
+　　││┴End If
+　　│┴Next r
+　　〇 Set GetModuleProcedureList =  Result
+　　┴End Function
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetProcedureJPName	ProcedureJPName取得	modHCPInfo
+
+========================================
+Called By (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+RebuildModuleIndex	モジュールINDEX再生成	modHCPIndex
+WriteToolIndexHtml	Tool INDEX HTML出力	modHCPIndex

@@ -1,22 +1,20 @@
-Procedure: modUtility.FormatOccurrence  [ 発生日時整形＜modUtility＞ ]
-HCP	Business
 ┬
 〇│Public Function FormatOccurrence(  ByVal occurrenceDate As Variant,  ByVal occurrenceTime As Variant) As String	発生日時整形＜modUtility＞
 ┴└┐
 　　□ Dim dt As Date
 　　□ Dim dateStr As String
 　　□ Dim timeStr As String
-　　│#  発生日形式判定
+　　│#   発生日形式判定
 　　◆┐If IsDate(occurrenceDate) Then
-　　││#  発生日変換
+　　││#   発生日変換
 　　│〇 dt = CDate(occurrenceDate)
-　　││#  日付文字列生成
+　　││#   日付文字列生成
 　　│〇 dateStr = Format(dt, "yyyy-mm-dd")
-　　││#  時刻取得
+　　││#   時刻取得
 　　│◆┐If Hour(dt) <> 0 Or Minute(dt) <> 0 Then
 　　││〇 timeStr = Format(dt, "hh:mm")
 　　│├┐ELSE
-　　│││#  時刻引数確認
+　　│││#   時刻引数確認
 　　││◆┐If IsDate(occurrenceTime) Then
 　　│││〇 timeStr = Format(occurrenceTime, "hh:mm")
 　　││├┐ELSE
@@ -24,7 +22,7 @@ HCP	Business
 　　│││┴End If
 　　││┴End If
 　　├┐ELSE
-　　││#  文字列形式処理
+　　││#   文字列形式処理
 　　│〇 dateStr = Trim(CStr(occurrenceDate))
 　　│◆┐If IsDate(occurrenceTime) Then
 　　││〇 timeStr = Format(occurrenceTime, "hh:mm")
@@ -32,7 +30,7 @@ HCP	Business
 　　││〇 timeStr = Trim(CStr(occurrenceTime))
 　　││┴End If
 　　│┴End If
-　　│#  発生日時文字列生成
+　　│#   発生日時文字列生成
 　　◆┐If dateStr = "" Then
 　　│〇 FormatOccurrence = "-"
 　　├┐ElseIf timeStr = "" Then
@@ -41,3 +39,18 @@ HCP	Business
 　　│〇 FormatOccurrence = dateStr & " " & timeStr
 　　│┴End If
 　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+SetIssueToUI	Issue画面反映	modUtility
+CreateIssueFromInfo	問診情報からIssue生成	modIssueMapper

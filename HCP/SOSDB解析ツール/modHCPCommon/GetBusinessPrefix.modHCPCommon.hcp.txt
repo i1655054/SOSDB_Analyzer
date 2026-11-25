@@ -1,0 +1,59 @@
+┬
+〇│Public Function GetBusinessPrefix(  ByVal RenderText As String)  As String	Business継続プレフィックス取得＜modHCPCommon＞
+┴└┐
+　　□ Dim Pos As Long
+　　│#   CALL記号検索
+　　〇 Pos = InStr(  RenderText,  "◎")
+　　◆┐If Pos > 0 Then
+　　│〇 GetBusinessPrefix =  Left$(  RenderText,  Pos - 1) &  "│"
+　　│→ Exit Function
+　　│┴End If
+　　│#   REFERENCE記号検索
+　　〇 Pos = InStr(  RenderText,  "◇")
+　　◆┐If Pos > 0 Then
+　　│〇 GetBusinessPrefix =  Left$(  RenderText,  Pos - 1) &  "│"
+　　│→ Exit Function
+　　│┴End If
+　　│#   NORMAL記号検索
+　　〇 Pos = InStr(  RenderText,  "〇")
+　　◆┐If Pos > 0 Then
+　　│〇 GetBusinessPrefix =  Left$(  RenderText,  Pos - 1) &  "│"
+　　│→ Exit Function
+　　│┴End If
+　　│#   DECLARE記号検索
+　　〇 Pos = InStr(  RenderText,  "□")
+　　◆┐If Pos > 0 Then
+　　│〇 GetBusinessPrefix =  Left$(  RenderText,  Pos - 1) &  "│"
+　　│→ Exit Function
+　　│┴End If
+　　│#   IF記号検索
+　　〇 Pos = InStr(  RenderText,  "◆")
+　　◆┐If Pos > 0 Then
+　　│〇 GetBusinessPrefix =  Left$(  RenderText,  Pos - 1) &  "│"
+　　│→ Exit Function
+　　│┴End If
+　　│#   FOR記号検索
+　　〇 Pos = InStr(  RenderText,  "＠")
+　　◆┐If Pos > 0 Then
+　　│〇 GetBusinessPrefix =  Left$(  RenderText,  Pos - 1) &  "│"
+　　│→ Exit Function
+　　│┴End If
+　　│#   継続行生成不可
+　　〇 GetBusinessPrefix = "│"
+　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (3)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+Export
+OutputHCPNodes	HCPノードHTML出力	clsHtmlRenderer
+OutputNode	ノード出力	clsExcelRenderer

@@ -1,0 +1,33 @@
+┬
+〇│Public Function GetHCPToolFolder()  As String	HCPツールフォルダ取得＜modHCPPath＞
+┴└┐
+　　│#   ツール情報
+　　□ Dim Tool As clsToolInfo
+　　│#   フォルダパス
+　　□ Dim FolderPath As String
+　　◎ Set Tool =  GetCurrentToolInfo()	現在ツール情報取得＜modToolManager＞
+　　◎ FolderPath =  GetOutputFolder() &  "HCP\" &  Tool.ToolName & "\"	出力フォルダ取得＜modPowerPointChart＞
+　　◎ CreateFolderIfNotExists  GetOutputFolder() &  "HCP"	出力フォルダ取得＜modPowerPointChart＞
+　　◎ CreateFolderIfNotExists  FolderPath	フォルダ作成＜modHCPPath＞
+　　〇 GetHCPToolFolder =  FolderPath
+　　┴End Function
+
+========================================
+Calls (3)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetCurrentToolInfo	現在ツール情報取得	modToolManager
+GetOutputFolder	出力フォルダ取得	modPowerPointChart
+CreateFolderIfNotExists	フォルダ作成	modHCPPath
+
+========================================
+Called By (3)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+RebuildToolIndex	ツールINDEX再生成	modHCPIndex
+ExistsToolIndex	ツールINDEX存在確認	modHCPIndex
+WriteToolIndexHtml	Tool INDEX HTML出力	modHCPIndex

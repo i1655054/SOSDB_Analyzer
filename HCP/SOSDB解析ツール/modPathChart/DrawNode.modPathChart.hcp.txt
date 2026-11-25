@@ -1,0 +1,43 @@
+┬
+〇│Private Function DrawNode(  ws As Worksheet,  ByVal CaptionText As String,  ByVal TopPos As Double,  ByVal LeftPos As Double,  ByVal FillColor As Long) As Shape	ノード作成＜modPathChart＞
+┴└┐
+　　□ Dim shp As Shape
+　　│#   ノード生成上限確認
+　　◆┐If gMaxNode > 0 Then
+　　│◆┐If gNodeNo >= gMaxNode Then
+　　││→ Exit Function
+　　││┴End If
+　　│┴End If
+　　│#   ノード採番
+　　〇 gNodeNo = gNodeNo + 1
+　　│#   ノード図形生成
+　　〇 Set shp = ws.Shapes.AddShape(  msoShapeRoundedRectangle,  LeftPos,  TopPos,  NODE_WIDTH,  NODE_HEIGHT)
+　　〇 shp.Name = "N_" & Format$(gNodeNo, "000000")
+　　│#   ノード表示文字列設定
+　　〇 shp.TextFrame.Characters.Text = CaptionText
+　　〇 shp.TextFrame.Characters.Font.Size = NODE_FONT_SIZE
+　　│#   ノード選択イベント設定
+　　〇 shp.OnAction =  "'" & ThisWorkbook.Name & "'!SelectNode"
+　　│#   ノード書式設定
+　　〇 shp.Fill.ForeColor.RGB = FillColor
+　　〇 shp.TextFrame.Characters.Font.Color = NODE_FONT_COLOR
+　　〇 shp.line.ForeColor.RGB = NODE_LINE_COLOR
+　　〇 shp.line.Weight = NODE_LINE_WEIGHT
+　　│#   ノード返却
+　　〇 Set DrawNode = shp
+　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+CreatePathChart_V3	パスチャート作成	modPathChart
+DrawCallTreeShape	ノード再帰描画	modPathChart

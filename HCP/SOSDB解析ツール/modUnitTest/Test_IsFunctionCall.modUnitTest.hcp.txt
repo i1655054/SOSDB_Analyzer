@@ -1,0 +1,33 @@
+┬
+〇│Public Sub Test_IsFunctionCall()	＜modUnitTest＞
+┴└┐
+　　◎ Debug.Assert  IsFunctionCall(  "Call Test",  "Test") = True	関数呼出判定＜modAnalyzerCommon＞
+　　◎ Debug.Assert  IsFunctionCall(  "Call test",  "Test") = True	関数呼出判定＜modAnalyzerCommon＞
+　　◎ Debug.Assert  IsFunctionCall(  "Call TEST",  "Test") = True	関数呼出判定＜modAnalyzerCommon＞
+　　◎ Debug.Assert  IsFunctionCall(  "Call TestSub",  "Test") = False	関数呼出判定＜modAnalyzerCommon＞
+　　◎ Debug.Assert  IsFunctionCall(  "MsgBox ""Test""",  "Test") = False	関数呼出判定＜modAnalyzerCommon＞
+　　◎ Debug.Assert  IsFunctionCall(  "Calc = 1",  "Calc") = False	関数呼出判定＜modAnalyzerCommon＞
+　　◎ Debug.Assert  IsFunctionCall(  "If Not FP_InitAboutCalendar() Then",  "FP_InitAboutCalendar")	関数呼出判定＜modAnalyzerCommon＞
+　　│	内部呼出:FP_InitAboutCalendar
+　　◎ Debug.Assert  IsFunctionCall(  "RegEx.Test(LineText)",  "Test") = False	関数呼出判定＜modAnalyzerCommon＞
+　　│	内部呼出:Test
+　　◎ Debug.Assert  IsFunctionCall(  "Dictionary.Exists(Key)",  "Exists") = False	関数呼出判定＜modAnalyzerCommon＞
+　　│	内部呼出:Exists
+　　〇 Debug.Print "OK"
+　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+IsFunctionCall	関数呼出判定	modAnalyzerCommon
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+Test_All		modUnitTest

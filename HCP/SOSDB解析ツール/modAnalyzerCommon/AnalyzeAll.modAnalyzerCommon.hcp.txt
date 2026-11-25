@@ -1,0 +1,65 @@
+┬
+〇│Public Sub AnalyzeAll()	全解析実行＜modAnalyzerCommon＞
+┴└┐
+　　□ Dim NoCallerCount As Long
+　　│#   解析コンテキスト確認
+　　◆┐If gContext Is Nothing Then
+　　│〇 MsgBox "解析コンテキスト未生成"
+　　│→ Exit Sub
+　　│┴End If
+　　│#   解析コンテキスト妥当性確認
+　　◆┐If Not gContext.IsValid Then
+　　│〇 MsgBox "解析コンテキスト生成失敗"
+　　│→ Exit Sub
+　　│┴End If
+　　│#   対象ブック確認
+　　◆┐If Not CheckTargetBook(  gContext.TargetBook,  gContext.Tool.WorkbookName) Then	内部呼出:CheckTargetBook
+　　│→ Exit Sub
+　　│┴End If
+　　│#   管理ブック確認
+　　◆┐If Not CheckManagementWorkbook(  gContext.ManagementBook,  gContext.Tool.ManagementFile) Then	内部呼出:CheckManagementWorkbook
+　　│→ Exit Sub
+　　│┴End If
+　　☆ On Error GoTo ExitProc
+　　〇 Application.StatusBar = "Step 1/4 ProcedureList生成中"
+　　│#   ProcList生成
+　　◎ ProcedureList	関数一覧作成＜modAnalyze＞
+　　〇 Application.StatusBar = "Step 2/4 NoCallerProcList生成中"
+　　│#   呼出元なしProcedure抽出
+　　◎ NoCallerCount =  ExportNoCallerProcedureList()	呼出元なし関数一覧出力＜modAnalyze＞
+　　〇 Application.StatusBar = "Step 3/4 FunctionTrace生成中"
+　　│#   FunctionTrace生成
+　　◎ FunctionTrace	関数トレース作成＜modFunctionTrac＞
+　　〇 Application.StatusBar = "Step 4/4 FunctionDependency生成中"
+　　│#   FunctionDependency生成
+　　◎ FunctionDependency	関数依存関係作成＜modFunctionDependency＞
+　　〇 Application.StatusBar = False
+　　│#   解析結果通知
+　　〇 MsgBox  "解析完了" & vbCrLf &  "呼出元なし : " &  NoCallerCount & "件",  vbInformation
+　　→ Exit Sub
+▼ ExitProc:
+　　〇 Application.StatusBar = False
+　　│#   エラー内容通知
+　　〇 MsgBox  "解析中にエラーが発生しました。" & vbCrLf &  Err.Description,  vbInformation
+　　┴End Sub
+
+========================================
+Calls (6)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+CheckTargetBook	対象ブック確認	modAnalyzerCommon
+CheckManagementWorkbook	管理ブック確認	modToolManager
+ProcedureList	関数一覧作成	modAnalyze
+ExportNoCallerProcedureList	呼出元なし関数一覧出力	modAnalyze
+FunctionTrace	関数トレース作成	modFunctionTrac
+FunctionDependency	関数依存関係作成	modFunctionDependency
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+cmdAnalyze_Click

@@ -1,0 +1,40 @@
+┬
+〇│Private Sub LoadProcedureInfo()	プロシージャ情報読込＜frmHCPGenerator＞
+┴└┐
+　　□ Dim ws As Worksheet
+　　□ Dim LastRow As Long
+　　□ Dim r As Long
+　　□ Dim ModuleName As String
+　　□ Dim ProcName As String
+　　│#   ProcListシート取得
+　　〇 Set ws =  gContext.ManagementBook.Worksheets(
+　　│   SHEET_PROC_LIST)
+　　〇 LastRow =  ws.Cells(  ws.Rows.Count,  1).End(xlUp).row
+　　│#   選択Procedure取得
+　　〇 ModuleName = lstModule.Value
+　　〇 ProcName = lstProcedure.Value
+　　│#   Procedure情報検索
+　　＠┐For r = 2 To LastRow
+　　││#   Procedure一致判定
+　　│◆┐If ws.Cells(r, COL_MODULE).Value =  ModuleName  And ws.Cells(r, COL_PROC).Value =  ProcName Then
+　　│││#   Procedure情報表示
+　　││〇 txtJPName.Text =  ws.Cells(r, COL_JPNAME).Value
+　　││〇 txtSummary.Text =  ws.Cells(r, COL_SUMMARY).Value
+　　││→ Exit For
+　　││┴End If
+　　│┴Next r
+　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+lstProcedure_Click	プロシージャ選択	frmHCPGenerator

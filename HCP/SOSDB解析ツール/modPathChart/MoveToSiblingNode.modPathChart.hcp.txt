@@ -1,0 +1,90 @@
+┬
+〇│Public Sub MoveToSiblingNode()	兄弟ノード移動＜modPathChart＞
+┴└┐
+　　◆┐If gParentMap Is Nothing Then
+　　│〇 MsgBox "PathChartを再生成してください。"
+　　│→ Exit Sub
+　　│┴End If
+　　□ Dim ws As Worksheet
+　　□ Dim shp As Shape
+　　□ Dim ParentName As String
+　　□ Dim Ary As Variant
+　　□ Dim i As Long
+　　□ Dim CurrentPos As Long
+　　〇 Set ws = gContext.ManagementBook.Worksheets(
+　　│ SHEET_PATH_CHART)
+　　◆┐If gCurrentShapeName = "" Then
+　　│〇 MsgBox "現在ノードがありません。"
+　　│→ Exit Sub
+　　│┴End If
+　　◆┐If gParentMap Is Nothing Then
+　　│〇 MsgBox "パスチャートを再生成してください。"
+　　│→ Exit Sub
+　　│┴End If
+　　◆┐If Not gParentMap.Exists(gCurrentShapeName) Then
+　　│〇 MsgBox "兄弟ノードはありません。"
+　　│→ Exit Sub
+　　│┴End If
+　　│#   親ノード取得
+　　〇 ParentName = gParentMap(gCurrentShapeName)
+　　◆┐If Not gChildMap.Exists(ParentName) Then
+　　│〇 MsgBox "兄弟ノードはありません。"
+　　│→ Exit Sub
+　　│┴End If
+　　│#   兄弟ノード一覧取得
+　　〇 Ary = Split(gChildMap(ParentName), "|")
+　　〇 CurrentPos = -1
+　　│#   現在位置検索
+　　＠┐For i = LBound(Ary) To UBound(Ary)
+　　│◆┐If Ary(i) = gCurrentShapeName Then
+　　││〇 CurrentPos = i
+　　││→ Exit For
+　　││┴End If
+　　│┴Next i
+　　◆┐If CurrentPos = -1 Then
+　　│〇 MsgBox "兄弟ノードが見つかりません。"
+　　│→ Exit Sub
+　　│┴End If
+　　│#   次兄弟ノード選択
+　　〇 CurrentPos = CurrentPos + 1
+　　◆┐If CurrentPos > UBound(Ary) Then
+　　│〇 CurrentPos = 0
+　　│┴End If
+　　│#   兄弟ノード取得
+　　〇 Set shp = ws.Shapes(Ary(CurrentPos))
+　　│#   現在ノード更新
+　　〇 gCurrentShapeName = shp.Name
+　　〇 gCurrentNodeText = shp.TextFrame.Characters.Text
+　　◎ UpdateCurrentNodeInfo  GetProcedureNameFromNodeText(  gCurrentNodeText)	関数名取得＜modPathChart＞
+　　◆┐If gParentMap.Exists(shp.Name) Then
+　　│〇 gCurrentParentShapeName =  gParentMap(shp.Name)
+　　│〇 gCurrentParentWithChildren =  gParentMap(shp.Name)
+　　├┐ELSE
+　　│〇 gCurrentParentShapeName = ""
+　　│〇 gCurrentParentWithChildren = ""
+　　│┴End If
+　　│#   ノード強調表示
+　　◎ Call HighlightNode(shp)	ノード強調表示＜modPathChart＞
+　　〇 gCurrentParentWithChildren =  gCurrentParentShapeName
+　　│#   Navigator状態更新
+　　◎ UpdateNavigatorStatus  "兄弟ノード : " &  GetProcedureNameFromNodeText(  shp.TextFrame.Characters.Text)	関数名取得＜modPathChart＞
+　　┴End Sub
+
+========================================
+Calls (4)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+UpdateCurrentNodeInfo	ノード情報更新	modPathChart
+GetProcedureNameFromNodeText	関数名取得	modPathChart
+HighlightNode	ノード強調表示	modPathChart
+UpdateNavigatorStatus	Navigator状態更新	modPathChart
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+cmdSibling_Click	兄弟ノード移動	frmPathChartNavigator

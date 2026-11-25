@@ -1,0 +1,32 @@
+┬
+〇│Private Sub ConnectShapes(  ws As Worksheet,  ByVal ParentName As String,  ByVal ChildName As String)	接続線作成＜modPathChart＞
+┴└┐
+　　□ Dim Con As Shape
+　　│#   接続線生成
+　　〇 Set Con = ws.Shapes.AddConnector(  msoConnectorElbow,  0, 0, 100, 100)
+　　│#   接続線書式設定
+　　〇 Con.line.ForeColor.RGB =  CONNECTOR_LINE_COLOR
+　　〇 Con.line.Weight =  CONNECTOR_LINE_WEIGHT
+　　│#   親ノード接続
+　　〇 Con.ConnectorFormat.BeginConnect  ws.Shapes(ParentName), 4
+　　│#   子ノード接続
+　　〇 Con.ConnectorFormat.EndConnect  ws.Shapes(ChildName), 2
+　　☆ On Error Resume Next
+　　│#   接続線名称設定
+　　〇 Con.Name =  "C_" & ParentName & "_" & ChildName
+　　☆ On Error GoTo 0
+　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+DrawCallTreeShape	ノード再帰描画	modPathChart

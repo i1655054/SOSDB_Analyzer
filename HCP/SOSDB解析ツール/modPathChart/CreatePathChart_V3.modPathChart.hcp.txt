@@ -1,0 +1,95 @@
+┬
+〇│Public Sub CreatePathChartV3(  ByVal StartProc As String,  ByVal MaxDepth As Long)	パスチャート作成＜modPathChart＞
+┴└┐
+　　□ Dim ws As Worksheet
+　　□ Dim RootShape As Shape
+　　□ Dim RootLeft As Double
+　　□ Dim RootCaption As String
+　　│#   状態初期化
+　　│#   PathChart状態初期化
+　　〇 gNodeNo = 0
+　　〇 NodeCount = 0
+　　〇 EdgeCount = 0
+　　〇 MaxDepthFound = 0
+　　〇 gCurrentNodeText = ""
+　　〇 gNavigatorStatus = ""
+　　〇 gCurrentShapeName = ""
+　　〇 gCurrentParentShapeName = ""
+　　〇 gCurrentParentWithChildren = ""
+　　〇 gCurrentChildIndex = 0
+　　│#   親子関係管理初期化
+　　〇 Set gParentMap =  CreateObject("Scripting.Dictionary")
+　　〇 Set gChildMap =  CreateObject("Scripting.Dictionary")
+　　│#   シート準備
+　　│#   PathChartシート取得
+　　〇 Set ws = gContext.ManagementBook.Worksheets(
+　　│ SHEET_PATH_CHART)
+　　│#   開始Procedure確認
+　　◆┐If StartProc = "" Then
+　　│〇 MsgBox  "開始Procedureを指定してください。"
+　　│→ Exit Sub
+　　│┴End If
+　　│#   探索最大深度設定
+　　〇 gMaxLevel = MaxDepth
+　　◆┐If gMaxLevel <= 0 Then
+　　│〇 gMaxLevel = 99
+　　│┴End If
+　　│#   出力タイムスタンプ生成
+　　◎ gExportTimeStamp = GetTimeStamp()	タイムスタンプ取得＜modPowerPointChart＞
+　　│#   PathChart初期化
+　　◎ Call ClearChartShapes(ws)	チャート初期化＜modPathChart＞
+　　〇 RootLeft = ws.Range(ROOT_CELL).Left
+　　◆┐#If DEBUG_MODE Then
+　　│◎ Debug.Print  "SetIssueToUI=" & GetBranchSize("SetIssueToUI")	分岐サイズ取得＜modPathChart＞
+　　│◎ Debug.Print  "get_MonshinFile=" & GetBranchSize("get_MonshinFile")	分岐サイズ取得＜modPathChart＞
+　　│◎ Debug.Print  "Get_MonshinInfo=" & GetBranchSize("Get_MonshinInfo")	分岐サイズ取得＜modPathChart＞
+　　│┴#End If
+　　│#   ルートノード表示文字列生成
+　　◎ RootCaption =  BuildCaptionText(StartProc)	ノード表示文字列生成＜modPathChart＞
+　　│#   ルートノード生成
+　　◎ Set RootShape =  DrawNode(  ws,  RootCaption,  ROOT_TOP,  RootLeft,  ROOT_NODE_COLOR)	ノード作成＜modPathChart＞
+　　│#   パスチャート再帰生成
+　　◎ DrawCallTreeShape  StartProc,  RootShape.Name,  1,  ROOT_TOP,  RootLeft	ノード再帰描画＜modPathChart＞
+　　〇 ActiveWindow.Zoom = DEFAULT_ZOOM
+　　│#   出力処理
+　　│#   PowerPoint出力
+　　◆┐If gPowerPoint Then
+　　│◎ Call ExportPathChartToPowerPoint(  StartProc,  MaxDepth)	PowerPoint出力＜modPathChart＞
+　　│┴End If
+　　│#   PNG出力
+　　◆┐If gPngOutput Then
+　　│◎ Call ExportPathChartToPNG(  StartProc,  MaxDepth)	PNG出力＜modPowerPointChart＞
+　　│┴End If
+　　│#   パスチャートテキスト出力
+　　◎ Call ExportPathChartToText(  StartProc,  MaxDepth)	テキストチャート出力＜modPathChartText＞
+　　〇 NodeCount = gNodeNo
+　　□ Dim ChartRange As Range
+　　│#   出力範囲取得
+　　◎ Set ChartRange = GetChartRange()	チャート範囲取得＜modPathChart＞
+　　〇 ChartRange.Cells(  ChartRange.Rows.Count,  ChartRange.Columns.Count).Value = " "
+　　┴End Sub
+
+========================================
+Calls (10)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetTimeStamp	タイムスタンプ取得	modPowerPointChart
+ClearChartShapes	チャート初期化	modPathChart
+GetBranchSize	分岐サイズ取得	modPathChart
+BuildCaptionText	ノード表示文字列生成	modPathChart
+DrawNode	ノード作成	modPathChart
+DrawCallTreeShape	ノード再帰描画	modPathChart
+ExportPathChartToPowerPoint	PowerPoint出力	modPathChart
+ExportPathChartToPNG	PNG出力	modPowerPointChart
+ExportPathChartToText	テキストチャート出力	modPathChartText
+GetChartRange	チャート範囲取得	modPathChart
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ExecutePathChart	パスチャート実行	modPathChart

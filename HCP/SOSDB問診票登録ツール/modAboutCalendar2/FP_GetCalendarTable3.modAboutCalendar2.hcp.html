@@ -1,67 +1,75 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
 <meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
 <title>FP_GetCalendarTable3</title>
 <style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
 body{font-family:Meiryo;font-size:9pt;}
 table{border-collapse:collapse;}
-th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
 td{vertical-align:top;}
 th{background:#e8f0fe;}
-colgroup col:nth-of-type(1) {}
-colgroup col:nth-of-type(2) {}
-.resize {position: relative;}
-.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
 </style>
 </head>
-<body>
+<body translate="no">
 <h1>FP_GetCalendarTable3</h1>
 <p>Module : modAboutCalendar2</p>
-<p><a href="./_INDEX.html">← Module Index</a></p>
 <table>
-<colgroup><col/><col/></colgroup>
-<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
 <tbody>
-<tr><td>Procedure: modAboutCalendar2.FP_GetCalendarTable3  [ 三か月カレンダーテーブル取得＜modAboutCalendar2＞ ]</td><td></td></tr>
-<tr><td>HCP</td><td>Business</td></tr>
 <tr><td>┬</td><td></td></tr>
 <tr><td>〇│Public Function FPGetCalendarTable3(ByVal lngYear As Long,  ByVal lngMonth As Long,  ByRef tblCalendar() As gtypAboutCalendar2,  Optional ByRef lngCurrStartIx As Long = -1,  Optional ByRef lngCurrEndIx As Long = -1,  Optional ByVal blnOmitCheck As Boolean = False) As Boolean</td><td>三か月カレンダーテーブル取得＜modAboutCalendar2＞</td></tr>
 <tr><td>┴└┐</td><td></td></tr>
-<tr><td>　　◆┐If Not FP_InitAboutCalendar(blnOmitCheck) Then</td><td></td></tr>
+<tr><td>　　◆┐If Not <a href="../modAboutCalendar2/FP_InitAboutCalendar.modAboutCalendar2.hcp.html">FP_InitAboutCalendar</a>(blnOmitCheck) Then</td><td>内部呼出:<a href="../modAboutCalendar2/FP_InitAboutCalendar.modAboutCalendar2.hcp.html">FP_InitAboutCalendar</a></td></tr>
 <tr><td>　　│〇 FP_GetCalendarTable3 = False</td><td></td></tr>
 <tr><td>　　│→ Exit Function</td><td></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
-<tr><td>　　◎ Call g_clsAboutCalendar.GetCalendarTable3(lngYear,  lngMonth,  tblCalendar,  lngCurrStartIx,  lngCurrEndIx)</td><td>三か月カレンダーテーブル生成＜clsAboutCalendar2＞</td></tr>
+<tr><td>　　◎ Call g_clsAboutCalendar.<a href="../clsAboutCalendar2/GetCalendarTable3.clsAboutCalendar2.hcp.html">GetCalendarTable3</a>(lngYear,  lngMonth,  tblCalendar,  lngCurrStartIx,  lngCurrEndIx)</td><td><a href="../clsAboutCalendar2/GetCalendarTable3.clsAboutCalendar2.hcp.html">三か月カレンダーテーブル生成＜clsAboutCalendar2＞</a></td></tr>
 <tr><td>　　〇 FP_GetCalendarTable3 = True</td><td></td></tr>
 <tr><td>　　┴End Function</td><td></td></tr>
 </tbody>
 </table>
+<hr>
+<h2>Calls (2)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modAboutCalendar2/FP_InitAboutCalendar.modAboutCalendar2.hcp.html">FP_InitAboutCalendar</a></td><td>カレンダー初期化</td><td>modAboutCalendar2</td></tr>
+<tr><td><a href="../clsAboutCalendar2/GetCalendarTable3.clsAboutCalendar2.hcp.html">GetCalendarTable3</a></td><td>三か月カレンダーテーブル生成</td><td>clsAboutCalendar2</td></tr>
+</table>
+<hr>
+<h2>Called By (1)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../UF_Calendar5/UserForm_Initialize.UF_Calendar5.hcp.html">UserForm_Initialize</a></td><td></td><td></td></tr>
+</table>
 <script>
-document.querySelectorAll('.resize').forEach(function (eleTh) {
+document.querySelectorAll('.resize').forEach(function(eleTh) {
 let startX;
 let startWidth;
 const eleResizer = document.createElement('div');
 eleResizer.classList.add('resizer');
-eleResizer.addEventListener('mousedown', function (e) {
-const styleTh = window.getComputedStyle(eleTh);
-const paddingLeft = parseFloat(styleTh.paddingLeft);
-const paddingRight = parseFloat(styleTh.paddingRight);
-const borderLeft = parseFloat(styleTh.borderLeftWidth);
-const borderRight = parseFloat(styleTh.borderRightWidth);
+eleResizer.addEventListener('mousedown', function(e) {
 startX = e.pageX;
-startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+startWidth = eleTh.offsetWidth;
 document.addEventListener('mousemove', onMouseMove);
 document.addEventListener('mouseup', onMouseUp);
 });
 eleTh.appendChild(eleResizer);
-function onMouseMove(e) {
-const newWidth = startWidth + (e.pageX - startX);
-eleTh.style.width = newWidth + 'px';
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
 }
-function onMouseUp() {
-document.removeEventListener('mousemove', onMouseMove);
-document.removeEventListener('mouseup', onMouseUp);
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
 }
 });
 </script>

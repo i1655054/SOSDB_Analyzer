@@ -1,15 +1,13 @@
-Procedure: clsAboutCalendar2.SumEigyoNissu  [ 営業日数集計＜clsAboutCalendar2＞ ]
-HCP	Business
 ┬
 〇│Friend Sub SumEigyoNissu(ByVal dteDateF As Date,  ByVal dteDateT As Date,  ByRef lngCntEigyo As Long,  Optional ByRef lngCntReki As Long = 0)	営業日数集計＜clsAboutCalendar2＞
 ┴└┐
-　　│#  集計値初期化
+　　│#   集計値初期化
 　　〇 lngCntEigyo = 0
 　　〇 lngCntReki = 0
-　　│#  時刻情報除去
+　　│#   時刻情報除去
 　　〇 dteDateF = DateSerial(Year(dteDateF), Month(dteDateF), Day(dteDateF))
 　　〇 dteDateT = DateSerial(Year(dteDateT), Month(dteDateT), Day(dteDateT))
-　　│#  開始終了日確認
+　　│#   開始終了日確認
 　　◆→ If dteDateF > dteDateF Then Exit Sub
 　　□ Dim dteTmp As Date                                              ' 作業日
 　　□ Dim currY As Long                                               ' 現在年
@@ -23,36 +21,52 @@ HCP	Business
 　　〇 dteTmp = dteDateF
 　　〇 currY = Year(dteTmp)
 　　〇 currM = Month(dteTmp)
-　　│#  営業日集計開始
+　　│#   営業日集計開始
 　　＠┐Do While dteTmp <= dteDateT
 　　│〇 lngIxS = 0
 　　│〇 prevY = currY
 　　│〇 prevM = currM
 　　│〇 lngIxSMax = -1
 　　│〇 ReDim tblCalendar(0)
-　　││#  月次カレンダー生成
+　　││#   月次カレンダー生成
 　　│◎ Call GP_GetCalendarSub(prevY, prevM, lngIxSMax, tblCalendar)	単月カレンダー生成内部処理＜clsAboutCalendar2＞
-　　││#  日次判定処理
+　　││#   日次判定処理
 　　│＠┐Do While ((dteTmp <= dteDateT) And (currY = prevY) And (currM = prevM))
 　　││〇 swSyuku = False
 　　││〇 lngCntReki = lngCntReki + 1                         ' 歴日数を加算
 　　││＠┐Do While lngIxS <= lngIxSMax
 　　│││◆┐If tblCalendar(lngIxS).Hiduke = dteTmp Then
-　　│││││#  祝日判定
+　　│││││#   祝日判定
 　　││││〇 swSyuku = tblCalendar(lngIxS).Syuku <> 0
 　　││││→ Exit Do
 　　││││┴End If
 　　│││〇 lngIxS = lngIxS + 1
 　　│││┴Loop
-　　│││#  営業日判定
+　　│││#   営業日判定
 　　││◆┐If ((Weekday(dteTmp) <> vbSunday) And  (Weekday(dteTmp) <> vbSaturday) And  (Not swSyuku)) Then
-　　││││#  営業日数加算
+　　││││#   営業日数加算
 　　│││〇 lngCntEigyo = lngCntEigyo + 1                   ' 営業日数を加算
 　　│││┴End If
-　　│││#  次日付設定
+　　│││#   次日付設定
 　　││〇 dteTmp = dteTmp + 1
 　　││〇 currY = Year(dteTmp)
 　　││〇 currM = Month(dteTmp)
 　　││┴Loop
 　　│┴Loop
 　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GP_GetCalendarSub	単月カレンダー生成内部処理	clsAboutCalendar2
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+FP_SumEigyoNissu	営業日数集計	modAboutCalendar2

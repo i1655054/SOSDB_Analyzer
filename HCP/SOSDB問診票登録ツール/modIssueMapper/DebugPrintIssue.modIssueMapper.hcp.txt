@@ -1,5 +1,3 @@
-Procedure: modIssueMapper.DebugPrintIssue  [ Issue情報デバッグ出力＜modIssueMapper＞ ]
-HCP	Business
 ┬
 〇│Public Sub DebugPrintIssue(  ByVal issue As IssueInfo)	Issue情報デバッグ出力＜modIssueMapper＞
 ┴└┐
@@ -38,3 +36,15 @@ HCP	Business
 　　〇 Debug.Print "Close:", issue.Close_Date
 　　〇 Debug.Print "====================="
 　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

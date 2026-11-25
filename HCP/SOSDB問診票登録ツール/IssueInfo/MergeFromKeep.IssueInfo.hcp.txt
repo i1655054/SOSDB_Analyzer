@@ -1,28 +1,26 @@
-Procedure: IssueInfo.MergeFromKeep  [ Redmine情報優先マージ＜IssueInfo＞ ]
-HCP	Business
 ┬
 〇│Public Sub MergeFromKeep(ByVal src As IssueInfo)	Redmine情報優先マージ＜IssueInfo＞
 ┴└┐
-　　│#  Redmine情報優先マージ
-　　◆ If HasValue(src.Status) Then Me.Status = CStr(src.Status)
-　　◆ If HasValue(src.Priority) Then Me.Priority = CStr(src.Priority)
-　　◆ If HasValue(src.Description) Then Me.Description = CStr(src.Description)
-　　◆ If HasValue(src.ProblemBuilding) Then Me.ProblemBuilding = CStr(src.ProblemBuilding)
-　　◆ If HasValue(src.HostName) Then Me.HostName = CStr(src.HostName)
-　　◆ If HasValue(src.Phenomenon) Then Me.Phenomenon = CStr(src.Phenomenon)
-　　◆ If HasValue(src.CauseDetail) Then Me.CauseDetail = CStr(src.CauseDetail)
-　　◆ If HasValue(src.Mondainum_Pro) Then Me.Mondainum_Pro = CStr(src.Mondainum_Pro)
-　　◆ If HasValue(src.Remarks) Then Me.Remarks = CStr(src.Remarks)
-　　◆ If HasValue(src.ServiceImpact) Then Me.ServiceImpact = CStr(src.ServiceImpact)
-　　◆ If HasValue(src.Equipment) Then Me.Equipment = CStr(src.Equipment)
-　　◆ If HasValue(src.Countermeasure) Then Me.Countermeasure = CStr(src.Countermeasure)
-　　◆ If HasValue(src.RequesterNum) Then Me.RequesterNum = CStr(src.RequesterNum)
-　　◆ If HasValue(src.Key_Word) Then Me.Key_Word = CStr(src.Key_Word)
-　　│#  数値項目マージ
+　　│#   Redmine情報優先マージ
+　　◆ If HasValue(src.Status) Then Me.Status = CStr(src.Status)	内部呼出:HasValue
+　　◆ If HasValue(src.Priority) Then Me.Priority = CStr(src.Priority)	内部呼出:HasValue
+　　◆ If HasValue(src.Description) Then Me.Description = CStr(src.Description)	内部呼出:HasValue
+　　◆ If HasValue(src.ProblemBuilding) Then Me.ProblemBuilding = CStr(src.ProblemBuilding)	内部呼出:HasValue
+　　◆ If HasValue(src.HostName) Then Me.HostName = CStr(src.HostName)	内部呼出:HasValue
+　　◆ If HasValue(src.Phenomenon) Then Me.Phenomenon = CStr(src.Phenomenon)	内部呼出:HasValue
+　　◆ If HasValue(src.CauseDetail) Then Me.CauseDetail = CStr(src.CauseDetail)	内部呼出:HasValue
+　　◆ If HasValue(src.Mondainum_Pro) Then Me.Mondainum_Pro = CStr(src.Mondainum_Pro)	内部呼出:HasValue
+　　◆ If HasValue(src.Remarks) Then Me.Remarks = CStr(src.Remarks)	内部呼出:HasValue
+　　◆ If HasValue(src.ServiceImpact) Then Me.ServiceImpact = CStr(src.ServiceImpact)	内部呼出:HasValue
+　　◆ If HasValue(src.Equipment) Then Me.Equipment = CStr(src.Equipment)	内部呼出:HasValue
+　　◆ If HasValue(src.Countermeasure) Then Me.Countermeasure = CStr(src.Countermeasure)	内部呼出:HasValue
+　　◆ If HasValue(src.RequesterNum) Then Me.RequesterNum = CStr(src.RequesterNum)	内部呼出:HasValue
+　　◆ If HasValue(src.Key_Word) Then Me.Key_Word = CStr(src.Key_Word)	内部呼出:HasValue
+　　│#   数値項目マージ
 　　◆┐If IsNumeric(src.IssueId) Then
 　　│〇 Me.IssueId = CLng(src.IssueId)
 　　│┴End If
-　　│#  日付項目マージ
+　　│#   日付項目マージ
 　　◆┐If IsDate(src.OccurrenceDateTime) Then
 　　│〇 Me.OccurrenceDateTime = CDate(src.OccurrenceDateTime)
 　　│┴End If
@@ -36,3 +34,17 @@ HCP	Business
 　　│〇 Me.KihensinName_Date = CDate(src.KihensinName_Date)
 　　│┴End If
 　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+HasValue	有効値判定	IssueInfo
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

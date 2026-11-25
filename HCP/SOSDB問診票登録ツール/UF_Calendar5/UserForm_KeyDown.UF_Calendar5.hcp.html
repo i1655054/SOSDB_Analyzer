@@ -1,98 +1,114 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
 <meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
 <title>UserForm_KeyDown</title>
 <style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
 body{font-family:Meiryo;font-size:9pt;}
 table{border-collapse:collapse;}
-th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
 td{vertical-align:top;}
 th{background:#e8f0fe;}
-colgroup col:nth-of-type(1) {}
-colgroup col:nth-of-type(2) {}
-.resize {position: relative;}
-.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
 </style>
 </head>
-<body>
+<body translate="no">
 <h1>UserForm_KeyDown</h1>
 <p>Module : UF_Calendar5</p>
-<p><a href="./_INDEX.html">← Module Index</a></p>
 <table>
-<colgroup><col/><col/></colgroup>
-<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
 <tbody>
-<tr><td>Procedure: UF_Calendar5.UserForm_KeyDown  [ キーボード日付操作＜UF_Calendar5＞ ]</td><td></td></tr>
-<tr><td>HCP</td><td>Business</td></tr>
 <tr><td>┬</td><td></td></tr>
 <tr><td>〇│Private Sub UserFormKeyDown(ByVal KeyCode As MSForms.ReturnInteger,  ByVal Shift As Integer)</td><td>キーボード日付操作＜UF_Calendar5＞</td></tr>
 <tr><td>┴└┐</td><td></td></tr>
-<tr><td>　　│#  キー操作判定</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   キー操作判定</span></td><td></td></tr>
 <tr><td>　　◆┐Select Case KeyCode</td><td></td></tr>
 <tr><td>　　│├┐Case vbKeyReturn, vbKeyExecute, vbKeySeparator  ' Enter(決定)</td><td></td></tr>
-<tr><td>　　││◎ Call GP_ClickCalendar(g_CurPos)</td><td>日付確定＜UF_Calendar5＞</td></tr>
+<tr><td>　　││◎ Call <a href="../UF_Calendar5/GP_ClickCalendar.UF_Calendar5.hcp.html">GP_ClickCalendar</a>(g_CurPos)</td><td><a href="../UF_Calendar5/GP_ClickCalendar.UF_Calendar5.hcp.html">日付確定＜UF_Calendar5＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│││#   フォーム終了</span></td><td></td></tr>
 <tr><td>　　│├┐Case vbKeyCancel, vbKeyEscape                   ' Cancel, Esc(終了)</td><td></td></tr>
 <tr><td>　　││〇 Me.Hide</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│││#   翌月表示</span></td><td></td></tr>
 <tr><td>　　│├┐Case vbKeyPageDown                              ' PageDown(次月)</td><td></td></tr>
-<tr><td>　　││◎ Call LBL_NEXT_Click</td><td>翌月表示＜UF_Calendar5＞</td></tr>
+<tr><td>　　││◎ Call <a href="../UF_Calendar5/LBL_NEXT_Click.UF_Calendar5.hcp.html">LBL_NEXT_Click</a></td><td><a href="../UF_Calendar5/LBL_NEXT_Click.UF_Calendar5.hcp.html">翌月表示＜UF_Calendar5＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│││#   前月表示</span></td><td></td></tr>
 <tr><td>　　│├┐Case vbKeyPageUp                                ' KeyPageUp(前月)</td><td></td></tr>
-<tr><td>　　││◎ Call LBL_PREV_Click</td><td>前月表示＜UF_Calendar5＞</td></tr>
+<tr><td>　　││◎ Call <a href="../UF_Calendar5/LBL_PREV_Click.UF_Calendar5.hcp.html">LBL_PREV_Click</a></td><td><a href="../UF_Calendar5/LBL_PREV_Click.UF_Calendar5.hcp.html">前月表示＜UF_Calendar5＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│││#   日付移動</span></td><td></td></tr>
 <tr><td>　　│├┐Case vbKeyRight, vbKeyNumpad6, vbKeyAdd         ' →(翌日)</td><td></td></tr>
-<tr><td>　　││◎ Call GP_MoveDay(1)</td><td>日付移動＜UF_Calendar5＞</td></tr>
+<tr><td>　　││◎ Call <a href="../UF_Calendar5/GP_MoveDay.UF_Calendar5.hcp.html">GP_MoveDay</a>(1)</td><td><a href="../UF_Calendar5/GP_MoveDay.UF_Calendar5.hcp.html">日付移動＜UF_Calendar5＞</a></td></tr>
 <tr><td>　　│├┐Case vbKeyLeft, vbKeyNumpad4, vbKeySubtract     ' ←(前日)</td><td></td></tr>
-<tr><td>　　││◎ Call GP_MoveDay(-1)</td><td>日付移動＜UF_Calendar5＞</td></tr>
+<tr><td>　　││◎ Call <a href="../UF_Calendar5/GP_MoveDay.UF_Calendar5.hcp.html">GP_MoveDay</a>(-1)</td><td><a href="../UF_Calendar5/GP_MoveDay.UF_Calendar5.hcp.html">日付移動＜UF_Calendar5＞</a></td></tr>
 <tr><td>　　│├┐Case vbKeyUp, vbKeyNumpad8                      ' ↑(7日後)</td><td></td></tr>
-<tr><td>　　││◎ Call GP_MoveDay(-7)</td><td>日付移動＜UF_Calendar5＞</td></tr>
+<tr><td>　　││◎ Call <a href="../UF_Calendar5/GP_MoveDay.UF_Calendar5.hcp.html">GP_MoveDay</a>(-7)</td><td><a href="../UF_Calendar5/GP_MoveDay.UF_Calendar5.hcp.html">日付移動＜UF_Calendar5＞</a></td></tr>
 <tr><td>　　│├┐Case vbKeyDown, vbKeyNumpad2                    ' ↓(7日前)</td><td></td></tr>
-<tr><td>　　││◎ Call GP_MoveDay(7)</td><td>日付移動＜UF_Calendar5＞</td></tr>
+<tr><td>　　││◎ Call <a href="../UF_Calendar5/GP_MoveDay.UF_Calendar5.hcp.html">GP_MoveDay</a>(7)</td><td><a href="../UF_Calendar5/GP_MoveDay.UF_Calendar5.hcp.html">日付移動＜UF_Calendar5＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│││#   月初移動</span></td><td></td></tr>
 <tr><td>　　│├┐Case vbKeyHome                                  ' Home(月初)</td><td></td></tr>
-<tr><td>　　││◎ Call GP_MoveDay(g_CurPosF - g_CurPos)</td><td>日付移動＜UF_Calendar5＞</td></tr>
+<tr><td>　　││◎ Call <a href="../UF_Calendar5/GP_MoveDay.UF_Calendar5.hcp.html">GP_MoveDay</a>(g_CurPosF - g_CurPos)</td><td><a href="../UF_Calendar5/GP_MoveDay.UF_Calendar5.hcp.html">日付移動＜UF_Calendar5＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│││#   月末移動</span></td><td></td></tr>
 <tr><td>　　│├┐Case vbKeyEnd                                   ' End(月末)</td><td></td></tr>
-<tr><td>　　││◎ Call GP_MoveDay(g_CurPosT - g_CurPos)</td><td>日付移動＜UF_Calendar5＞</td></tr>
+<tr><td>　　││◎ Call <a href="../UF_Calendar5/GP_MoveDay.UF_Calendar5.hcp.html">GP_MoveDay</a>(g_CurPosT - g_CurPos)</td><td><a href="../UF_Calendar5/GP_MoveDay.UF_Calendar5.hcp.html">日付移動＜UF_Calendar5＞</a></td></tr>
 <tr><td>　　│├┐Case vbKeyTab                                   ' Tab(Shiftによる)</td><td></td></tr>
 <tr><td>　　││◆┐If Shift = 1 Then</td><td></td></tr>
-<tr><td>　　│││◎ Call GP_MoveDay(-1)                     ' 前日</td><td>日付移動＜UF_Calendar5＞</td></tr>
+<tr><td>　　│││◎ Call <a href="../UF_Calendar5/GP_MoveDay.UF_Calendar5.hcp.html">GP_MoveDay</a>(-1)                     ' 前日</td><td><a href="../UF_Calendar5/GP_MoveDay.UF_Calendar5.hcp.html">日付移動＜UF_Calendar5＞</a></td></tr>
 <tr><td>　　││├┐ELSE</td><td></td></tr>
-<tr><td>　　│││◎ Call GP_MoveDay(1)                      ' 翌日</td><td>日付移動＜UF_Calendar5＞</td></tr>
+<tr><td>　　│││◎ Call <a href="../UF_Calendar5/GP_MoveDay.UF_Calendar5.hcp.html">GP_MoveDay</a>(1)                      ' 翌日</td><td><a href="../UF_Calendar5/GP_MoveDay.UF_Calendar5.hcp.html">日付移動＜UF_Calendar5＞</a></td></tr>
 <tr><td>　　│││┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│││#   年移動</span></td><td></td></tr>
 <tr><td>　　│├┐Case vbKeyF11                                   ' F11(前年)</td><td></td></tr>
 <tr><td>　　││〇 g_FormDate1 = DateSerial(g_intCurYear - 1, g_intCurMonth, 1)</td><td></td></tr>
-<tr><td>　　││◎ Call GP_EraseYearMonth</td><td>年月選択非表示＜UF_Calendar5＞</td></tr>
-<tr><td>　　││◎ Call GP_MakeCalendar</td><td>カレンダー生成＜UF_Calendar5＞</td></tr>
+<tr><td>　　││◎ Call <a href="../UF_Calendar5/GP_EraseYearMonth.UF_Calendar5.hcp.html">GP_EraseYearMonth</a></td><td><a href="../UF_Calendar5/GP_EraseYearMonth.UF_Calendar5.hcp.html">年月選択非表示＜UF_Calendar5＞</a></td></tr>
+<tr><td>　　││◎ Call <a href="../UF_Calendar5/GP_MakeCalendar.UF_Calendar5.hcp.html">GP_MakeCalendar</a></td><td><a href="../UF_Calendar5/GP_MakeCalendar.UF_Calendar5.hcp.html">カレンダー生成＜UF_Calendar5＞</a></td></tr>
 <tr><td>　　│├┐Case vbKeyF12                                   ' F11(翌年)</td><td></td></tr>
 <tr><td>　　││〇 g_FormDate1 = DateSerial(g_intCurYear + 1, g_intCurMonth, 1)</td><td></td></tr>
-<tr><td>　　││◎ Call GP_EraseYearMonth</td><td>年月選択非表示＜UF_Calendar5＞</td></tr>
-<tr><td>　　││◎ Call GP_MakeCalendar</td><td>カレンダー生成＜UF_Calendar5＞</td></tr>
+<tr><td>　　││◎ Call <a href="../UF_Calendar5/GP_EraseYearMonth.UF_Calendar5.hcp.html">GP_EraseYearMonth</a></td><td><a href="../UF_Calendar5/GP_EraseYearMonth.UF_Calendar5.hcp.html">年月選択非表示＜UF_Calendar5＞</a></td></tr>
+<tr><td>　　││◎ Call <a href="../UF_Calendar5/GP_MakeCalendar.UF_Calendar5.hcp.html">GP_MakeCalendar</a></td><td><a href="../UF_Calendar5/GP_MakeCalendar.UF_Calendar5.hcp.html">カレンダー生成＜UF_Calendar5＞</a></td></tr>
 <tr><td>　　│┴End Select</td><td></td></tr>
 <tr><td>　　┴End Sub</td><td></td></tr>
 </tbody>
 </table>
+<hr>
+<h2>Calls (6)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../UF_Calendar5/GP_ClickCalendar.UF_Calendar5.hcp.html">GP_ClickCalendar</a></td><td>日付確定</td><td>UF_Calendar5</td></tr>
+<tr><td><a href="../UF_Calendar5/LBL_NEXT_Click.UF_Calendar5.hcp.html">LBL_NEXT_Click</a></td><td>翌月表示</td><td>UF_Calendar5</td></tr>
+<tr><td><a href="../UF_Calendar5/LBL_PREV_Click.UF_Calendar5.hcp.html">LBL_PREV_Click</a></td><td>前月表示</td><td>UF_Calendar5</td></tr>
+<tr><td><a href="../UF_Calendar5/GP_MoveDay.UF_Calendar5.hcp.html">GP_MoveDay</a></td><td>日付移動</td><td>UF_Calendar5</td></tr>
+<tr><td><a href="../UF_Calendar5/GP_EraseYearMonth.UF_Calendar5.hcp.html">GP_EraseYearMonth</a></td><td>年月選択非表示</td><td>UF_Calendar5</td></tr>
+<tr><td><a href="../UF_Calendar5/GP_MakeCalendar.UF_Calendar5.hcp.html">GP_MakeCalendar</a></td><td>カレンダー生成</td><td>UF_Calendar5</td></tr>
+</table>
+<hr>
+<h2>Called By (0)</h2>
+<p>呼出元なし</p>
 <script>
-document.querySelectorAll('.resize').forEach(function (eleTh) {
+document.querySelectorAll('.resize').forEach(function(eleTh) {
 let startX;
 let startWidth;
 const eleResizer = document.createElement('div');
 eleResizer.classList.add('resizer');
-eleResizer.addEventListener('mousedown', function (e) {
-const styleTh = window.getComputedStyle(eleTh);
-const paddingLeft = parseFloat(styleTh.paddingLeft);
-const paddingRight = parseFloat(styleTh.paddingRight);
-const borderLeft = parseFloat(styleTh.borderLeftWidth);
-const borderRight = parseFloat(styleTh.borderRightWidth);
+eleResizer.addEventListener('mousedown', function(e) {
 startX = e.pageX;
-startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+startWidth = eleTh.offsetWidth;
 document.addEventListener('mousemove', onMouseMove);
 document.addEventListener('mouseup', onMouseUp);
 });
 eleTh.appendChild(eleResizer);
-function onMouseMove(e) {
-const newWidth = startWidth + (e.pageX - startX);
-eleTh.style.width = newWidth + 'px';
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
 }
-function onMouseUp() {
-document.removeEventListener('mousemove', onMouseMove);
-document.removeEventListener('mouseup', onMouseUp);
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
 }
 });
 </script>

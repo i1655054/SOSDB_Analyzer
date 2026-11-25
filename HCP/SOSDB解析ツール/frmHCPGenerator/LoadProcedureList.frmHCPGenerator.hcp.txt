@@ -1,0 +1,49 @@
+┬
+〇│Private Sub LoadProcedureList(  ByVal ModuleName As String)	プロシージャ一覧読込＜frmHCPGenerator＞
+┴└┐
+　　□ Dim ws As Worksheet
+　　□ Dim LastRow As Long
+　　□ Dim r As Long
+　　□ Dim Dic As Object
+　　□ Dim Keys As Variant
+　　□ Dim i As Long
+　　│#   Procedure管理初期化
+　　〇 Set Dic =  CreateObject("Scripting.Dictionary")
+　　│#   Procedure一覧初期化
+　　〇 lstProcedure.Clear
+　　│#   ProcListシート取得
+　　〇 Set ws =  gContext.ManagementBook.Worksheets(
+　　│   SHEET_PROC_LIST)
+　　〇 LastRow =  ws.Cells(  ws.Rows.Count,  1).End(xlUp).row
+　　│#   Procedure一覧収集
+　　＠┐For r = 2 To LastRow
+　　││#   モジュール一致判定
+　　│◆┐If ws.Cells(r, COL_MODULE).Value =  ModuleName Then
+　　│││#   Procedure名登録
+　　││〇 Dic(  CStr(ws.Cells(r, COL_PROC).Value)) = True
+　　││┴End If
+　　│┴Next r
+　　│#   Procedure一覧ソート
+　　〇 Keys = Dic.Keys
+　　◎ SortStringArray Keys	文字列配列ソート＜frmHCPGenerator＞
+　　│#   Procedure一覧表示
+　　＠┐For i = LBound(Keys) To UBound(Keys)
+　　│〇 lstProcedure.AddItem Keys(i)
+　　│┴Next i
+　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+SortStringArray	文字列配列ソート	frmHCPGenerator
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+lstModule_Click	モジュール選択	frmHCPGenerator

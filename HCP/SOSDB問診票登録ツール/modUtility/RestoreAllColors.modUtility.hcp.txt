@@ -1,9 +1,7 @@
-Procedure: modUtility.RestoreAllColors  [ 全セル色復元＜modUtility＞ ]
-HCP	Business
 ┬
 〇│Public Sub RestoreAllColors()	全セル色復元＜modUtility＞
 ┴└┐
-　　│#  管理対象セル色復元
+　　│#   管理対象セル色復元
 　　◎ Call RestoreColor(TARGET_VER_RANG)	セル色復元＜modUtility＞
 　　◎ Call RestoreColor(TANTOU_NAME_RANG)	セル色復元＜modUtility＞
 　　◎ Call RestoreColor(TANTOU_RANG)	セル色復元＜modUtility＞
@@ -26,3 +24,23 @@ HCP	Business
 　　◎ Call RestoreColor(HOST_NAME_RANG)	セル色復元＜modUtility＞
 　　◎ Call RestoreColor(PROBLEM_EQUIPMENT_RANG)	セル色復元＜modUtility＞
 　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+RestoreColor	セル色復元	modUtility
+
+========================================
+Called By (5)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+DB検索_Click	Redmine検索	Sheet1
+MonshinInfoHandler	問診票取込処理	modMonshinCore
+UpdateMonshinHandler	問診票更新処理	modMonshinCore
+PrepareIssueFor	事前処理実行	modUtility
+ResetWorkInfo	作業情報リセット	modUtility

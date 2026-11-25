@@ -1,0 +1,38 @@
+┬
+〇│Public Function ValidateTargetBook(  Optional ByVal Title As String = "")  As Boolean	対象ブック存在確認＜modToolManager＞
+┴└┐
+　　□ Dim Tool As clsToolInfo
+　　│#   対象ブック存在確認
+　　◆┐If Not gContext.TargetBook Is Nothing Then
+　　│〇 ValidateTargetBook = True
+　　│→ Exit Function
+　　│┴End If
+　　◎ Set Tool = GetCurrentToolInfo()	現在ツール情報取得＜modToolManager＞
+　　│#   ツール情報取得
+　　◆┐If Tool Is Nothing Then
+　　││#   対象ブック未オープン通知
+　　│〇 MsgBox  "解析対象ブックが開かれていません。",  vbExclamation,  Title
+　　│→ Exit Function
+　　│┴End If
+　　│#   エラー通知
+　　〇 MsgBox  "解析対象ブックが開かれていません。" &  vbCrLf & vbCrLf &  "対象 : " & Tool.ToolName & vbCrLf &  "Book : " & Tool.WorkbookName,  vbExclamation,  Title
+　　┴End Function
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetCurrentToolInfo	現在ツール情報取得	modToolManager
+
+========================================
+Called By (4)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+cmdOK_Click
+cmdAnalyze_Click
+cmdHCP_Click	HCP生成起動	frmFunctionManager
+cmdPathChart_Click	PathChart起動	frmFunctionManager

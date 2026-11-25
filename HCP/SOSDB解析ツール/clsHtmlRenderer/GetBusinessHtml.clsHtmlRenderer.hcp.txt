@@ -1,0 +1,50 @@
+┬
+〇│Private Function GetBusinessHtml(  ByVal Node As clsHCPNode,  ByVal BusinessText As String)  As String	Business HTML取得＜clsHtmlRenderer＞
+┴└┐
+　　□ Dim HtmlPath As String
+　　□ Dim Calls() As String
+　　□ Dim FuncName As Variant
+　　□ Dim LinkText As String
+　　│#   CALLノードBusinessリンク
+　　◆┐If Node.NodeType = NODE_CALL Then
+　　│◆┐If Trim$(Node.CallName) <> "" Then
+　　││◎ HtmlPath =  GetProcedureHtmlPath(  Node.CallName)	ProcedureHTMLパス取得＜modHCPInfo＞
+　　││◆┐If HtmlPath <> "" Then
+　　│││◎ GetBusinessHtml =  "<a href=""" &  HtmlPath &  """>" &  HtmlEncode(BusinessText) &  "</a>"	HTMLエンコード＜clsHtmlRenderer＞
+　　│││→ Exit Function
+　　│││┴End If
+　　││┴End If
+　　│┴End If
+　　│#   通常Business
+　　◎ GetBusinessHtml =  HtmlEncode(BusinessText)	HTMLエンコード＜clsHtmlRenderer＞
+　　│#   内部呼出リンク化
+　　◆┐If Trim$(Node.InternalCalls) <> "" Then
+　　│〇 Calls = Split(  Node.InternalCalls,  ",")
+　　│＠┐For Each FuncName In Calls
+　　││〇 FuncName =  Trim$(CStr(FuncName))
+　　││◆┐If FuncName <> "" Then
+　　│││◎ LinkText =  BuildProcedureLink(  CStr(FuncName))	Procedureリンク生成＜clsHtmlRenderer＞
+　　││││	内部呼出:CStr
+　　│││〇 GetBusinessHtml =  Replace(  GetBusinessHtml,  CStr(FuncName),  LinkText)
+　　│││┴End If
+　　││┴Next FuncName
+　　│┴End If
+　　┴End Function
+
+========================================
+Calls (3)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetProcedureHtmlPath	ProcedureHTMLパス取得	modHCPInfo
+HtmlEncode	HTMLエンコード	clsHtmlRenderer
+BuildProcedureLink	Procedureリンク生成	clsHtmlRenderer
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+OutputHCPNodes	HCPノードHTML出力	clsHtmlRenderer

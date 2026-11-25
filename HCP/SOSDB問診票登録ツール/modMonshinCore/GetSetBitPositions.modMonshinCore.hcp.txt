@@ -1,25 +1,37 @@
-Procedure: modMonshinCore.GetSetBitPositions  [ 設定ビット位置取得＜modMonshinCore＞ ]
-HCP	Business
 ┬
 〇│Public Function GetSetBitPositions(ByVal Value As Long) As String	設定ビット位置取得＜modMonshinCore＞
 ┴└┐
-　　│#  変数初期化
+　　│#   変数初期化
 　　□ Dim i As Integer
 　　□ Dim mask As LongLong
 　　□ Dim result As String
 　　〇 result = ""
-　　│#  ビット位置走査
+　　│#   ビット位置走査
 　　＠┐For i = 31 To 0 Step -1
-　　││#  判定用マスク生成
+　　││#   判定用マスク生成
 　　│〇 mask = CLngLng(2) ^ i
-　　││#  ビット設定確認
+　　││#   ビット設定確認
 　　│◆┐If (CLngLng(Value) And mask) <> 0 Then
-　　│││#  区切り文字追加
+　　│││#   区切り文字追加
 　　││◆ If result <> "" Then result = result & ","
-　　│││#  ビット位置追加
+　　│││#   ビット位置追加
 　　││〇 result = result & i
 　　││┴End If
 　　│┴Next i
-　　│#  ビット位置一覧返却
+　　│#   ビット位置一覧返却
 　　〇 GetSetBitPositions = result
 　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+UpdateExistingIssue	Issue更新登録	modIssueService

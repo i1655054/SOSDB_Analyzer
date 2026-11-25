@@ -1,0 +1,46 @@
+┬
+〇│Public Sub UpdateCurrentNodeInfo(  ByVal ProcName As String)	ノード情報更新＜modPathChart＞
+┴└┐
+　　□ Dim Proc As clsProcInfo
+　　│#   Procedure情報取得
+　　◎ Set Proc =  ResolveProcedure(  "",  ProcName)	Procedure解決＜modProcedureRepository＞
+　　☆ On Error Resume Next
+　　│#   Navigator表示更新
+　　◆┐If frmPathChartNavigator.Visible Then
+　　│〇 frmPathChartNavigator.txtCurrentNode.Text = ProcName
+　　││#   Procedure情報表示
+　　│◆┐If Not Proc Is Nothing Then
+　　││〇 frmPathChartNavigator.lblJPName.Caption = Proc.JPName
+　　││〇 frmPathChartNavigator.lblCategory.Caption = Proc.Category
+　　││〇 frmPathChartNavigator.lblModule.Caption = Proc.ModuleName
+　　││〇 frmPathChartNavigator.txtSummary.Text = Proc.Summary
+　　│││#   Navigator表示クリア
+　　│├┐ELSE
+　　││〇 frmPathChartNavigator.lblJPName.Caption = ""
+　　││〇 frmPathChartNavigator.lblCategory.Caption = ""
+　　││〇 frmPathChartNavigator.lblModule.Caption = ""
+　　││〇 frmPathChartNavigator.txtSummary.Text = ""
+　　││┴End If
+　　│┴End If
+　　☆ On Error GoTo 0
+　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ResolveProcedure	Procedure解決	modProcedureRepository
+
+========================================
+Called By (5)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+FindNodeCore	ノード検索実行	modPathChart
+SelectNode	ノード選択	modPathChart
+MoveToParentNode	親ノード移動	modPathChart
+MoveToChildNode	子ノード移動	modPathChart
+MoveToSiblingNode	兄弟ノード移動	modPathChart

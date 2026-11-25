@@ -1,22 +1,34 @@
-Procedure: modUtility.BuildKihensinNameDate  [ 規変審情報生成＜modUtility＞ ]
-HCP	Business
 ┬
 〇│Public Function BuildKihensinNameDate() As String	規変審情報生成＜modUtility＞
 ┴└┐
 　　□ Dim nameVal As String
 　　□ Dim dateVal As Variant
-　　│#  規変審名取得
+　　│#   規変審名取得
 　　〇 nameVal = Trim(Range(KIHENSIN_RANG).Value)
-　　│#  開催日取得
+　　│#   開催日取得
 　　〇 dateVal = Range(KIKAKU_DAY_RANG).Value
-　　│#  入力状態判定
+　　│#   入力状態判定
 　　◆┐If nameVal = "" And Trim(dateVal) = "" Then
 　　│〇 BuildKihensinNameDate = ""
 　　├┐ElseIf Trim(dateVal) = "" Then
-　　││#  規変審名のみ返却
+　　││#   規変審名のみ返却
 　　│〇 BuildKihensinNameDate = nameVal
 　　├┐ELSE
-　　││#  規変審情報生成
+　　││#   規変審情報生成
 　　│〇 BuildKihensinNameDate = nameVal & " / " & Format(dateVal, "yyyy-mm-dd")
 　　│┴End If
 　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ApplyMainSheetToIssue	メイン画面反映	modIssueMapper

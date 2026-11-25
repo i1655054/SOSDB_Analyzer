@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
+<title>DrawCallTreeShape</title>
+<style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
+</style>
+</head>
+<body translate="no">
+<h1>DrawCallTreeShape</h1>
+<p>Module : modPathChart</p>
+<table>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
+<tbody>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Private Sub DrawCallTreeShape(  ByVal ParentFunc As String,  ByVal ParentShapeName As String,  ByVal Level As Long,  ByVal TopPos As Double,  ByVal LeftPos As Double,  Optional ByVal PathText As String = "")</td><td>ノード再帰描画＜modPathChart＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　□ Dim wsDep As Worksheet</td><td></td></tr>
+<tr><td>　　□ Dim LastRow As Long</td><td></td></tr>
+<tr><td>　　□ Dim r As Long</td><td></td></tr>
+<tr><td>　　□ Dim BranchOffset As Long</td><td></td></tr>
+<tr><td>　　□ Dim BranchSize As Long</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   再帰判定用パス生成</span></td><td></td></tr>
+<tr><td>　　◆┐If PathText = "" Then</td><td></td></tr>
+<tr><td>　　│〇 PathText =  "|" &amp; UCase$(ParentFunc) &amp; "|"</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   探索深度上限制御</span></td><td></td></tr>
+<tr><td>　　◆→ If Level &gt;= gMaxLevel Then Exit Sub</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   最大深度更新</span></td><td></td></tr>
+<tr><td>　　◆┐If Level &gt; MaxDepthFound Then</td><td></td></tr>
+<tr><td>　　│〇 MaxDepthFound = Level</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   ノード数上限制御</span></td><td></td></tr>
+<tr><td>　　◆┐If gMaxNode &gt; 0 Then</td><td></td></tr>
+<tr><td>　　│◆→ If gNodeNo &gt;= gMaxNode Then Exit Sub</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   接続線数上限制御</span></td><td></td></tr>
+<tr><td>　　◆┐If gMaxEdge &gt; 0 Then</td><td></td></tr>
+<tr><td>　　│◆→ If EdgeCount &gt;= gMaxEdge Then Exit Sub</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   関数依存関係取得</span></td><td></td></tr>
+<tr><td>　　〇 Set wsDep =  gContext.ManagementBook.Worksheets(<br>　　│ SHEET_FUNCTION_DEPENDENCY)</td><td></td></tr>
+<tr><td>　　〇 LastRow =  wsDep.Cells(  wsDep.Rows.Count,  "A").End(xlUp).row</td><td></td></tr>
+<tr><td>　　〇 BranchOffset = 0</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   呼出先探索</span></td><td></td></tr>
+<tr><td>　　＠┐For r = 2 To LastRow</td><td></td></tr>
+<tr><td>　　│◆┐If wsDep.Cells(r, 1).Value = ParentFunc Then</td><td></td></tr>
+<tr><td>　　││□ Dim ChildFunc As String</td><td></td></tr>
+<tr><td>　　││□ Dim CallCount As Long</td><td></td></tr>
+<tr><td>　　││□ Dim ParentModule As String</td><td></td></tr>
+<tr><td>　　││□ Dim ChildModule As String</td><td></td></tr>
+<tr><td>　　││□ Dim ModuleName As String</td><td></td></tr>
+<tr><td>　　││□ Dim Proc As clsProcInfo</td><td></td></tr>
+<tr><td>　　││□ Dim CaptionText As String</td><td></td></tr>
+<tr><td>　　││□ Dim ChildTop As Double</td><td></td></tr>
+<tr><td>　　││□ Dim ChildLeft As Double</td><td></td></tr>
+<tr><td>　　││□ Dim FillColor As Long</td><td></td></tr>
+<tr><td>　　││□ Dim shpChild As Shape</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│││#   呼出先情報取得</span></td><td></td></tr>
+<tr><td>　　││〇 ChildFunc =  Trim$(wsDep.Cells(r, 3).Value)</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│││#   再帰ループ防止</span></td><td></td></tr>
+<tr><td>　　││◆┐If InStr(  1,  PathText,  "|" &amp; UCase$(ChildFunc) &amp; "|",  vbTextCompare) &gt; 0 Then</td><td></td></tr>
+<tr><td>　　│││→ GoTo NextChild</td><td></td></tr>
+<tr><td>　　│││┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│││#   再帰呼出除外</span></td><td></td></tr>
+<tr><td>　　││◆┐If Not gRecursive Then</td><td></td></tr>
+<tr><td>　　│││◆┐If StrComp(  ParentFunc,  ChildFunc,  vbTextCompare) = 0 Then</td><td></td></tr>
+<tr><td>　　││││→ GoTo NextChild</td><td></td></tr>
+<tr><td>　　││││┴End If</td><td></td></tr>
+<tr><td>　　│││┴End If</td><td></td></tr>
+<tr><td>　　││〇 CallCount =  Val(wsDep.Cells(r, 5).Value)</td><td></td></tr>
+<tr><td>　　││〇 ParentModule =  Trim$(wsDep.Cells(r, 6).Value)</td><td></td></tr>
+<tr><td>　　││〇 ChildModule =  Trim$(wsDep.Cells(r, 7).Value)</td><td></td></tr>
+<tr><td>　　││〇 ModuleName = ChildModule</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│││#   外部呼出除外</span></td><td></td></tr>
+<tr><td>　　││◆┐If Not gExternal Then</td><td></td></tr>
+<tr><td>　　│││◆┐If StrComp(  ParentModule,  ChildModule,  vbTextCompare) &lt;&gt; 0 Then</td><td></td></tr>
+<tr><td>　　││││→ GoTo NextChild</td><td></td></tr>
+<tr><td>　　││││┴End If</td><td></td></tr>
+<tr><td>　　│││┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│││#   共通関数除外</span></td><td></td></tr>
+<tr><td>　　││◆┐If gSkipCommon Then</td><td></td></tr>
+<tr><td>　　│││◆┐If <a href="../modPathChartCommon/IsCommonFunction.modPathChartCommon.hcp.html">IsCommonFunction</a>(ChildFunc) Then</td><td>内部呼出:<a href="../modPathChartCommon/IsCommonFunction.modPathChartCommon.hcp.html">IsCommonFunction</a></td></tr>
+<tr><td>　　││││→ GoTo NextChild</td><td></td></tr>
+<tr><td>　　││││┴End If</td><td></td></tr>
+<tr><td>　　│││┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│││#   子ノード配置座標計算</span></td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│││#   分岐サイズ取得</span></td><td></td></tr>
+<tr><td>　　││◎ BranchSize =  <a href="../modPathChart/GetBranchSize.modPathChart.hcp.html">GetBranchSize</a>(ChildFunc)</td><td><a href="../modPathChart/GetBranchSize.modPathChart.hcp.html">分岐サイズ取得＜modPathChart＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│││#   子ノード配置座標計算</span></td><td></td></tr>
+<tr><td>　　││〇 ChildLeft =  LeftPos + H_GAP</td><td></td></tr>
+<tr><td>　　││〇 ChildTop =  TopPos + BranchOffset</td><td></td></tr>
+<tr><td>　　││〇 BranchOffset =  BranchOffset +  (BranchSize * V_GAP)</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│││#   Procedure情報取得</span></td><td></td></tr>
+<tr><td>　　││◎ Set Proc =  <a href="../modProcedureRepository/ResolveProcedure.modProcedureRepository.hcp.html">ResolveProcedure</a>(  ParentModule,  ChildFunc)</td><td><a href="../modProcedureRepository/ResolveProcedure.modProcedureRepository.hcp.html">Procedure解決＜modProcedureRepository＞</a></td></tr>
+<tr><td>　　││◆┐If Not Proc Is Nothing Then</td><td></td></tr>
+<tr><td>　　│││〇 ModuleName =  Proc.ModuleName</td><td></td></tr>
+<tr><td>　　│││┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│││#   ノード表示文字列生成</span></td><td></td></tr>
+<tr><td>　　││◎ CaptionText =  <a href="../modPathChart/BuildCaptionText.modPathChart.hcp.html">BuildCaptionText</a>(  ChildFunc,  CallCount)</td><td><a href="../modPathChart/BuildCaptionText.modPathChart.hcp.html">ノード表示文字列生成＜modPathChart＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│││#   モジュール色設定</span></td><td></td></tr>
+<tr><td>　　││◆┐If gColorModule Then</td><td></td></tr>
+<tr><td>　　│││◎ FillColor =  <a href="../modPathChart/GetModuleColor.modPathChart.hcp.html">GetModuleColor</a>(ModuleName)</td><td><a href="../modPathChart/GetModuleColor.modPathChart.hcp.html">モジュール色取得＜modPathChart＞</a></td></tr>
+<tr><td>　　││├┐ELSE</td><td></td></tr>
+<tr><td>　　│││〇 FillColor =  DEFAULT_NODE_COLOR</td><td></td></tr>
+<tr><td>　　│││┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│││#   子ノード生成</span></td><td></td></tr>
+<tr><td>　　││◎ Set shpChild =  <a href="../modPathChart/DrawNode.modPathChart.hcp.html">DrawNode</a>(  gContext.ManagementBook.Worksheets(<br>　　│││ SHEET_PATH_CHART),  CaptionText,  ChildTop,  ChildLeft,  FillColor)</td><td><a href="../modPathChart/DrawNode.modPathChart.hcp.html">ノード作成＜modPathChart＞</a></td></tr>
+<tr><td>　　│││</td><td>内部呼出:Worksheets</td></tr>
+<tr><td>　　││◆┐If shpChild Is Nothing Then</td><td></td></tr>
+<tr><td>　　│││→ GoTo NextChild</td><td></td></tr>
+<tr><td>　　│││┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│││#   親子関係登録</span></td><td></td></tr>
+<tr><td>　　││〇 gParentMap(shpChild.Name) =  ParentShapeName</td><td></td></tr>
+<tr><td>　　││◆┐If gChildMap.Exists(ParentShapeName) Then</td><td></td></tr>
+<tr><td>　　│││〇 gChildMap(ParentShapeName) =  gChildMap(ParentShapeName) &amp;  "|" &amp;  shpChild.Name</td><td></td></tr>
+<tr><td>　　││├┐ELSE</td><td></td></tr>
+<tr><td>　　│││〇 gChildMap.Add  ParentShapeName,  shpChild.Name</td><td></td></tr>
+<tr><td>　　│││┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│││#   接続線生成</span></td><td></td></tr>
+<tr><td>　　││◎ <a href="../modPathChart/ConnectShapes.modPathChart.hcp.html">ConnectShapes</a>  gContext.ManagementBook.Worksheets(<br>　　│││ SHEET_PATH_CHART),  ParentShapeName,  shpChild.Name</td><td><a href="../modPathChart/ConnectShapes.modPathChart.hcp.html">接続線作成＜modPathChart＞</a></td></tr>
+<tr><td>　　│││</td><td>内部呼出:Worksheets</td></tr>
+<tr><td>　　││〇 EdgeCount = EdgeCount + 1</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│││#   子ノード再帰生成</span></td><td></td></tr>
+<tr><td>　　││◎ <a href="../modPathChart/DrawCallTreeShape.modPathChart.hcp.html">DrawCallTreeShape</a>  ChildFunc,  shpChild.Name,  Level + 1,  ChildTop,  ChildLeft,  PathText &amp;  UCase$(ChildFunc) &amp; "|"</td><td><a href="../modPathChart/DrawCallTreeShape.modPathChart.hcp.html">ノード再帰描画＜modPathChart＞</a></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td>▼ NextChild:</td><td></td></tr>
+<tr><td>　　│┴Next r</td><td></td></tr>
+<tr><td>　　┴End Sub</td><td></td></tr>
+</tbody>
+</table>
+<hr>
+<h2>Calls (7)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modPathChartCommon/IsCommonFunction.modPathChartCommon.hcp.html">IsCommonFunction</a></td><td>共通関数判定</td><td>modPathChartCommon</td></tr>
+<tr><td><a href="../modPathChart/GetBranchSize.modPathChart.hcp.html">GetBranchSize</a></td><td>分岐サイズ取得</td><td>modPathChart</td></tr>
+<tr><td><a href="../modProcedureRepository/ResolveProcedure.modProcedureRepository.hcp.html">ResolveProcedure</a></td><td>Procedure解決</td><td>modProcedureRepository</td></tr>
+<tr><td><a href="../modPathChart/BuildCaptionText.modPathChart.hcp.html">BuildCaptionText</a></td><td>ノード表示文字列生成</td><td>modPathChart</td></tr>
+<tr><td><a href="../modPathChart/GetModuleColor.modPathChart.hcp.html">GetModuleColor</a></td><td>モジュール色取得</td><td>modPathChart</td></tr>
+<tr><td><a href="../modPathChart/DrawNode.modPathChart.hcp.html">DrawNode</a></td><td>ノード作成</td><td>modPathChart</td></tr>
+<tr><td><a href="../modPathChart/ConnectShapes.modPathChart.hcp.html">ConnectShapes</a></td><td>接続線作成</td><td>modPathChart</td></tr>
+</table>
+<hr>
+<h2>Called By (1)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modPathChart/CreatePathChart_V3.modPathChart.hcp.html">CreatePathChart_V3</a></td><td>パスチャート作成</td><td>modPathChart</td></tr>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function(eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function(e) {
+startX = e.pageX;
+startWidth = eleTh.offsetWidth;
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
+}
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
+}
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,86 @@
+┬
+〇│Public Sub MoveToChildNode()	子ノード移動＜modPathChart＞
+┴└┐
+　　◆┐If gChildMap Is Nothing Then
+　　│〇 MsgBox "PathChartを再生成してください。"
+　　│→ Exit Sub
+　　│┴End If
+　　□ Dim ws As Worksheet
+　　□ Dim shp As Shape
+　　□ Dim Ary As Variant
+　　〇 Set ws = gContext.ManagementBook.Worksheets(
+　　│ SHEET_PATH_CHART)
+　　◆┐If gCurrentParentWithChildren = "" Then
+　　│〇 MsgBox "基準ノードがありません。"
+　　│→ Exit Sub
+　　│┴End If
+　　│#   子ノード管理確認
+　　◆┐If gChildMap Is Nothing Then
+　　│〇 MsgBox "パスチャートを再生成してください。"
+　　│→ Exit Sub
+　　│┴End If
+　　◆┐#If DEBUG_MODE Then
+　　│〇 Debug.Print "Current=" & gCurrentParentWithChildren
+　　│┴#End If
+　　◆┐If Not gChildMap.Exists(gCurrentParentWithChildren) Then
+　　│〇 MsgBox "子ノードはありません。"
+　　│→ Exit Sub
+　　│┴End If
+　　◆┐#If DEBUG_MODE Then
+　　│〇 Debug.Print "ChildMap=" & gChildMap(gCurrentParentWithChildren)
+　　│┴#End If
+　　│#   子ノード一覧取得
+　　〇 Ary = Split(  gChildMap(gCurrentParentWithChildren),  "|")
+　　│#   子ノード巡回
+　　│#   次子ノード選択
+　　〇 gCurrentChildIndex = gCurrentChildIndex + 1
+　　◆┐If gCurrentChildIndex > UBound(Ary) + 1 Then
+　　│〇 gCurrentChildIndex = 1
+　　│┴End If
+　　│#   子ノード取得
+　　〇 Set shp =  ws.Shapes(  Ary(gCurrentChildIndex - 1))
+　　│#   現在ノード更新
+　　〇 gCurrentShapeName = shp.Name
+　　〇 gCurrentNodeText =  shp.TextFrame.Characters.Text
+　　◆┐If Not gParentMap Is Nothing Then
+　　│◆┐If gParentMap.Exists(shp.Name) Then
+　　││〇 gCurrentParentShapeName = gParentMap(shp.Name)
+　　│├┐ELSE
+　　││〇 gCurrentParentShapeName = ""
+　　││┴End If
+　　│┴End If
+　　〇 gCurrentParentWithChildren = shp.Name
+　　│#   ノード強調表示
+　　◎ Call HighlightNode(shp)	ノード強調表示＜modPathChart＞
+　　◎ UpdateCurrentNodeInfo  GetProcedureNameFromNodeText(  gCurrentNodeText)	関数名取得＜modPathChart＞
+　　〇 gCurrentParentWithChildren = shp.Name
+　　◆┐If Not gParentMap Is Nothing Then
+　　│◆┐If gParentMap.Exists(shp.Name) Then
+　　││〇 gCurrentParentWithChildren =  gParentMap(shp.Name)
+　　│├┐ELSE
+　　││〇 gCurrentParentWithChildren = ""
+　　││┴End If
+　　│┴End If
+　　│#   Navigator状態更新
+　　◎ UpdateNavigatorStatus  "子ノード " &  gCurrentChildIndex & "/" &  UBound(Ary) + 1 &  " : " &  GetProcedureNameFromNodeText(  shp.TextFrame.Characters.Text)	関数名取得＜modPathChart＞
+　　│	内部呼出:UBound
+　　┴End Sub
+
+========================================
+Calls (4)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+HighlightNode	ノード強調表示	modPathChart
+UpdateCurrentNodeInfo	ノード情報更新	modPathChart
+GetProcedureNameFromNodeText	関数名取得	modPathChart
+UpdateNavigatorStatus	Navigator状態更新	modPathChart
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+cmdChild_Click	子ノード移動	frmPathChartNavigator

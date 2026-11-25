@@ -1,0 +1,1173 @@
+Option Explicit
+
+'===================================================================
+' @JPName
+' HCPレンダリング構築
+'
+' @Category
+' HCP
+'
+' @Summary
+' HCPNode一覧から
+' RenderTextを生成する
+'
+' @Remarks
+' TXT出力、
+' HTML出力、
+' Excel出力で共通利用する
+'
+' ノード種別に応じた
+' 表示文字列(RenderText)を生成する
+'===================================================================
+
+Private mNodes As Collection
+
+'===================================================================
+' @JPName
+' RenderText生成
+'
+' @Category
+' HCP
+'
+' @Input
+' HCPNodes(Collection)
+'
+' @Output
+' Node.RenderText
+'
+' @Summary
+' HCPNode一覧の
+' RenderTextを生成する
+'
+' @Remarks
+' HCP描画用文字列のみ生成する
+' Excel出力は行わない
+'===================================================================
+Public Sub BuildRenderText( _
+                ByVal HCPNodes As Collection)
+
+    Set mNodes = HCPNodes
+
+    '# RenderText生成開始
+    BuildNode _
+        0, _
+        "　　"
+
+End Sub
+
+'===================================================================
+' @JPName
+' RenderNode生成
+'
+' @Category
+' HCP
+'
+' @Input
+' ParentID(Long)
+' Prefix(String)
+'
+' @Output
+' Node.RenderText
+'
+' @Summary
+' 指定階層配下の
+' RenderTextを生成する
+'
+' @Remarks
+' ノード種別毎に
+' RenderText生成処理へ振り分ける
+'
+' 必要に応じて
+' 配下ノードを再帰処理する
+'===================================================================
+Private Sub BuildNode( _
+                ByVal ParentID As Long, _
+                ByVal Prefix As String)
+
+    ' 描画対象ノード
+    Dim Node As clsHCPNode
+
+    '# 指定階層ノード走査
+    For Each Node In mNodes
+
+        If Node.ParentID = ParentID Then
+
+            '# ノード種別毎にRenderText生成
+            Select Case Node.NodeType
+
+                Case NODE_START
+
+                    Node.RenderText = _
+                        "〇│" & _
+                        Node.Text
+
+                Case NODE_DECLARE
+
+                    Node.RenderText = _
+                        Prefix & _
+                        "□ " & _
+                        GetDisplayText( _
+                            Node, _
+                            Prefix)
+
+                Case NODE_END
+
+                    Node.RenderText = _
+                        Prefix & _
+                        "┴" & _
+                        Node.Text
+
+                Case NODE_MERGE
+
+                    ' RenderText生成しない
+
+                Case NODE_COMMENT
+
+                    BuildRenderCommentNode _
+                        Node, _
+                        Prefix
+
+                Case Else
+
+                    BuildRenderControlNode _
+                        Node, _
+                        Prefix
+
+            End Select
+
+        End If
+
+    Next Node
+
+End Sub
+
+'===================================================================
+' @JPName
+' 制御ノード RenderText生成
+'
+' @Category
+' HCP
+'
+' @Input
+' Node(clsHCPNode)
+' Prefix(String)
+'
+' @Output
+' Node.RenderText
+'
+' @Summary
+' 制御構造ノードを種別に応じて
+' RenderText生成処理へ振り分ける
+'
+' @Remarks
+' IF
+' FOR
+' DO
+' WHILE
+' WITH
+' SELECT CASE
+' COMPILE IF
+'
+' などの制御構造を判定し
+' 専用RenderText生成処理へ委譲する
+'
+' 通常ノードは
+' BuildOutputNodeへ委譲する
+'===================================================================
+Private Sub BuildRenderControlNode( _
+                ByVal Node As clsHCPNode, _
+                ByVal Prefix As String)
+
+    '-----------------------------
+    '# ノード種別判定
+    '-----------------------------
+    Select Case Node.NodeType
+
+        '-------------------------
+        '# IF構造
+        '-------------------------
+        Case NODE_IF
+
+            BuildRenderIfBlock _
+                Node, _
+                Prefix
+
+        '-------------------------
+        '# ELSEIF構造
+        '-------------------------
+        Case NODE_ELSEIF
+
+            BuildRenderIfBlock _
+                Node, _
+                Prefix
+
+        '-------------------------
+        '# FOR構造
+        '-------------------------
+        Case NODE_FOR
+
+            BuildRenderForBlock _
+                Node, _
+                Prefix
+
+        '-------------------------
+        '# DO構造
+        '-------------------------
+        Case NODE_DO
+
+            BuildRenderDoBlock _
+                Node, _
+                Prefix
+
+        '-------------------------
+        '# WITH構造
+        '-------------------------
+        Case NODE_WITH
+
+            BuildRenderWithBlock _
+                Node, _
+                Prefix
+
+        '-------------------------
+        '# WHILE構造
+        '-------------------------
+        Case NODE_WHILE
+
+            BuildRenderWhileBlock _
+                Node, _
+                Prefix
+
+        '-------------------------
+        '# SELECT構造
+        '-------------------------
+        Case NODE_SELECT
+
+            BuildRenderSelectBlock _
+                Node, _
+                Prefix
+
+        '-------------------------
+        '# 条件コンパイル構造
+        '-------------------------
+        Case NODE_COMPILE_IF
+
+            BuildRenderCompileBlock _
+                Node, _
+                Prefix
+
+        '-------------------------
+        '# FALSEノード
+        '-------------------------
+        Case NODE_FALSE
+
+            Node.RenderText = _
+                Prefix & _
+                "├┐ELSE"
+
+        '-------------------------
+        '# コメントノード
+        '-------------------------
+        Case NODE_COMMENT
+
+            BuildRenderCommentNode _
+                Node, _
+                Prefix
+
+        '-------------------------
+        '# 通常ノード
+        '-------------------------
+        Case Else
+
+            BuildOutputNode _
+                Node, _
+                Prefix
+
+    End Select
+
+End Sub
+
+'===================================================================
+' @JPName
+' IF RenderText生成
+'
+' @Category
+' HCP
+'
+' @Input
+' IfNode(clsHCPNode)
+' Prefix(String)
+'
+' @Output
+' Node.RenderText
+'
+' @Summary
+' IF構造の
+' RenderTextを生成する
+'
+' @Remarks
+' TRUE
+' ELSEIF
+' FALSE
+' End If
+'
+' を生成する
+'===================================================================
+Private Sub BuildRenderIfBlock( _
+                ByVal IfNode As clsHCPNode, _
+                ByVal Prefix As String)
+
+    ' IF配下ノード
+    Dim Node As clsHCPNode
+
+    ' TRUEノード
+    Dim TrueNode As clsHCPNode
+
+    ' FALSEノード
+    Dim FalseNode As clsHCPNode
+
+    ' ELSEIFノード
+    Dim ElseIfNode As clsHCPNode
+
+    ' MERGEノード
+    Dim MergeNode As clsHCPNode
+
+    '# IF見出し生成
+    If IfNode.NodeType = NODE_ELSEIF Then
+
+        IfNode.RenderText = _
+            Prefix & _
+            "├┐" & _
+            GetDisplayText( _
+                IfNode, _
+                Prefix)
+
+    Else
+
+        IfNode.RenderText = _
+            Prefix & _
+            "◆┐" & _
+            GetDisplayText( _
+                IfNode, _
+                Prefix)
+
+    End If
+
+    '-----------------------------
+    '# 配下ノード検索
+    '-----------------------------
+    For Each Node In mNodes
+
+        If Node.ParentID = IfNode.NodeID Then
+
+            Select Case Node.NodeType
+
+                Case NODE_TRUE
+
+                    Set TrueNode = Node
+
+                Case NODE_FALSE
+
+                    Set FalseNode = Node
+
+                Case NODE_ELSEIF
+
+                    Set ElseIfNode = Node
+
+                Case NODE_MERGE
+
+                    Set MergeNode = Node
+
+            End Select
+
+        End If
+
+    Next Node
+
+    '-----------------------------
+    '# TRUE枝生成
+    '-----------------------------
+    If Not TrueNode Is Nothing Then
+
+        BuildNode _
+            TrueNode.NodeID, _
+            Prefix & "│"
+
+    End If
+
+    '-----------------------------
+    '# IF直下ノード生成
+    '-----------------------------
+    For Each Node In mNodes
+
+        If Node.ParentID = IfNode.NodeID Then
+
+            Select Case Node.NodeType
+
+                Case NODE_TRUE
+                Case NODE_FALSE
+                Case NODE_ELSEIF
+                Case NODE_MERGE
+
+                Case Else
+
+                    BuildRenderControlNode _
+                        Node, _
+                        Prefix & "│"
+
+            End Select
+
+        End If
+
+    Next Node
+
+    '-----------------------------
+    '# ELSEIF生成
+    '-----------------------------
+    If Not ElseIfNode Is Nothing Then
+
+        BuildRenderIfBlock _
+            ElseIfNode, _
+            Prefix
+
+    End If
+
+    '-----------------------------
+    '# FALSE枝生成
+    '-----------------------------
+    If Not FalseNode Is Nothing Then
+
+        FalseNode.RenderText = _
+            Prefix & _
+            "├┐ELSE"
+
+        BuildNode _
+            FalseNode.NodeID, _
+            Prefix & "│"
+
+    End If
+
+    '-----------------------------
+    '# End If生成
+    '-----------------------------
+    If IfNode.NodeType = NODE_IF Then
+
+        If Not MergeNode Is Nothing Then
+
+            MergeNode.RenderText = _
+                Prefix & _
+                "│┴End If"
+
+        End If
+
+    End If
+
+End Sub
+'===================================================================
+' @JPName
+' FOR RenderText生成
+'
+' @Category
+' HCP
+'
+' @Input
+' ForNode(clsHCPNode)
+' Prefix(String)
+'
+' @Output
+' Node.RenderText
+'
+' @Summary
+' FORノードの
+' RenderTextを生成する
+'
+' @Remarks
+' FOR開始ノード用の
+' 表示文字列を生成する
+'===================================================================
+Private Sub BuildRenderForBlock( _
+                ByVal ForNode As clsHCPNode, _
+                ByVal Prefix As String)
+
+    Dim Node As clsHCPNode
+    Dim MergeNode As clsHCPNode
+
+    '# FOR開始
+    ForNode.RenderText = _
+        Prefix & _
+        "＠┐" & _
+        GetDisplayText( _
+            ForNode, _
+            Prefix)
+
+    '# 配下RenderText生成
+    BuildNode _
+        ForNode.NodeID, _
+        Prefix & "│"
+
+    '# MERGE検索
+    For Each Node In mNodes
+
+        If Node.ParentID = ForNode.NodeID Then
+
+            If Node.NodeType = NODE_MERGE Then
+
+                Set MergeNode = Node
+
+                Exit For
+
+            End If
+
+        End If
+
+    Next Node
+
+    '# FOR終了
+    If Not MergeNode Is Nothing Then
+
+        MergeNode.RenderText = _
+            Prefix & _
+            "│┴" & _
+            GetDisplayText( _
+                MergeNode, _
+                Prefix)
+
+    End If
+
+End Sub
+
+'===================================================================
+' @JPName
+' DO RenderText生成
+'
+' @Category
+' HCP
+'
+' @Input
+' DoNode(clsHCPNode)
+' Prefix(String)
+'
+' @Output
+' Node.RenderText
+'
+' @Summary
+' Do Loop構造の
+' RenderTextを生成する
+'
+' @Remarks
+' DO開始ノード、
+' 配下ノード、
+' 終端MERGEノードの
+' RenderTextを生成する
+'===================================================================
+Private Sub BuildRenderDoBlock( _
+                ByVal DoNode As clsHCPNode, _
+                ByVal Prefix As String)
+
+    ' DO配下ノード
+    Dim Node As clsHCPNode
+
+    ' 終端MERGEノード
+    Dim EndNode As clsHCPNode
+
+    '# DO開始RenderText生成
+    DoNode.RenderText = _
+        Prefix & _
+        "＠┐" & _
+        GetDisplayText( _
+            DoNode, _
+            Prefix)
+
+    '# 終端MERGEノード検索
+    For Each Node In mNodes
+
+        If Node.ParentID = _
+            DoNode.NodeID Then
+
+            If Node.NodeType = _
+                NODE_MERGE Then
+
+                Set EndNode = Node
+
+            End If
+
+        End If
+
+    Next Node
+
+    '# DO配下RenderText生成
+    BuildNode _
+        DoNode.NodeID, _
+        Prefix & "│"
+
+    '# DO終端RenderText生成
+    If Not EndNode Is Nothing Then
+
+        EndNode.RenderText = _
+            Prefix & _
+            "│┴" & _
+            GetDisplayText( _
+                EndNode, _
+                Prefix)
+
+    End If
+
+End Sub
+
+'===================================================================
+' @JPName
+' WHILE RenderText生成
+'
+' @Category
+' HCP
+'
+' @Input
+' WhileNode(clsHCPNode)
+' Prefix(String)
+'
+' @Output
+' Node.RenderText
+'
+' @Summary
+' WHILE構造の
+' RenderTextを生成する
+'
+' @Remarks
+' WHILE開始ノード、
+' 配下ノード、
+' 終端MERGEノードの
+' RenderTextを生成する
+'===================================================================
+Private Sub BuildRenderWhileBlock( _
+                ByVal WhileNode As clsHCPNode, _
+                ByVal Prefix As String)
+
+    Dim Node As clsHCPNode
+    Dim EndNode As clsHCPNode
+
+    '# WHILE開始RenderText生成
+    WhileNode.RenderText = _
+        Prefix & _
+        "＠┐" & _
+        GetDisplayText( _
+            WhileNode, _
+            Prefix)
+
+    '# 終端MERGEノード検索
+    For Each Node In mNodes
+
+        If Node.ParentID = _
+            WhileNode.NodeID Then
+
+            If Node.NodeType = _
+                NODE_MERGE Then
+
+                Set EndNode = Node
+
+            End If
+
+        End If
+
+    Next Node
+
+    '# WHILE配下RenderText生成
+    BuildNode _
+        WhileNode.NodeID, _
+        Prefix & "│"
+
+    '# WHILE終端RenderText生成
+    If Not EndNode Is Nothing Then
+
+        EndNode.RenderText = _
+            Prefix & _
+            "│┴" & _
+            GetDisplayText( _
+                EndNode, _
+                Prefix)
+
+    End If
+
+End Sub
+
+'===================================================================
+' @JPName
+' WITH RenderText生成
+'
+' @Category
+' HCP
+'
+' @Input
+' WithNode(clsHCPNode)
+' Prefix(String)
+'
+' @Output
+' Node.RenderText
+'
+' @Summary
+' WITH構造の
+' RenderTextを生成する
+'
+' @Remarks
+' WITH開始ノード、
+' 配下ノード、
+' 終端MERGEノードの
+' RenderTextを生成する
+'===================================================================
+Private Sub BuildRenderWithBlock( _
+                ByVal WithNode As clsHCPNode, _
+                ByVal Prefix As String)
+
+    Dim Node As clsHCPNode
+    Dim EndNode As clsHCPNode
+
+    '# WITH開始RenderText生成
+    WithNode.RenderText = _
+        Prefix & _
+        "＠┐" & _
+        GetDisplayText( _
+            WithNode, _
+            Prefix)
+
+    '# 終端MERGEノード検索
+    For Each Node In mNodes
+
+        If Node.ParentID = _
+            WithNode.NodeID Then
+
+            If Node.NodeType = _
+                NODE_MERGE Then
+
+                Set EndNode = Node
+
+            End If
+
+        End If
+
+    Next Node
+
+    '# WITH配下RenderText生成
+    BuildNode _
+        WithNode.NodeID, _
+        Prefix & "│"
+
+    '# WITH終端RenderText生成
+    If Not EndNode Is Nothing Then
+
+        EndNode.RenderText = _
+            Prefix & _
+            "│┴" & _
+            GetDisplayText( _
+                EndNode, _
+                Prefix)
+
+    End If
+
+End Sub
+
+'===================================================================
+' @JPName
+' SELECT RenderText生成
+'
+' @Category
+' HCP
+'
+' @Input
+' SelectNode(clsHCPNode)
+' Prefix(String)
+'
+' @Output
+' Node.RenderText
+'
+' @Summary
+' Select Case構造の
+' RenderTextを生成する
+'
+' @Remarks
+' CASE単位で
+' RenderTextを生成する
+'===================================================================
+Private Sub BuildRenderSelectBlock( _
+                ByVal SelectNode As clsHCPNode, _
+                ByVal Prefix As String)
+
+    Dim Node As clsHCPNode
+    Dim MergeNode As clsHCPNode
+
+    '# SELECT開始
+    SelectNode.RenderText = _
+        Prefix & _
+        "◆┐" & _
+        GetDisplayText( _
+            SelectNode, _
+            Prefix)
+
+    '# CASE展開
+    For Each Node In mNodes
+
+        If Node.ParentID = SelectNode.NodeID Then
+
+            If Node.NodeType = NODE_CASE Then
+
+                Node.RenderText = _
+                    Prefix & _
+                    "│├┐" & _
+                    GetDisplayText( _
+                        Node, _
+                        Prefix)
+
+                BuildNode _
+                    Node.NodeID, _
+                    Prefix & "││"
+
+            ElseIf Node.NodeType = NODE_MERGE Then
+
+                Set MergeNode = Node
+
+            End If
+
+        End If
+
+    Next Node
+
+    '# End Select
+    If Not MergeNode Is Nothing Then
+
+        MergeNode.RenderText = _
+            Prefix & _
+            "│┴" & _
+            GetDisplayText( _
+                MergeNode, _
+                Prefix)
+
+    End If
+
+End Sub
+
+'===================================================================
+' @JPName
+' 条件コンパイル RenderText生成
+'
+' @Category
+' HCP
+'
+' @Input
+' CompileNode(clsHCPNode)
+' Prefix(String)
+'
+' @Output
+' Node.RenderText
+'
+' @Summary
+' 条件コンパイル構造の
+' RenderTextを生成する
+'
+' @Remarks
+' #If～#End If を
+' IF構造として描画する
+'===================================================================
+Private Sub BuildRenderCompileBlock( _
+                ByVal CompileNode As clsHCPNode, _
+                ByVal Prefix As String)
+
+    Dim Node As clsHCPNode
+    Dim MergeNode As clsHCPNode
+
+    '# Compile開始RenderText生成
+    CompileNode.RenderText = _
+        Prefix & _
+        "◆┐" & _
+        GetDisplayText( _
+            CompileNode, _
+            Prefix)
+
+    '# 配下RenderText生成
+    BuildNode _
+        CompileNode.NodeID, _
+        Prefix & "│"
+
+    '# MERGE検索
+    For Each Node In mNodes
+
+        If Node.ParentID = _
+            CompileNode.NodeID Then
+
+            If Node.NodeType = _
+                NODE_MERGE Then
+
+                Set MergeNode = Node
+
+                Exit For
+
+            End If
+
+        End If
+
+    Next Node
+
+    '# Compile終了RenderText生成
+    If Not MergeNode Is Nothing Then
+
+        MergeNode.RenderText = _
+            Prefix & _
+            "│┴" & _
+            GetDisplayText( _
+                MergeNode, _
+                Prefix)
+
+    End If
+
+End Sub
+
+'===================================================================
+' @JPName
+' コメント RenderText生成
+'
+' @Category
+' HCP
+'
+' @Input
+' Node(clsHCPNode)
+' Prefix(String)
+'
+' @Output
+' Node.RenderText
+'
+' @Summary
+' コメントノードの
+' RenderTextを生成する
+'
+' @Remarks
+' NODE_COMMENTを
+' 「│#」形式で表現する
+'
+' Excel出力、
+' HTML出力、
+' TXT出力は行わない
+'===================================================================
+Private Sub BuildRenderCommentNode( _
+                ByVal Node As clsHCPNode, _
+                ByVal Prefix As String)
+
+    '# コメントRenderText生成
+    Node.RenderText = _
+        Prefix & _
+        "│#  " & _
+        GetDisplayText( _
+            Node, _
+            Prefix)
+
+End Sub
+
+'===================================================================
+' @JPName
+' 通常ノード RenderText生成
+'
+' @Category
+' HCP
+'
+' @Input
+' Node(clsHCPNode)
+' Prefix(String)
+'
+' @Output
+' Node.RenderText
+'
+' @Summary
+' 通常ノードの
+' RenderTextを生成する
+'
+' @Remarks
+' HCP記号および
+' 表示文字列を組み合わせて
+' RenderTextを生成する
+'
+' LABELノードは
+' Prefixを付与しない
+'
+' Excel出力、
+' HTML出力、
+' TXT出力は行わない
+'===================================================================
+Private Sub BuildOutputNode( _
+                ByVal Node As clsHCPNode, _
+                ByVal Prefix As String)
+
+    '# LABELノード判定
+    If Node.NodeType = NODE_LABEL Then
+
+        '# LABEL RenderText生成
+        Node.RenderText = _
+            GetHCPSymbol(Node) & _
+            GetDisplayText( _
+                Node, _
+                Prefix)
+
+    Else
+
+        '# 通常 RenderText生成
+        Node.RenderText = _
+            Prefix & _
+            GetHCPSymbol(Node) & _
+            GetDisplayText( _
+                Node, _
+                Prefix)
+
+    End If
+
+End Sub
+
+' @JPName
+' HCP文字列整形
+'
+' @Category
+' HCP
+'
+' @Input
+' Text(String)
+'
+' @Output
+' FormattedText(String)
+'
+' @Summary
+' HCP表示用に文字列を整形する
+'
+' @Remarks
+' 長いコードは可読性向上のため
+' 特定位置で改行を挿入する
+'
+Private Function FormatHCPText( _
+                ByVal Text As String) _
+                As String
+
+    Const MAX_LEN As Long = 60
+
+    '# 長文判定
+    If Len(Text) <= MAX_LEN Then
+
+        FormatHCPText = Text
+        Exit Function
+
+    End If
+
+    '# HCP表示向け改行挿入
+    Text = Replace( _
+                Text, _
+                "Array(", _
+                "Array(" & vbCrLf)
+
+    Text = Replace( _
+                Text, _
+                ".Worksheets.Add(", _
+                ".Worksheets.Add(" & vbCrLf)
+
+    Text = Replace( _
+                Text, _
+                ".Worksheets(", _
+                ".Worksheets(" & vbCrLf)
+
+    Text = Replace( _
+                Text, _
+                "(After:=", _
+                vbCrLf & "After:=")
+
+    FormatHCPText = Text
+
+End Function
+
+
+' @JPName
+' 描画文字列取得
+'
+' @Category
+' HCP
+'
+' @Input
+' Node(clsHCPNode)
+'
+' @Output
+' RenderText(String)
+'
+' @Summary
+' 描画用文字列を取得する
+'
+' @Remarks
+' ノード文字列に対して
+' HCP表示向け整形を行う
+'
+Private Function GetRenderText( _
+                ByVal Node As clsHCPNode) _
+                As String
+
+    '# HCP描画文字列取得
+    GetRenderText = _
+        FormatHCPText(Node.Text)
+
+End Function
+
+
+' @JPName
+' 複数行インデント付与
+'
+' @Category
+' HCP
+'
+' @Input
+' Text(String)
+' Prefix(String)
+'
+' @Output
+' Text(String)
+'
+' @Summary
+' 複数行文字列へインデントを付与する
+'
+' @Remarks
+' 2行目以降にHCP階層表示用の
+' プレフィックスを付加する
+'
+Private Function AddIndentToMultiLine( _
+                ByVal Text As String, _
+                ByVal Prefix As String) _
+                As String
+
+    '# 複数行インデント付与
+    AddIndentToMultiLine = _
+        Replace( _
+            Text, _
+            vbCrLf, _
+            vbCrLf & Prefix & "│ ")
+
+End Function
+
+' @JPName
+' 表示文字列取得
+'
+' @Category
+' HCP
+'
+' @Input
+' Node(clsHCPNode)
+' Prefix(String)
+'
+' @Output
+' DisplayText(String)
+'
+' @Summary
+' HCP表示用文字列を生成する
+'
+' @Remarks
+' 描画文字列整形および
+' 複数行インデント付与を行う
+'
+Private Function GetDisplayText( _
+                ByVal Node As clsHCPNode, _
+                ByVal Prefix As String) _
+                As String
+
+    '# HCP表示文字列生成
+    GetDisplayText = _
+        AddIndentToMultiLine( _
+            GetRenderText(Node), _
+            Prefix)
+
+End Function
+

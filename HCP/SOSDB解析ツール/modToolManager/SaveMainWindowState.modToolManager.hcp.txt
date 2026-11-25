@@ -1,0 +1,28 @@
+┬
+〇│Public Sub SaveMainWindowState()	Main画面状態保存＜modToolManager＞
+┴└┐
+　　│#   Main画面状態保存
+　　＠┐With ThisWorkbook.Windows(1)
+　　│〇 gMainOldState = .WindowState
+　　││#   Main画面位置保存
+　　│〇 gMainOldLeft = .Left
+　　│〇 gMainOldTop = .Top
+　　││#   Main画面サイズ保存
+　　│〇 gMainOldWidth = .Width
+　　│〇 gMainOldHeight = .Height
+　　│┴End With
+　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+InitializeAnalyzer	Analyzer初期化	modStartup

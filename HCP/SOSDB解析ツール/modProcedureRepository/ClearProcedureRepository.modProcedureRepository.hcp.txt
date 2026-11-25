@@ -1,0 +1,27 @@
+┬
+〇│Public Sub ClearProcedureRepository()	ProcedureRepository初期化解除＜modProcedureRepository＞
+┴└┐
+　　│#   Context存在確認
+　　◆→ If gContext Is Nothing Then Exit Sub
+　　│#   Procedure情報辞書破棄
+　　〇 Set gContext.ProcInfoDic = Nothing
+　　│#   Procedure索引辞書破棄
+　　〇 Set gContext.ProcIndexDic = Nothing
+　　│#   ProcedureRepository初期化状態解除
+　　〇 gContext.ProcInfoLoaded = False
+　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+cmdOK_Click
+cmdAnalyze_Click

@@ -1,0 +1,34 @@
+┬
+〇│Public Sub CopyTextToClipboard(Text As String)	クリップボードコピー＜modAnalyzerCommon＞
+┴└┐
+　　□ Dim hGlobalMemory As LongPtr
+　　□ Dim lpGlobalMemory As LongPtr
+　　□ Dim Size As LongPtr
+　　│#   コピーサイズ算出
+　　〇 Size = (Len(Text) + 1) * 2 ' Unicodeは2バイト
+　　│#   クリップボードへコピー
+　　◆┐If OpenClipboard(0&) Then
+　　│〇 EmptyClipboard
+　　│〇 hGlobalMemory = GlobalAlloc(GHND, Size)
+　　│〇 lpGlobalMemory = GlobalLock(hGlobalMemory)
+　　│〇 CopyMemory ByVal lpGlobalMemory, ByVal StrPtr(Text), Size
+　　│〇 GlobalUnlock hGlobalMemory
+　　│〇 SetClipboardData CF_UNICODETEXT, hGlobalMemory
+　　│〇 CloseClipboard
+　　│┴End If
+　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+cmdCopyCurrentInfo_Click	現在情報コピー	frmPathChartNavigator
+CopyControlValue	値コピー	frmPathChartNavigator

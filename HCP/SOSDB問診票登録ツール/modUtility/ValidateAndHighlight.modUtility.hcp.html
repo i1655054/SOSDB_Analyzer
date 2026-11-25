@@ -1,80 +1,94 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
 <meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
 <title>ValidateAndHighlight</title>
 <style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
 body{font-family:Meiryo;font-size:9pt;}
 table{border-collapse:collapse;}
-th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
 td{vertical-align:top;}
 th{background:#e8f0fe;}
-colgroup col:nth-of-type(1) {}
-colgroup col:nth-of-type(2) {}
-.resize {position: relative;}
-.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
 </style>
 </head>
-<body>
+<body translate="no">
 <h1>ValidateAndHighlight</h1>
 <p>Module : modUtility</p>
-<p><a href="./_INDEX.html">← Module Index</a></p>
 <table>
-<colgroup><col/><col/></colgroup>
-<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
 <tbody>
-<tr><td>Procedure: modUtility.ValidateAndHighlight  [ 入力確認強調表示＜modUtility＞ ]</td><td></td></tr>
-<tr><td>HCP</td><td>Business</td></tr>
 <tr><td>┬</td><td></td></tr>
 <tr><td>〇│Public Function ValidateAndHighlight(  ByVal val As Variant,  ByVal rngName As String,  Optional ByVal alertColor As Long = -1,  Optional ByVal defaultValue As String = "") As Boolean</td><td>入力確認強調表示＜modUtility＞</td></tr>
 <tr><td>┴└┐</td><td></td></tr>
-<tr><td>　　│#  入力値取得</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   入力値取得</span></td><td></td></tr>
 <tr><td>　　□ Dim s As String</td><td></td></tr>
 <tr><td>　　〇 s = Trim(CStr(val))</td><td></td></tr>
-<tr><td>　　│#  未入力判定</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   未入力判定</span></td><td></td></tr>
 <tr><td>　　□ Dim isEmpty As Boolean</td><td></td></tr>
 <tr><td>　　〇 isEmpty = (s = "" Or s = defaultValue)</td><td></td></tr>
-<tr><td>　　│#  入力済判定</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   入力済判定</span></td><td></td></tr>
 <tr><td>　　◆┐If Not isEmpty Then</td><td></td></tr>
-<tr><td>　　││#  セル色復元</td><td></td></tr>
-<tr><td>　　│◎ Call RestoreColor(rngName)</td><td>セル色復元＜modUtility＞</td></tr>
+<tr><td><span class="hcp-comment">　　││#   セル色復元</span></td><td></td></tr>
+<tr><td>　　│◎ Call <a href="../modUtility/RestoreColor.modUtility.hcp.html">RestoreColor</a>(rngName)</td><td><a href="../modUtility/RestoreColor.modUtility.hcp.html">セル色復元＜modUtility＞</a></td></tr>
 <tr><td>　　│〇 ValidateAndHighlight = True</td><td></td></tr>
 <tr><td>　　│→ Exit Function</td><td></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
-<tr><td>　　│#  セル強調表示</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   セル強調表示</span></td><td></td></tr>
 <tr><td>　　◆┐If alertColor &lt;&gt; -1 Then</td><td></td></tr>
-<tr><td>　　│◎ Call HighlightCell(rngName, alertColor)</td><td>セル強調表示＜modUtility＞</td></tr>
+<tr><td>　　│◎ Call <a href="../modUtility/HighlightCell.modUtility.hcp.html">HighlightCell</a>(rngName, alertColor)</td><td><a href="../modUtility/HighlightCell.modUtility.hcp.html">セル強調表示＜modUtility＞</a></td></tr>
 <tr><td>　　│┴End If</td><td></td></tr>
-<tr><td>　　│#  入力エラー返却</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   入力エラー返却</span></td><td></td></tr>
 <tr><td>　　〇 ValidateAndHighlight = False</td><td></td></tr>
 <tr><td>　　┴End Function</td><td></td></tr>
 </tbody>
 </table>
+<hr>
+<h2>Calls (2)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modUtility/RestoreColor.modUtility.hcp.html">RestoreColor</a></td><td>セル色復元</td><td>modUtility</td></tr>
+<tr><td><a href="../modUtility/HighlightCell.modUtility.hcp.html">HighlightCell</a></td><td>セル強調表示</td><td>modUtility</td></tr>
+</table>
+<hr>
+<h2>Called By (7)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modUtility/chk_Person.modUtility.hcp.html">chk_Person</a></td><td>担当者確認</td><td>modUtility</td></tr>
+<tr><td><a href="../modUtility/chk_Target.modUtility.hcp.html">chk_Target</a></td><td>対象バージョン確認</td><td>modUtility</td></tr>
+<tr><td><a href="../modUtility/chk_Priority.modUtility.hcp.html">chk_Priority</a></td><td>優先度確認</td><td>modUtility</td></tr>
+<tr><td><a href="../modUtility/chk_Eq_Product.modUtility.hcp.html">chk_Eq_Product</a></td><td>装置プロダクト確認</td><td>modUtility</td></tr>
+<tr><td><a href="../modUtility/chk_Escale_Day.modUtility.hcp.html">chk_Escale_Day</a></td><td>エスカレーション日確認</td><td>modUtility</td></tr>
+<tr><td><a href="../modUtility/chk_Db_id.modUtility.hcp.html">chk_Db_id</a></td><td>IssueID確認</td><td>modUtility</td></tr>
+<tr><td><a href="../modUtility/chk_Product_Person.modUtility.hcp.html">chk_Product_Person</a></td><td>プロダクト担当者確認</td><td>modUtility</td></tr>
+</table>
 <script>
-document.querySelectorAll('.resize').forEach(function (eleTh) {
+document.querySelectorAll('.resize').forEach(function(eleTh) {
 let startX;
 let startWidth;
 const eleResizer = document.createElement('div');
 eleResizer.classList.add('resizer');
-eleResizer.addEventListener('mousedown', function (e) {
-const styleTh = window.getComputedStyle(eleTh);
-const paddingLeft = parseFloat(styleTh.paddingLeft);
-const paddingRight = parseFloat(styleTh.paddingRight);
-const borderLeft = parseFloat(styleTh.borderLeftWidth);
-const borderRight = parseFloat(styleTh.borderRightWidth);
+eleResizer.addEventListener('mousedown', function(e) {
 startX = e.pageX;
-startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+startWidth = eleTh.offsetWidth;
 document.addEventListener('mousemove', onMouseMove);
 document.addEventListener('mouseup', onMouseUp);
 });
 eleTh.appendChild(eleResizer);
-function onMouseMove(e) {
-const newWidth = startWidth + (e.pageX - startX);
-eleTh.style.width = newWidth + 'px';
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
 }
-function onMouseUp() {
-document.removeEventListener('mousemove', onMouseMove);
-document.removeEventListener('mouseup', onMouseUp);
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
 }
 });
 </script>

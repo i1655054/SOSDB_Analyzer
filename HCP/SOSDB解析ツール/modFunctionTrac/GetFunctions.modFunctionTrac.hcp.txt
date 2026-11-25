@@ -1,0 +1,54 @@
+┬
+〇│Public Function GetFunctions(  ByVal CodeText As String,  ByVal ModuleName As String,  ByRef FuncList As Object)	関数一覧取得＜modFunctionTrac＞
+┴└┐
+　　□ Dim Lines() As String
+　　□ Dim LineText As String
+　　□ Dim i As Long
+　　□ Dim FuncName As String
+　　□ Dim Proc As clsProcInfo
+　　│#   ソースコード行分割
+　　〇 Lines = Split(CodeText, vbCrLf)
+　　│#   Procedure定義走査
+　　＠┐For i = LBound(Lines) To UBound(Lines)
+　　│〇 LineText = Trim$(Lines(i))
+　　││#   Procedure定義判定
+　　│◆┐If IsProcedureLine(LineText) Then	内部呼出:IsProcedureLine
+　　│││#   Procedure名取得
+　　││◎ FuncName =  ExtractProcedureName(LineText)	プロシージャ名抽出＜modAnalyze＞
+　　││◆┐If FuncName <> "" Then
+　　││││#   未登録Procedure判定
+　　│││◆┐If Not FuncList.Exists(FuncName) Then
+　　│││││#   Procedure情報生成
+　　││││〇 Set Proc = New clsProcInfo
+　　││││〇 Proc.ProcName = FuncName
+　　││││〇 Proc.ModuleName = ModuleName
+　　│││││#   Procedureコメント情報取得
+　　││││◎ Proc.JPName =  GetTagValueFromCode(  CodeText,  FuncName,  "@JPName")	タグ値取得＜modAnalyzerCommon＞
+　　││││◎ Proc.Category =  GetTagValueFromCode(  CodeText,  FuncName,  "@Category")	タグ値取得＜modAnalyzerCommon＞
+　　││││◎ Proc.Summary =  GetTagValueFromCode(  CodeText,  FuncName,  "@Summary")	タグ値取得＜modAnalyzerCommon＞
+　　│││││#   Procedure一覧登録
+　　││││〇 FuncList.Add  FuncName,  Proc
+　　││││┴End If
+　　│││┴End If
+　　││┴End If
+　　│┴Next i
+　　┴End Function
+
+========================================
+Calls (3)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+IsProcedureLine	プロシージャ定義判定	modAnalyze
+ExtractProcedureName	プロシージャ名抽出	modAnalyze
+GetTagValueFromCode	タグ値取得	modAnalyzerCommon
+
+========================================
+Called By (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+FunctionTrace	関数トレース作成	modFunctionTrac
+BuildFuncList	Function一覧作成	modProcAnalyzer

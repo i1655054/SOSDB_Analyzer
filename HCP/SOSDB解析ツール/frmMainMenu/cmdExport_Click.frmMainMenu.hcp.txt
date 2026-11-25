@@ -1,0 +1,25 @@
+┬
+〇│Private Sub cmdExport_Click()	ソース管理起動＜frmMainMenu＞
+┴└┐
+　　│#   メインメニュー終了
+　　〇 Unload Me
+　　│#   ソース管理画面表示
+　　〇 frmExportTool.Show vbModeless
+　　┴End Sub
+
+========================================
+Calls (4)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetWorkbookByToolID	対象ブック取得	modToolManager
+GetGitRootPathByToolID	Git管理フォルダ取得	modExportVBA
+ExportVBABook	VBAソース出力	modExportVBA
+OpenGitPowerShell	Gitフォルダ起動	modExportVBA
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

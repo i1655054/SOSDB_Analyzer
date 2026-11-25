@@ -1,0 +1,26 @@
+┬
+〇│Public Function GetGitRootPathByToolID(  ByVal ToolID As Long) As String	Git管理フォルダ取得＜modExportVBA＞
+┴└┐
+　　□ Dim Tool As clsToolInfo
+　　│#   ツール情報取得
+　　◎ Set Tool = GetToolInfo(ToolID)	ツール情報取得＜modToolManager＞
+　　│#   Git管理フォルダ生成
+　　〇 GetGitRootPathByToolID =  Environ$("OneDriveCommercial") &  "\ドキュメント\GitHub\" &  Tool.GitRepository
+　　┴End Function
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetToolInfo	ツール情報取得	modToolManager
+
+========================================
+Called By (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ExportVBABook	VBAソース出力	modExportVBA
+cmdExport_Click

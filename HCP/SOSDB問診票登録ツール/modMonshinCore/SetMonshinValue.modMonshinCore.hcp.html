@@ -1,30 +1,31 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
 <meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
 <title>SetMonshinValue</title>
 <style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
 body{font-family:Meiryo;font-size:9pt;}
 table{border-collapse:collapse;}
-th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
 td{vertical-align:top;}
 th{background:#e8f0fe;}
-colgroup col:nth-of-type(1) {}
-colgroup col:nth-of-type(2) {}
-.resize {position: relative;}
-.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
 </style>
 </head>
-<body>
+<body translate="no">
 <h1>SetMonshinValue</h1>
 <p>Module : modMonshinCore</p>
-<p><a href="./_INDEX.html">← Module Index</a></p>
 <table>
-<colgroup><col/><col/></colgroup>
-<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
 <tbody>
-<tr><td>Procedure: modMonshinCore.SetMonshinValue  [ 問診情報設定＜modMonshinCore＞ ]</td><td></td></tr>
-<tr><td>HCP</td><td>Business</td></tr>
 <tr><td>┬</td><td></td></tr>
 <tr><td>〇│Private Sub SetMonshinValue(  ByRef info As MonshinInfoType,  ByVal Key As String,  ByVal Value As String)</td><td>問診情報設定＜modMonshinCore＞</td></tr>
 <tr><td>┴└┐</td><td></td></tr>
@@ -35,12 +36,14 @@ colgroup col:nth-of-type(2) {}
 <tr><td>　　││〇 info.faultRepNum = Value</td><td></td></tr>
 <tr><td>　　│├┐Case "UnKanNum"              ' 運管管理番号</td><td></td></tr>
 <tr><td>　　││〇 info.unKanNum = Value</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│││#   題名事象設定</span></td><td></td></tr>
 <tr><td>　　│├┐Case "TitleLine"             ' 題名（1行目）</td><td></td></tr>
 <tr><td>　　││〇 info.TitleLine = Value</td><td></td></tr>
 <tr><td>　　│├┐Case "Phenomenon"            ' 事象／問合せ内容</td><td></td></tr>
 <tr><td>　　││〇 info.Phenomenon = Value</td><td></td></tr>
 <tr><td>　　│├┐Case "Request_Client"</td><td></td></tr>
 <tr><td>　　││〇 info.Request_Client = Value</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│││#   発生日時設定</span></td><td></td></tr>
 <tr><td>　　│├┐Case "OccurrenceDate"        ' 発生日</td><td></td></tr>
 <tr><td>　　││〇 info.occurrenceDate = Format(Value, "yyyy-mm-dd")</td><td></td></tr>
 <tr><td>　　│├┐Case "OccurrenceTime"        ' 発生時間</td><td></td></tr>
@@ -53,12 +56,14 @@ colgroup col:nth-of-type(2) {}
 <tr><td>　　││〇 info.HostName = Value</td><td></td></tr>
 <tr><td>　　│├┐Case "FileVer"               ' ファイル版数</td><td></td></tr>
 <tr><td>　　││〇 info.FileVer = Value</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│││#   環境情報設定</span></td><td></td></tr>
 <tr><td>　　│├┐Case "AlarmInfo"             ' アラーム表示内容</td><td></td></tr>
 <tr><td>　　││〇 info.AlarmInfo = Value</td><td></td></tr>
 <tr><td>　　│├┐Case "OccurrenceStatus"      ' 発生状況</td><td></td></tr>
 <tr><td>　　││〇 info.OccurrenceStatus = Value</td><td></td></tr>
 <tr><td>　　│├┐Case "ResponseStatus"        ' 対応状況</td><td></td></tr>
 <tr><td>　　││〇 info.ResponseStatus = Value</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│││#   状況情報設定</span></td><td></td></tr>
 <tr><td>　　│├┐Case "Req0": info.RequestContents(0) = Value</td><td></td></tr>
 <tr><td>　　│├┐Case "Req1": info.RequestContents(1) = Value</td><td></td></tr>
 <tr><td>　　│├┐Case "Req2": info.RequestContents(2) = Value</td><td></td></tr>
@@ -69,48 +74,55 @@ colgroup col:nth-of-type(2) {}
 <tr><td>　　│├┐Case "Req7": info.RequestContents(7) = Value</td><td></td></tr>
 <tr><td>　　│├┐Case "CollectedData"         ' 収集データ</td><td></td></tr>
 <tr><td>　　││〇 info.CollectedData = Value</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│││#   問合せ内容設定</span></td><td></td></tr>
 <tr><td>　　│├┐Case "CauseDetail"           ' 原因</td><td></td></tr>
 <tr><td>　　││〇 info.CauseDetail = Value</td><td></td></tr>
 <tr><td>　　│├┐Case "Countermeasure"        ' 対処</td><td></td></tr>
 <tr><td>　　││〇 info.Countermeasure = Value</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│││#   回答情報設定</span></td><td></td></tr>
 <tr><td>　　│├┐Case "AnswerDate"            ' 回答日</td><td></td></tr>
 <tr><td>　　││〇 info.AnswerDate = Value</td><td></td></tr>
 <tr><td>　　│├┐Case "AnswerPerson"          ' 回答者</td><td></td></tr>
 <tr><td>　　││〇 info.AnswerPerson = Value</td><td></td></tr>
 <tr><td>　　│├┐Case "AnswerInfo"            ' 解析結果・対処方法</td><td></td></tr>
 <tr><td>　　││〇 info.AnswerInfo = Value</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│││#   Redmine素材設定</span></td><td></td></tr>
 <tr><td>　　│├┐Case "Key_Word"              ' キーワード</td><td></td></tr>
 <tr><td>　　││〇 info.Key_Word = Value</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│││#   未定義キー</span></td><td></td></tr>
 <tr><td>　　│├┐Case Else</td><td></td></tr>
 <tr><td>　　│┴End Select</td><td></td></tr>
 <tr><td>　　┴End Sub</td><td></td></tr>
 </tbody>
 </table>
+<hr>
+<h2>Calls (0)</h2>
+<p>呼出先なし</p>
+<hr>
+<h2>Called By (1)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modMonshinCore/Get_MonshinInfo.modMonshinCore.hcp.html">Get_MonshinInfo</a></td><td>問診情報取得</td><td>modMonshinCore</td></tr>
+</table>
 <script>
-document.querySelectorAll('.resize').forEach(function (eleTh) {
+document.querySelectorAll('.resize').forEach(function(eleTh) {
 let startX;
 let startWidth;
 const eleResizer = document.createElement('div');
 eleResizer.classList.add('resizer');
-eleResizer.addEventListener('mousedown', function (e) {
-const styleTh = window.getComputedStyle(eleTh);
-const paddingLeft = parseFloat(styleTh.paddingLeft);
-const paddingRight = parseFloat(styleTh.paddingRight);
-const borderLeft = parseFloat(styleTh.borderLeftWidth);
-const borderRight = parseFloat(styleTh.borderRightWidth);
+eleResizer.addEventListener('mousedown', function(e) {
 startX = e.pageX;
-startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+startWidth = eleTh.offsetWidth;
 document.addEventListener('mousemove', onMouseMove);
 document.addEventListener('mouseup', onMouseUp);
 });
 eleTh.appendChild(eleResizer);
-function onMouseMove(e) {
-const newWidth = startWidth + (e.pageX - startX);
-eleTh.style.width = newWidth + 'px';
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
 }
-function onMouseUp() {
-document.removeEventListener('mousemove', onMouseMove);
-document.removeEventListener('mouseup', onMouseUp);
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
 }
 });
 </script>

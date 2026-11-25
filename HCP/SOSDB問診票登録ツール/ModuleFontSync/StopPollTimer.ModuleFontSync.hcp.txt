@@ -1,13 +1,25 @@
-Procedure: ModuleFontSync.StopPollTimer  [ フォント監視停止＜ModuleFontSync＞ ]
-HCP	Business
 ┬
 〇│Public Sub StopPollTimer()	フォント監視停止＜ModuleFontSync＞
 ┴└┐
-　　│#  タイマー動作確認
+　　│#   タイマー動作確認
 　　◆┐If gTimerID <> 0 Then
-　　││#  フォント監視タイマー停止
+　　││#   フォント監視タイマー停止
 　　│〇 KillTimer 0, gTimerID
-　　││#  タイマーID初期化
+　　││#   タイマーID初期化
 　　│〇 gTimerID = 0
 　　│┴End If
 　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+UserForm_QueryClose

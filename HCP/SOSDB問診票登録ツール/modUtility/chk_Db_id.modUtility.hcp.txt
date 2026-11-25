@@ -1,8 +1,20 @@
-Procedure: modUtility.chk_Db_id  [ IssueID確認＜modUtility＞ ]
-HCP	Business
 ┬
 〇│Function chk_Db_id(issue As IssueInfo) As Boolean	IssueID確認＜modUtility＞
 ┴└┐
-　　│#  IssueID入力確認
+　　│#   IssueID入力確認
 　　◎ chk_Db_id = ValidateAndHighlight(  issue.IssueId,  DB_ID_RANG,  COLOR_REQUIRED) ' 赤系	入力確認強調表示＜modUtility＞
 　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ValidateAndHighlight	入力確認強調表示	modUtility
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

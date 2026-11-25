@@ -1,0 +1,37 @@
+┬
+〇│Private Function GetUsageStatus(ProcName As String, usage As Long) As String	使用状況判定＜modAnalyze＞
+┴└┐
+　　│#   イベントProcedure判定
+　　◆┐If IsEventProcedure(ProcName) Then	内部呼出:IsEventProcedure
+　　│〇 GetUsageStatus = STATUS_EVENT
+　　││#   特殊Procedure判定
+　　├┐ElseIf IsSpecialProcedure(ProcName) Then	内部呼出:IsSpecialProcedure
+　　│〇 GetUsageStatus = STATUS_USED
+　　││#   呼出元なし判定
+　　├┐ElseIf usage = 0 Then
+　　│〇 GetUsageStatus = STATUS_NOCALLER
+　　││#   要確認判定
+　　├┐ElseIf usage = 1 Then
+　　│〇 GetUsageStatus = STATUS_CONFIRM
+　　││#   使用中判定
+　　├┐ELSE
+　　│〇 GetUsageStatus = STATUS_USED
+　　│┴End If
+　　┴End Function
+
+========================================
+Calls (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+IsEventProcedure	イベントプロシージャ判定	modAnalyze
+IsSpecialProcedure	特殊プロシージャ判定	modAnalyze
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ProcedureList	関数一覧作成	modAnalyze

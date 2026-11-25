@@ -1,0 +1,26 @@
+┬
+〇│Public Function GetManagementFilePathByToolID(  ByVal ToolID As Long)  As String	管理ファイルパス取得＜modToolManager＞
+┴└┐
+　　□ Dim Tool As clsToolInfo
+　　│#   ツール情報取得
+　　◎ Set Tool = GetToolInfo(ToolID)	ツール情報取得＜modToolManager＞
+　　│#   管理ファイルパス生成
+　　◎ GetManagementFilePathByToolID =  GetOutputFolder() &  Tool.ManagementFile	出力フォルダ取得＜modPowerPointChart＞
+　　┴End Function
+
+========================================
+Calls (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetToolInfo	ツール情報取得	modToolManager
+GetOutputFolder	出力フォルダ取得	modPowerPointChart
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetManagementWorkbookByToolID	管理ブック取得	modToolManager

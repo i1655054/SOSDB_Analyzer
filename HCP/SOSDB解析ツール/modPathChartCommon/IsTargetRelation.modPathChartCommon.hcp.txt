@@ -1,0 +1,47 @@
+┬
+〇│Public Function IsTargetRelation(  ByVal ParentProc As String,  ByVal ChildProc As String,  ByVal ParentModule As String,  ByVal ChildModule As String)  As Boolean	出力対象判定＜modPathChartCommon＞
+┴└┐
+　　│#   初期状態
+　　│#   出力対象初期設定
+　　〇 IsTargetRelation = True
+　　│#   再帰呼出判定
+　　◆┐If Not gRecursive Then
+　　││#   再帰呼出除外
+　　│◆┐If StrComp(  ParentProc,  ChildProc,  vbTextCompare) = 0 Then
+　　││〇 IsTargetRelation = False
+　　││→ Exit Function
+　　││┴End If
+　　│┴End If
+　　│#   外部モジュール判定
+　　◆┐If Not gExternal Then
+　　││#   外部モジュール除外
+　　│◆┐If StrComp(  ParentModule,  ChildModule,  vbTextCompare) <> 0 Then
+　　││〇 IsTargetRelation = False
+　　││→ Exit Function
+　　││┴End If
+　　│┴End If
+　　│#   共通関数判定
+　　◆┐If gSkipCommon Then
+　　││#   共通関数除外
+　　│◆┐If IsCommonFunction(  ChildProc) Then	内部呼出:IsCommonFunction
+　　││〇 IsTargetRelation = False
+　　││→ Exit Function
+　　││┴End If
+　　│┴End If
+　　┴End Function
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+IsCommonFunction	共通関数判定	modPathChartCommon
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetChildrenList	子関数一覧取得	modPathChartCommon

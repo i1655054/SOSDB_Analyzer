@@ -1,0 +1,48 @@
+┬
+〇│Public Function GetChildNodes(  ByVal ParentID As Long,  ByVal HCPNodes As Collection)  As Collection	子ノード取得＜modHCPAnalyzer＞
+┴└┐
+　　□ Dim Result As Collection
+　　□ Dim Node As clsHCPNode
+　　│#   子ノード一覧初期化
+　　〇 Set Result = New Collection
+　　│#   TRUEノード収集
+　　＠┐For Each Node In HCPNodes
+　　│◆┐If Node.ParentID = ParentID Then
+　　││◆┐If Node.NodeType = NODE_TRUE Then
+　　│││〇 Result.Add Node
+　　│││┴End If
+　　││┴End If
+　　│┴Next Node
+　　│#   FALSEノード収集
+　　＠┐For Each Node In HCPNodes
+　　│◆┐If Node.ParentID = ParentID Then
+　　││◆┐If Node.NodeType = NODE_FALSE Then
+　　│││〇 Result.Add Node
+　　│││┴End If
+　　││┴End If
+　　│┴Next Node
+　　│#   通常ノード収集
+　　＠┐For Each Node In HCPNodes
+　　│◆┐If Node.ParentID = ParentID Then
+　　││◆┐If Node.NodeType <> NODE_TRUE  And Node.NodeType <> NODE_FALSE Then
+　　│││〇 Result.Add Node
+　　│││┴End If
+　　││┴End If
+　　│┴Next Node
+　　│#   子ノード一覧返却
+　　〇 Set GetChildNodes = Result
+　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+LayoutTree	ノード配置	modHCPAnalyzer

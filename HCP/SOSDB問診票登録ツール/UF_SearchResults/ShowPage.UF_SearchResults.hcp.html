@@ -1,49 +1,50 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
 <meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
 <title>ShowPage</title>
 <style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
 body{font-family:Meiryo;font-size:9pt;}
 table{border-collapse:collapse;}
-th,td{border:1px solid #cccccc;padding:1px 4px;line-height: 1.2;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
 td{vertical-align:top;}
 th{background:#e8f0fe;}
-colgroup col:nth-of-type(1) {}
-colgroup col:nth-of-type(2) {}
-.resize {position: relative;}
-.resizer {position: absolute;right: -10px;top: 0;width: 20px;height: 100%;cursor: col-resize;user-select: none;z-index: 100;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
 </style>
 </head>
-<body>
+<body translate="no">
 <h1>ShowPage</h1>
 <p>Module : UF_SearchResults</p>
-<p><a href="./_INDEX.html">← Module Index</a></p>
 <table>
-<colgroup><col/><col/></colgroup>
-<thead><tr><th class="resize">HCP</th><th class="resize">Business</th></tr></thead>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
 <tbody>
-<tr><td>Procedure: UF_SearchResults.ShowPage  [ 検索結果ページ表示＜UF_SearchResults＞ ]</td><td></td></tr>
-<tr><td>HCP</td><td>Business</td></tr>
 <tr><td>┬</td><td></td></tr>
 <tr><td>〇│Sub ShowPage(page As Long)</td><td>検索結果ページ表示＜UF_SearchResults＞</td></tr>
 <tr><td>┴└┐</td><td></td></tr>
 <tr><td>　　□ Dim i As Long, startIdx As Long, endIdx As Long</td><td></td></tr>
 <tr><td>　　□ Dim totalPages As Long</td><td></td></tr>
-<tr><td>　　│#  一覧初期化</td><td></td></tr>
-<tr><td>　　◎ ListBox1.Clear</td><td>Issue情報初期化＜IssueInfo＞</td></tr>
-<tr><td>　　◎ ListBox2.Clear</td><td>Issue情報初期化＜IssueInfo＞</td></tr>
-<tr><td>　　◎ ListBox3.Clear</td><td>Issue情報初期化＜IssueInfo＞</td></tr>
-<tr><td>　　◎ ListBox4.Clear</td><td>Issue情報初期化＜IssueInfo＞</td></tr>
-<tr><td>　　◎ ListBox5.Clear</td><td>Issue情報初期化＜IssueInfo＞</td></tr>
-<tr><td>　　◎ ListBox6.Clear</td><td>Issue情報初期化＜IssueInfo＞</td></tr>
-<tr><td>　　◎ ListBox7.Clear</td><td>Issue情報初期化＜IssueInfo＞</td></tr>
-<tr><td>　　│#  表示範囲算出</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   一覧初期化</span></td><td></td></tr>
+<tr><td>　　〇 ListBox1.Clear</td><td></td></tr>
+<tr><td>　　〇 ListBox2.Clear</td><td></td></tr>
+<tr><td>　　〇 ListBox3.Clear</td><td></td></tr>
+<tr><td>　　〇 ListBox4.Clear</td><td></td></tr>
+<tr><td>　　〇 ListBox5.Clear</td><td></td></tr>
+<tr><td>　　〇 ListBox6.Clear</td><td></td></tr>
+<tr><td>　　〇 ListBox7.Clear</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   表示範囲算出</span></td><td></td></tr>
 <tr><td>　　〇 startIdx = page * pageSize + 1</td><td></td></tr>
 <tr><td>　　〇 endIdx = startIdx + pageSize - 1</td><td></td></tr>
-<tr><td>　　│#  表示範囲補正</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   表示範囲補正</span></td><td></td></tr>
 <tr><td>　　◆ If endIdx &gt; UBound(csvData) Then endIdx = UBound(csvData)</td><td></td></tr>
-<tr><td>　　│#  一覧表示</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   一覧表示</span></td><td></td></tr>
 <tr><td>　　＠┐For i = startIdx To endIdx</td><td></td></tr>
 <tr><td>　　│〇 ListBox1.AddItem Format(i, "000")</td><td></td></tr>
 <tr><td>　　│〇 ListBox2.AddItem csvData(i)(0)</td><td></td></tr>
@@ -53,15 +54,15 @@ colgroup col:nth-of-type(2) {}
 <tr><td>　　│〇 ListBox6.AddItem csvData(i)(5)</td><td></td></tr>
 <tr><td>　　│〇 ListBox7.AddItem csvData(i)(4)</td><td></td></tr>
 <tr><td>　　│┴Next i</td><td></td></tr>
-<tr><td>　　│#  操作ボタン表示</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   操作ボタン表示</span></td><td></td></tr>
 <tr><td>　　〇 btnSelect.Visible = True</td><td></td></tr>
 <tr><td>　　〇 btnDbAccess.Visible = True</td><td></td></tr>
-<tr><td>　　│#  件数表示</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   件数表示</span></td><td></td></tr>
 <tr><td>　　〇 Label件数.Caption = "検索結果： " &amp; UBound(csvData) &amp; " 件数"</td><td></td></tr>
-<tr><td>　　│#  ページ情報表示</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   ページ情報表示</span></td><td></td></tr>
 <tr><td>　　〇 totalPages = Int((UBound(csvData) - 1) / pageSize) + 1</td><td></td></tr>
 <tr><td>　　〇 LabelPage.Caption = "ページ " &amp; (page + 1) &amp; " / " &amp; totalPages</td><td></td></tr>
-<tr><td>　　│#  ページ切替可否判定</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   ページ切替可否判定</span></td><td></td></tr>
 <tr><td>　　◆┐If totalPages &gt; 1 Then</td><td></td></tr>
 <tr><td>　　│〇 btnNext.Visible = True</td><td></td></tr>
 <tr><td>　　│〇 btnPrev.Visible = True</td><td></td></tr>
@@ -69,31 +70,39 @@ colgroup col:nth-of-type(2) {}
 <tr><td>　　┴End Sub</td><td></td></tr>
 </tbody>
 </table>
+<hr>
+<h2>Calls (1)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../IssueInfo/Clear.IssueInfo.hcp.html">Clear</a></td><td>Issue情報初期化</td><td>IssueInfo</td></tr>
+</table>
+<hr>
+<h2>Called By (3)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../UF_SearchResults/loadcsv.UF_SearchResults.hcp.html">loadcsv</a></td><td>検索結果読込</td><td>UF_SearchResults</td></tr>
+<tr><td><a href="../UF_SearchResults/btnNext_Click.UF_SearchResults.hcp.html">btnNext_Click</a></td><td>次ページ表示</td><td>UF_SearchResults</td></tr>
+<tr><td><a href="../UF_SearchResults/btnPrev_Click.UF_SearchResults.hcp.html">btnPrev_Click</a></td><td>前ページ表示</td><td>UF_SearchResults</td></tr>
+</table>
 <script>
-document.querySelectorAll('.resize').forEach(function (eleTh) {
+document.querySelectorAll('.resize').forEach(function(eleTh) {
 let startX;
 let startWidth;
 const eleResizer = document.createElement('div');
 eleResizer.classList.add('resizer');
-eleResizer.addEventListener('mousedown', function (e) {
-const styleTh = window.getComputedStyle(eleTh);
-const paddingLeft = parseFloat(styleTh.paddingLeft);
-const paddingRight = parseFloat(styleTh.paddingRight);
-const borderLeft = parseFloat(styleTh.borderLeftWidth);
-const borderRight = parseFloat(styleTh.borderRightWidth);
+eleResizer.addEventListener('mousedown', function(e) {
 startX = e.pageX;
-startWidth = eleTh.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
+startWidth = eleTh.offsetWidth;
 document.addEventListener('mousemove', onMouseMove);
 document.addEventListener('mouseup', onMouseUp);
 });
 eleTh.appendChild(eleResizer);
-function onMouseMove(e) {
-const newWidth = startWidth + (e.pageX - startX);
-eleTh.style.width = newWidth + 'px';
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
 }
-function onMouseUp() {
-document.removeEventListener('mousemove', onMouseMove);
-document.removeEventListener('mouseup', onMouseUp);
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
 }
 });
 </script>

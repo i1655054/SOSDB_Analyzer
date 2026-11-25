@@ -1,0 +1,25 @@
+┬
+〇│Public Function GetProcNameFromDisplay(  ByVal DisplayText As String)  As String	関数名抽出＜modAnalyzerCommon＞
+┴└┐
+　　│#   表示名からProcedure名抽出
+　　◆┐If InStr(DisplayText, " : ") > 0 Then
+　　│〇 GetProcNameFromDisplay =  Trim$(Split(DisplayText, " : ")(0))
+　　├┐ELSE
+　　││#   表示文字列をそのまま使用
+　　│〇 GetProcNameFromDisplay =  Trim$(DisplayText)
+　　│┴End If
+　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+cmdFind_Click	ノード検索	frmPathChartNavigator

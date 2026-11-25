@@ -1,0 +1,37 @@
+┬
+〇│Private Function CalcLevel(  ByVal Node As clsHCPNode,  ByVal NodeMap As Object)  As Long	HCPレベル算出＜modHCPAnalyzer＞
+┴└┐
+　　□ Dim ParentID As Long
+　　□ Dim Level As Long
+　　□ Dim SafeCount As Long
+　　〇 ParentID = Node.ParentID
+　　│#   親ノード階層探索
+　　＠┐Do While ParentID <> 0
+　　│〇 Level = Level + 1
+　　│〇 SafeCount = SafeCount + 1
+　　││#   無限ループ防止
+　　│◆┐If SafeCount > 100 Then
+　　││→ Exit Do
+　　││┴End If
+　　│◆┐If NodeMap.Exists(CStr(ParentID)) Then
+　　││〇 ParentID =  NodeMap(CStr(ParentID)).ParentID
+　　│├┐ELSE
+　　││→ Exit Do
+　　││┴End If
+　　│┴Loop
+　　〇 CalcLevel = Level
+　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+RebuildHCPLevel	HCPレベル再計算	modHCPAnalyzer

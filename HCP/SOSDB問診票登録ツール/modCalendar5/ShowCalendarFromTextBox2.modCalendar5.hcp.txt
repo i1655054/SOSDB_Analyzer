@@ -1,5 +1,3 @@
-Procedure: modCalendar5.ShowCalendarFromTextBox2  [ テキストボックス日付選択＜modCalendar5＞ ]
-HCP	Business
 ┬
 〇│Public Sub ShowCalendarFromTextBox2(ByRef objTextBox As MSForms.TextBox,  Optional ByVal lngLeft As Long = 0,  Optional ByVal lngTop As Long = 0,  Optional ByVal strCaption As String = gcnsCaption,  Optional ByVal strFormat As String = g_cnsDateFormat)	テキストボックス日付選択＜modCalendar5＞
 ┴└┐
@@ -12,9 +10,9 @@ HCP	Business
 　　□ Dim lngPPI As Long                                              ' Pixels Per Inch
 　　〇 lngFormWidth = UF_Calendar5.Width
 　　〇 lngFormHeight = UF_Calendar5.Height
-　　〇 lngDPIX = FP_GetDPIX
-　　〇 lngDPIY = FP_GetDPIY
-　　〇 lngPPI = FP_GetPPI
+　　◎ lngDPIX = FP_GetDPIX	水平DPI取得＜modCalendar5＞
+　　◎ lngDPIY = FP_GetDPIY	垂直DPI取得＜modCalendar5＞
+　　◎ lngPPI = FP_GetPPI	PPI取得＜modCalendar5＞
 　　◎ Call GP_GetScreenPos(0, 0, lngScreenRight, lngScreenBottom)	画面有効領域取得＜modCalendar5＞
 　　◆┐If (lngLeft + lngFormWidth) * (lngDPIX / lngPPI) > lngScreenRight Then
 　　│〇 lngLeft = lngScreenRight * (lngPPI / lngDPIX) - lngFormWidth + 3
@@ -37,3 +35,24 @@ HCP	Business
 　　│〇 .Show
 　　│┴End With
 　　┴End Sub
+
+========================================
+Calls (4)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+FP_GetDPIX	水平DPI取得	modCalendar5
+FP_GetDPIY	垂直DPI取得	modCalendar5
+FP_GetPPI	PPI取得	modCalendar5
+GP_GetScreenPos	画面有効領域取得	modCalendar5
+
+========================================
+Called By (3)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+txt発生日_MouseDown	発生日カレンダー表示	UF_NewInfoRegist
+txt完了日_MouseDown	完了日カレンダー表示	UF_NewInfoRegist
+txt問題発生日_MouseDown	発生日カレンダー表示	UF_OccDateTimeRegist

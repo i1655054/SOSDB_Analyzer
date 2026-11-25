@@ -1,0 +1,33 @@
+┬
+〇│Private Function GetCallNodeHtml(  ByVal Node As clsHCPNode)  As String	CALLノードHTML取得＜clsHtmlRenderer＞
+┴└┐
+　　│#   HTMLリンク
+　　□ Dim LinkText As String
+　　│#   CallName未設定
+　　◆┐If Trim$(Node.CallName) = "" Then
+　　│◎ GetCallNodeHtml =  HtmlEncode(  Node.RenderText)	HTMLエンコード＜clsHtmlRenderer＞
+　　│→ Exit Function
+　　│┴End If
+　　│#   Procedureリンク生成
+　　◎ LinkText =  BuildProcedureLink(  Node.CallName)	Procedureリンク生成＜clsHtmlRenderer＞
+　　│#   CALLノードHTML生成
+　　◎ GetCallNodeHtml =  Replace(  HtmlEncode(  Node.RenderText),  Node.CallName,  LinkText)	HTMLエンコード＜clsHtmlRenderer＞
+　　│	内部呼出:Replace
+　　┴End Function
+
+========================================
+Calls (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+HtmlEncode	HTMLエンコード	clsHtmlRenderer
+BuildProcedureLink	Procedureリンク生成	clsHtmlRenderer
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetNodeHtmlText	ノードHTML文字列取得	clsHtmlRenderer

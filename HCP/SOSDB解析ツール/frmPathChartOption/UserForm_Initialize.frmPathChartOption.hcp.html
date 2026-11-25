@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
+<title>UserForm_Initialize</title>
+<style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
+</style>
+</head>
+<body translate="no">
+<h1>UserForm_Initialize</h1>
+<p>Module : frmPathChartOption</p>
+<table>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
+<tbody>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Private Sub UserForm_Initialize()</td><td>オプション初期化＜frmPathChartOption＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   制限値設定読込</span></td><td></td></tr>
+<tr><td>　　◆┐If gMaxNode = 0 Then</td><td></td></tr>
+<tr><td>　　│〇 txtMaxNode.Text = "1000"</td><td></td></tr>
+<tr><td>　　│〇 txtMaxEdge.Text = "3000"</td><td></td></tr>
+<tr><td>　　├┐ELSE</td><td></td></tr>
+<tr><td>　　│〇 txtMaxNode.Text = gMaxNode</td><td></td></tr>
+<tr><td>　　│〇 txtMaxEdge.Text = gMaxEdge</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   解析対象設定読込</span></td><td></td></tr>
+<tr><td>　　〇 chkProperty.Value = gProperty</td><td></td></tr>
+<tr><td>　　〇 chkPrivate.Value = gPrivate</td><td></td></tr>
+<tr><td>　　〇 chkPublic.Value = gPublic</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   モジュール種別設定読込</span></td><td></td></tr>
+<tr><td>　　〇 chkStdModule.Value = gStdModule</td><td></td></tr>
+<tr><td>　　〇 chkUserForm.Value = gUserForm</td><td></td></tr>
+<tr><td>　　〇 chkClassModule.Value = gClassModule</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   除外条件設定読込</span></td><td></td></tr>
+<tr><td>　　〇 chkIgnoreAPI.Value = gIgnoreAPI</td><td></td></tr>
+<tr><td>　　〇 chkIgnoreExcel.Value = gIgnoreExcel</td><td></td></tr>
+<tr><td>　　〇 chkIgnoreSelf.Value = gIgnoreSelf</td><td></td></tr>
+<tr><td>　　〇 chkSameModuleOnly.Value = gSameModuleOnly</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   PathChart表示設定読込</span></td><td></td></tr>
+<tr><td>　　〇 chkSkipCommon.Value = gSkipCommon</td><td></td></tr>
+<tr><td>　　〇 chkShowCount.Value = gShowCount</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   出力設定読込</span></td><td></td></tr>
+<tr><td>　　〇 chkPowerPoint.Value = gPowerPoint</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   PowerPoint向き設定読込</span></td><td></td></tr>
+<tr><td>　　◆┐Select Case gPptOrientation</td><td></td></tr>
+<tr><td>　　│├┐Case PPT_ORIENT_PORTRAIT</td><td></td></tr>
+<tr><td>　　││〇 optPptPortrait.Value = True</td><td></td></tr>
+<tr><td>　　│├┐Case PPT_ORIENT_LANDSCAPE</td><td></td></tr>
+<tr><td>　　││〇 optPptLandscape.Value = True</td><td></td></tr>
+<tr><td>　　│├┐Case Else</td><td></td></tr>
+<tr><td>　　││〇 optPptAuto.Value = True</td><td></td></tr>
+<tr><td>　　│┴End Select</td><td></td></tr>
+<tr><td>　　〇 chkPngOutput.Value = gPngOutput</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   モジュール表示設定読込</span></td><td></td></tr>
+<tr><td>　　〇 chkShowModule.Value = gShowModule</td><td></td></tr>
+<tr><td>　　〇 chkColorModule.Value = gColorModule</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   テーマ候補設定</span></td><td></td></tr>
+<tr><td>　　〇 cmbColorTheme.Clear</td><td></td></tr>
+<tr><td>　　〇 cmbColorTheme.AddItem "標準"</td><td></td></tr>
+<tr><td>　　〇 cmbColorTheme.AddItem "明るい"</td><td></td></tr>
+<tr><td>　　〇 cmbColorTheme.AddItem "ダーク"</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   テーマ設定反映</span></td><td></td></tr>
+<tr><td>　　◆┐If gColorTheme = "" Then</td><td></td></tr>
+<tr><td>　　│〇 cmbColorTheme.ListIndex = 0</td><td></td></tr>
+<tr><td>　　├┐ELSE</td><td></td></tr>
+<tr><td>　　│〇 cmbColorTheme.Value = gColorTheme</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   出力方向設定状態反映</span></td><td></td></tr>
+<tr><td>　　◎ Call <a href="../frmPathChartOption/chkPowerPoint_Click.frmPathChartOption.hcp.html">chkPowerPoint_Click</a></td><td><a href="../frmPathChartOption/chkPowerPoint_Click.frmPathChartOption.hcp.html">PowerPoint出力切替＜frmPathChartOption＞</a></td></tr>
+<tr><td>　　┴End Sub</td><td></td></tr>
+</tbody>
+</table>
+<hr>
+<h2>Calls (10)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modPathChartConfig/LoadPathChartConfig.modPathChartConfig.hcp.html">LoadPathChartConfig</a></td><td>PathChart設定読込</td><td>modPathChartConfig</td></tr>
+<tr><td><a href="../modPathChartConfig/GetDefaultMaxDepth.modPathChartConfig.hcp.html">GetDefaultMaxDepth</a></td><td>既定深度取得</td><td>modPathChartConfig</td></tr>
+<tr><td><a href="../modPathChart/LoadStartProcedure.modPathChart.hcp.html">LoadStartProcedure</a></td><td>開始関数読込</td><td>modPathChart</td></tr>
+<tr><td><a href="../modPathChartConfig/GetDefaultStartProcedure.modPathChartConfig.hcp.html">GetDefaultStartProcedure</a></td><td>開始関数取得</td><td>modPathChartConfig</td></tr>
+<tr><td><a href="../frmPathChartOption/chkPowerPoint_Click.frmPathChartOption.hcp.html">chkPowerPoint_Click</a></td><td>PowerPoint出力切替</td><td>frmPathChartOption</td></tr>
+<tr><td><a href="../frmExportTool/SetupListView.frmExportTool.hcp.html">SetupListView</a></td><td>ListView初期化</td><td>frmExportTool</td></tr>
+<tr><td><a href="../frmExportTool/LoadToolList.frmExportTool.hcp.html">LoadToolList</a></td><td></td><td></td></tr>
+<tr><td><a href="../modPathChart/LoadSearchHistory.modPathChart.hcp.html">LoadSearchHistory</a></td><td>検索履歴読込</td><td>modPathChart</td></tr>
+<tr><td><a href="../modToolManager/GetCurrentToolInfo.modToolManager.hcp.html">GetCurrentToolInfo</a></td><td>現在ツール情報取得</td><td>modToolManager</td></tr>
+<tr><td><a href="../frmHCPGenerator/LoadModuleList.frmHCPGenerator.hcp.html">LoadModuleList</a></td><td>モジュール一覧読込</td><td>frmHCPGenerator</td></tr>
+</table>
+<hr>
+<h2>Called By (0)</h2>
+<p>呼出元なし</p>
+<script>
+document.querySelectorAll('.resize').forEach(function(eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function(e) {
+startX = e.pageX;
+startWidth = eleTh.offsetWidth;
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
+}
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
+}
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
+<title>ProcedureList</title>
+<style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
+</style>
+</head>
+<body translate="no">
+<h1>ProcedureList</h1>
+<p>Module : modAnalyze</p>
+<table>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
+<tbody>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Public Sub ProcedureList()</td><td>関数一覧作成＜modAnalyze＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　□ Dim VBComp As Object</td><td></td></tr>
+<tr><td>　　□ Dim CodeMod As Object</td><td></td></tr>
+<tr><td>　　□ Dim i As Long</td><td></td></tr>
+<tr><td>　　□ Dim r As Long</td><td></td></tr>
+<tr><td>　　□ Dim row As Long</td><td></td></tr>
+<tr><td>　　□ Dim LastRow As Long</td><td></td></tr>
+<tr><td>　　□ Dim TotalProcCount As Long</td><td></td></tr>
+<tr><td>　　□ Dim CurrentProcCount As Long</td><td></td></tr>
+<tr><td>　　□ Dim ws As Worksheet</td><td></td></tr>
+<tr><td>　　□ Dim line As String</td><td></td></tr>
+<tr><td>　　□ Dim ProcName As String</td><td></td></tr>
+<tr><td>　　☆ On Error Resume Next</td><td></td></tr>
+<tr><td>　　〇 Set ws =  gContext.ManagementBook.Worksheets(<br>　　│ SHEET_PROC_LIST)</td><td></td></tr>
+<tr><td>　　☆ On Error GoTo 0</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   ProcListシート準備</span></td><td></td></tr>
+<tr><td>　　◆┐If ws Is Nothing Then</td><td></td></tr>
+<tr><td>　　│〇 Set ws =  gContext.ManagementBook.Worksheets.Add(<br>　　││   After:=gContext.ManagementBook.Worksheets(<br>　　││   gContext.ManagementBook.Worksheets.Count))</td><td></td></tr>
+<tr><td>　　│〇 ws.Name = SHEET_PROC_LIST</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　〇 ws.Cells.Clear</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   ProcListヘッダ出力</span></td><td></td></tr>
+<tr><td>　　〇 ws.Range("A1:L1").Value = Array(<br>　　│   "Module",  "Type",  "ProcedureName",  "JPName",  "Category",  "Input",  "Output",  "Summary",  "Remarks",  "Declaration",  "UsageCount",  "判定")</td><td></td></tr>
+<tr><td>　　〇 row = 2</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   関数総数を数える</span></td><td></td></tr>
+<tr><td>　　〇 TotalProcCount = 0</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   進捗表示用にProcedure総数を集計</span></td><td></td></tr>
+<tr><td>　　＠┐For Each VBComp In gContext.TargetBook.VBProject.VBComponents</td><td></td></tr>
+<tr><td>　　│〇 Set CodeMod = VBComp.CodeModule</td><td></td></tr>
+<tr><td>　　│＠┐For i = 1 To CodeMod.CountOfLines</td><td></td></tr>
+<tr><td>　　││〇 line = Trim$(CodeMod.Lines(i, 1))</td><td></td></tr>
+<tr><td>　　││◆┐If <a href="../modAnalyze/IsProcedureLine.modAnalyze.hcp.html">IsProcedureLine</a>(line) Then</td><td>内部呼出:<a href="../modAnalyze/IsProcedureLine.modAnalyze.hcp.html">IsProcedureLine</a></td></tr>
+<tr><td>　　│││〇 TotalProcCount = TotalProcCount + 1</td><td></td></tr>
+<tr><td>　　│││┴End If</td><td></td></tr>
+<tr><td>　　││┴Next i</td><td></td></tr>
+<tr><td>　　│┴Next VBComp</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   関数抽出</span></td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   Procedure情報抽出開始</span></td><td></td></tr>
+<tr><td>　　＠┐For Each VBComp In gContext.TargetBook.VBProject.VBComponents</td><td></td></tr>
+<tr><td>　　│〇 Set CodeMod = VBComp.CodeModule</td><td></td></tr>
+<tr><td>　　│＠┐For i = 1 To CodeMod.CountOfLines</td><td></td></tr>
+<tr><td>　　││〇 line = Trim(CodeMod.Lines(i, 1))</td><td></td></tr>
+<tr><td>　　││◆┐If <a href="../modAnalyze/IsProcedureLine.modAnalyze.hcp.html">IsProcedureLine</a>(line) Then</td><td>内部呼出:<a href="../modAnalyze/IsProcedureLine.modAnalyze.hcp.html">IsProcedureLine</a></td></tr>
+<tr><td><span class="hcp-comment">　　││││#   Procedure名抽出</span></td><td></td></tr>
+<tr><td>　　│││◎ ProcName = <a href="../modAnalyze/ExtractProcedureName.modAnalyze.hcp.html">ExtractProcedureName</a>(line)</td><td><a href="../modAnalyze/ExtractProcedureName.modAnalyze.hcp.html">プロシージャ名抽出＜modAnalyze＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　││││#   Procedure名未取得時はUnknown設定</span></td><td></td></tr>
+<tr><td>　　│││◆┐If Trim(ProcName) = "" Then</td><td></td></tr>
+<tr><td>　　││││〇 ProcName = PROC_UNKNOWN</td><td></td></tr>
+<tr><td>　　││││┴End If</td><td></td></tr>
+<tr><td>　　│││〇 CurrentProcCount = CurrentProcCount + 1</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││││#   解析進捗表示更新</span></td><td></td></tr>
+<tr><td>　　│││〇 Application.StatusBar =  "ProcList解析中 [" &amp;  CurrentProcCount &amp; "/" &amp;  TotalProcCount &amp;  "] " &amp;  VBComp.Name &amp; "." &amp; ProcName</td><td></td></tr>
+<tr><td>　　│││〇 DoEvents</td><td></td></tr>
+<tr><td>　　│││〇 ws.Cells(row, COL_MODULE).Value = VBComp.Name</td><td></td></tr>
+<tr><td>　　│││◎ ws.Cells(row, COL_TYPE).Value = <a href="../modAnalyze/GetProcedureType.modAnalyze.hcp.html">GetProcedureType</a>(line)</td><td><a href="../modAnalyze/GetProcedureType.modAnalyze.hcp.html">プロシージャ種別取得＜modAnalyze＞</a></td></tr>
+<tr><td>　　││││</td><td>内部呼出:Cells</td></tr>
+<tr><td>　　│││〇 ws.Cells(row, COL_PROC).Value = ProcName</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││││#   Procedureコメント情報取得</span></td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││││#   コメントタグからJPName取得</span></td><td></td></tr>
+<tr><td>　　│││◎ ws.Cells(row, COL_JPNAME).Value =  <a href="../modAnalyzerCommon/GetTagValue.modAnalyzerCommon.hcp.html">GetTagValue</a>(CodeMod, i, "@JPName")</td><td><a href="../modAnalyzerCommon/GetTagValue.modAnalyzerCommon.hcp.html">タグ値取得＜modAnalyzerCommon＞</a></td></tr>
+<tr><td>　　││││</td><td>内部呼出:Cells</td></tr>
+<tr><td><span class="hcp-comment">　　││││#   コメントタグからCategory取得</span></td><td></td></tr>
+<tr><td>　　│││◎ ws.Cells(row, COL_CATEGORY).Value =  <a href="../modAnalyzerCommon/GetTagValue.modAnalyzerCommon.hcp.html">GetTagValue</a>(CodeMod, i, "@Category")</td><td><a href="../modAnalyzerCommon/GetTagValue.modAnalyzerCommon.hcp.html">タグ値取得＜modAnalyzerCommon＞</a></td></tr>
+<tr><td>　　││││</td><td>内部呼出:Cells</td></tr>
+<tr><td><span class="hcp-comment">　　││││#   コメントタグからInput取得</span></td><td></td></tr>
+<tr><td>　　│││◎ ws.Cells(row, COL_INPUT).Value =  <a href="../modAnalyzerCommon/GetTagValue.modAnalyzerCommon.hcp.html">GetTagValue</a>(CodeMod, i, "@Input")</td><td><a href="../modAnalyzerCommon/GetTagValue.modAnalyzerCommon.hcp.html">タグ値取得＜modAnalyzerCommon＞</a></td></tr>
+<tr><td>　　││││</td><td>内部呼出:Cells</td></tr>
+<tr><td><span class="hcp-comment">　　││││#   コメントタグからOutput取得</span></td><td></td></tr>
+<tr><td>　　│││◎ ws.Cells(row, COL_OUTPUT).Value =  <a href="../modAnalyzerCommon/GetTagValue.modAnalyzerCommon.hcp.html">GetTagValue</a>(CodeMod, i, "@Output")</td><td><a href="../modAnalyzerCommon/GetTagValue.modAnalyzerCommon.hcp.html">タグ値取得＜modAnalyzerCommon＞</a></td></tr>
+<tr><td>　　││││</td><td>内部呼出:Cells</td></tr>
+<tr><td><span class="hcp-comment">　　││││#   コメントタグからSummary取得</span></td><td></td></tr>
+<tr><td>　　│││◎ ws.Cells(row, COL_SUMMARY).Value =  <a href="../modAnalyzerCommon/GetTagValue.modAnalyzerCommon.hcp.html">GetTagValue</a>(CodeMod, i, "@Summary")</td><td><a href="../modAnalyzerCommon/GetTagValue.modAnalyzerCommon.hcp.html">タグ値取得＜modAnalyzerCommon＞</a></td></tr>
+<tr><td>　　││││</td><td>内部呼出:Cells</td></tr>
+<tr><td><span class="hcp-comment">　　││││#   コメントタグからRemarks取得</span></td><td></td></tr>
+<tr><td>　　│││◎ ws.Cells(row, COL_REMARKS).Value =  <a href="../modAnalyzerCommon/GetTagValue.modAnalyzerCommon.hcp.html">GetTagValue</a>(CodeMod, i, "@Remarks")</td><td><a href="../modAnalyzerCommon/GetTagValue.modAnalyzerCommon.hcp.html">タグ値取得＜modAnalyzerCommon＞</a></td></tr>
+<tr><td>　　││││</td><td>内部呼出:Cells</td></tr>
+<tr><td>　　│││〇 ws.Cells(row, COL_DECLARATION).Value = line</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││││#   Procedure呼出回数集計</span></td><td></td></tr>
+<tr><td>　　│││◆┐If ProcName = PROC_UNKNOWN Then</td><td></td></tr>
+<tr><td>　　││││〇 ws.Cells(row, COL_USAGECOUNT).Value = 0</td><td></td></tr>
+<tr><td>　　│││├┐ELSE</td><td></td></tr>
+<tr><td>　　││││◎ ws.Cells(row, COL_USAGECOUNT).Value = <a href="../modAnalyze/CountUsage.modAnalyze.hcp.html">CountUsage</a>(ProcName)</td><td><a href="../modAnalyze/CountUsage.modAnalyze.hcp.html">使用回数集計＜modAnalyze＞</a></td></tr>
+<tr><td>　　│││││</td><td>内部呼出:Cells</td></tr>
+<tr><td>　　││││┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││││#   UsageCountから状態判定</span></td><td></td></tr>
+<tr><td>　　│││◎ ws.Cells(row, COL_STATUS).Value =  <a href="../modAnalyze/GetUsageStatus.modAnalyze.hcp.html">GetUsageStatus</a>(ProcName, ws.Cells(row, COL_USAGECOUNT).Value)</td><td><a href="../modAnalyze/GetUsageStatus.modAnalyze.hcp.html">使用状況判定＜modAnalyze＞</a></td></tr>
+<tr><td>　　││││</td><td>内部呼出:Cells, Cells</td></tr>
+<tr><td>　　│││〇 row = row + 1</td><td></td></tr>
+<tr><td>　　│││┴End If</td><td></td></tr>
+<tr><td>　　││┴Next i</td><td></td></tr>
+<tr><td>　　│┴Next VBComp</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   色付け</span></td><td></td></tr>
+<tr><td>　　〇 LastRow = ws.Cells(ws.Rows.Count, 1).End(xlUp).row</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   判定結果に応じて色付け</span></td><td></td></tr>
+<tr><td>　　＠┐For r = 2 To LastRow</td><td></td></tr>
+<tr><td>　　│◆┐Select Case ws.Cells(r, COL_STATUS).Value</td><td></td></tr>
+<tr><td>　　││├┐Case STATUS_NOCALLER</td><td></td></tr>
+<tr><td>　　│││〇 ws.Rows(r).Interior.Color = COLOR_NOCALLER</td><td></td></tr>
+<tr><td>　　││├┐Case STATUS_CONFIRM</td><td></td></tr>
+<tr><td>　　│││〇 ws.Rows(r).Interior.Color = COLOR_CONFIRM</td><td></td></tr>
+<tr><td>　　││├┐Case STATUS_EVENT</td><td></td></tr>
+<tr><td>　　│││〇 ws.Rows(r).Interior.Color = COLOR_EVENT</td><td></td></tr>
+<tr><td>　　││┴End Select</td><td></td></tr>
+<tr><td>　　│┴Next r</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   ProcListシート体裁設定</span></td><td></td></tr>
+<tr><td>　　〇 ws.Columns.AutoFit</td><td></td></tr>
+<tr><td>　　〇 ws.Rows(1).AutoFilter</td><td></td></tr>
+<tr><td>　　〇 ws.Rows(1).Font.Bold = True</td><td></td></tr>
+<tr><td>　　┴End Sub</td><td></td></tr>
+</tbody>
+</table>
+<hr>
+<h2>Calls (6)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modAnalyze/IsProcedureLine.modAnalyze.hcp.html">IsProcedureLine</a></td><td>プロシージャ定義判定</td><td>modAnalyze</td></tr>
+<tr><td><a href="../modAnalyze/ExtractProcedureName.modAnalyze.hcp.html">ExtractProcedureName</a></td><td>プロシージャ名抽出</td><td>modAnalyze</td></tr>
+<tr><td><a href="../modAnalyze/GetProcedureType.modAnalyze.hcp.html">GetProcedureType</a></td><td>プロシージャ種別取得</td><td>modAnalyze</td></tr>
+<tr><td><a href="../modAnalyzerCommon/GetTagValue.modAnalyzerCommon.hcp.html">GetTagValue</a></td><td>タグ値取得</td><td>modAnalyzerCommon</td></tr>
+<tr><td><a href="../modAnalyze/CountUsage.modAnalyze.hcp.html">CountUsage</a></td><td>使用回数集計</td><td>modAnalyze</td></tr>
+<tr><td><a href="../modAnalyze/GetUsageStatus.modAnalyze.hcp.html">GetUsageStatus</a></td><td>使用状況判定</td><td>modAnalyze</td></tr>
+</table>
+<hr>
+<h2>Called By (2)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modAnalyzerCommon/AnalyzeAll.modAnalyzerCommon.hcp.html">AnalyzeAll</a></td><td>全解析実行</td><td>modAnalyzerCommon</td></tr>
+<tr><td><a href="../modHCPIndex/WriteHtmlIndexFile.modHCPIndex.hcp.html">WriteHtmlIndexFile</a></td><td>Module INDEX HTML出力</td><td>modHCPIndex</td></tr>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function(eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function(e) {
+startX = e.pageX;
+startWidth = eleTh.offsetWidth;
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
+}
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
+}
+});
+</script>
+</body>
+</html>

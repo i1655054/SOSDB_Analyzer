@@ -1,16 +1,29 @@
-Procedure: UF_Calendar5.CBO_YEAR_Change  [ カレンダー年変更＜UF_Calendar5＞ ]
-HCP	Business
 ┬
 〇│Private Sub CBO_YEAR_Change()	カレンダー年変更＜UF_Calendar5＞
 ┴└┐
 　　□ Dim intYear As Integer
-　　│#  年変更処理
+　　│#   年変更処理
 　　◆→ If g_swBatch Then Exit Sub
 　　〇 intYear = CInt(CBO_YEAR.text)
-　　│#  表示年月更新
+　　│#   表示年月更新
 　　〇 g_FormDate1 = DateSerial(intYear, g_intCurMonth, 1)
-　　│#  年月選択非表示
+　　│#   年月選択非表示
 　　◎ Call GP_EraseYearMonth	年月選択非表示＜UF_Calendar5＞
-　　│#  カレンダー再生成
+　　│#   カレンダー再生成
 　　◎ Call GP_MakeCalendar	カレンダー生成＜UF_Calendar5＞
 　　┴End Sub
+
+========================================
+Calls (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GP_EraseYearMonth	年月選択非表示	UF_Calendar5
+GP_MakeCalendar	カレンダー生成	UF_Calendar5
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

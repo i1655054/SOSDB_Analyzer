@@ -1,8 +1,21 @@
-Procedure: modUtility.HighlightCell  [ セル強調表示＜modUtility＞ ]
-HCP	Business
 ┬
 〇│Public Sub HighlightCell(rngName As String, color As Long)	セル強調表示＜modUtility＞
 ┴└┐
-　　│#  セル強調表示
+　　│#   セル強調表示
 　　〇 Range(rngName).Interior.color = color
 　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+chk_TorbleNum	トラブル番号確認	modUtility
+ValidateAndHighlight	入力確認強調表示	modUtility

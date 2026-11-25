@@ -1,54 +1,86 @@
-Procedure: modUtility.Button_Set_Check  [ 詳細表示ボタン制御＜modUtility＞ ]
-HCP	Business
 ┬
 〇│Public Sub Button_Set_Check(ByVal issue As IssueInfo)	詳細表示ボタン制御＜modUtility＞
 ┴└┐
-　　│#  事象詳細ボタン制御
+　　│#   事象詳細ボタン制御
 　　◆┐If issue.Phenomenon <> "" Then
-　　│◎ Sheet1.Phenomenon_Button_Set	事象名ボタン強調表示＜Sheet1＞
+　　│〇 Sheet1.Phenomenon_Button_Set
 　　├┐ELSE
-　　│◎ Sheet1.Phenomenon_Button_Release	事象名ボタン解除＜Sheet1＞
+　　│〇 Sheet1.Phenomenon_Button_Release
 　　│┴End If
-　　│#  詳細原因ボタン制御
+　　│#   詳細原因ボタン制御
 　　◆┐If issue.CauseDetail <> "" Then
-　　│◎ Sheet1.Cause_Button_Set	原因ボタン強調表示＜Sheet1＞
+　　│〇 Sheet1.Cause_Button_Set
 　　├┐ELSE
-　　│◎ Sheet1.Cause_Button_Release	原因ボタン解除＜Sheet1＞
+　　│〇 Sheet1.Cause_Button_Release
 　　│┴End If
-　　│#  説明ボタン制御
+　　│#   説明ボタン制御
 　　◆┐If issue.Description <> "" Then
-　　│◎ Sheet1.Description_Button_Set	説明ボタン強調表示＜Sheet1＞
+　　│〇 Sheet1.Description_Button_Set
 　　├┐ELSE
-　　│◎ Sheet1.Description_Button_Release	説明ボタン解除＜Sheet1＞
+　　│〇 Sheet1.Description_Button_Release
 　　│┴End If
-　　│#  備考ボタン制御
+　　│#   備考ボタン制御
 　　◆┐If issue.Remarks <> "" Then
-　　│◎ Sheet1.Remarks_Button_Set	備考ボタン強調表示＜Sheet1＞
+　　│〇 Sheet1.Remarks_Button_Set
 　　├┐ELSE
-　　│◎ Sheet1.Remarks_Button_Release	備考ボタン解除＜Sheet1＞
+　　│〇 Sheet1.Remarks_Button_Release
 　　│┴End If
-　　│#  問合せ者ボタン制御
+　　│#   問合せ者ボタン制御
 　　◆┐If issue.Requester_Pro <> "" Then
-　　│◎ Sheet1.RequesterPro_Button_Set	依頼者ボタン強調表示＜Sheet1＞
+　　│〇 Sheet1.RequesterPro_Button_Set
 　　├┐ELSE
-　　│◎ Sheet1.RequesterPro_Button_Release	依頼者ボタン解除＜Sheet1＞
+　　│〇 Sheet1.RequesterPro_Button_Release
 　　│┴End If
-　　│#  対処内容ボタン制御
+　　│#   対処内容ボタン制御
 　　◆┐If issue.Countermeasure <> "" Then
-　　│◎ Sheet1.Cope_Button_Set	対処内容ボタン強調表示＜Sheet1＞
+　　│〇 Sheet1.Cope_Button_Set
 　　├┐ELSE
-　　│◎ Sheet1.Cope_Button_Release	対処内容ボタン解除＜Sheet1＞
+　　│〇 Sheet1.Cope_Button_Release
 　　│┴End If
-　　│#  依頼元管理番号ボタン制御
+　　│#   依頼元管理番号ボタン制御
 　　◆┐If issue.RequesterNum <> "" Then
-　　│◎ Sheet1.RequesterNum_Button_Set	依頼元管理番号ボタン強調表示＜Sheet1＞
+　　│〇 Sheet1.RequesterNum_Button_Set
 　　├┐ELSE
-　　│◎ Sheet1.RequesterNum_Button_Release	依頼元管理番号ボタン解除＜Sheet1＞
+　　│〇 Sheet1.RequesterNum_Button_Release
 　　│┴End If
-　　│#  キーワードボタン制御
+　　│#   キーワードボタン制御
 　　◆┐If issue.Key_Word <> "" Then
-　　│◎ Sheet1.KeyWord_Button_Set	キーワードボタン強調表示＜Sheet1＞
+　　│〇 Sheet1.KeyWord_Button_Set
 　　├┐ELSE
-　　│◎ Sheet1.KeyWord_Button_Release	キーワードボタン解除＜Sheet1＞
+　　│〇 Sheet1.KeyWord_Button_Release
 　　│┴End If
 　　┴End Sub
+
+========================================
+Calls (16)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+Phenomenon_Button_Set	事象名ボタン強調表示	Sheet1
+Phenomenon_Button_Release	事象名ボタン解除	Sheet1
+Cause_Button_Set	原因ボタン強調表示	Sheet1
+Cause_Button_Release	原因ボタン解除	Sheet1
+Description_Button_Set	説明ボタン強調表示	Sheet1
+Description_Button_Release	説明ボタン解除	Sheet1
+Remarks_Button_Set	備考ボタン強調表示	Sheet1
+Remarks_Button_Release	備考ボタン解除	Sheet1
+RequesterPro_Button_Set	依頼者ボタン強調表示	Sheet1
+RequesterPro_Button_Release	依頼者ボタン解除	Sheet1
+Cope_Button_Set	対処内容ボタン強調表示	Sheet1
+Cope_Button_Release	対処内容ボタン解除	Sheet1
+RequesterNum_Button_Set	依頼元管理番号ボタン強調表示	Sheet1
+RequesterNum_Button_Release	依頼元管理番号ボタン解除	Sheet1
+KeyWord_Button_Set	キーワードボタン強調表示	Sheet1
+KeyWord_Button_Release	キーワードボタン解除	Sheet1
+
+========================================
+Called By (4)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+MonshinInfoHandler	問診票取込処理	modMonshinCore
+UpdateMonshinHandler	問診票更新処理	modMonshinCore
+LoadRedmineIssue	Redmine情報読込	modMonshinCore
+SaveEditedTextIntoVba	編集内容保存	UF_InfoWebDisplay

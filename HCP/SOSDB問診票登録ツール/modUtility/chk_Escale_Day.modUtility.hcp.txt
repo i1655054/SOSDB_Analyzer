@@ -1,8 +1,22 @@
-Procedure: modUtility.chk_Escale_Day  [ エスカレーション日確認＜modUtility＞ ]
-HCP	Business
 ┬
 〇│Function chk_Escale_Day(ByVal issue As IssueInfo) As Boolean	エスカレーション日確認＜modUtility＞
 ┴└┐
-　　│#  エスカレーション日入力確認
+　　│#   エスカレーション日入力確認
 　　◎ chk_Escale_Day = ValidateAndHighlight(  issue.Esukare_Date,  ESCALE_DAY_RANG,  COLOR_REQUIRED) ' 赤系	入力確認強調表示＜modUtility＞
 　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ValidateAndHighlight	入力確認強調表示	modUtility
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ValidateIssue	登録前入力確認	modUtility

@@ -1,8 +1,21 @@
-Procedure: Sheet1.更新問診票を開く_Click  [ 更新問診票読込＜Sheet1＞ ]
-HCP	Business
 ┬
 〇│Private Sub 更新問診票を開く_Click()	更新問診票読込＜Sheet1＞
 ┴└┐
 　　◆→ If modUtility.IsSearchResultActive Then Exit Sub
 　　◎ Call UpdateMonshinHandler	問診票更新処理＜modMonshinCore＞
 　　┴End Sub
+
+========================================
+Calls (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+IsSearchResultActive	検索結果表示状態確認	modUtility
+UpdateMonshinHandler	問診票更新処理	modMonshinCore
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

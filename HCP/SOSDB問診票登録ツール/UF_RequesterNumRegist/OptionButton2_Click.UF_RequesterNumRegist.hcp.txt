@@ -1,14 +1,24 @@
-Procedure: UF_RequesterNumRegist.OptionButton2_Click  [ 故障票番号入力切替＜UF_RequesterNumRegist＞ ]
-HCP	Business
 ┬
 〇│Private Sub OptionButton2_Click()	故障票番号入力切替＜UF_RequesterNumRegist＞
 ┴└┐
-　　│#  故障票入力モード設定
+　　│#   故障票入力モード設定
 　　〇 OptionButton1.Value = False
 　　〇 OptionButton1.ForeColor = &H80000010
 　　〇 OptionButton2.Value = True
 　　〇 OptionButton2.ForeColor = &H80000012
-　　│#  入力欄切替
+　　│#   入力欄切替
 　　〇 TextBox1.Enabled = False
 　　〇 TextBox2.Enabled = True
 　　┴End Sub
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

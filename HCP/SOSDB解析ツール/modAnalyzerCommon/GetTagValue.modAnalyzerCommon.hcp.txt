@@ -1,0 +1,60 @@
+┬
+〇│Public Function GetTagValue(  CodeMod As Object,  ByVal StartLine As Long,  ByVal TagName As String) As String	タグ値取得＜modAnalyzerCommon＞
+┴└┐
+　　□ Dim i As Long
+　　□ Dim j As Long
+　　□ Dim txt As String
+　　□ Dim Result As String
+　　│#   コメントブロック走査
+　　＠┐For i = StartLine - 1 To 1 Step -1
+　　││#   コメント行抽出
+　　│〇 txt = Trim$(CodeMod.Lines(i, 1))
+　　│◆┐If Left$(txt, 1) <> "'" Then Exit For
+　　│││#   コメント記号除去
+　　││〇 txt = Mid$(txt, 2)
+　　││〇 txt = Trim$(txt)
+　　│││#   旧形式タグ取得
+　　│││#   旧形式タグ検索
+　　││◆┐If InStr(1, txt, TagName, vbTextCompare) = 1 Then
+　　││││#   単一行タグ取得
+　　│││〇 Result = Trim$(Replace(  txt,  TagName,  "",  , ,  vbTextCompare))
+　　│││◆┐If Result <> "" Then
+　　││││〇 GetTagValue = Result
+　　││││→ Exit Function
+　　││││┴End If
+　　││││#   新形式タグ
+　　││││#   新形式複数行タグ取得
+　　│││＠┐For j = i + 1 To StartLine - 1
+　　││││〇 txt = Trim$(CodeMod.Lines(j, 1))
+　　││││◆┐If Left$(txt, 1) <> "'" Then Exit For
+　　│││││〇 txt = Mid$(txt, 2)
+　　│││││〇 txt = Trim$(txt)
+　　│││││◆ If txt = "" Then GoTo ContinueLoop
+　　│││││◆→ If Left$(txt, 1) = "@" Then Exit For
+　　│││││◆┐If Result <> "" Then
+　　││││││〇 Result =  Result & vbCrLf & txt
+　　│││││├┐ELSE
+　　││││││〇 Result = txt
+　　││││││┴End If
+▼ ContinueLoop:
+　　│││││┴End If
+　　│││││#   タグ値返却
+　　││││〇 GetTagValue = Result
+　　││││→ Exit Function
+　　││││┴End If
+　　│││┴End If
+　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ProcedureList	関数一覧作成	modAnalyze

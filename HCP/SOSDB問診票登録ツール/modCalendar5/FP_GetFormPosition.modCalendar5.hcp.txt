@@ -1,5 +1,3 @@
-Procedure: modCalendar5.FP_GetFormPosition  [ フォーム表示位置算出＜modCalendar5＞ ]
-HCP	Business
 ┬
 〇│Private Function FPGetFormPosition(ByRef objRange As Range,  ByVal lngFormWidth As Long,  ByVal lngFormHeight As Long,  ByRef lngFormLeft As Long,  ByRef lngFormTop As Long) As Boolean	フォーム表示位置算出＜modCalendar5＞
 ┴└┐
@@ -41,9 +39,9 @@ HCP	Business
 　　│││┴End If
 　　││┴End If
 　　│┴End If
-　　〇 lngDPIX = FP_GetDPIX
-　　〇 lngDPIY = FP_GetDPIY
-　　〇 lngPPI = FP_GetPPI
+　　◎ lngDPIX = FP_GetDPIX	水平DPI取得＜modCalendar5＞
+　　◎ lngDPIY = FP_GetDPIY	垂直DPI取得＜modCalendar5＞
+　　◎ lngPPI = FP_GetPPI	PPI取得＜modCalendar5＞
 　　◆┐If lngPaneIx = 0 Then
 　　│〇 lngR1C1Left = objAW.PointsToScreenPixelsX(0)
 　　│〇 lngR1C1Top = objAW.PointsToScreenPixelsY(0)
@@ -64,3 +62,22 @@ HCP	Business
 　　│┴End If
 　　〇 FP_GetFormPosition = True
 　　┴End Function
+
+========================================
+Calls (4)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+FP_GetDPIX	水平DPI取得	modCalendar5
+FP_GetDPIY	垂直DPI取得	modCalendar5
+FP_GetPPI	PPI取得	modCalendar5
+GP_GetScreenPos	画面有効領域取得	modCalendar5
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ShowCalendarFromRange2	セル日付選択	modCalendar5

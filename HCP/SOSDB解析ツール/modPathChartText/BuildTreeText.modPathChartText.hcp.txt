@@ -1,0 +1,97 @@
+┬
+〇│Private Sub BuildTreeText(  ByVal ParentProc As String,  ByVal Prefix As String,  ByVal Level As Long,  ByVal MaxDepth As Long,  Optional ByVal PathText As String = "")	ツリー構造生成＜modPathChartText＞
+┴└┐
+　　□ Dim JPText As String
+　　□ Dim JPParent As String
+　　□ Dim JPChild As String
+　　□ Dim Children As Collection
+　　□ Dim ChildProc As Variant
+　　□ Dim ChildCount As Long
+　　□ Dim TreeText As String
+　　□ Dim NextPrefix As String
+　　□ Dim Node As clsTreeNode
+　　□ Dim i As Long
+　　□ Dim IsLastChild As Boolean
+　　□ Dim HasChildren As Boolean
+　　│#   循環参照判定パス生成
+　　◆┐If PathText = "" Then
+　　│〇 PathText =  "|" & UCase$(ParentProc) & "|"
+　　│┴End If
+　　│#   最大深度判定
+　　◆┐If MaxDepth > 0 Then
+　　│◆┐If Level > MaxDepth Then
+　　││→ Exit Sub
+　　││┴End If
+　　│┴End If
+　　│#   子ノード取得
+　　│#   子ノード取得
+　　◎ Set Children = GetChildrenList(ParentProc)	子関数一覧取得＜modPathChartCommon＞
+　　│#   子ノード数取得
+　　〇 ChildCount = Children.Count
+　　◆→ If ChildCount = 0 Then Exit Sub
+　　│#   子ノード走査
+　　＠┐For i = 1 To ChildCount
+　　│〇 ChildProc = CStr(Children(i))
+　　││#   循環参照防止
+　　│◆┐If InStr(  1,  PathText,  "|" & UCase$(ChildProc) & "|",  vbTextCompare) > 0 Then
+　　││→ GoTo NextChild
+　　││┴End If
+　　││#   最終子ノード判定
+　　│〇 IsLastChild = (i = ChildCount)
+　　││#   英語Tree行生成
+　　│◆┐If IsLastChild Then
+　　││〇 TreeText =  Prefix &  TREE_NODE_LAST &  TREE_SPACE &  ChildProc
+　　││〇 NextPrefix =  Prefix &  TREE_LAST_LEVEL &  TREE_SPACE
+　　│├┐ELSE
+　　││〇 TreeText =  Prefix &  TREE_NODE_NEXT &  TREE_SPACE &  ChildProc
+　　││〇 NextPrefix =  Prefix &  TREE_NEXT_LEVEL &  TREE_SPACE
+　　││┴End If
+　　││#   TreeNode生成
+　　│◎ Set Node =  CreateTreeNode(  ChildProc,  ParentProc,  Level,  TreeText)	ツリーノード生成＜modPathChartCommon＞
+　　││#   表示情報設定
+　　││#   モジュール名表示設定
+　　│◆┐If Len(Node.ModuleName) > 0 Then
+　　││◆┐If gShowModule Then
+　　│││〇 Node.TreeText =  Node.TreeText &  " <" &  Node.ModuleName &  ">"
+　　│││┴End If
+　　││┴End If
+　　││#   子ノード有無判定
+　　│◎ HasChildren =  (GetChildrenList(ChildProc).Count > 0)	子関数一覧取得＜modPathChartCommon＞
+　　││#   日本語Tree行生成
+　　│◆┐If IsLastChild Then
+　　││〇 JPParent = TREE_LAST_LEVEL
+　　│├┐ELSE
+　　││〇 JPParent = TREE_CONTINUE
+　　││┴End If
+　　│◆┐If HasChildren Then
+　　││〇 JPChild = TREE_BAR
+　　│├┐ELSE
+　　││〇 JPChild = TREE_SPACE
+　　││┴End If
+　　││#   日本語Tree文字列設定
+　　│〇 JPText =  Prefix &  JPParent &  TREE_SPACE &  JPChild &  Node.JPName
+　　│〇 Node.JPLine = JPText
+　　││#   TreeNode登録
+　　│〇 gTreeNodes.Add Node
+　　││#   子ノード再帰展開
+　　│◎ BuildTreeText  ChildProc,  NextPrefix,  Level + 1,  MaxDepth,  PathText &  UCase$(ChildProc) & "|"	ツリー構造生成＜modPathChartText＞
+▼ NextChild:
+　　│┴Next i
+　　┴End Sub
+
+========================================
+Calls (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetChildrenList	子関数一覧取得	modPathChartCommon
+CreateTreeNode	ツリーノード生成	modPathChartCommon
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ExportPathChartToText	テキストチャート出力	modPathChartText

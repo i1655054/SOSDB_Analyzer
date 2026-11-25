@@ -1,5 +1,3 @@
-Procedure: modMonshinCore.LoadRedmineIssue  [ Redmine情報読込＜modMonshinCore＞ ]
-HCP	Business
 ┬
 〇│Public Sub LoadRedmineIssue()	Redmine情報読込＜modMonshinCore＞
 ┴└┐
@@ -10,26 +8,48 @@ HCP	Business
 　　□ Dim Nend As String, nen As String, num As String
 　　□ Dim oldIssue As IssueInfo
 　　〇 glbdbgflg = False
-　　│#  IssueID検索
+　　│#   IssueID検索
 　　◎ Bug_id = FindIssueIdByTroubleNum(g_CurrentIssue.AuthorName, g_CurrentIssue.TroubleNum)	トラバス管理番号検索＜modIssueService＞
-　　│#  検索結果確認
+　　│#   検索結果確認
 　　◆┐If Bug_id = "" Then
 　　│〇 MsgBox "トラバス管理番号【 " & g_CurrentIssue.TroubleNum & " 】を検索できませんでした"
 　　│→ Exit Sub
 　　│┴End If
-　　│#  Redmine情報取得
+　　│#   Redmine情報取得
 　　◎ Set oldIssue = modIssueMapper.Get_RedmineDataToIssueInfo(  Author_Name, Bug_id)	Redmine情報取得＜modIssueMapper＞
-　　│#  CurrentIssue更新
+　　│#   CurrentIssue更新
 　　〇 Set g_CurrentIssue = oldIssue
-　　│#  OriginalIssue生成
+　　│#   OriginalIssue生成
 　　◎ Set g_OriginalIssue = CloneIssue(oldIssue)	Issue複製＜modIssueMapper＞
-　　│#  デバッグ情報出力
+　　│#   デバッグ情報出力
 　　◆┐If glbdbgflg Then
 　　│〇 Debug.Print "Redmine取得完了: " & Bug_id
-　　│◎ oldIssue.DebugPrint	Issue情報出力＜IssueInfo＞
+　　│〇 oldIssue.DebugPrint
 　　│┴End If
-　　│#  UI反映
+　　│#   UI反映
 　　◎ Call SetIssueToUI(oldIssue)	Issue画面反映＜modUtility＞
-　　│#  ボタン制御更新
+　　│#   ボタン制御更新
 　　◎ Call Button_Set_Check(oldIssue)	詳細表示ボタン制御＜modUtility＞
 　　┴End Sub
+
+========================================
+Calls (6)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+FindIssueIdByTroubleNum	トラバス管理番号検索	modIssueService
+Get_RedmineDataToIssueInfo	Redmine情報取得	modIssueMapper
+CloneIssue	Issue複製	modIssueMapper
+DebugPrint	Issue情報出力	IssueInfo
+SetIssueToUI	Issue画面反映	modUtility
+Button_Set_Check	詳細表示ボタン制御	modUtility
+
+========================================
+Called By (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+DB情報取得_Click	Redmine情報取得	Sheet1
+btnSelect_Click	検索結果選択	UF_SearchResults

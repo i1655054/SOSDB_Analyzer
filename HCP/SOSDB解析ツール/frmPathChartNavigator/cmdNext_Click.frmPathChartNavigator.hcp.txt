@@ -1,0 +1,22 @@
+┬
+〇│Private Sub cmdNext_Click()	次候補検索＜frmPathChartNavigator＞
+┴└┐
+　　│#   完全一致検索設定
+　　〇 gExactMatch = chkExactMatch.Value
+　　│#   次候補検索実行
+　　◎ FindNextNode	次候補検索＜modPathChart＞
+　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+FindNextNode	次候補検索	modPathChart
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

@@ -1,5 +1,3 @@
-Procedure: clsAboutCalendar2.FP_GetHoliParameter  [ 祝日パラメータ読込＜clsAboutCalendar2＞ ]
-HCP	Business
 ┬
 〇│Private Function FP_GetHoliParameter(Optional ByVal blnOmitCheck As Boolean = False) As Boolean	祝日パラメータ読込＜clsAboutCalendar2＞
 ┴└┐
@@ -10,30 +8,30 @@ HCP	Business
 　　□ Dim lngPrevM As Long                                            ' 直前月
 　　□ Dim objParaSheet As Worksheet                                   ' 祝日パラメータシート
 　　〇 FP_GetHoliParameter = False
-　　│#  状態初期化
+　　│#   状態初期化
 　　〇 g_blnParaReaded = False
 　　〇 g_blnParaChecked = False
 　　☆ On Error Resume Next
-　　│#  パラメータシート取得
+　　│#   パラメータシート取得
 　　〇 Set objParaSheet = ThisWorkbook.Worksheets(g_cnsParaSheet)
-　　│#  シート存在確認
+　　│#   シート存在確認
 　　◆┐If Err.Number <> 0 Then
 　　│〇 MsgBox "「" & g_cnsParaSheet & "」シートが参照できません。", vbCritical, g_cnsTitle
 　　│☆ On Error GoTo 0
 　　│→ Exit Function
 　　│┴End If
 　　☆ On Error GoTo 0
-　　│#  パラメータ検証
+　　│#   パラメータ検証
 　　◆┐If Not g_blnParaChecked And Not blnOmitCheck Then
-　　│◆→ If Not FP_CheckSyukuParameter(objParaSheet, lngRowMax) Then Exit Function
+　　│◆→ If Not FP_CheckSyukuParameter(objParaSheet, lngRowMax) Then Exit Function	内部呼出:FP_CheckSyukuParameter
 　　├┐ELSE
 　　│＠┐With objParaSheet
-　　││┴End With
 　　│〇 lngRowMax = .Range("$A$" & .Rows.count).End(xlUp).row
+　　││┴End With
 　　│┴End If
-　　│#  テーブル領域確保
+　　│#   テーブル領域確保
 　　〇 ReDim g_tblParamater(lngRowMax - 3)
-　　│#  月別位置テーブル初期化
+　　│#   月別位置テーブル初期化
 　　＠┐For lngIx = 1 To 12
 　　│＠┐With g_tblParamMMPos(lngIx)
 　　││〇 .StrIx = -1
@@ -44,12 +42,12 @@ HCP	Business
 　　〇 lngRow = 3
 　　＠┐With objParaSheet                                                 ' ｢祝日パラメータ｣シート
 　　│〇 lngCurrM = .Cells(lngRow, 1).Value
-　　││#  パラメータ読込
+　　││#   パラメータ読込
 　　│＠┐Do While lngRow <= lngRowMax
-　　│││#  月開始位置設定
+　　│││#   月開始位置設定
 　　││〇 lngPrevM = lngCurrM
 　　││〇 g_tblParamMMPos(lngPrevM).StrIx = lngIx
-　　│││#  月内パラメータ読込
+　　│││#   月内パラメータ読込
 　　││＠┐Do While lngCurrM = lngPrevM
 　　│││＠┐With g_tblParamater(lngIx)
 　　││││〇 .Getsu = lngPrevM                               ' 月
@@ -77,12 +75,29 @@ HCP	Business
 　　││││〇 lngCurrM = 99
 　　││││┴End If
 　　│││┴Loop
-　　│││#  月終了位置設定
+　　│││#   月終了位置設定
 　　││〇 g_tblParamMMPos(lngPrevM).EndIx = lngIx - 1
 　　││┴Loop
 　　│┴End With
-　　│#  読込完了
+　　│#   読込完了
 　　〇 g_blnParaReaded = True
 　　〇 g_blnParaChecked = True
 　　〇 FP_GetHoliParameter = True
 　　┴End Function
+
+========================================
+Calls (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+FP_CheckSyukuParameter	祝日パラメータ検証	clsAboutCalendar2
+FP_GetNumber	数値取得	clsAboutCalendar2
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+MakeHoliParamater	祝日パラメータ作成	clsAboutCalendar2

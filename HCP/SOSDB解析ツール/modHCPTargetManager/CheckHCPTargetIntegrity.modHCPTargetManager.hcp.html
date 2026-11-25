@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
+<title>CheckHCPTargetIntegrity</title>
+<style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
+</style>
+</head>
+<body translate="no">
+<h1>CheckHCPTargetIntegrity</h1>
+<p>Module : modHCPTargetManager</p>
+<table>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
+<tbody>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Public Sub CheckHCPTargetIntegrity()</td><td>HCP_TARGETS整合性チェック＜modHCPTargetManager＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　□ Dim wsProc As Worksheet</td><td></td></tr>
+<tr><td>　　□ Dim wsTarget As Worksheet</td><td></td></tr>
+<tr><td>　　□ Dim Dict As Object</td><td></td></tr>
+<tr><td>　　□ Dim r As Long</td><td></td></tr>
+<tr><td>　　□ Dim LastRow As Long</td><td></td></tr>
+<tr><td>　　□ Dim Key As String</td><td></td></tr>
+<tr><td>　　□ Dim NGCount As Long</td><td></td></tr>
+<tr><td>　　□ Dim Result As String</td><td></td></tr>
+<tr><td>　　〇 Set Dict =  CreateObject("Scripting.Dictionary")</td><td></td></tr>
+<tr><td>　　〇 Set wsProc =  Worksheets(SHEET_PROC_LIST)</td><td></td></tr>
+<tr><td>　　〇 Set wsTarget =  Worksheets(SHEET_HCP_TARGETS)</td><td></td></tr>
+<tr><td>　　〇 LastRow =  wsProc.Cells(  wsProc.Rows.Count,  COL_PROCLIST_MODULE).End(xlUp).row</td><td></td></tr>
+<tr><td>　　＠┐For r = 2 To LastRow</td><td></td></tr>
+<tr><td>　　│〇 Key =  Trim$(wsProc.Cells(  r,  COL_PROCLIST_MODULE).Value) &amp;  "|" &amp;  Trim$(wsProc.Cells(  r,  COL_PROCLIST_NAME).Value)</td><td></td></tr>
+<tr><td>　　│〇 Dict(Key) = True</td><td></td></tr>
+<tr><td>　　│┴Next r</td><td></td></tr>
+<tr><td>　　〇 Result =  "CheckHCPTargetIntegrity Result" &amp; vbCrLf &amp;  String(40, "-") &amp; vbCrLf</td><td></td></tr>
+<tr><td>　　〇 Result = Result &amp;  "ProcList Count = " &amp;  Dict.Count &amp; vbCrLf</td><td></td></tr>
+<tr><td>　　〇 LastRow =  wsTarget.Cells(  wsTarget.Rows.Count,  2).End(xlUp).row</td><td></td></tr>
+<tr><td>　　〇 Result = Result &amp;  "HCP_TARGETS Count = " &amp;  LastRow - 1 &amp; vbCrLf</td><td></td></tr>
+<tr><td>　　＠┐For r = LastRow To 2 Step -1</td><td></td></tr>
+<tr><td>　　│〇 Key =  Trim$(wsTarget.Cells(r, 2).Value) &amp;  "|" &amp;  Trim$(wsTarget.Cells(r, 3).Value)</td><td></td></tr>
+<tr><td>　　│◆┐If Not Dict.Exists(Key) Then</td><td></td></tr>
+<tr><td>　　││〇 NGCount =  NGCount + 1</td><td></td></tr>
+<tr><td>　　││〇 Result = Result &amp;  "NG : " &amp;  Key &amp; vbCrLf</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td>　　│┴Next r</td><td></td></tr>
+<tr><td>　　〇 Result = Result &amp; vbCrLf &amp;  "NG Count = " &amp;  NGCount</td><td></td></tr>
+<tr><td>　　〇 Debug.Print Result</td><td></td></tr>
+<tr><td>　　◆┐If NGCount = 0 Then</td><td></td></tr>
+<tr><td>　　│〇 MsgBox  "HCP_TARGETS整合性OK" &amp; vbCrLf &amp;  "ProcList=" &amp; Dict.Count,  vbInformation</td><td></td></tr>
+<tr><td>　　├┐ELSE</td><td></td></tr>
+<tr><td>　　│〇 MsgBox  "HCP_TARGETS不整合あり" &amp; vbCrLf &amp;  "NG=" &amp; NGCount,  vbExclamation</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　┴End Sub</td><td></td></tr>
+</tbody>
+</table>
+<hr>
+<h2>Calls (0)</h2>
+<p>呼出先なし</p>
+<hr>
+<h2>Called By (0)</h2>
+<p>呼出元なし</p>
+<script>
+document.querySelectorAll('.resize').forEach(function(eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function(e) {
+startX = e.pageX;
+startWidth = eleTh.offsetWidth;
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
+}
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
+}
+});
+</script>
+</body>
+</html>

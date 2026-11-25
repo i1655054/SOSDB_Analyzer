@@ -1,16 +1,14 @@
-Procedure: IssueInfo.IsDifferent  [ 差分有無判定＜IssueInfo＞ ]
-HCP	Business
 ┬
 〇│Public Function IsDifferent(other As IssueInfo) As Boolean	差分有無判定＜IssueInfo＞
 ┴└┐
-　　│#  基本項目差分判定
+　　│#   基本項目差分判定
 　　◆→ If Me.Subject <> other.Subject Then IsDifferent = True: Exit Function
 　　◆→ If Me.Description <> other.Description Then IsDifferent = True: Exit Function
 　　◆→ If Me.Status <> other.Status Then IsDifferent = True: Exit Function
 　　◆→ If Me.Priority <> other.Priority Then IsDifferent = True: Exit Function
 　　◆→ If Me.AssignedTo <> other.AssignedTo Then IsDifferent = True: Exit Function
 　　◆→ If Me.targetVersion <> other.targetVersion Then IsDifferent = True: Exit Function
-　　│#  カスタムフィールド差分判定
+　　│#   カスタムフィールド差分判定
 　　◆→ If Me.OccurrenceDateTime <> other.OccurrenceDateTime Then IsDifferent = True: Exit Function
 　　◆→ If Me.HostName <> other.HostName Then IsDifferent = True: Exit Function
 　　◆→ If Me.ProblemBuilding <> other.ProblemBuilding Then IsDifferent = True: Exit Function
@@ -30,6 +28,18 @@ HCP	Business
 　　◆→ If Me.KihensinName_Date <> other.KihensinName_Date Then IsDifferent = True: Exit Function
 　　◆→ If Me.Key_Word <> other.Key_Word Then IsDifferent = True: Exit Function
 　　◆→ If Me.EqProduct <> other.EqProduct Then IsDifferent = True: Exit Function
-　　│#  差分なし
+　　│#   差分なし
 　　〇 IsDifferent = False
 　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

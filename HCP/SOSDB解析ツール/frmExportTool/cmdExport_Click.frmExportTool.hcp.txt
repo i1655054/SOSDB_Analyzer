@@ -1,0 +1,61 @@
+┬
+〇│Private Sub cmdExport_Click()	VBAエクスポート実行＜frmExportTool＞
+┴└┐
+　　□ Dim itm As ListItem
+　　□ Dim ToolID As Long
+　　□ Dim wb As Workbook
+　　□ Dim Count As Long
+　　□ Dim ExportCount As Long
+　　□ Dim LastRootPath As String
+　　│#   エクスポート対象走査
+　　＠┐For Each itm In lvwTools.ListItems
+　　││#   選択状態判定
+　　│◆┐If itm.Checked Then
+　　││〇 ToolID = CLng(itm.Text)
+　　│││#   対象Workbook取得
+　　││◎ Set wb =  GetWorkbookByToolID(ToolID)	対象ブック取得＜modToolManager＞
+　　││◆┐If Not wb Is Nothing Then
+　　│││〇 ExportCount = ExportCount + 1
+　　││││#   Git出力先取得
+　　│││◎ LastRootPath =  GetGitRootPathByToolID(ToolID)	Git管理フォルダ取得＜modExportVBA＞
+　　││││#   VBAエクスポート実行
+　　│││◎ ExportVBABook wb, ToolID	VBAソース出力＜modExportVBA＞
+　　││││#   エクスポート件数更新
+　　│││〇 Count = Count + 1
+　　││├┐ELSE
+　　│││〇 Debug.Print "Workbook Not Found"
+　　││││#   Workbook未オープン通知
+　　│││〇 MsgBox  "対象ブックが開かれていません。"  & vbCrLf  & itm.SubItems(1),  vbExclamation
+　　│││┴End If
+　　││┴End If
+　　│┴Next itm
+　　│#   エクスポート対象確認
+　　◆┐If Count = 0 Then
+　　││#   Workbook未選択通知
+　　│〇 MsgBox  "選択されたツールはありません。",  vbInformation
+　　│→ Exit Sub
+　　│┴End If
+　　│#   エクスポート完了通知
+　　〇 MsgBox  Count & " 件のエクスポートが完了しました。",  vbInformation
+　　│#   Git PowerShell起動
+　　◆┐If ExportCount = 1 Then
+　　│◎ OpenGitPowerShell LastRootPath	Gitフォルダ起動＜modExportVBA＞
+　　│┴End If
+　　┴End Sub
+
+========================================
+Calls (4)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetWorkbookByToolID	対象ブック取得	modToolManager
+GetGitRootPathByToolID	Git管理フォルダ取得	modExportVBA
+ExportVBABook	VBAソース出力	modExportVBA
+OpenGitPowerShell	Gitフォルダ起動	modExportVBA
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

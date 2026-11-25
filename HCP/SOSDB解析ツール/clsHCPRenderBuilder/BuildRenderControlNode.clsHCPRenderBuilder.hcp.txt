@@ -1,0 +1,64 @@
+┬
+〇│Private Sub BuildRenderControlNode(  ByVal Node As clsHCPNode,  ByVal Prefix As String)	制御ノード RenderText生成＜clsHCPRenderBuilder＞
+┴└┐
+　　│#   ノード種別判定
+　　◆┐Select Case Node.NodeType
+　　│├┐Case NODE_IF
+　　││◎ BuildRenderIfBlock  Node,  Prefix	IF RenderText生成＜clsHCPRenderBuilder＞
+　　│││#   ELSEIF構造
+　　│├┐Case NODE_ELSEIF
+　　││◎ BuildRenderIfBlock  Node,  Prefix	IF RenderText生成＜clsHCPRenderBuilder＞
+　　│││#   FOR構造
+　　│├┐Case NODE_FOR
+　　││◎ BuildRenderForBlock  Node,  Prefix	FOR RenderText生成＜clsHCPRenderBuilder＞
+　　│││#   DO構造
+　　│├┐Case NODE_DO
+　　││◎ BuildRenderDoBlock  Node,  Prefix	DO RenderText生成＜clsHCPRenderBuilder＞
+　　│││#   WITH構造
+　　│├┐Case NODE_WITH
+　　││◎ BuildRenderWithBlock  Node,  Prefix	WITH RenderText生成＜clsHCPRenderBuilder＞
+　　│││#   WHILE構造
+　　│├┐Case NODE_WHILE
+　　││◎ BuildRenderWhileBlock  Node,  Prefix	WHILE RenderText生成＜clsHCPRenderBuilder＞
+　　│││#   SELECT構造
+　　│├┐Case NODE_SELECT
+　　││◎ BuildRenderSelectBlock  Node,  Prefix	SELECT RenderText生成＜clsHCPRenderBuilder＞
+　　│││#   条件コンパイル構造
+　　│├┐Case NODE_COMPILE_IF
+　　││◎ BuildRenderCompileBlock  Node,  Prefix	条件コンパイル RenderText生成＜clsHCPRenderBuilder＞
+　　│││#   FALSEノード
+　　│├┐Case NODE_FALSE
+　　││〇 Node.RenderText =  Prefix &  "├┐ELSE"
+　　│││#   コメントノード
+　　│├┐Case NODE_COMMENT
+　　││◎ BuildRenderCommentNode  Node,  Prefix	コメント RenderText生成＜clsHCPRenderBuilder＞
+　　│││#   通常ノード
+　　│├┐Case Else
+　　││◎ BuildOutputNode  Node,  Prefix	通常ノード RenderText生成＜clsHCPRenderBuilder＞
+　　│┴End Select
+　　┴End Sub
+
+========================================
+Calls (9)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+BuildRenderIfBlock	IF RenderText生成	clsHCPRenderBuilder
+BuildRenderForBlock	FOR RenderText生成	clsHCPRenderBuilder
+BuildRenderDoBlock	DO RenderText生成	clsHCPRenderBuilder
+BuildRenderWithBlock	WITH RenderText生成	clsHCPRenderBuilder
+BuildRenderWhileBlock	WHILE RenderText生成	clsHCPRenderBuilder
+BuildRenderSelectBlock	SELECT RenderText生成	clsHCPRenderBuilder
+BuildRenderCompileBlock	条件コンパイル RenderText生成	clsHCPRenderBuilder
+BuildRenderCommentNode	コメント RenderText生成	clsHCPRenderBuilder
+BuildOutputNode	通常ノード RenderText生成	clsHCPRenderBuilder
+
+========================================
+Called By (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+BuildNode	RenderNode生成	clsHCPRenderBuilder
+BuildRenderIfBlock	IF RenderText生成	clsHCPRenderBuilder

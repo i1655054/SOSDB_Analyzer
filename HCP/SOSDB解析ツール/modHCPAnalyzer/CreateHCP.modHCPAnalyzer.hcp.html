@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
+<title>CreateHCP</title>
+<style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
+</style>
+</head>
+<body translate="no">
+<h1>CreateHCP</h1>
+<p>Module : modHCPAnalyzer</p>
+<table>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
+<tbody>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Public Sub CreateHCP(  ByVal ModuleName As String,  ByVal ProcName As String)</td><td>HCP作成＜modHCPAnalyzer＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　□ Dim CodeText As String</td><td></td></tr>
+<tr><td>　　□ Dim ProcNodes As Collection</td><td></td></tr>
+<tr><td>　　□ Dim HCPNodes As Collection</td><td></td></tr>
+<tr><td>　　□ Dim FuncList As Object</td><td></td></tr>
+<tr><td>　　□ Dim RenderBuilder As clsHCPRenderBuilder</td><td></td></tr>
+<tr><td>　　□ Dim TextRenderer As clsTextRenderer</td><td></td></tr>
+<tr><td>　　□ Dim HtmlRenderer As clsHtmlRenderer</td><td></td></tr>
+<tr><td>　　□ Dim ExcelRenderer As clsExcelRenderer</td><td></td></tr>
+<tr><td>　　□ Dim CurrentStep As String</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   開発モード確認</span></td><td></td></tr>
+<tr><td>　　◆┐If gDevMode Then</td><td></td></tr>
+<tr><td>　　│◎ <a href="../modHCPAnalyzer/CreateDebugSheet.modHCPAnalyzer.hcp.html">CreateDebugSheet</a></td><td><a href="../modHCPAnalyzer/CreateDebugSheet.modHCPAnalyzer.hcp.html">デバッグシート作成＜modHCPAnalyzer＞</a></td></tr>
+<tr><td>　　├┐ELSE</td><td></td></tr>
+<tr><td>　　│◎ <a href="../modHCPAnalyzer/DeleteSheetIfExists.modHCPAnalyzer.hcp.html">DeleteSheetIfExists</a>  SHEET_DEBUG_NODES</td><td><a href="../modHCPAnalyzer/DeleteSheetIfExists.modHCPAnalyzer.hcp.html">シート削除＜modHCPAnalyzer＞</a></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td>　　◎ <a href="../modDebug/Trace.modDebug.hcp.html">Trace</a> "HCP",  ModuleName &amp; "." &amp; ProcName</td><td><a href="../modDebug/Trace.modDebug.hcp.html">トレース出力＜modDebug＞</a></td></tr>
+<tr><td>　　☆ On Error GoTo ErrHandler</td><td></td></tr>
+<tr><td>　　〇 Application.ScreenUpdating = False</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   Procedure一覧取得</span></td><td></td></tr>
+<tr><td>　　〇 CurrentStep = "BuildFuncList"</td><td></td></tr>
+<tr><td>　　◎ <a href="../modDebug/Trace.modDebug.hcp.html">Trace</a> "HCP",  "Step=10 BuildFuncList"</td><td><a href="../modDebug/Trace.modDebug.hcp.html">トレース出力＜modDebug＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│#   Procedure一覧取得</span></td><td></td></tr>
+<tr><td>　　◎ Set FuncList =  <a href="../modProcAnalyzer/BuildFuncList.modProcAnalyzer.hcp.html">BuildFuncList</a>()</td><td><a href="../modProcAnalyzer/BuildFuncList.modProcAnalyzer.hcp.html">Function一覧作成＜modProcAnalyzer＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│#   Procedureソース取得</span></td><td></td></tr>
+<tr><td>　　〇 CurrentStep = "GetProcedureCode"</td><td></td></tr>
+<tr><td>　　◎ <a href="../modDebug/Trace.modDebug.hcp.html">Trace</a> "HCP",  "Step=20 GetProcedureCode"</td><td><a href="../modDebug/Trace.modDebug.hcp.html">トレース出力＜modDebug＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│#   Procedureソース取得</span></td><td></td></tr>
+<tr><td>　　◎ CodeText =  <a href="../modProcAnalyzer/GetProcedureCode.modProcAnalyzer.hcp.html">GetProcedureCode</a>(  ModuleName,  ProcName)</td><td><a href="../modProcAnalyzer/GetProcedureCode.modProcAnalyzer.hcp.html">Procedureソース取得＜modProcAnalyzer＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│#   Procedure解析</span></td><td></td></tr>
+<tr><td>　　〇 CurrentStep = "AnalyzeProcedure"</td><td></td></tr>
+<tr><td>　　◎ <a href="../modDebug/Trace.modDebug.hcp.html">Trace</a> "HCP",  "Step=30 AnalyzeProcedure"</td><td><a href="../modDebug/Trace.modDebug.hcp.html">トレース出力＜modDebug＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│#   Procedure解析</span></td><td></td></tr>
+<tr><td>　　◎ Set ProcNodes =  <a href="../modProcAnalyzer/AnalyzeProcedure.modProcAnalyzer.hcp.html">AnalyzeProcedure</a>(  CodeText,  ModuleName,  ProcName,  FuncList)</td><td><a href="../modProcAnalyzer/AnalyzeProcedure.modProcAnalyzer.hcp.html">Proc解析＜modProcAnalyzer＞</a></td></tr>
+<tr><td>　　◎ <a href="../modHCPAnalyzer/DeleteSheetIfExists.modHCPAnalyzer.hcp.html">DeleteSheetIfExists</a>  SHEET_PROC_NODES</td><td><a href="../modHCPAnalyzer/DeleteSheetIfExists.modHCPAnalyzer.hcp.html">シート削除＜modHCPAnalyzer＞</a></td></tr>
+<tr><td>　　◎ <a href="../modHCPAnalyzer/DeleteSheetIfExists.modHCPAnalyzer.hcp.html">DeleteSheetIfExists</a>  SHEET_PROC_CHART</td><td><a href="../modHCPAnalyzer/DeleteSheetIfExists.modHCPAnalyzer.hcp.html">シート削除＜modHCPAnalyzer＞</a></td></tr>
+<tr><td>　　◎ <a href="../modHCPAnalyzer/DeleteSheetIfExists.modHCPAnalyzer.hcp.html">DeleteSheetIfExists</a>  SHEET_HCP_NODES</td><td><a href="../modHCPAnalyzer/DeleteSheetIfExists.modHCPAnalyzer.hcp.html">シート削除＜modHCPAnalyzer＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│#   ProcNode → HCPNode変換</span></td><td></td></tr>
+<tr><td>　　〇 CurrentStep = "ConvertProcToHCP"</td><td></td></tr>
+<tr><td>　　◎ <a href="../modDebug/Trace.modDebug.hcp.html">Trace</a> "HCP",  "Step=40 ConvertProcToHCP"</td><td><a href="../modDebug/Trace.modDebug.hcp.html">トレース出力＜modDebug＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│#   ProcNode → HCPNode変換</span></td><td></td></tr>
+<tr><td>　　◎ Set HCPNodes =  <a href="../modHCPAnalyzer/ConvertProcToHCP.modHCPAnalyzer.hcp.html">ConvertProcToHCP</a>(  ProcNodes)</td><td><a href="../modHCPAnalyzer/ConvertProcToHCP.modHCPAnalyzer.hcp.html">HCP変換＜modHCPAnalyzer＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│#   RenderText生成</span></td><td></td></tr>
+<tr><td>　　〇 CurrentStep = "BuildRenderText"</td><td></td></tr>
+<tr><td>　　◎ <a href="../modDebug/Trace.modDebug.hcp.html">Trace</a> "HCP",  "Step=50 BuildRenderText"</td><td><a href="../modDebug/Trace.modDebug.hcp.html">トレース出力＜modDebug＞</a></td></tr>
+<tr><td>　　〇 Set RenderBuilder =  New clsHCPRenderBuilder</td><td></td></tr>
+<tr><td>　　〇 RenderBuilder.BuildRenderText  HCPNodes</td><td></td></tr>
+<tr><td>　　◆┐If gDevMode Then</td><td></td></tr>
+<tr><td>　　│◎ <a href="../modProcAnalyzer/ExportProcNodes.modProcAnalyzer.hcp.html">ExportProcNodes</a>  ProcNodes</td><td><a href="../modProcAnalyzer/ExportProcNodes.modProcAnalyzer.hcp.html">ProcNode出力＜modProcAnalyzer＞</a></td></tr>
+<tr><td>　　│◎ <a href="../modHCPAnalyzer/ExportHCPNodes.modHCPAnalyzer.hcp.html">ExportHCPNodes</a>  HCPNodes</td><td><a href="../modHCPAnalyzer/ExportHCPNodes.modHCPAnalyzer.hcp.html">HCPノード出力＜modHCPAnalyzer＞</a></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   TXT出力</span></td><td></td></tr>
+<tr><td>　　〇 CurrentStep = "TextRenderer"</td><td></td></tr>
+<tr><td>　　◎ <a href="../modDebug/Trace.modDebug.hcp.html">Trace</a> "HCP",  "Step=60 TextRenderer"</td><td><a href="../modDebug/Trace.modDebug.hcp.html">トレース出力＜modDebug＞</a></td></tr>
+<tr><td>　　〇 Set TextRenderer =  New clsTextRenderer</td><td></td></tr>
+<tr><td>　　◎ TextRenderer.Export  <a href="../modHCPPath/GetHCPOutputFolder.modHCPPath.hcp.html">GetHCPOutputFolder</a>(ModuleName) &amp;  ProcName &amp; "." &amp;  ModuleName &amp;  ".hcp.txt",  ProcName,  HCPNodes</td><td><a href="../modHCPPath/GetHCPOutputFolder.modHCPPath.hcp.html">HCP出力フォルダ取得＜modHCPPath＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│#   HTML出力</span></td><td></td></tr>
+<tr><td>　　〇 CurrentStep = "HtmlRenderer"</td><td></td></tr>
+<tr><td>　　◎ <a href="../modDebug/Trace.modDebug.hcp.html">Trace</a> "HCP",  "Step=70 HtmlRenderer"</td><td><a href="../modDebug/Trace.modDebug.hcp.html">トレース出力＜modDebug＞</a></td></tr>
+<tr><td>　　〇 Set HtmlRenderer =  New clsHtmlRenderer</td><td></td></tr>
+<tr><td>　　◎ HtmlRenderer.Export  <a href="../modHCPPath/GetHCPOutputFolder.modHCPPath.hcp.html">GetHCPOutputFolder</a>(ModuleName) &amp;  ProcName &amp; "." &amp;  ModuleName &amp;  ".hcp.html",  ModuleName,  ProcName,  HCPNodes</td><td><a href="../modHCPPath/GetHCPOutputFolder.modHCPPath.hcp.html">HCP出力フォルダ取得＜modHCPPath＞</a></td></tr>
+<tr><td>　　◆┐If gDevMode Then</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   Excel出力</span></td><td></td></tr>
+<tr><td>　　│〇 CurrentStep = "ExcelRenderer"</td><td></td></tr>
+<tr><td>　　│◎ <a href="../modDebug/Trace.modDebug.hcp.html">Trace</a> "HCP",  "Step=80 ExcelRenderer"</td><td><a href="../modDebug/Trace.modDebug.hcp.html">トレース出力＜modDebug＞</a></td></tr>
+<tr><td>　　│〇 Set ExcelRenderer =  New clsExcelRenderer</td><td></td></tr>
+<tr><td>　　│〇 ExcelRenderer.Export  HCPNodes,  ModuleName,  ProcName</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   INDEX更新</span></td><td></td></tr>
+<tr><td>　　〇 CurrentStep = "RebuildIndex"</td><td></td></tr>
+<tr><td>　　◎ <a href="../modHCPIndex/RebuildModuleIndex.modHCPIndex.hcp.html">RebuildModuleIndex</a>  ModuleName</td><td><a href="../modHCPIndex/RebuildModuleIndex.modHCPIndex.hcp.html">モジュールINDEX再生成＜modHCPIndex＞</a></td></tr>
+<tr><td>　　◎ <a href="../modHCPIndex/RebuildToolIndex.modHCPIndex.hcp.html">RebuildToolIndex</a></td><td><a href="../modHCPIndex/RebuildToolIndex.modHCPIndex.hcp.html">ツールINDEX再生成＜modHCPIndex＞</a></td></tr>
+<tr><td>▼ ExitProc:</td><td></td></tr>
+<tr><td>　　〇 Application.ScreenUpdating = True</td><td></td></tr>
+<tr><td>　　→ Exit Sub</td><td></td></tr>
+<tr><td>▼ ErrHandler:</td><td></td></tr>
+<tr><td>　　◎ <a href="../modDebug/Trace.modDebug.hcp.html">Trace</a> "ERROR",  ModuleName &amp; "." &amp;  ProcName &amp;  " Step=" &amp;  CurrentStep &amp;  " Error=" &amp;  Err.Description</td><td><a href="../modDebug/Trace.modDebug.hcp.html">トレース出力＜modDebug＞</a></td></tr>
+<tr><td>　　〇 Application.ScreenUpdating = True</td><td></td></tr>
+<tr><td>　　〇 Err.Raise  Err.Number,  CurrentStep,  ModuleName &amp; "." &amp;  ProcName &amp;  " : " &amp;  Err.Description</td><td></td></tr>
+<tr><td>　　┴End Sub</td><td></td></tr>
+</tbody>
+</table>
+<hr>
+<h2>Calls (12)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modHCPAnalyzer/CreateDebugSheet.modHCPAnalyzer.hcp.html">CreateDebugSheet</a></td><td>デバッグシート作成</td><td>modHCPAnalyzer</td></tr>
+<tr><td><a href="../modHCPAnalyzer/DeleteSheetIfExists.modHCPAnalyzer.hcp.html">DeleteSheetIfExists</a></td><td>シート削除</td><td>modHCPAnalyzer</td></tr>
+<tr><td><a href="../modDebug/Trace.modDebug.hcp.html">Trace</a></td><td>トレース出力</td><td>modDebug</td></tr>
+<tr><td><a href="../modProcAnalyzer/BuildFuncList.modProcAnalyzer.hcp.html">BuildFuncList</a></td><td>Function一覧作成</td><td>modProcAnalyzer</td></tr>
+<tr><td><a href="../modProcAnalyzer/GetProcedureCode.modProcAnalyzer.hcp.html">GetProcedureCode</a></td><td>Procedureソース取得</td><td>modProcAnalyzer</td></tr>
+<tr><td><a href="../modProcAnalyzer/AnalyzeProcedure.modProcAnalyzer.hcp.html">AnalyzeProcedure</a></td><td>Proc解析</td><td>modProcAnalyzer</td></tr>
+<tr><td><a href="../modHCPAnalyzer/ConvertProcToHCP.modHCPAnalyzer.hcp.html">ConvertProcToHCP</a></td><td>HCP変換</td><td>modHCPAnalyzer</td></tr>
+<tr><td><a href="../modProcAnalyzer/ExportProcNodes.modProcAnalyzer.hcp.html">ExportProcNodes</a></td><td>ProcNode出力</td><td>modProcAnalyzer</td></tr>
+<tr><td><a href="../modHCPAnalyzer/ExportHCPNodes.modHCPAnalyzer.hcp.html">ExportHCPNodes</a></td><td>HCPノード出力</td><td>modHCPAnalyzer</td></tr>
+<tr><td><a href="../modHCPPath/GetHCPOutputFolder.modHCPPath.hcp.html">GetHCPOutputFolder</a></td><td>HCP出力フォルダ取得</td><td>modHCPPath</td></tr>
+<tr><td><a href="../modHCPIndex/RebuildModuleIndex.modHCPIndex.hcp.html">RebuildModuleIndex</a></td><td>モジュールINDEX再生成</td><td>modHCPIndex</td></tr>
+<tr><td><a href="../modHCPIndex/RebuildToolIndex.modHCPIndex.hcp.html">RebuildToolIndex</a></td><td>ツールINDEX再生成</td><td>modHCPIndex</td></tr>
+</table>
+<hr>
+<h2>Called By (2)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../frmHCPGenerator/cmdGenerate_Click.frmHCPGenerator.hcp.html">cmdGenerate_Click</a></td><td>HCP生成</td><td>frmHCPGenerator</td></tr>
+<tr><td><a href="../modHCPTargetManager/GenerateHCPBatch.modHCPTargetManager.hcp.html">GenerateHCPBatch</a></td><td>HCP一括生成</td><td>modHCPTargetManager</td></tr>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function(eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function(e) {
+startX = e.pageX;
+startWidth = eleTh.offsetWidth;
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
+}
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
+}
+});
+</script>
+</body>
+</html>

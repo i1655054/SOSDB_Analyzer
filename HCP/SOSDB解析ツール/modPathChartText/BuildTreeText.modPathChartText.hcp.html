@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
+<title>BuildTreeText</title>
+<style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
+</style>
+</head>
+<body translate="no">
+<h1>BuildTreeText</h1>
+<p>Module : modPathChartText</p>
+<table>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
+<tbody>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Private Sub BuildTreeText(  ByVal ParentProc As String,  ByVal Prefix As String,  ByVal Level As Long,  ByVal MaxDepth As Long,  Optional ByVal PathText As String = "")</td><td>ツリー構造生成＜modPathChartText＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　□ Dim JPText As String</td><td></td></tr>
+<tr><td>　　□ Dim JPParent As String</td><td></td></tr>
+<tr><td>　　□ Dim JPChild As String</td><td></td></tr>
+<tr><td>　　□ Dim Children As Collection</td><td></td></tr>
+<tr><td>　　□ Dim ChildProc As Variant</td><td></td></tr>
+<tr><td>　　□ Dim ChildCount As Long</td><td></td></tr>
+<tr><td>　　□ Dim TreeText As String</td><td></td></tr>
+<tr><td>　　□ Dim NextPrefix As String</td><td></td></tr>
+<tr><td>　　□ Dim Node As clsTreeNode</td><td></td></tr>
+<tr><td>　　□ Dim i As Long</td><td></td></tr>
+<tr><td>　　□ Dim IsLastChild As Boolean</td><td></td></tr>
+<tr><td>　　□ Dim HasChildren As Boolean</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   循環参照判定パス生成</span></td><td></td></tr>
+<tr><td>　　◆┐If PathText = "" Then</td><td></td></tr>
+<tr><td>　　│〇 PathText =  "|" &amp; UCase$(ParentProc) &amp; "|"</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   最大深度判定</span></td><td></td></tr>
+<tr><td>　　◆┐If MaxDepth &gt; 0 Then</td><td></td></tr>
+<tr><td>　　│◆┐If Level &gt; MaxDepth Then</td><td></td></tr>
+<tr><td>　　││→ Exit Sub</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td>　　│┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   子ノード取得</span></td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   子ノード取得</span></td><td></td></tr>
+<tr><td>　　◎ Set Children = <a href="../modPathChartCommon/GetChildrenList.modPathChartCommon.hcp.html">GetChildrenList</a>(ParentProc)</td><td><a href="../modPathChartCommon/GetChildrenList.modPathChartCommon.hcp.html">子関数一覧取得＜modPathChartCommon＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　│#   子ノード数取得</span></td><td></td></tr>
+<tr><td>　　〇 ChildCount = Children.Count</td><td></td></tr>
+<tr><td>　　◆→ If ChildCount = 0 Then Exit Sub</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   子ノード走査</span></td><td></td></tr>
+<tr><td>　　＠┐For i = 1 To ChildCount</td><td></td></tr>
+<tr><td>　　│〇 ChildProc = CStr(Children(i))</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   循環参照防止</span></td><td></td></tr>
+<tr><td>　　│◆┐If InStr(  1,  PathText,  "|" &amp; UCase$(ChildProc) &amp; "|",  vbTextCompare) &gt; 0 Then</td><td></td></tr>
+<tr><td>　　││→ GoTo NextChild</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   最終子ノード判定</span></td><td></td></tr>
+<tr><td>　　│〇 IsLastChild = (i = ChildCount)</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   英語Tree行生成</span></td><td></td></tr>
+<tr><td>　　│◆┐If IsLastChild Then</td><td></td></tr>
+<tr><td>　　││〇 TreeText =  Prefix &amp;  TREE_NODE_LAST &amp;  TREE_SPACE &amp;  ChildProc</td><td></td></tr>
+<tr><td>　　││〇 NextPrefix =  Prefix &amp;  TREE_LAST_LEVEL &amp;  TREE_SPACE</td><td></td></tr>
+<tr><td>　　│├┐ELSE</td><td></td></tr>
+<tr><td>　　││〇 TreeText =  Prefix &amp;  TREE_NODE_NEXT &amp;  TREE_SPACE &amp;  ChildProc</td><td></td></tr>
+<tr><td>　　││〇 NextPrefix =  Prefix &amp;  TREE_NEXT_LEVEL &amp;  TREE_SPACE</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   TreeNode生成</span></td><td></td></tr>
+<tr><td>　　│◎ Set Node =  <a href="../modPathChartCommon/CreateTreeNode.modPathChartCommon.hcp.html">CreateTreeNode</a>(  ChildProc,  ParentProc,  Level,  TreeText)</td><td><a href="../modPathChartCommon/CreateTreeNode.modPathChartCommon.hcp.html">ツリーノード生成＜modPathChartCommon＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　││#   表示情報設定</span></td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   モジュール名表示設定</span></td><td></td></tr>
+<tr><td>　　│◆┐If Len(Node.ModuleName) &gt; 0 Then</td><td></td></tr>
+<tr><td>　　││◆┐If gShowModule Then</td><td></td></tr>
+<tr><td>　　│││〇 Node.TreeText =  Node.TreeText &amp;  " &lt;" &amp;  Node.ModuleName &amp;  "&gt;"</td><td></td></tr>
+<tr><td>　　│││┴End If</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   子ノード有無判定</span></td><td></td></tr>
+<tr><td>　　│◎ HasChildren =  (<a href="../modPathChartCommon/GetChildrenList.modPathChartCommon.hcp.html">GetChildrenList</a>(ChildProc).Count &gt; 0)</td><td><a href="../modPathChartCommon/GetChildrenList.modPathChartCommon.hcp.html">子関数一覧取得＜modPathChartCommon＞</a></td></tr>
+<tr><td><span class="hcp-comment">　　││#   日本語Tree行生成</span></td><td></td></tr>
+<tr><td>　　│◆┐If IsLastChild Then</td><td></td></tr>
+<tr><td>　　││〇 JPParent = TREE_LAST_LEVEL</td><td></td></tr>
+<tr><td>　　│├┐ELSE</td><td></td></tr>
+<tr><td>　　││〇 JPParent = TREE_CONTINUE</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td>　　│◆┐If HasChildren Then</td><td></td></tr>
+<tr><td>　　││〇 JPChild = TREE_BAR</td><td></td></tr>
+<tr><td>　　│├┐ELSE</td><td></td></tr>
+<tr><td>　　││〇 JPChild = TREE_SPACE</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   日本語Tree文字列設定</span></td><td></td></tr>
+<tr><td>　　│〇 JPText =  Prefix &amp;  JPParent &amp;  TREE_SPACE &amp;  JPChild &amp;  Node.JPName</td><td></td></tr>
+<tr><td>　　│〇 Node.JPLine = JPText</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   TreeNode登録</span></td><td></td></tr>
+<tr><td>　　│〇 gTreeNodes.Add Node</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　││#   子ノード再帰展開</span></td><td></td></tr>
+<tr><td>　　│◎ <a href="../modPathChartText/BuildTreeText.modPathChartText.hcp.html">BuildTreeText</a>  ChildProc,  NextPrefix,  Level + 1,  MaxDepth,  PathText &amp;  UCase$(ChildProc) &amp; "|"</td><td><a href="../modPathChartText/BuildTreeText.modPathChartText.hcp.html">ツリー構造生成＜modPathChartText＞</a></td></tr>
+<tr><td>▼ NextChild:</td><td></td></tr>
+<tr><td>　　│┴Next i</td><td></td></tr>
+<tr><td>　　┴End Sub</td><td></td></tr>
+</tbody>
+</table>
+<hr>
+<h2>Calls (2)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modPathChartCommon/GetChildrenList.modPathChartCommon.hcp.html">GetChildrenList</a></td><td>子関数一覧取得</td><td>modPathChartCommon</td></tr>
+<tr><td><a href="../modPathChartCommon/CreateTreeNode.modPathChartCommon.hcp.html">CreateTreeNode</a></td><td>ツリーノード生成</td><td>modPathChartCommon</td></tr>
+</table>
+<hr>
+<h2>Called By (1)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modPathChartText/ExportPathChartToText.modPathChartText.hcp.html">ExportPathChartToText</a></td><td>テキストチャート出力</td><td>modPathChartText</td></tr>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function(eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function(e) {
+startX = e.pageX;
+startWidth = eleTh.offsetWidth;
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
+}
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
+}
+});
+</script>
+</body>
+</html>

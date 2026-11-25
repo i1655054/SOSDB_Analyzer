@@ -1,0 +1,24 @@
+┬
+〇│Public Sub Test_Compile()	＜modUnitTest＞
+┴└┐
+　　◆┐#If VBA7 Then
+　　││#   COMPILEコメント
+　　│◎ Call FuncA	FuncA＜modUnitTest＞
+　　│#Else
+　　│◎ Call FuncA	FuncA＜modUnitTest＞
+　　│┴#End If
+　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+FuncA		modUnitTest
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

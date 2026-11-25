@@ -1,0 +1,44 @@
+┬
+〇│Private Sub HighlightNode(  ByVal shp As Shape)	ノード強調表示＜modPathChart＞
+┴└┐
+　　│#   強調表示初期化
+　　◎ Call ResetChartHighlight	強調解除＜modPathChart＞
+　　│#   現在ノード強調
+　　◎ Call HighlightCurrentNode(shp)	現在ノード強調＜modPathChart＞
+　　│#   親ノード強調
+　　◎ Call HighlightParentNode(  gCurrentParentShapeName)	親ノード強調＜modPathChart＞
+　　│#   親接続線強調
+　　◎ Call HighlightParentConnector	親接続線強調＜modPathChart＞
+　　│#   兄弟ノード強調
+　　◎ Call HighlightSiblingNodes(  gCurrentParentShapeName)	兄弟ノード強調＜modPathChart＞
+　　│#   兄弟接続線強調
+　　◎ Call HighlightSiblingConnectors(  gCurrentParentWithChildren)	兄弟接続線強調＜modPathChart＞
+　　│#   子ノード強調
+　　◎ Call HighlightChildNodes(  gCurrentShapeName)	子ノード強調＜modPathChart＞
+　　┴End Sub
+
+========================================
+Calls (7)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ResetChartHighlight	強調解除	modPathChart
+HighlightCurrentNode	現在ノード強調	modPathChart
+HighlightParentNode	親ノード強調	modPathChart
+HighlightParentConnector	親接続線強調	modPathChart
+HighlightSiblingNodes	兄弟ノード強調	modPathChart
+HighlightSiblingConnectors	兄弟接続線強調	modPathChart
+HighlightChildNodes	子ノード強調	modPathChart
+
+========================================
+Called By (5)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+FindNodeCore	ノード検索実行	modPathChart
+SelectNode	ノード選択	modPathChart
+MoveToParentNode	親ノード移動	modPathChart
+MoveToChildNode	子ノード移動	modPathChart
+MoveToSiblingNode	兄弟ノード移動	modPathChart

@@ -1,13 +1,26 @@
-Procedure: ModuleFontSync.PollFontSize  [ フォント同期実行＜ModuleFontSync＞ ]
-HCP	Business
 ┬
 〇│Public Sub PollFontSize()	フォント同期実行＜ModuleFontSync＞
 ┴└┐
 　　☆ On Error Resume Next
-　　│#  フォーム表示状態確認
+　　│#   フォーム表示状態確認
 　　◆┐If VBA.UserForms.count > 0 Then
-　　││#  フォント同期処理実行
-　　│◎ UF_InfoWebDisplay.PollFontSize_Worker	フォント同期＜UF_InfoWebDisplay＞
+　　││#   フォント同期処理実行
+　　│〇 UF_InfoWebDisplay.PollFontSize_Worker
 　　├┐ELSE
+　　││#   フォーム未表示
 　　│┴End If
 　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+PollFontSize_Worker	フォント同期	UF_InfoWebDisplay
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

@@ -1,0 +1,28 @@
+┬
+〇│Private Function IsReferenceLine(  ByVal LineText As String)  As Boolean	参照行判定＜modProcAnalyzer＞
+┴└┐
+　　│#   問診シート参照判定
+　　◆┐If InStr(LineText,  "MonShinSheet_id(") > 0 Then
+　　│〇 IsReferenceLine = True
+　　│→ Exit Function
+　　│┴End If
+　　│#   問診マップ参照判定
+　　◆┐If InStr(LineText,  "MonshinMap(") > 0 Then
+　　│〇 IsReferenceLine = True
+　　│→ Exit Function
+　　│┴End If
+　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+AnalyzeProcedure	Proc解析	modProcAnalyzer

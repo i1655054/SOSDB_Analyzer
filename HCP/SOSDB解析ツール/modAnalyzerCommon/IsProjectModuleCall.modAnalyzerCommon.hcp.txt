@@ -1,0 +1,28 @@
+┬
+〇│Private Function IsProjectModuleCall(  ByVal LineText As String,  ByVal FuncName As String)  As Boolean	＜modAnalyzerCommon＞
+┴└┐
+　　□ Dim Info As clsProcInfo
+　　□ Dim ModuleName As String
+　　◎ Set Info =  ResolveProcedure("", FuncName)	Procedure解決＜modProcedureRepository＞
+　　◆→ If Info Is Nothing Then Exit Function
+　　〇 ModuleName =  Info.ModuleName
+　　◆┐If InStr(  1,  LineText,  ModuleName & "." & FuncName & "(",  vbTextCompare) > 0 Then
+　　│〇 IsProjectModuleCall = True
+　　│┴End If
+　　┴End Function
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ResolveProcedure	Procedure解決	modProcedureRepository
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+IsFunctionCall	関数呼出判定	modAnalyzerCommon

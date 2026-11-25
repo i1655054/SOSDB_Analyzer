@@ -1,0 +1,40 @@
+┬
+〇│Public Function GetProcedureHtmlPath(  ByVal ProcName As String)  As String	ProcedureHTMLパス取得＜modHCPInfo＞
+┴└┐
+　　〇 #Const DEBUG_MODE = False
+　　│#   ProcList
+　　□ Dim ws As Worksheet
+　　│#   最終行
+　　□ Dim LastRow As Long
+　　│#   行番号
+　　□ Dim r As Long
+　　│#   Module名
+　　□ Dim ModuleName As String
+　　〇 Set ws =  gContext.ManagementBook.Worksheets(
+　　│   SHEET_PROC_LIST)
+　　〇 LastRow =  ws.Cells(  ws.Rows.Count,  COL_MODULE).End(xlUp).row
+　　＠┐For r = 2 To LastRow
+　　│◆┐If StrComp(  Trim$(ws.Cells(  r,  COL_PROC).Value),  ProcName,  vbTextCompare) = 0 Then
+　　││〇 ModuleName =  Trim$(ws.Cells(  r,  COL_MODULE).Value)
+　　││〇 GetProcedureHtmlPath =  "../" &  ModuleName & "/" &  ProcName & "." &  ModuleName &  ".hcp.html"
+　　││→ Exit Function
+　　││┴End If
+　　│┴Next r
+　　┴End Function
+
+========================================
+Calls (0)
+========================================
+
+呼出先なし
+
+========================================
+Called By (4)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+BuildProcedureLink	Procedureリンク生成	clsHtmlRenderer
+GetBusinessHtml	Business HTML取得	clsHtmlRenderer
+WriteCallsHtml	Calls一覧HTML出力	clsHtmlRenderer
+WriteCalledByHtml	Called By一覧HTML出力	clsHtmlRenderer

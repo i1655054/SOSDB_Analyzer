@@ -1,8 +1,25 @@
-Procedure: modUtility.chk_Person  [ 担当者確認＜modUtility＞ ]
-HCP	Business
 ┬
 〇│Public Function chk_Person(issue As IssueInfo) As Boolean	担当者確認＜modUtility＞
 ┴└┐
-　　│#  担当者入力確認
+　　│#   担当者入力確認
 　　◎ chk_Person = ValidateAndHighlight(  issue.AuthorName,  TANTOU_NAME_RANG,  COLOR_REQUIRED,  "氏名")                 ' 赤系	入力確認強調表示＜modUtility＞
 　　┴End Function
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ValidateAndHighlight	入力確認強調表示	modUtility
+
+========================================
+Called By (4)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+PrepareIssueFor	事前処理実行	modUtility
+ValidateForMonshin	問診票処理入力確認	modUtility
+ValidateIssue	登録前入力確認	modUtility
+ValidateForSearch	検索前入力確認	modUtility

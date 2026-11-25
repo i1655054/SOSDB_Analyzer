@@ -1,0 +1,35 @@
+┬
+〇│Private Sub CopyControlValue(  ByVal TextValue As String,  Optional ByVal Title As String = "")	値コピー＜frmPathChartNavigator＞
+┴└┐
+　　│#   コピー文字列確認
+　　◆→ If Trim$(TextValue) = "" Then Exit Sub
+　　│#   クリップボードコピー
+　　◎ Call CopyTextToClipboard(TextValue)	クリップボードコピー＜modAnalyzerCommon＞
+　　│#   コピー結果表示
+　　◆┐If Title <> "" Then
+　　│〇 Application.StatusBar =  "コピーしました : " &  Title
+　　├┐ELSE
+　　│〇 Application.StatusBar =  "コピーしました : " &  TextValue
+　　│┴End If
+　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+CopyTextToClipboard	クリップボードコピー	modAnalyzerCommon
+
+========================================
+Called By (6)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+txtCurrentNode_MouseDown	値コピー	frmPathChartNavigator
+txtStatus_MouseDown	値コピー	frmPathChartNavigator
+lblJPName_MouseDown	値コピー	frmPathChartNavigator
+lblCategory_MouseDown	値コピー	frmPathChartNavigator
+lblModule_MouseDown	値コピー	frmPathChartNavigator
+txtSummary_MouseDown	値コピー	frmPathChartNavigator

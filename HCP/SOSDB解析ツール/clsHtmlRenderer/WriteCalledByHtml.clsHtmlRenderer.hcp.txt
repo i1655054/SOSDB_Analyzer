@@ -1,0 +1,56 @@
+┬
+〇│Private Sub WriteCalledByHtml(  ByVal FileNo As Integer,  ByVal ProcName As String)	Called By一覧HTML出力＜clsHtmlRenderer＞
+┴└┐
+　　□ Dim Callers As Collection
+　　□ Dim Caller As Variant
+　　□ Dim HtmlPath As String
+　　□ Dim Info As clsProcInfo
+　　│#   呼出元一覧取得
+　　◎ Set Callers =  GetCalledByList(  ProcName)	呼出元一覧取得＜modHCPInfo＞
+　　〇 Print #FileNo, "<hr>"
+　　〇 Print #FileNo,  "<h2>Called By (" &  Callers.Count &  ")</h2>"
+　　│#   呼出元なし
+　　◆┐If Callers.Count = 0 Then
+　　│〇 Print #FileNo,  "<p>呼出元なし</p>"
+　　│→ Exit Sub
+　　│┴End If
+　　│#   呼出元一覧テーブル出力
+　　〇 Print #FileNo, "<table>"
+　　│#   テーブルヘッダ出力
+　　〇 Print #FileNo,  "<tr>" &  "<th>Procedure</th>" &  "<th>JPName</th>" &  "<th>Module</th>" &  "</tr>"
+　　│#   呼出元一覧出力
+　　＠┐For Each Caller In Callers
+　　││#   Procedure情報取得
+　　│◎ Set Info =  ResolveProcedure(  "",  CStr(Caller))	Procedure解決＜modProcedureRepository＞
+　　││	内部呼出:CStr
+　　││#   HCP HTMLパス取得
+　　│◎ HtmlPath =  GetProcedureHtmlPath(CStr(Caller))	ProcedureHTMLパス取得＜modHCPInfo＞
+　　││	内部呼出:CStr
+　　│◆┐If Info Is Nothing Then
+　　││〇 Print #FileNo,  "<tr>" &  "<td><a href=""" &  HtmlPath &  """>" &  CStr(Caller) &  "</a></td>" &  "<td></td>" &  "<td></td>" &  "</tr>"
+　　│├┐ELSE
+　　││◎ Print #FileNo,  "<tr>" &  "<td><a href=""" &  HtmlPath &  """>" &  CStr(Caller) &  "</a></td>" &  "<td>" &  HtmlEncode(Info.JPName) &  "</td>" &  "<td>" &  HtmlEncode(Info.ModuleName) &  "</td>" &  "</tr>"	HTMLエンコード＜clsHtmlRenderer＞
+　　│││	内部呼出:CStr
+　　││┴End If
+　　│┴Next Caller
+　　〇 Print #FileNo, "</table>"
+　　┴End Sub
+
+========================================
+Calls (4)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GetCalledByList	呼出元一覧取得	modHCPInfo
+ResolveProcedure	Procedure解決	modProcedureRepository
+GetProcedureHtmlPath	ProcedureHTMLパス取得	modHCPInfo
+HtmlEncode	HTMLエンコード	clsHtmlRenderer
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+Export

@@ -1,21 +1,36 @@
-Procedure: UF_SearchResults.loadcsv  [ 検索結果読込＜UF_SearchResults＞ ]
-HCP	Business
 ┬
 〇│Sub loadcsv(Word As String, csvfilepath As String)	検索結果読込＜UF_SearchResults＞
 ┴└┐
 　　□ Dim uf As UF_SearchResults
 　　〇 Set uf = UF_SearchResults
-　　│#  検索条件保存
+　　│#   検索条件保存
 　　〇 SearchWord = Word
 　　〇 filePath = csvfilepath
-　　│#  CSV読込
+　　│#   CSV読込
 　　◎ csvData = LoadCSVData(filePath)	CSV読込＜UF_SearchResults＞
-　　│#  表示位置初期化
+　　│#   表示位置初期化
 　　〇 currentPage = 0
-　　│#  検索結果表示
+　　│#   検索結果表示
 　　◎ ShowPage currentPage	検索結果ページ表示＜UF_SearchResults＞
-　　│#  検索ワード表示
+　　│#   検索ワード表示
 　　〇 lbl検索ワードテキスト.Caption = SearchWord
-　　│#  フォーム表示
+　　│#   フォーム表示
 　　〇 uf.Show
 　　┴End Sub
+
+========================================
+Calls (2)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+LoadCSVData	CSV読込	UF_SearchResults
+ShowPage	検索結果ページ表示	UF_SearchResults
+
+========================================
+Called By (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+ExportRedmineIDsToCSV	検索結果CSV生成	XmlSearch

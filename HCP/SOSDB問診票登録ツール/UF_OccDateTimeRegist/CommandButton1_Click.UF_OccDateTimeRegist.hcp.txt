@@ -1,27 +1,50 @@
-Procedure: UF_OccDateTimeRegist.CommandButton1_Click  [ 発生日時登録＜UF_OccDateTimeRegist＞ ]
-HCP	Business
 ┬
 〇│Private Sub CommandButton1_Click()	発生日時登録＜UF_OccDateTimeRegist＞
 ┴└┐
 　　□ Dim sht As Worksheet
 　　□ Dim stProblem As String
 　　〇 Set sht = ThisWorkbook.Sheets(SheetName_Main) ' 対象のシート名を指定
-　　│#  出力文字列生成
+　　│#   出力文字列生成
 　　◆┐If Chk発生時分.Value = False Then
-　　││#  日付のみ設定
+　　││#   日付のみ設定
 　　│〇 stProblem = Me.txt問題発生日.text
 　　├┐ELSE
-　　││#  日時文字列生成
+　　││#   日時文字列生成
 　　│〇 stProblem = Me.txt問題発生日.text & " " & Me.txt時刻_時.text & ":" & Me.txt時刻_分.text
 　　│┴End If
-　　│#  呼出元判定
-　　◆┐If IsUserFormOpen("UF_NewInfoRegist") Then
-　　││#  フォームへ反映
+　　│#   呼出元判定
+　　◆┐If IsUserFormOpen("UF_NewInfoRegist") Then	内部呼出:IsUserFormOpen
+　　││#   フォームへ反映
 　　│〇 UF_NewInfoRegist.txt問題発生日時.Value = stProblem
 　　├┐ELSE
-　　││#  シートへ反映
+　　││#   シートへ反映
 　　│〇 sht.Range(PROBLEM_YMDHM_RANG) = stProblem
 　　│┴End If
-　　│#  フォーム終了
+　　│#   フォーム終了
 　　〇 Unload Me
 　　┴End Sub
+
+========================================
+Calls (12)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+管理番号_子番号_chk	管理番号入力確認	UF_NewInfoRegist
+優先度_chk	優先度入力確認	UF_NewInfoRegist
+装置プロダクト_chk	装置プロダクト確認	UF_NewInfoRegist
+プロダクト担当者_chk	プロダクト担当者確認	UF_NewInfoRegist
+発生日_chk	発生日入力確認	UF_NewInfoRegist
+事象名_chk	事象名入力確認	UF_NewInfoRegist
+依頼元管理番号_chk	依頼元管理番号確認	UF_NewInfoRegist
+依頼者_chk	依頼者入力確認	UF_NewInfoRegist
+説明_chk	説明入力確認	UF_NewInfoRegist
+Clear_chk	入力エラー表示解除	UF_NewInfoRegist
+BuildTroubleNum	トラブル番号生成	modUtility
+IsUserFormOpen	フォーム起動状態確認	modUtility
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
+<title>GetChildNodes</title>
+<style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
+</style>
+</head>
+<body translate="no">
+<h1>GetChildNodes</h1>
+<p>Module : modHCPAnalyzer</p>
+<table>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
+<tbody>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Public Function GetChildNodes(  ByVal ParentID As Long,  ByVal HCPNodes As Collection)  As Collection</td><td>子ノード取得＜modHCPAnalyzer＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　□ Dim Result As Collection</td><td></td></tr>
+<tr><td>　　□ Dim Node As clsHCPNode</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   子ノード一覧初期化</span></td><td></td></tr>
+<tr><td>　　〇 Set Result = New Collection</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   TRUEノード収集</span></td><td></td></tr>
+<tr><td>　　＠┐For Each Node In HCPNodes</td><td></td></tr>
+<tr><td>　　│◆┐If Node.ParentID = ParentID Then</td><td></td></tr>
+<tr><td>　　││◆┐If Node.NodeType = NODE_TRUE Then</td><td></td></tr>
+<tr><td>　　│││〇 Result.Add Node</td><td></td></tr>
+<tr><td>　　│││┴End If</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td>　　│┴Next Node</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   FALSEノード収集</span></td><td></td></tr>
+<tr><td>　　＠┐For Each Node In HCPNodes</td><td></td></tr>
+<tr><td>　　│◆┐If Node.ParentID = ParentID Then</td><td></td></tr>
+<tr><td>　　││◆┐If Node.NodeType = NODE_FALSE Then</td><td></td></tr>
+<tr><td>　　│││〇 Result.Add Node</td><td></td></tr>
+<tr><td>　　│││┴End If</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td>　　│┴Next Node</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   通常ノード収集</span></td><td></td></tr>
+<tr><td>　　＠┐For Each Node In HCPNodes</td><td></td></tr>
+<tr><td>　　│◆┐If Node.ParentID = ParentID Then</td><td></td></tr>
+<tr><td>　　││◆┐If Node.NodeType &lt;&gt; NODE_TRUE  And Node.NodeType &lt;&gt; NODE_FALSE Then</td><td></td></tr>
+<tr><td>　　│││〇 Result.Add Node</td><td></td></tr>
+<tr><td>　　│││┴End If</td><td></td></tr>
+<tr><td>　　││┴End If</td><td></td></tr>
+<tr><td>　　│┴Next Node</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   子ノード一覧返却</span></td><td></td></tr>
+<tr><td>　　〇 Set GetChildNodes = Result</td><td></td></tr>
+<tr><td>　　┴End Function</td><td></td></tr>
+</tbody>
+</table>
+<hr>
+<h2>Calls (0)</h2>
+<p>呼出先なし</p>
+<hr>
+<h2>Called By (1)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modHCPAnalyzer/LayoutTree.modHCPAnalyzer.hcp.html">LayoutTree</a></td><td>ノード配置</td><td>modHCPAnalyzer</td></tr>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function(eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function(e) {
+startX = e.pageX;
+startWidth = eleTh.offsetWidth;
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
+}
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
+}
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="shift_jis">
+<meta name="google" content="notranslate">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Language" content="ja">
+<title>CreateManagementWorkbook</title>
+<style>
+.notranslate{translate:no;}
+.hcp-comment{color:#008000;font-style:italic;white-space:pre;}
+body{font-family:Meiryo;font-size:9pt;}
+table{border-collapse:collapse;}
+th,td{border:1px solid #cccccc;padding:1px 4px;line-height:1.2;}
+td{vertical-align:top;}
+th{background:#e8f0fe;}
+.resize{position:relative;}
+.resizer{position:absolute;right:-10px;top:0;width:20px;height:100%;cursor:col-resize;user-select:none;z-index:100;}
+</style>
+</head>
+<body translate="no">
+<h1>CreateManagementWorkbook</h1>
+<p>Module : modToolManager</p>
+<table>
+<thead>
+<tr><th class="resize">HCP</th><th class="resize">Business</th></tr>
+</thead>
+<tbody>
+<tr><td>┬</td><td></td></tr>
+<tr><td>〇│Public Function CreateManagementWorkbook(  ByVal FilePath As String,  ByVal ToolName As String)  As Workbook</td><td>管理ブック作成＜modToolManager＞</td></tr>
+<tr><td>┴└┐</td><td></td></tr>
+<tr><td>　　□ Dim wb As Workbook</td><td></td></tr>
+<tr><td>　　☆ On Error GoTo ErrHandler</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   管理ブック生成</span></td><td></td></tr>
+<tr><td>　　〇 Set wb = Workbooks.Add</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   管理シート生成</span></td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   ProcListシート作成</span></td><td></td></tr>
+<tr><td>　　〇 wb.Worksheets(1).Name = SHEET_PROC_LIST</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   関数トレースシート作成</span></td><td></td></tr>
+<tr><td>　　〇 wb.Worksheets.Add.Name = SHEET_FUNCTION_TRACE</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   関数依存関係シート作成</span></td><td></td></tr>
+<tr><td>　　〇 wb.Worksheets.Add.Name = SHEET_FUNCTION_DEPENDENCY</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   PathChartシート作成</span></td><td></td></tr>
+<tr><td>　　〇 wb.Worksheets.Add.Name = SHEET_PATH_CHART</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   PathChartTreeシート作成</span></td><td></td></tr>
+<tr><td>　　〇 wb.Worksheets.Add.Name = SHEET_PATH_CHART_TREE</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   保存確認抑止</span></td><td></td></tr>
+<tr><td>　　〇 Application.DisplayAlerts = False</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   管理ブック保存</span></td><td></td></tr>
+<tr><td>　　〇 wb.SaveAs FilePath</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   保存確認復元</span></td><td></td></tr>
+<tr><td>　　〇 Application.DisplayAlerts = True</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   管理ブック作成完了通知</span></td><td></td></tr>
+<tr><td>　　〇 MsgBox  "管理ファイルを作成しました。"  &amp; vbCrLf &amp; vbCrLf  &amp; "対象ツール : " &amp; ToolName  &amp; vbCrLf  &amp; "管理ファイル : " &amp; FilePath,  vbInformation</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   管理ブック返却</span></td><td></td></tr>
+<tr><td>　　〇 Set CreateManagementWorkbook = wb</td><td></td></tr>
+<tr><td>　　→ Exit Function</td><td></td></tr>
+<tr><td>▼ ErrHandler:</td><td></td></tr>
+<tr><td><span class="hcp-comment">　　│#   完了通知</span></td><td></td></tr>
+<tr><td>　　〇 MsgBox  "管理ファイル作成失敗" &amp; vbCrLf &amp;  Err.Number &amp; " : " &amp;  Err.Description</td><td></td></tr>
+<tr><td>　　┴End Function</td><td></td></tr>
+</tbody>
+</table>
+<hr>
+<h2>Calls (0)</h2>
+<p>呼出先なし</p>
+<hr>
+<h2>Called By (1)</h2>
+<table>
+<tr><th>Procedure</th><th>JPName</th><th>Module</th></tr>
+<tr><td><a href="../modToolManager/GetManagementWorkbookByToolID.modToolManager.hcp.html">GetManagementWorkbookByToolID</a></td><td>管理ブック取得</td><td>modToolManager</td></tr>
+</table>
+<script>
+document.querySelectorAll('.resize').forEach(function(eleTh) {
+let startX;
+let startWidth;
+const eleResizer = document.createElement('div');
+eleResizer.classList.add('resizer');
+eleResizer.addEventListener('mousedown', function(e) {
+startX = e.pageX;
+startWidth = eleTh.offsetWidth;
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+});
+eleTh.appendChild(eleResizer);
+function onMouseMove(e){
+eleTh.style.width=(startWidth+(e.pageX-startX))+'px';
+}
+function onMouseUp(){
+document.removeEventListener('mousemove',onMouseMove);
+document.removeEventListener('mouseup',onMouseUp);
+}
+});
+</script>
+</body>
+</html>

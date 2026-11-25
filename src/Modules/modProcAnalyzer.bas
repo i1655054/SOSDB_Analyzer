@@ -500,6 +500,15 @@ Private Function ExtractCallNames( _
     '----------------------------------
     For Each Key In FuncList.Keys
 
+        '# オブジェクトメソッド除外
+        If IsObjectMethodCall( _
+                LineText, _
+                CStr(Key)) Then
+
+            GoTo ContinueKey
+
+        End If
+
         If IsFunctionCall( _
                 LineText, _
                 CStr(Key)) Then
@@ -508,6 +517,8 @@ Private Function ExtractCallNames( _
             Names.Add CStr(Key)
 
         End If
+
+ContinueKey:
 
     Next Key
 

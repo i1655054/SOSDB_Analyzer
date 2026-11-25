@@ -1,18 +1,20 @@
-Procedure: UF_Calendar5.UserForm_KeyDown  [ キーボード日付操作＜UF_Calendar5＞ ]
-HCP	Business
 ┬
 〇│Private Sub UserFormKeyDown(ByVal KeyCode As MSForms.ReturnInteger,  ByVal Shift As Integer)	キーボード日付操作＜UF_Calendar5＞
 ┴└┐
-　　│#  キー操作判定
+　　│#   キー操作判定
 　　◆┐Select Case KeyCode
 　　│├┐Case vbKeyReturn, vbKeyExecute, vbKeySeparator  ' Enter(決定)
 　　││◎ Call GP_ClickCalendar(g_CurPos)	日付確定＜UF_Calendar5＞
+　　│││#   フォーム終了
 　　│├┐Case vbKeyCancel, vbKeyEscape                   ' Cancel, Esc(終了)
 　　││〇 Me.Hide
+　　│││#   翌月表示
 　　│├┐Case vbKeyPageDown                              ' PageDown(次月)
 　　││◎ Call LBL_NEXT_Click	翌月表示＜UF_Calendar5＞
+　　│││#   前月表示
 　　│├┐Case vbKeyPageUp                                ' KeyPageUp(前月)
 　　││◎ Call LBL_PREV_Click	前月表示＜UF_Calendar5＞
+　　│││#   日付移動
 　　│├┐Case vbKeyRight, vbKeyNumpad6, vbKeyAdd         ' →(翌日)
 　　││◎ Call GP_MoveDay(1)	日付移動＜UF_Calendar5＞
 　　│├┐Case vbKeyLeft, vbKeyNumpad4, vbKeySubtract     ' ←(前日)
@@ -21,8 +23,10 @@ HCP	Business
 　　││◎ Call GP_MoveDay(-7)	日付移動＜UF_Calendar5＞
 　　│├┐Case vbKeyDown, vbKeyNumpad2                    ' ↓(7日前)
 　　││◎ Call GP_MoveDay(7)	日付移動＜UF_Calendar5＞
+　　│││#   月初移動
 　　│├┐Case vbKeyHome                                  ' Home(月初)
 　　││◎ Call GP_MoveDay(g_CurPosF - g_CurPos)	日付移動＜UF_Calendar5＞
+　　│││#   月末移動
 　　│├┐Case vbKeyEnd                                   ' End(月末)
 　　││◎ Call GP_MoveDay(g_CurPosT - g_CurPos)	日付移動＜UF_Calendar5＞
 　　│├┐Case vbKeyTab                                   ' Tab(Shiftによる)
@@ -31,6 +35,7 @@ HCP	Business
 　　││├┐ELSE
 　　│││◎ Call GP_MoveDay(1)                      ' 翌日	日付移動＜UF_Calendar5＞
 　　│││┴End If
+　　│││#   年移動
 　　│├┐Case vbKeyF11                                   ' F11(前年)
 　　││〇 g_FormDate1 = DateSerial(g_intCurYear - 1, g_intCurMonth, 1)
 　　││◎ Call GP_EraseYearMonth	年月選択非表示＜UF_Calendar5＞
@@ -41,3 +46,22 @@ HCP	Business
 　　││◎ Call GP_MakeCalendar	カレンダー生成＜UF_Calendar5＞
 　　│┴End Select
 　　┴End Sub
+
+========================================
+Calls (6)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GP_ClickCalendar	日付確定	UF_Calendar5
+LBL_NEXT_Click	翌月表示	UF_Calendar5
+LBL_PREV_Click	前月表示	UF_Calendar5
+GP_MoveDay	日付移動	UF_Calendar5
+GP_EraseYearMonth	年月選択非表示	UF_Calendar5
+GP_MakeCalendar	カレンダー生成	UF_Calendar5
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし

@@ -1,8 +1,20 @@
-Procedure: clsUF_Cal5Label1.Label_MouseMove  [ 日付ガイド表示＜clsUF_Cal5Label1＞ ]
-HCP	Business
 ┬
 〇│Private Sub LabelMouseMove(ByVal Button As Integer,  ByVal Shift As Integer,  ByVal X As Single,  ByVal Y As Single)	日付ガイド表示＜clsUF_Cal5Label1＞
 ┴└┐
-　　│#  日付ガイド表示
+　　│#   日付ガイド表示
 　　◎ Call UF_Calendar5.GP_ShowGuide(g_lngIndex)	日付ガイド表示＜UF_Calendar5＞
 　　┴End Sub
+
+========================================
+Calls (1)
+========================================
+
+Procedure	JPName	Module
+------------------------------------------------------------
+GP_ShowGuide	日付ガイド表示	UF_Calendar5
+
+========================================
+Called By (0)
+========================================
+
+呼出元なし
