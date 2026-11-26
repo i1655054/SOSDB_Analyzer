@@ -309,6 +309,7 @@ HCP一括生成
 
 ## HCPアーキテクチャ
 
+```text
 Procedure
  ↓ 
 AnalyzeProcedure
@@ -334,7 +335,7 @@ Renderer
 ├─ hcp.txt
 ├─ hcp.html
 └─ HCPChart
-
+```
 ---
 
 ## ProcedureRepository
